@@ -1,0 +1,441 @@
+{
+	"tables": {
+		"9414e00f-4889-4743-bfc8-35044f94b8d1": {
+			"id": "9414e00f-4889-4743-bfc8-35044f94b8d1",
+			"visible": true,
+			"name": "usuarios",
+			"desc": "Almacena los usuarios de la aplicación Fritri",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "471b328a-b685-4c8c-885c-03faeedd90c2",
+					"name": "_id",
+					"datatype": "objectId",
+					"param": "",
+					"pk": true,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": ""
+				},
+				{
+					"id": "a4378209-abfc-4052-9056-608d6b6c974e",
+					"name": "tipoLogin",
+					"datatype": "string",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "32a90a1a-70d8-4664-86c9-96aa9f0312ea",
+					"name": "correoElectronico",
+					"datatype": "string",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "11a6a525-34b3-4c84-bd21-b5d74083db94",
+					"name": "contrasena",
+					"datatype": "string",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "54a72235-57bf-4c69-b413-fd31aab89751",
+					"name": "nombre",
+					"datatype": "string",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "f6ee31ae-081d-45b3-badb-7109c36d6d60",
+					"name": "apellidos",
+					"datatype": "string",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "a75991c1-b42f-4987-836d-b0c4337f65f2",
+					"name": "urlFoto",
+					"datatype": "string",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "4d0162b6-d3e2-4f95-9c0b-a46a881851cb",
+					"name": "genero",
+					"datatype": "string",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "30a4fc44-6668-4bde-a560-f019af26b4ec",
+					"name": "pais",
+					"datatype": "string",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "03d505bc-5479-4fec-89da-9fedfd3e2c6b",
+					"name": "fechaCreacion",
+					"datatype": "date",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "006d0929-6177-4e4c-a049-03eb7d9c32e7",
+					"name": "fechaModificacion",
+					"datatype": "date",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				}
+			],
+			"relations": [
+				"42c00ecd-05d1-408f-958d-233d28c27b5a"
+			],
+			"lines": [],
+			"keys": [
+				{
+					"id": "e605f264-b966-441e-b840-0f7a9be472cd",
+					"name": "Primary key",
+					"isPk": true,
+					"using": "na",
+					"cols": [
+						{
+							"id": "a0de29d2-c089-40ef-8e3c-bfa616e8243f",
+							"colid": "471b328a-b685-4c8c-885c-03faeedd90c2"
+						}
+					]
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"internalColumnIdRef": "",
+			"validationLevel": "na",
+			"validationAction": "na",
+			"collation": "",
+			"others": ""
+		},
+		"75bd517f-4c86-4d7f-aa42-1a15db940fd2": {
+			"id": "75bd517f-4c86-4d7f-aa42-1a15db940fd2",
+			"visible": true,
+			"name": "notificaciones",
+			"desc": "",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "fb84a0f9-f7d8-4c46-89db-42a6ef3eea3a",
+					"name": "_id",
+					"datatype": "objectId",
+					"param": "",
+					"pk": true,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": ""
+				},
+				{
+					"id": "1dcf3afd-440f-4abf-b84f-9b527cb6a8e7",
+					"name": "idUsuario",
+					"datatype": "objectId",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"fk": true,
+					"ref": "usuarios"
+				},
+				{
+					"id": "3fa0d25a-ede5-4957-bc02-7743b3da7be4",
+					"name": "idPaseo",
+					"datatype": "objectId",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "7dcf9b30-64d1-4778-9b25-dd1579410447",
+					"name": "detalle",
+					"datatype": "string",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "e67d2a99-dead-4cd6-b260-752f78f72fc7",
+					"name": "esArchivada",
+					"datatype": "bool",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "0b740f66-97b6-4e30-85ce-5bfd08e826ab",
+					"name": "esLeida",
+					"datatype": "bool",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "99fd47bd-8a82-4123-a924-d188983a1cec",
+					"name": "fechaCreacion",
+					"datatype": "date",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "a8a27f97-00df-4172-acc1-0beec901231f",
+					"name": "fechaModificacion",
+					"datatype": "date",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				}
+			],
+			"relations": [
+				"42c00ecd-05d1-408f-958d-233d28c27b5a"
+			],
+			"lines": [],
+			"keys": [
+				{
+					"id": "fe990a64-fb07-4e8f-babd-07b5e5ace57b",
+					"name": "Primary key",
+					"isPk": true,
+					"using": "na",
+					"cols": [
+						{
+							"id": "486da428-fe02-4a18-8d63-196bb5e36f09",
+							"colid": "fb84a0f9-f7d8-4c46-89db-42a6ef3eea3a"
+						}
+					]
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"internalColumnIdRef": "",
+			"validationLevel": "na",
+			"validationAction": "na",
+			"collation": "",
+			"others": ""
+		}
+	},
+	"relations": {
+		"42c00ecd-05d1-408f-958d-233d28c27b5a": {
+			"id": "42c00ecd-05d1-408f-958d-233d28c27b5a",
+			"visible": true,
+			"name": "usuarios_notificaciones",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "e605f264-b966-441e-b840-0f7a9be472cd",
+			"parent": "9414e00f-4889-4743-bfc8-35044f94b8d1",
+			"child": "75bd517f-4c86-4d7f-aa42-1a15db940fd2",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "3eed0ce7-5ec4-4df5-be7e-18d7042e1341",
+					"parentcol": "471b328a-b685-4c8c-885c-03faeedd90c2",
+					"childcol": "1dcf3afd-440f-4abf-b84f-9b527cb6a8e7"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true
+		}
+	},
+	"notes": {},
+	"lines": {},
+	"model": {
+		"name": "Usuarios_FriTri",
+		"id": "fbf4de19-d1bf-417c-badc-92496f14b84a",
+		"activeDiagram": "def820e7-3488-48e3-91af-6042b4c1044a",
+		"desc": "Base de datos para el servicio de usuarios",
+		"path": "",
+		"type": "MONGODB",
+		"version": 1,
+		"parentTableInFkCols": true,
+		"caseConvention": "under",
+		"replaceSpace": "_",
+		"color": "transparent",
+		"sideSelections": true,
+		"isDirty": true,
+		"storedin": {
+			"major": 4,
+			"minor": 6,
+			"extra": 0
+		},
+		"embeddedInParentsIsDisplayed": true,
+		"schemaContainerIsDisplayed": false,
+		"cardinalityIsDisplayed": false,
+		"estimatedSizeIsDisplayed": false,
+		"stickyParentIsDisplayed": false,
+		"def_coltopk": true,
+		"def_validationLevel": "na",
+		"def_validationAction": "na",
+		"def_collation": "",
+		"def_others": "",
+		"writeFileParam": false,
+		"lastSaved": "Mon Jun 20 2022 21:17:25 GMT-0600 (Central Standard Time)"
+	},
+	"otherObjects": {},
+	"diagrams": {
+		"def820e7-3488-48e3-91af-6042b4c1044a": {
+			"name": "Main Diagram",
+			"description": "",
+			"id": "def820e7-3488-48e3-91af-6042b4c1044a",
+			"keysgraphics": true,
+			"linegraphics": "detailed",
+			"zoom": 1,
+			"background": "transparent",
+			"lineColor": "transparent",
+			"isOpen": true,
+			"main": true,
+			"diagramItems": {
+				"9414e00f-4889-4743-bfc8-35044f94b8d1": {
+					"referencedItemId": "9414e00f-4889-4743-bfc8-35044f94b8d1",
+					"x": 417,
+					"y": 40,
+					"gHeight": 225,
+					"gWidth": 232,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": false,
+					"autoExpand": true
+				},
+				"75bd517f-4c86-4d7f-aa42-1a15db940fd2": {
+					"referencedItemId": "75bd517f-4c86-4d7f-aa42-1a15db940fd2",
+					"x": 50,
+					"y": 40,
+					"gHeight": 170,
+					"gWidth": 229,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": false,
+					"autoExpand": true
+				}
+			},
+			"scroll": {
+				"x": 0,
+				"y": 0
+			},
+			"type": "erd"
+		}
+	},
+	"order": []
+}
