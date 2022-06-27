@@ -1,0 +1,510 @@
+{
+	"tables": {
+		"8b337368-c184-47bf-b0c0-ab6387d3ceb2": {
+			"id": "8b337368-c184-47bf-b0c0-ab6387d3ceb2",
+			"visible": true,
+			"name": "destinos",
+			"desc": "Almacena la información de las busquedas de los destinos",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "24820c1d-4569-4fb5-a2f9-e65459ce5985",
+					"name": "_id",
+					"datatype": "objectId",
+					"param": "",
+					"pk": true,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": ""
+				},
+				{
+					"id": "13e5c7f7-71ae-47b7-bd87-d4b3934f352b",
+					"name": "fecha",
+					"datatype": "date",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "ff4109d0-74cc-4829-a456-6db71dfb6330",
+					"name": "nombre",
+					"datatype": "string",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "b67d918d-adc7-4bec-a7aa-5c4234020369",
+					"name": "tipo",
+					"datatype": "string",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "f5c526bf-8b1f-453a-ab33-44ac69e841ef",
+					"name": "paisDestino",
+					"datatype": "string",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "e587a3f4-a141-4228-973f-36f3a977f1f1",
+					"name": "paisUsuario",
+					"datatype": "string",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "37ac8c53-eb5f-401b-874e-1460efe8734f",
+					"name": "idLugarGoogle",
+					"datatype": "string",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "15de2e64-2a84-4690-8b16-8fcd8189ab46",
+					"name": "idUsuario",
+					"datatype": "objectId",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				}
+			],
+			"relations": [],
+			"lines": [],
+			"keys": [
+				{
+					"id": "c3efa9f0-e03b-4482-8f21-0164872e858a",
+					"name": "Primary key",
+					"isPk": true,
+					"using": "na",
+					"cols": [
+						{
+							"id": "e6fa38a9-5e37-4073-9259-dae00d2ae979",
+							"colid": "24820c1d-4569-4fb5-a2f9-e65459ce5985"
+						}
+					]
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"internalColumnIdRef": "",
+			"validationLevel": "na",
+			"validationAction": "na",
+			"collation": "",
+			"others": ""
+		},
+		"e682b02b-8673-43c0-8f37-d67fffaedd07": {
+			"id": "e682b02b-8673-43c0-8f37-d67fffaedd07",
+			"visible": true,
+			"name": "paseos",
+			"desc": "Almacena las estadisticas de los paseos creados",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "e5d7955e-2f6f-4396-8741-6644564870cb",
+					"name": "_id",
+					"datatype": "objectId",
+					"param": "",
+					"pk": true,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": ""
+				},
+				{
+					"id": "8d8a0a1a-ad6f-4a04-8fd2-0d7f7ae07351",
+					"name": "idCreador",
+					"datatype": "objectId",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "87088ee5-5531-4c2b-bf81-ecbaf5745939",
+					"name": "fechaCreacion",
+					"datatype": "date",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "644c6afb-7279-4765-826b-1149b7af193e",
+					"name": "fechaPaseo",
+					"datatype": "date",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "39de5265-182c-4f64-8675-ffa0a47c8a9e",
+					"name": "nombrePaseo",
+					"datatype": "string",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "5afdb4ea-ad73-4e92-9496-b1db82bd75c6",
+					"name": "paisPaseo",
+					"datatype": "string",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "db5b94f4-eeb6-43b1-9808-9860d83f5159",
+					"name": "paisCreador",
+					"datatype": "string",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "c55eb864-1aa1-4dec-a9c8-16c2f93911b4",
+					"name": "cantidadIntegrantes",
+					"datatype": "int",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "a1c52f8c-847f-49a2-a3d4-4a1b3c1760b9",
+					"name": "cantidadRestaurantes",
+					"datatype": "int",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "7646d51b-b672-4d94-8dfc-2ec6d1e1ccf0",
+					"name": "cantidadAtraccionesTuristicas",
+					"datatype": "int",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				}
+			],
+			"relations": [],
+			"lines": [],
+			"keys": [
+				{
+					"id": "8f997147-4d2a-4aa4-9678-f47eb91de7c6",
+					"name": "Primary key",
+					"isPk": true,
+					"using": "na",
+					"cols": [
+						{
+							"id": "3e513bf4-a8d0-4dba-85cf-139dfa0f657a",
+							"colid": "e5d7955e-2f6f-4396-8741-6644564870cb"
+						}
+					]
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"internalColumnIdRef": "",
+			"validationLevel": "na",
+			"validationAction": "na",
+			"collation": "",
+			"others": ""
+		},
+		"e81ae7f2-ae9e-49ba-a36b-d8366183328c": {
+			"id": "e81ae7f2-ae9e-49ba-a36b-d8366183328c",
+			"visible": true,
+			"name": "usuarios",
+			"desc": "Almacena las estadisticas de los usuarios",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "e7abecc9-c13d-4fc8-870d-3b2fc989dd8f",
+					"name": "_id",
+					"datatype": "objectId",
+					"param": "",
+					"pk": true,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": ""
+				},
+				{
+					"id": "251ec486-a8ab-490b-8caf-b471c7134b1d",
+					"name": "idUsuario",
+					"datatype": "objectId",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "1867c082-17c9-41f4-9ad5-53f71c55d177",
+					"name": "paisUsuario",
+					"datatype": "string",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "7f73a58e-fc19-468b-8877-879b20e6fccf",
+					"name": "nombreUsuario",
+					"datatype": "string",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				},
+				{
+					"id": "fafe8548-b7d4-487b-b5a3-5805428802bb",
+					"name": "fechaRegistro",
+					"datatype": "date",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"list": false,
+					"enum": "",
+					"validate": ""
+				}
+			],
+			"relations": [],
+			"lines": [],
+			"keys": [
+				{
+					"id": "009ed54a-b84b-497e-93dc-259b3b11370b",
+					"name": "Primary key",
+					"isPk": true,
+					"using": "na",
+					"cols": [
+						{
+							"id": "e34b68f4-f7d7-411c-99e1-087e62b81a3d",
+							"colid": "e7abecc9-c13d-4fc8-870d-3b2fc989dd8f"
+						}
+					]
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"internalColumnIdRef": "",
+			"validationLevel": "na",
+			"validationAction": "na",
+			"collation": "",
+			"others": ""
+		}
+	},
+	"relations": {},
+	"notes": {},
+	"lines": {},
+	"model": {
+		"name": "Estadisticas",
+		"id": "5a77dacb-2a30-4df1-8273-c953fb3359d7",
+		"activeDiagram": "070ac1fc-46ff-4eb7-aa4d-083c2ec3f0fd",
+		"desc": "Base de datos del servicio de estadisticas",
+		"path": "",
+		"type": "MONGODB",
+		"version": 1,
+		"parentTableInFkCols": true,
+		"caseConvention": "under",
+		"replaceSpace": "_",
+		"color": "transparent",
+		"sideSelections": true,
+		"isDirty": true,
+		"storedin": {
+			"major": 4,
+			"minor": 6,
+			"extra": 0
+		},
+		"embeddedInParentsIsDisplayed": true,
+		"schemaContainerIsDisplayed": false,
+		"cardinalityIsDisplayed": false,
+		"estimatedSizeIsDisplayed": false,
+		"stickyParentIsDisplayed": false,
+		"def_coltopk": true,
+		"def_validationLevel": "na",
+		"def_validationAction": "na",
+		"def_collation": "",
+		"def_others": "",
+		"writeFileParam": false,
+		"lastSaved": "Mon Jun 20 2022 20:45:22 GMT-0600 (Central Standard Time)"
+	},
+	"otherObjects": {},
+	"diagrams": {
+		"070ac1fc-46ff-4eb7-aa4d-083c2ec3f0fd": {
+			"name": "Main Diagram",
+			"description": "",
+			"id": "070ac1fc-46ff-4eb7-aa4d-083c2ec3f0fd",
+			"keysgraphics": true,
+			"linegraphics": "detailed",
+			"zoom": 1,
+			"background": "transparent",
+			"lineColor": "transparent",
+			"isOpen": true,
+			"main": true,
+			"diagramItems": {
+				"8b337368-c184-47bf-b0c0-ab6387d3ceb2": {
+					"referencedItemId": "8b337368-c184-47bf-b0c0-ab6387d3ceb2",
+					"x": 50,
+					"y": 40,
+					"gHeight": 170,
+					"gWidth": 215,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": false,
+					"autoExpand": true
+				},
+				"e682b02b-8673-43c0-8f37-d67fffaedd07": {
+					"referencedItemId": "e682b02b-8673-43c0-8f37-d67fffaedd07",
+					"x": 295,
+					"y": 40,
+					"gHeight": 206,
+					"gWidth": 284,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": false,
+					"autoExpand": true
+				},
+				"e81ae7f2-ae9e-49ba-a36b-d8366183328c": {
+					"referencedItemId": "e81ae7f2-ae9e-49ba-a36b-d8366183328c",
+					"x": 609,
+					"y": 40,
+					"gHeight": 117,
+					"gWidth": 222,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": false,
+					"autoExpand": true
+				}
+			},
+			"scroll": {
+				"x": 0,
+				"y": 0
+			},
+			"type": "erd"
+		}
+	},
+	"order": []
+}

@@ -1,0 +1,2 @@
+
+db.createCollection( 'notificaciones', {validator: {$jsonSchema: {bsonType: 'object',title:'notificaciones',required: [         'idUsuario',          'idPaseo',          'detalle',          'esArchivada',          'esLeida',          'fechaCreacion',          'fechaModificacion'],properties: {idUsuario: {bsonType: 'objectId'},idPaseo: {bsonType: 'objectId'},detalle: {bsonType: 'string'},esArchivada: {bsonType: 'bool'},esLeida: {bsonType: 'bool'},fechaCreacion: {bsonType: 'date'},fechaModificacion: {bsonType: 'date'}}         }      }});  
