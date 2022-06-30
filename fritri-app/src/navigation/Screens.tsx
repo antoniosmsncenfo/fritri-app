@@ -121,6 +121,12 @@ export default () => {
       />
 
       <Stack.Screen
+        name="LoginFacebook"
+        component={Login}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
         name="Extra"
         component={Extras}
         options={{title: t('navigation.extra'), headerRight: () => null}}
