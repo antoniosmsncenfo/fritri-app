@@ -20,6 +20,7 @@ import {
   Settings,
   Shopping,
   NotificationsSettings,
+  LoginFacebook,
 } from '../screens';
 
 import {useScreenOptions, useTranslation} from '../hooks';
@@ -122,7 +123,7 @@ export default () => {
 
       <Stack.Screen
         name="LoginFacebook"
-        component={Login}
+        component={LoginFacebook}
         options={{headerShown: false}}
       />
 
