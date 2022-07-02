@@ -12,12 +12,14 @@ interface IRegistration {
   name: string;
   email: string;
   password: string;
+  confirmPassword: string;
   agreed: boolean;
 }
 interface IRegistrationValidation {
   name: boolean;
   email: boolean;
   password: boolean;
+  confirmPassword: boolean;
   agreed: boolean;
 }
 
@@ -29,12 +31,14 @@ const Register = () => {
     name: false,
     email: false,
     password: false,
+    confirmPassword: false,
     agreed: false,
   });
   const [registration, setRegistration] = useState<IRegistration>({
     name: '',
     email: '',
     password: '',
+    confirmPassword: '',
     agreed: false,
   });
   const {assets, colors, gradients, sizes} = useTheme();
@@ -59,6 +63,7 @@ const Register = () => {
       name: regex.name.test(registration.name),
       email: regex.email.test(registration.email),
       password: regex.password.test(registration.password),
+      confirmPassword: registration.confirmPassword===registration.password,
       agreed: registration.agreed,
     }));
   }, [registration, setIsValid]);
@@ -74,7 +79,7 @@ const Register = () => {
             radius={sizes.cardRadius}
             source={assets.background}
             height={sizes.height * 0.3}>
-            <Button
+            {/* <Button
               row
               flex={0}
               justify="flex-start"
@@ -90,9 +95,9 @@ const Register = () => {
               <Text p white marginLeft={sizes.s}>
                 {t('common.goBack')}
               </Text>
-            </Button>
+            </Button> */}
 
-            <Text h4 center white marginBottom={sizes.md}>
+            <Text h4 center white marginTop={20}>
               {t('register.title')}
             </Text>
           </Image>
@@ -121,7 +126,7 @@ const Register = () => {
                 {t('register.subtitle')}
               </Text>
               {/* social buttons */}
-              <Block row center justify="space-evenly" marginVertical={sizes.m}>
+              {/* <Block row center justify="space-evenly" marginVertical={sizes.m}>
                 <Button outlined gray shadow={!isAndroid}>
                   <Image
                     source={assets.facebook}
@@ -173,7 +178,7 @@ const Register = () => {
                   start={[1, 0]}
                   gradient={gradients.divider}
                 />
-              </Block>
+              </Block> */}
               {/* form inputs */}
               <Block paddingHorizontal={sizes.sm}>
                 <Input
@@ -205,6 +210,16 @@ const Register = () => {
                   success={Boolean(registration.password && isValid.password)}
                   danger={Boolean(registration.password && !isValid.password)}
                 />
+                <Input
+                  secureTextEntry
+                  autoCapitalize="none"
+                  marginBottom={sizes.m}
+                  label={t('common.confirmPassword')}
+                  placeholder={t('common.passwordPlaceholder')}
+                  onChangeText={(value) => handleChange({confirmPassword: value})}
+                  success={Boolean(registration.confirmPassword && isValid.confirmPassword)}
+                  danger={Boolean(registration.confirmPassword && !isValid.confirmPassword)}
+                />                
               </Block>
               {/* checkbox terms */}
               <Block row flex={0} align="center" paddingHorizontal={sizes.sm}>

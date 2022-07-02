@@ -29,6 +29,7 @@
     "namePlaceholder": "Enter your full name",
     "email": "Email",
     "emailPlaceholder": "Enter your email address",
+    "confirmPassword": "Confirm Password",
     "password": "Password",
     "passwordPlaceholder": "Enter a password",
     "agree": "I agree with the ",
@@ -108,7 +109,7 @@
   },
   "register": {
     "title": "Welcome",
-    "subtitle": "Register with"
+    "subtitle": "Register with email"
   },
   "login": {
     "title": "Welcome",

@@ -33,23 +33,25 @@ export default () => {
   return (
     <Stack.Navigator screenOptions={screenOptions.stack}>
       <Stack.Screen
+        name="Register"
+        component={Register}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
         name="Home"
         component={Home}
         options={{title: t('navigation.home')}}
       />
-
       <Stack.Screen
         name="Components"
         component={Components}
         options={screenOptions.components}
       />
-
       <Stack.Screen
         name="Articles"
         component={Articles}
         options={{title: t('navigation.articles')}}
       />
-
       <Stack.Screen
         name="Rentals"
         component={Rentals}
@@ -70,13 +72,11 @@ export default () => {
         component={Chat}
         options={{title: t('navigation.chat'), ...screenOptions.chat}}
       />
-
       <Stack.Screen
         name="Profile"
         component={Profile}
         options={{headerShown: false}}
       />
-
       <Stack.Screen
         name="Settings"
         component={Settings}
@@ -107,25 +107,16 @@ export default () => {
         component={Privacy}
         options={{title: t('navigation.privacy'), ...screenOptions.back}}
       />
-
-      <Stack.Screen
-        name="Register"
-        component={Register}
-        options={{headerShown: false}}
-      />
-
       <Stack.Screen
         name="Login"
         component={Login}
         options={{headerShown: false}}
       />
-
       <Stack.Screen
         name="Extra"
         component={Extras}
         options={{title: t('navigation.extra'), headerRight: () => null}}
       />
-
       <Stack.Screen
         name="Shopping"
         component={Shopping}
