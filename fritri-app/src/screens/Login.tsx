@@ -1,10 +1,11 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {Linking, Platform} from 'react-native';
-import {useNavigation} from '@react-navigation/core';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Linking, Platform } from 'react-native';
+import { useNavigation } from '@react-navigation/core';
 
-import {useData, useTheme, useTranslation} from '../hooks/';
+import { useData, useTheme, useTranslation } from '../hooks/';
 import * as regex from '../constants/regex';
-import {Block, Button, Input, Image, Text, Checkbox} from '../components/';
+import { Block, Button, Input, Image, Text, Checkbox } from '../components/';
+import { useGoogleLogin } from '../hooks/useGoogleLogin';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -20,8 +21,8 @@ interface ILoginValidation {
 }
 
 const Login = () => {
-  const {isDark} = useData();
-  const {t} = useTranslation();
+  const { isDark } = useData();
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const [isValid, setIsValid] = useState<ILoginValidation>({
     email: false,
@@ -33,11 +34,15 @@ const Login = () => {
     password: '',
     agreed: false,
   });
-  const {assets, colors, gradients, sizes} = useTheme();
+
+
+  const { assets, colors, gradients, sizes } = useTheme();
+
+  const { isGoogleUserLogged, signInWithGoogleAsync, googleUser } = useGoogleLogin();
 
   const handleChange = useCallback(
     (value) => {
-      setLoginData((state) => ({...state, ...value}));
+      setLoginData((state) => ({ ...state, ...value }));
     },
     [setLoginData],
   );
@@ -56,10 +61,14 @@ const Login = () => {
     }));
   }, [login, setIsValid]);
 
+  useEffect(() => {
+    console.log(`Usuario ${isGoogleUserLogged ? 'sí' : 'no'} inició sesión con Google`);
+  }, [isGoogleUserLogged]);
+
   return (
     <Block safe marginTop={sizes.md}>
       <Block paddingHorizontal={sizes.s}>
-        <Block flex={0} style={{zIndex: 0}}>
+        <Block flex={0} style={{ zIndex: 0 }}>
           <Image
             background
             resizeMode="cover"
@@ -78,7 +87,7 @@ const Login = () => {
                 height={18}
                 color={colors.white}
                 source={assets.arrow}
-                transform={[{rotate: '180deg'}]}
+                transform={[{ rotate: '180deg' }]}
               />
               <Text p white marginLeft={sizes.s}>
                 {t('common.goBack')}
@@ -131,7 +140,9 @@ const Login = () => {
                     color={isDark ? colors.icon : undefined}
                   />
                 </Button>
-                <Button outlined gray shadow={!isAndroid}>
+                <Button outlined gray shadow={!isAndroid}
+                  onPress={signInWithGoogleAsync}
+                >
                   <Image
                     source={assets.google}
                     height={sizes.m}
@@ -177,7 +188,7 @@ const Login = () => {
                   placeholder={t('common.emailPlaceholder')}
                   success={Boolean(login.email && isValid.email)}
                   danger={Boolean(login.email && !isValid.email)}
-                  onChangeText={(value) => handleChange({email: value})}
+                  onChangeText={(value) => handleChange({ email: value })}
                 />
                 <Input
                   secureTextEntry
@@ -185,7 +196,7 @@ const Login = () => {
                   autoCapitalize="none"
                   marginBottom={sizes.m}
                   placeholder={t('common.passwordPlaceholder')}
-                  onChangeText={(value) => handleChange({password: value})}
+                  onChangeText={(value) => handleChange({ password: value })}
                   success={Boolean(login.password && isValid.password)}
                   danger={Boolean(login.password && !isValid.password)}
                 />
@@ -195,7 +206,7 @@ const Login = () => {
                 <Checkbox
                   marginRight={sizes.sm}
                   checked={login?.agreed}
-                  onPress={(value) => handleChange({agreed: value})}
+                  onPress={(value) => handleChange({ agreed: value })}
                 />
                 <Text paddingRight={sizes.s}>
                   {t('common.agree')}
