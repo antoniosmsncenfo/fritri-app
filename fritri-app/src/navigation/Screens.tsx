@@ -33,15 +33,15 @@ export default () => {
   return (
     <Stack.Navigator screenOptions={screenOptions.stack}>
       <Stack.Screen
-        name="Register"
-        component={Register}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
         name="Home"
         component={Home}
         options={{title: t('navigation.home')}}
       />
+      <Stack.Screen
+        name="Register"
+        component={Register}
+        options={{headerShown: false}}
+      />      
       <Stack.Screen
         name="Components"
         component={Components}
