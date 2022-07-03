@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { UsuariosService } from './usuarios.service';
 import { CrearUsuariosDto } from './dto/crear-usuarios.dto';
 import { Usuario } from './schemas/usuarios.schema';
+import { LoginTercerosDto } from './dto/login-terceros.dto';
 
 @Controller('usuarios')
 export class UsuariosController {
@@ -25,5 +26,10 @@ export class UsuariosController {
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return this.usuariosService.delete(id);
+  }
+
+  @Post('login-facebook')
+  async loginTerceros(@Body() loginTercerosDto: LoginTercerosDto) {
+    await this.usuariosService.loginTerceros(loginTercerosDto);
   }
 }
