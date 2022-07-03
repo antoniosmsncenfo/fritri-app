@@ -1,10 +1,12 @@
 export class LoginTercerosDto {
 
-  readonly id: string;
+  readonly idTerceros: string;
 
   readonly tipoLogin: string;
 
   readonly correoElectronico?: string;
+
+  readonly contrasena: string;
 
   readonly nombre: string;
 

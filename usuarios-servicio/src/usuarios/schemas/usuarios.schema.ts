@@ -8,7 +8,7 @@ export class Usuario {
 
 	@Prop({
 		required: true,
-		enum: ['Google', 'Facebook', 'Email']
+		enum: ['Google', 'Facebook', 'Email'],
 	})
 	tipoLogin: string;
 
@@ -18,29 +18,23 @@ export class Usuario {
 	@Prop({
 		required: true,
 	})
-	contrasena: Date;
+	contrasena: string;
 
 	@Prop({
 		required: true,
 	})
 	nombre: string;
 
-	@Prop({
-		required: true,
-	})
+	@Prop()
 	apellidos: string;
 
 	@Prop()
 	urlFoto: string;
 
-	@Prop({
-		required: true,
-	})
+	@Prop()
 	genero: string;
 
-	@Prop({
-		required: true,
-	})
+	@Prop()
 	pais: string;
 
 	@Prop({
@@ -48,6 +42,9 @@ export class Usuario {
 		default: new Date()
 	})
 	fechaCreacion: Date;
+
+	@Prop()
+	idTerceros: string;
 }
 
 
