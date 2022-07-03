@@ -14,6 +14,8 @@ interface IRegistration {
   name: string;
   email: string;
   gender: string;
+  country: string;
+  photo: string;
   password: string;
   confirmPassword: string;
   agreed: boolean;
@@ -90,7 +92,9 @@ const Register = () => {
   const [registration, setRegistration] = useState<IRegistration>({
     name: '',
     email: '',
-    gender: 'Mujer',
+    gender: GENDER_TYPES['1'],
+    country: COUNTRIES['1'],
+    photo:'',
     password: '',
     confirmPassword: '',
     agreed: true,
@@ -295,9 +299,9 @@ const Register = () => {
                 />
                 <TouchableInput
                   icon="more"
-                  value="Me.jpg"
+                  value={"Me.jpg"}
                   label={t('common.avatar')}
-                  onPress={() => setModal('gender')}
+                  onPress={() => setModal(undefined)}
                 />                                                 
                 {/* 
                 <Text bold marginBottom={sizes.s}>
