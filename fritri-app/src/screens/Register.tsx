@@ -35,7 +35,13 @@ interface ITouchableInput {
 
 const GENDER_TYPES: {
   [key: string]: string;
-} = {'Mujer': 'Mujer', 'Hombre': 'Hombre', 'Ninguno': 'Otro'};
+} = {'1': 'Mujer', '2': 'Hombre', '3': 'Otro'};
+
+const COUNTRIES: {
+  [key: string]: string;
+} = {'1': 'Costa Rica', '2': 'Nicaragua', 
+      '3': 'Panamá', '4': 'Guatemala', 
+      '5': 'El Salvador'};
 
 const TouchableInput = ({label, value, icon, onPress}: ITouchableInput) => {
   const {assets, colors, sizes} = useTheme();
@@ -90,10 +96,12 @@ const Register = () => {
     agreed: true,
   });
 
-  const [gender, setGender] = useState("Mujer");
+  const [gender, setGender] = useState(GENDER_TYPES['1']);
+
+  const [country, setCountry] = useState(COUNTRIES['1']);
 
   const [modal, setModal] = useState<
-    'gender' | undefined
+    'gender' | 'country' |  undefined
   >();
 
   const {assets, colors, gradients, sizes} = useTheme();
@@ -119,6 +127,15 @@ const Register = () => {
       setModal(undefined);
     },
     [setGender, setModal],
+  );
+
+  const handleCountry = useCallback(
+    (value: string) => {
+      setCountry(value);
+      // hide modal / reset modal state
+      setModal(undefined);
+    },
+    [setCountry, setModal],
   );
 
   useEffect(() => {
@@ -272,9 +289,9 @@ const Register = () => {
                 />
                 <TouchableInput
                   icon="home"
-                  value="Costa Rica"
+                  value={country}
                   label={t('common.country')}
-                  onPress={() => setModal('gender')}
+                  onPress={() => setModal('country')}
                 />
                 <TouchableInput
                   icon="more"
@@ -378,22 +395,21 @@ const Register = () => {
         onRequestClose={() => setModal(undefined)}>
           <FlatList
             keyExtractor={(index) => `${index}`}
-            data={modal === 'gender' ? [1, 2, 3] : [1, 2, 3]}
+            data={modal === 'gender' ? [1, 2, 3] : [1, 2, 3, 5]}
             renderItem={({item}) => (
               <Button
                 marginBottom={sizes.sm}
                 onPress={() =>
                   modal === 'gender'
                     ? handleGender(GENDER_TYPES[item])
-                    : handleGender(GENDER_TYPES[item])
+                    : handleCountry(COUNTRIES[item])
                 }>
                 <Text p white semibold transform="uppercase">
-                  {modal === 'gender' ? GENDER_TYPES[item] : GENDER_TYPES[item]}
+                  {modal === 'gender' ? GENDER_TYPES[item] : COUNTRIES[item]}
                 </Text>
               </Button>
             )}
           />
-        )
       </Modal>      
     </Block>
   );

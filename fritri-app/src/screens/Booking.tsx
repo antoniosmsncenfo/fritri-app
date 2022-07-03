@@ -189,7 +189,7 @@ const Booking = () => {
           label={t('common.adults')}
           onPress={() => setModal('persons')}
         />
-        {/* room type selection */}
+        {/* room type selection */ console.log(type)}
         <TouchableInput
           icon="hotel"
           value={type}
