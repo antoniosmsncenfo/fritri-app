@@ -2,7 +2,7 @@ export class CrearUsuariosDto {
 
   readonly tipoLogin: string;
 
-  readonly correoElectronico?: string;
+  readonly correoElectronico: string;
 
   readonly contrasena: string;
 
