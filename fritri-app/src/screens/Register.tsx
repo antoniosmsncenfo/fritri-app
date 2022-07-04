@@ -45,6 +45,14 @@ const COUNTRIES: {
       '3': 'Panamá', '4': 'Guatemala', 
       '5': 'El Salvador'};
 
+const options = {
+  title: 'Selecciona foto de perfil',
+  cancelButton: 'Cancelar',
+  takePhotoButtonTitle: 'Tomar Foto',
+  chooseFromLibraryButtonTitle: 'Abrir Galeria',
+  noData: true,
+};
+
 const TouchableInput = ({label, value, icon, onPress}: ITouchableInput) => {
   const {assets, colors, sizes} = useTheme();
 
@@ -381,7 +389,7 @@ const Register = () => {
                   {t('common.signup')}
                 </Text>
               </Button>
-              <Button
+              {/* <Button
                 primary
                 outlined
                 shadow={!isAndroid}
@@ -391,7 +399,7 @@ const Register = () => {
                 <Text bold primary transform="uppercase">
                   {t('common.signin')}
                 </Text>
-              </Button>
+              </Button> */}
             </Block>
           </Block>
         </Block>

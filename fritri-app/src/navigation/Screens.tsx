@@ -33,6 +33,11 @@ export default () => {
   return (
     <Stack.Navigator screenOptions={screenOptions.stack}>
       <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{headerShown: false}}
+      />      
+      <Stack.Screen
         name="Home"
         component={Home}
         options={{title: t('navigation.home')}}
@@ -106,11 +111,6 @@ export default () => {
         name="Privacy"
         component={Privacy}
         options={{title: t('navigation.privacy'), ...screenOptions.back}}
-      />
-      <Stack.Screen
-        name="Login"
-        component={Login}
-        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Extra"
