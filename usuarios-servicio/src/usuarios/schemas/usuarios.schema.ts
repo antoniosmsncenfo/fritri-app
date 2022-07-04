@@ -21,9 +21,6 @@ export class Usuario {
 	@Prop()
 	contrasena: string;
 
-	@Prop()
-	salt: string;
-
 	@Prop({
 		required: true,
 	})
