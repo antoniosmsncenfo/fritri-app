@@ -20,6 +20,7 @@ import {
   Settings,
   Shopping,
   NotificationsSettings,
+  LoginFacebook,
 } from '../screens';
 
 import {useScreenOptions, useTranslation} from '../hooks';
@@ -112,6 +113,12 @@ export default () => {
         component={Privacy}
         options={{title: t('navigation.privacy'), ...screenOptions.back}}
       />
+      <Stack.Screen
+        name="LoginFacebook"
+        component={LoginFacebook}
+        options={{headerShown: false}}
+      />
+
       <Stack.Screen
         name="Extra"
         component={Extras}
