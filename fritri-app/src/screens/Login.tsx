@@ -11,12 +11,10 @@ const isAndroid = Platform.OS === 'android';
 interface ILogin {
   email: string;
   password: string;
-  agreed: boolean;
 }
 interface ILoginValidation {
   email: boolean;
   password: boolean;
-  agreed: boolean;
 }
 
 const Login = () => {
@@ -26,12 +24,10 @@ const Login = () => {
   const [isValid, setIsValid] = useState<ILoginValidation>({
     email: false,
     password: false,
-    agreed: false,
   });
   const [login, setLoginData] = useState<ILogin>({
     email: '',
     password: '',
-    agreed: false,
   });
   const {assets, colors, gradients, sizes} = useTheme();
 
@@ -52,7 +48,6 @@ const Login = () => {
       ...state,
       email: regex.email.test(login.email),
       password: regex.password.test(login.password),
-      agreed: login.agreed,
     }));
   }, [login, setIsValid]);
 
@@ -67,7 +62,7 @@ const Login = () => {
             radius={sizes.cardRadius}
             source={assets.background}
             height={sizes.height * 0.3}>
-            <Button
+            {/* <Button
               row
               flex={0}
               justify="flex-start"
@@ -83,8 +78,7 @@ const Login = () => {
               <Text p white marginLeft={sizes.s}>
                 {t('common.goBack')}
               </Text>
-            </Button>
-
+            </Button> */}
             <Text h4 center white marginBottom={sizes.md}>
               {t('login.title')}
             </Text>
@@ -123,14 +117,14 @@ const Login = () => {
                     color={isDark ? colors.icon : undefined}
                   />
                 </Button>
-                <Button outlined gray shadow={!isAndroid}>
+                {/* <Button outlined gray shadow={!isAndroid}>
                   <Image
                     source={assets.apple}
                     height={sizes.m}
                     width={sizes.m}
                     color={isDark ? colors.icon : undefined}
                   />
-                </Button>
+                </Button> */}
                 <Button outlined gray shadow={!isAndroid}>
                   <Image
                     source={assets.google}
@@ -191,7 +185,7 @@ const Login = () => {
                 />
               </Block>
               {/* checkbox terms */}
-              <Block row flex={0} align="center" paddingHorizontal={sizes.sm}>
+              {/* <Block row flex={0} align="center" paddingHorizontal={sizes.sm}>
                 <Checkbox
                   marginRight={sizes.sm}
                   checked={login?.agreed}
@@ -207,7 +201,7 @@ const Login = () => {
                     {t('common.terms')}
                   </Text>
                 </Text>
-              </Block>
+              </Block> */}
               <Button
                 onPress={handleSignIn}
                 marginVertical={sizes.s}
@@ -218,6 +212,17 @@ const Login = () => {
                   {t('common.signin')}
                 </Text>
               </Button>
+              <Button
+                primary
+                outlined
+                shadow={!isAndroid}
+                marginVertical={sizes.s}
+                marginHorizontal={sizes.sm}
+                onPress={() => navigation.navigate('Register')}>
+                <Text bold primary transform="uppercase">
+                  {t('common.signup')}
+                </Text>
+              </Button>              
             </Block>
           </Block>
         </Block>
