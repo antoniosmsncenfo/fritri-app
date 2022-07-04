@@ -5,7 +5,9 @@ import { BadRequestException } from  '@nestjs/common';
 import { Usuario, UsuarioDocument } from './schemas/usuarios.schema';
 import { CrearUsuariosDto } from './dto/crear-usuarios.dto';
 import { LoginTercerosDto } from './dto/login-terceros.dto';
-
+import { CompararContrasena, HashContrasena } from '../helpers/hash.contrasena';
+import { LoginEmailDto } from './dto/login-email.dto';
+import { NoUsuario } from './interface/no-usuario';
 
 @Injectable()
 export class UsuariosService {
@@ -13,9 +15,19 @@ export class UsuariosService {
     @InjectModel(Usuario.name) private readonly usuarioModel: Model<UsuarioDocument>,
   ) {}
 
-  async create(crearUsuariosDto: CrearUsuariosDto): Promise<Usuario> {
-    const createdPaseo = await this.usuarioModel.create(crearUsuariosDto);
-    return createdPaseo;
+  async create(crearUsuarioDto: CrearUsuariosDto): Promise<Usuario> {
+    let resultado;
+    try {
+      const { hash } = await HashContrasena(crearUsuarioDto.contrasena);
+      crearUsuarioDto = {
+        ...crearUsuarioDto,
+        contrasena: hash
+      }
+      resultado = await this.usuarioModel.create(crearUsuarioDto);
+    } catch(error) {
+      throw new BadRequestException(`Error al tratar de crear el usuario-email::${error.message}`);
+    }
+    return resultado;
   }
 
   async findAll(): Promise<Usuario[]> {
@@ -45,6 +57,34 @@ export class UsuariosService {
     } catch(error) {
       console.log(error);
       throw new BadRequestException(`Error al tratar de crear el usuario::${error.message}`);
+    }
+    return resultado;
+  }
+
+  private eliminarPropiedades(usuario: UsuarioDocument): UsuarioDocument {
+    const propiedadesEliminar = ['contrasena'];
+    for (const propiedadEliminar of propiedadesEliminar) {
+      delete usuario[propiedadEliminar];
+    }
+    return usuario;
+  }
+
+  async loginEmail(loginEmailDto: LoginEmailDto): Promise<Usuario | NoUsuario> {
+    let resultado;
+    let resultadoNoExiste = {
+      message: 'No existe usuario',
+      statusCode: 200
+    };
+    try {
+      const resultadoUsuario: UsuarioDocument = await this.usuarioModel.findOne({ correoElectronico: loginEmailDto.correoElectronico }).exec();
+      if(!resultadoUsuario) {
+        return resultadoNoExiste;
+      }
+      const compararContrasena = await CompararContrasena(loginEmailDto.contrasena, resultadoUsuario.contrasena);
+      resultado = compararContrasena ? this.eliminarPropiedades(resultadoUsuario.toObject()) : resultadoNoExiste;
+    } catch(error) {
+      console.log(error);
+      throw new BadRequestException(`Error al tratar de iniciar sesión con el email::${error.message}`);
     }
     return resultado;
   }
