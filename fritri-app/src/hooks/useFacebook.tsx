@@ -29,7 +29,7 @@ export const useFacebook = () => {
         const informacionUsuario: IUsuarioFacebook = obtenerInformacion();
         let request = {
           method: 'post',
-          url: `http://192.168.0.4:3001/usuarios/login-terceros`,
+          url: `http://IP:3001/usuarios/login-terceros`,
           headers: {},
           data: informacionUsuario
         };
