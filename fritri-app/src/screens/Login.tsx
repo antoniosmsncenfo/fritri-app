@@ -50,6 +50,17 @@ const Login = () => {
       password: regex.password.test(login.password),
     }));
   }, [login, setIsValid]);
+  useEffect(() => {
+    console.log("Fetch!");
+    fetch('http:/192.168.1.3:3000/usuarios/findAll').then((response) => {
+      console.log(response);
+      response.json().then((data) => {
+          console.log(data);
+      });
+  });
+  }, []);
+
+  
 
   return (
     <Block safe marginTop={sizes.md}>
