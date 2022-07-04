@@ -29,8 +29,13 @@
     "namePlaceholder": "Enter your full name",
     "email": "Email",
     "emailPlaceholder": "Enter your email address",
+    "gender": "Gender",
+    "country": "Country",
+    "avatar": "Picture",
     "password": "Password",
     "passwordPlaceholder": "Enter a password",
+    "confirmPassword": "Confirm Password",    
+    "confirmPasswordPlaceholder": "Enter the same password",
     "agree": "I agree with the ",
     "terms": "Terms and Conditions",
     "signup": "Sign Up",
@@ -108,8 +113,8 @@
     "contactUs": "Contact us"
   },
   "register": {
-    "title": "Welcome",
-    "subtitle": "Register with"
+    "title": "Welcome to FriTri",
+    "subtitle": "Register with email"
   },
   "login": {
     "title": "Welcome",

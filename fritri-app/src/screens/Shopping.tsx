@@ -37,7 +37,7 @@ const ShoppingItem = ({
         <Image source={assets.close} color={colors.gray} />
       </Button>
       <Block row>
-        <Image width={97} radius={sizes.s} source={{uri: image}} />
+        <Image width={100} radius={sizes.s} source={{uri: image}} />
         <Block marginLeft={sizes.sm}>
           <Text p semibold>
             {title}
