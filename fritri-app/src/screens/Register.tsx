@@ -113,6 +113,8 @@ const Register = () => {
   const handleChange = useCallback(
     (value) => {
       setRegistration((state) => ({...state, ...value}));
+
+      setModal(undefined);
     },
     [setRegistration],
   );
@@ -287,13 +289,13 @@ const Register = () => {
                 />
                 <TouchableInput
                   icon="users"
-                  value={gender}
+                  value={registration.gender}
                   label={t('common.gender')}
                   onPress={() => setModal('gender')}
                 />
                 <TouchableInput
                   icon="home"
-                  value={country}
+                  value={registration.country}
                   label={t('common.country')}
                   onPress={() => setModal('country')}
                 />
@@ -405,8 +407,10 @@ const Register = () => {
                 marginBottom={sizes.sm}
                 onPress={() =>
                   modal === 'gender'
-                    ? handleGender(GENDER_TYPES[item])
-                    : handleCountry(COUNTRIES[item])
+                    //? handleGender(GENDER_TYPES[item])
+                    //: handleCountry(COUNTRIES[item])
+                    ? handleChange({gender: GENDER_TYPES[item]})
+                    : handleChange({country: COUNTRIES[item]})
                 }>
                 <Text p white semibold transform="uppercase">
                   {modal === 'gender' ? GENDER_TYPES[item] : COUNTRIES[item]}
