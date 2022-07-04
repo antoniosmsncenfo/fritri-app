@@ -28,7 +28,7 @@ export class UsuariosController {
     return this.usuariosService.delete(id);
   }
 
-  @Post('login-facebook')
+  @Post('login-terceros')
   async loginTerceros(@Body() loginTercerosDto: LoginTercerosDto) {
     await this.usuariosService.loginTerceros(loginTercerosDto);
   }
