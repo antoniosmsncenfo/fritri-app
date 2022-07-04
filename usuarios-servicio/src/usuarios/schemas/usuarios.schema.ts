@@ -12,11 +12,17 @@ export class Usuario {
 	})
 	tipoLogin: string;
 
-	@Prop()
+	@Prop({
+		unique: true,
+		index: true
+	})
 	correoElectronico: string;
 
 	@Prop()
 	contrasena: string;
+
+	@Prop()
+	salt: string;
 
 	@Prop({
 		required: true,
