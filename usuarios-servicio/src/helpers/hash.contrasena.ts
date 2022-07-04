@@ -6,7 +6,6 @@ export const HashContrasena = async (contrasena) => {
   const hash = await bcrypt.hash(contrasena, salt);
   return {
     hash,
-    salt
   }
 }
 

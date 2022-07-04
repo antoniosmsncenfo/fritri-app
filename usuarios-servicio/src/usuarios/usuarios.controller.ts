@@ -9,6 +9,7 @@ export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
   @Post('crear-usuario')
+  @HttpCode(200)
   async create(@Body() crearUsuariosDto: CrearUsuariosDto) {
     await this.usuariosService.create(crearUsuariosDto);
   }

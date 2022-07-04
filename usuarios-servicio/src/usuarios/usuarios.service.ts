@@ -17,16 +17,12 @@ export class UsuariosService {
   async create(crearUsuarioDto: CrearUsuariosDto): Promise<Usuario> {
     let resultado;
     try {
-      const { hash, salt } = await HashContrasena(crearUsuarioDto.contrasena);
+      const { hash } = await HashContrasena(crearUsuarioDto.contrasena);
       crearUsuarioDto = {
         ...crearUsuarioDto,
         contrasena: hash
       }
-      const guardarUsuario = {
-        ...crearUsuarioDto,
-        salt
-      }
-      resultado = await this.usuarioModel.create(guardarUsuario);
+      resultado = await this.usuarioModel.create(crearUsuarioDto);
     } catch(error) {
       throw new BadRequestException(`Error al tratar de crear el usuario-email::${error.message}`);
     }
