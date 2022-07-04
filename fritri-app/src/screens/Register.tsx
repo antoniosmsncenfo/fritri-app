@@ -4,22 +4,87 @@ import {useNavigation} from '@react-navigation/core';
 
 import {useData, useTheme, useTranslation} from '../hooks/';
 import * as regex from '../constants/regex';
-import {Block, Button, Input, Image, Text, Checkbox} from '../components/';
+import {Block, Button, Input, Image, Text, Checkbox, Modal} from '../components/';
+import { ITheme } from '../constants/types';
+import { FlatList } from 'react-native-gesture-handler';
 
 const isAndroid = Platform.OS === 'android';
 
 interface IRegistration {
   name: string;
   email: string;
+  gender: string;
+  country: string;
+  photo: string;
   password: string;
+  confirmPassword: string;
   agreed: boolean;
 }
 interface IRegistrationValidation {
   name: boolean;
   email: boolean;
   password: boolean;
+  confirmPassword: boolean;
   agreed: boolean;
 }
+
+interface ITouchableInput {
+  icon: keyof ITheme['assets'];
+  label?: string;
+  value?: number | string;
+  onPress?: () => void;
+}
+
+const GENDER_TYPES: {
+  [key: string]: string;
+} = {'1': 'Mujer', '2': 'Hombre', '3': 'Otro'};
+
+const COUNTRIES: {
+  [key: string]: string;
+} = {'1': 'Costa Rica', '2': 'Nicaragua', 
+      '3': 'Panamá', '4': 'Guatemala', 
+      '5': 'El Salvador'};
+
+const options = {
+  title: 'Selecciona foto de perfil',
+  cancelButton: 'Cancelar',
+  takePhotoButtonTitle: 'Tomar Foto',
+  chooseFromLibraryButtonTitle: 'Abrir Galeria',
+  noData: true,
+};
+
+const TouchableInput = ({label, value, icon, onPress}: ITouchableInput) => {
+  const {assets, colors, sizes} = useTheme();
+
+  return (
+    <Button
+      align="flex-start"
+      marginBottom={sizes.sm}
+      onPress={() => onPress?.()}>
+      <Text bold marginBottom={sizes.s}>
+        {label}
+      </Text>
+      <Block
+        row
+        gray
+        outlined
+        width="100%"
+        align="center"
+        radius={sizes.inputRadius}
+        height={sizes.inputHeight}>
+        <Image
+          radius={0}
+          color={colors.icon}
+          source={assets?.[icon]}
+          marginHorizontal={sizes.inputPadding}
+        />
+        <Text p gray>
+          {value}
+        </Text>
+      </Block>
+    </Button>
+  );
+};
 
 const Register = () => {
   const {isDark} = useData();
@@ -29,19 +94,35 @@ const Register = () => {
     name: false,
     email: false,
     password: false,
-    agreed: false,
+    confirmPassword: false,
+    agreed: true,
   });
   const [registration, setRegistration] = useState<IRegistration>({
     name: '',
     email: '',
+    gender: GENDER_TYPES['1'],
+    country: COUNTRIES['1'],
+    photo:'',
     password: '',
-    agreed: false,
+    confirmPassword: '',
+    agreed: true,
   });
+
+  const [gender, setGender] = useState(GENDER_TYPES['1']);
+
+  const [country, setCountry] = useState(COUNTRIES['1']);
+
+  const [modal, setModal] = useState<
+    'gender' | 'country' |  undefined
+  >();
+
   const {assets, colors, gradients, sizes} = useTheme();
 
   const handleChange = useCallback(
     (value) => {
       setRegistration((state) => ({...state, ...value}));
+
+      setModal(undefined);
     },
     [setRegistration],
   );
@@ -53,12 +134,31 @@ const Register = () => {
     }
   }, [isValid, registration]);
 
+  const handleGender = useCallback(
+    (value: string) => {
+      setGender(value);
+      // hide modal / reset modal state
+      setModal(undefined);
+    },
+    [setGender, setModal],
+  );
+
+  const handleCountry = useCallback(
+    (value: string) => {
+      setCountry(value);
+      // hide modal / reset modal state
+      setModal(undefined);
+    },
+    [setCountry, setModal],
+  );
+
   useEffect(() => {
     setIsValid((state) => ({
       ...state,
       name: regex.name.test(registration.name),
       email: regex.email.test(registration.email),
       password: regex.password.test(registration.password),
+      confirmPassword: registration.confirmPassword===registration.password,
       agreed: registration.agreed,
     }));
   }, [registration, setIsValid]);
@@ -74,7 +174,7 @@ const Register = () => {
             radius={sizes.cardRadius}
             source={assets.background}
             height={sizes.height * 0.3}>
-            <Button
+            {/* <Button
               row
               flex={0}
               justify="flex-start"
@@ -90,9 +190,9 @@ const Register = () => {
               <Text p white marginLeft={sizes.s}>
                 {t('common.goBack')}
               </Text>
-            </Button>
+            </Button> */}
 
-            <Text h4 center white marginBottom={sizes.md}>
+            <Text h4 center white marginTop={20}>
               {t('register.title')}
             </Text>
           </Image>
@@ -101,7 +201,7 @@ const Register = () => {
         <Block
           keyboard
           behavior={!isAndroid ? 'padding' : 'height'}
-          marginTop={-(sizes.height * 0.2 - sizes.l)}>
+          marginTop={-(sizes.height * 0.25 - sizes.l)}>
           <Block
             flex={0}
             radius={sizes.sm}
@@ -111,7 +211,7 @@ const Register = () => {
             <Block
               blur
               flex={0}
-              intensity={90}
+              intensity={150}
               radius={sizes.sm}
               overflow="hidden"
               justify="space-evenly"
@@ -121,7 +221,7 @@ const Register = () => {
                 {t('register.subtitle')}
               </Text>
               {/* social buttons */}
-              <Block row center justify="space-evenly" marginVertical={sizes.m}>
+              {/* <Block row center justify="space-evenly" marginVertical={sizes.m}>
                 <Button outlined gray shadow={!isAndroid}>
                   <Image
                     source={assets.facebook}
@@ -173,7 +273,7 @@ const Register = () => {
                   start={[1, 0]}
                   gradient={gradients.divider}
                 />
-              </Block>
+              </Block> */}
               {/* form inputs */}
               <Block paddingHorizontal={sizes.sm}>
                 <Input
@@ -195,6 +295,51 @@ const Register = () => {
                   danger={Boolean(registration.email && !isValid.email)}
                   onChangeText={(value) => handleChange({email: value})}
                 />
+                <TouchableInput
+                  icon="users"
+                  value={registration.gender}
+                  label={t('common.gender')}
+                  onPress={() => setModal('gender')}
+                />
+                <TouchableInput
+                  icon="home"
+                  value={registration.country}
+                  label={t('common.country')}
+                  onPress={() => setModal('country')}
+                />
+                <TouchableInput
+                  icon="more"
+                  value={"Me.jpg"}
+                  label={t('common.avatar')}
+                  onPress={() => setModal(undefined)}
+                />                                                 
+                {/* 
+                <Text bold marginBottom={sizes.s}>
+                  {t('common.gender')}
+                </Text>                
+                <Button
+                  row
+                  flex={1}
+                  gradient={gradients.primary}
+                  //marginRight={sizes.s}
+                  //onPress={() => onQTY?.()}
+                  marginBottom={sizes.s}
+                  >
+                  <Block
+                    row
+                    align="center"
+                    justify="space-between"
+                    paddingHorizontal={sizes.sm}>
+                    <Text bold white transform="uppercase" marginRight={sizes.sm}>
+                      {registration.gender}
+                    </Text>
+                    <Image
+                      source={assets.arrow}
+                      color={colors.white}
+                      transform={[{rotate: '90deg'}]}
+                    />
+                  </Block>
+                </Button>                 */}
                 <Input
                   secureTextEntry
                   autoCapitalize="none"
@@ -205,9 +350,19 @@ const Register = () => {
                   success={Boolean(registration.password && isValid.password)}
                   danger={Boolean(registration.password && !isValid.password)}
                 />
+                <Input
+                  secureTextEntry
+                  autoCapitalize="none"
+                  marginBottom={sizes.m}
+                  label={t('common.confirmPassword')}
+                  placeholder={t('common.confirmPasswordPlaceholder')}
+                  onChangeText={(value) => handleChange({confirmPassword: value})}
+                  success={Boolean(registration.confirmPassword && isValid.confirmPassword)}
+                  danger={Boolean(registration.confirmPassword && !isValid.confirmPassword)}
+                />                
               </Block>
               {/* checkbox terms */}
-              <Block row flex={0} align="center" paddingHorizontal={sizes.sm}>
+              {/* <Block row flex={0} align="center" paddingHorizontal={sizes.sm}>
                 <Checkbox
                   marginRight={sizes.sm}
                   checked={registration?.agreed}
@@ -223,7 +378,7 @@ const Register = () => {
                     {t('common.terms')}
                   </Text>
                 </Text>
-              </Block>
+              </Block> */}
               <Button
                 onPress={handleSignUp}
                 marginVertical={sizes.s}
@@ -234,7 +389,7 @@ const Register = () => {
                   {t('common.signup')}
                 </Text>
               </Button>
-              <Button
+              {/* <Button
                 primary
                 outlined
                 shadow={!isAndroid}
@@ -244,11 +399,34 @@ const Register = () => {
                 <Text bold primary transform="uppercase">
                   {t('common.signin')}
                 </Text>
-              </Button>
+              </Button> */}
             </Block>
           </Block>
         </Block>
       </Block>
+      <Modal
+        visible={Boolean(modal)}
+        onRequestClose={() => setModal(undefined)}>
+          <FlatList
+            keyExtractor={(index) => `${index}`}
+            data={modal === 'gender' ? [1, 2, 3] : [1, 2, 3, 5]}
+            renderItem={({item}) => (
+              <Button
+                marginBottom={sizes.sm}
+                onPress={() =>
+                  modal === 'gender'
+                    //? handleGender(GENDER_TYPES[item])
+                    //: handleCountry(COUNTRIES[item])
+                    ? handleChange({gender: GENDER_TYPES[item]})
+                    : handleChange({country: COUNTRIES[item]})
+                }>
+                <Text p white semibold transform="uppercase">
+                  {modal === 'gender' ? GENDER_TYPES[item] : COUNTRIES[item]}
+                </Text>
+              </Button>
+            )}
+          />
+      </Modal>      
     </Block>
   );
 };
