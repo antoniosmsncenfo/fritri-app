@@ -15,18 +15,13 @@ export class Usuario {
 	@Prop()
 	correoElectronico: string;
 
-	@Prop({
-		required: true,
-	})
+	@Prop()
 	contrasena: string;
 
 	@Prop({
 		required: true,
 	})
-	nombre: string;
-
-	@Prop()
-	apellidos: string;
+	nombreCompleto: string;
 
 	@Prop()
 	urlFoto: string;
@@ -45,6 +40,9 @@ export class Usuario {
 
 	@Prop()
 	idTerceros: string;
+
+	@Prop()
+	token: string;
 }
 
 
