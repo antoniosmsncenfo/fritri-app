@@ -5,6 +5,7 @@ import { BadRequestException } from  '@nestjs/common';
 import { Usuario, UsuarioDocument } from './schemas/usuarios.schema';
 import { CrearUsuariosDto } from './dto/crear-usuarios.dto';
 import { LoginTercerosDto } from './dto/login-terceros.dto';
+import { HashContrasena } from '../helpers/hash.contrasena';
 
 
 @Injectable()
@@ -13,9 +14,23 @@ export class UsuariosService {
     @InjectModel(Usuario.name) private readonly usuarioModel: Model<UsuarioDocument>,
   ) {}
 
-  async create(crearUsuariosDto: CrearUsuariosDto): Promise<Usuario> {
-    const createdPaseo = await this.usuarioModel.create(crearUsuariosDto);
-    return createdPaseo;
+  async create(crearUsuarioDto: CrearUsuariosDto): Promise<Usuario> {
+    let resultado;
+    try {
+      const { hash, salt } = await HashContrasena(crearUsuarioDto.contrasena);
+      crearUsuarioDto = {
+        ...crearUsuarioDto,
+        contrasena: hash
+      }
+      const guardarUsuario = {
+        ...crearUsuarioDto,
+        salt
+      }
+      resultado = await this.usuarioModel.create(guardarUsuario);
+    } catch(error) {
+      throw new BadRequestException(`Error al tratar de crear el usuario-email::${error.message}`);
+    }
+    return resultado;
   }
 
   async findAll(): Promise<Usuario[]> {
