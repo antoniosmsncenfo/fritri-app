@@ -6,10 +6,10 @@ export class LoginTercerosDto {
 
   readonly correoElectronico?: string;
 
-  readonly contrasena: string;
-
-  readonly nombre: string;
+  readonly nombreCompleto: string;
 
   readonly urlFoto?: string
+
+  readonly token: string
 
 }

@@ -6,11 +6,7 @@ export class CrearUsuariosDto {
 
   readonly contrasena: string;
 
-  readonly nombre: string;
-
-  readonly apellidos: string;
-
-  readonly urlFoto?: string
+  readonly nombreCompleto: string;
 
   readonly genero: number;
 
