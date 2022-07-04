@@ -1,11 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Linking, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
-import * as Facebook from 'expo-facebook';
 
 import {useData, useTheme, useTranslation} from '../hooks';
 import * as regex from '../constants/regex';
 import {Block, Button, Input, Image, Text, Checkbox} from '../components';
+import { useFacebook } from '../hooks/useFacebook';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -36,10 +36,6 @@ const LoginFacebook = () => {
   });
   const {assets, colors, gradients, sizes} = useTheme();
 
-  const [ isLoggedIn, setIsLoggedIn ] = useState(false);
-  const [ userDate, setUserData ] = useState(null); // TODO: Add interface
-  const [ isImageLoading, setImageLoadStatus ] = useState(false);
-
   const handleChange = useCallback(
     (value) => {
       setLoginData((state) => ({...state, ...value}));
@@ -52,41 +48,7 @@ const LoginFacebook = () => {
     console.log('handleSignIn', login);
   }, [login]);
 
-  const handleOnClickLoginFacebook = () => {
-    console.log('click facebook');
-  };
-
-  const facebookLogin = async () => {
-    try {
-      await Facebook.initializeAsync({
-        appId: '624952212446449'
-      });
-      const loginResponse = await Facebook.logInWithReadPermissionsAsync({
-        permissions: ['public_profile']
-      });
-      console.log(loginResponse);
-      const { type } = loginResponse;
-      if(type === 'success') {
-        fetch(`https://graph.facebook.com/me?access_token=${loginResponse.token}&fields=id,name,email,picture.height(500)`)
-        .then(res => res.json())
-        .then(data => {
-          setIsLoggedIn(true);
-          setUserData(data);
-        })
-        .catch(e => console.log(e))
-      }
-    } catch(error) {
-      console.log('error login facebook');
-      console.log(error);
-      // TODO: Show error on screen
-    }
-  }
-
-  const facebookLogout = () => {
-    setIsLoggedIn(false);
-    setUserData(null);
-    setImageLoadStatus(false);
-  }
+  const {facebookLogin, facebookLogout, userData, isLoggedIn} = useFacebook();
 
   useEffect(() => {
     setIsValid((state) => ({
