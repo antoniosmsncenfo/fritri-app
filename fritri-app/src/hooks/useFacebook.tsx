@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import * as Facebook from 'expo-facebook';
 import axios from 'axios';
-import { IUsuarioFacebook } from '../interfaces/usuario-facebook';
+import { IUsuarioDeTerceros } from '../interfaces/usuario-facebook';
 import { IRespuestaFacebook } from '../interfaces/respuesta-facebook';
 import { useEffect } from 'react';
 
@@ -26,7 +26,7 @@ export const useFacebook = () => {
   const guardarUsuario = async () => {
     try {
       if(userData.id) {
-        const informacionUsuario: IUsuarioFacebook = obtenerInformacion();
+        const informacionUsuario: IUsuarioDeTerceros = obtenerInformacion();
         let request = {
           method: 'post',
           url: `http://IP:3001/usuarios/login-terceros`,
@@ -45,7 +45,7 @@ export const useFacebook = () => {
     }
   }
 
-  const obtenerInformacion = (): IUsuarioFacebook => {
+  const obtenerInformacion = (): IUsuarioDeTerceros => {
     const { name, id, picture } = userData;
     return {
       idTerceros: id,

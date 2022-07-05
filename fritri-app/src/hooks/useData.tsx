@@ -139,6 +139,7 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
     theme,
     setTheme,
     user,
+    setUser,
     users,
     handleUsers,
     handleUser,
