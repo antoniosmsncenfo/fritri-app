@@ -53,7 +53,7 @@ export class UsuariosService {
         new: true,
         upsert: true
       }).exec();
-      resultado = resultadoUsuario;
+      resultado = this.eliminarPropiedades(resultadoUsuario.toObject());
     } catch(error) {
       console.log(error);
       throw new BadRequestException(`Error al tratar de crear el usuario::${error.message}`);
