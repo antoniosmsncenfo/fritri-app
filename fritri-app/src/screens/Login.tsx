@@ -74,11 +74,6 @@ const Login = () => {
     signInWithGoogleAsync();
   };
 
-  const loginFacebookUser = () => {
-    facebookLogout();
-    facebookLogin();
-  };
-
   return (
     <Block safe marginTop={sizes.md}>
       <Block paddingHorizontal={sizes.s}>
@@ -137,9 +132,7 @@ const Login = () => {
               </Text>
               {/* social buttons */}
               <Block row center justify="space-evenly" marginVertical={sizes.m}>
-                <Button outlined gray shadow={!isAndroid}
-                  onPress={loginFacebookUser}
-                >
+                <Button outlined gray shadow={!isAndroid}>
                   <Image
                     source={assets.facebook}
                     height={sizes.m}
