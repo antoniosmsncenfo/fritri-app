@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Linking, Platform} from 'react-native';
+import {Linking, Platform, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 
 import {useData, useTheme, useTranslation} from '../hooks/';
@@ -7,6 +7,7 @@ import * as regex from '../constants/regex';
 import {Block, Button, Input, Image, Text, Checkbox, Modal} from '../components/';
 import { ITheme } from '../constants/types';
 import { FlatList } from 'react-native-gesture-handler';
+import { useUsuario } from '../hooks/useUsuario';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -105,18 +106,21 @@ const Register = () => {
     photo:'',
     password: '',
     confirmPassword: '',
-    agreed: true,
+    agreed: true
   });
 
   const [gender, setGender] = useState(GENDER_TYPES['1']);
 
   const [country, setCountry] = useState(COUNTRIES['1']);
 
+  const {registrarUsuario} = useUsuario();
+
   const [modal, setModal] = useState<
     'gender' | 'country' |  undefined
   >();
 
   const {assets, colors, gradients, sizes} = useTheme();
+
 
   const handleChange = useCallback(
     (value) => {
@@ -131,6 +135,30 @@ const Register = () => {
     if (!Object.values(isValid).includes(false)) {
       /** send/save registratin data */
       console.log('handleSignUp', registration);
+      
+      registrarUsuario({
+        tipoLogin: 'Email',
+        correoElectronico: registration.email,
+        contrasena: registration.password,
+        nombreCompleto: registration.name,
+        genero: registration.gender,
+        pais: registration.country
+      })
+
+      Alert.alert(
+        t('register.welcome'),
+        t('register.success'),
+        [
+          {text: 'OK', onPress: () => {
+            console.log('OK button clicked');
+            navigation.navigate('Home');},
+          }
+        ],
+        { 
+          cancelable: false 
+        }
+      );
+      
     }
   }, [isValid, registration]);
 
