@@ -1,10 +1,12 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {Linking, Platform} from 'react-native';
-import {useNavigation} from '@react-navigation/core';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Linking, Platform, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/core';
 
-import {useData, useTheme, useTranslation} from '../hooks/';
+import { useData, useTheme, useTranslation } from '../hooks/';
 import * as regex from '../constants/regex';
-import {Block, Button, Input, Image, Text, Checkbox} from '../components/';
+import { Block, Button, Input, Image, Text, Checkbox } from '../components/';
+import { useLogin } from '../hooks/useUsuario';
+import { email } from '../constants/regex';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -18,9 +20,11 @@ interface ILoginValidation {
 }
 
 const Login = () => {
-  const {isDark} = useData();
-  const {t} = useTranslation();
+  const { isDark } = useData();
+  const { t } = useTranslation();
   const navigation = useNavigation();
+  const { loginUsuarioEmail } = useLogin();
+
   const [isValid, setIsValid] = useState<ILoginValidation>({
     email: false,
     password: false,
@@ -29,19 +33,62 @@ const Login = () => {
     email: '',
     password: '',
   });
-  const {assets, colors, gradients, sizes} = useTheme();
+  const { assets, colors, gradients, sizes } = useTheme();
 
   const handleChange = useCallback(
     (value) => {
-      setLoginData((state) => ({...state, ...value}));
+      setLoginData((state) => ({ ...state, ...value }));
     },
     [setLoginData],
   );
 
   const handleSignIn = useCallback(() => {
-    /** send/save registratin data */
     console.log('handleSignIn', login);
-  }, [login]);
+    loginUsuarioEmail({
+      correoElectronico: login.email,
+      contrasena: login.password,
+
+    })
+    if (!Object.values(isValid).includes(false) && Object.values(login).includes(''))  {
+
+      Alert.alert(
+        'Favor intente nuevamente',
+        'Correo o clave invalidos',
+        [
+          {
+            text: 'OK', onPress: () => {
+              console.log('OK button clicked');
+              navigation.navigate('Login');
+            },
+          }
+        ],
+        {
+          cancelable: false
+        }
+      );
+
+    // } else {
+    //   Alert.alert(
+    //     'Bienvenido',
+    //     'Ha iniciado sesión en FriTri APP',
+    //     [
+    //       {
+    //         text: 'OK', onPress: () => {
+    //           console.log('OK button clicked');
+    //           navigation.navigate('Home');
+    //         },
+    //       }
+    //     ],
+    //     {
+    //       cancelable: false
+    //     }
+    //   );
+    }
+  }, [isValid, login]);
+
+
+
+
 
   useEffect(() => {
     setIsValid((state) => ({
@@ -55,17 +102,17 @@ const Login = () => {
     fetch('http:/192.168.1.3:3000/usuarios/findAll').then((response) => {
       console.log(response);
       response.json().then((data) => {
-          console.log(data);
+        console.log(data);
       });
-  });
+    });
   }, []);
 
-  
+
 
   return (
     <Block safe marginTop={sizes.md}>
       <Block paddingHorizontal={sizes.s}>
-        <Block flex={0} style={{zIndex: 0}}>
+        <Block flex={0} style={{ zIndex: 0 }}>
           <Image
             background
             resizeMode="cover"
@@ -182,7 +229,7 @@ const Login = () => {
                   placeholder={t('common.emailPlaceholder')}
                   success={Boolean(login.email && isValid.email)}
                   danger={Boolean(login.email && !isValid.email)}
-                  onChangeText={(value) => handleChange({email: value})}
+                  onChangeText={(value) => handleChange({ email: value })}
                 />
                 <Input
                   secureTextEntry
@@ -190,7 +237,7 @@ const Login = () => {
                   autoCapitalize="none"
                   marginBottom={sizes.m}
                   placeholder={t('common.passwordPlaceholder')}
-                  onChangeText={(value) => handleChange({password: value})}
+                  onChangeText={(value) => handleChange({ password: value })}
                   success={Boolean(login.password && isValid.password)}
                   danger={Boolean(login.password && !isValid.password)}
                 />
@@ -233,7 +280,7 @@ const Login = () => {
                 <Text bold primary transform="uppercase">
                   {t('common.signup')}
                 </Text>
-              </Button>              
+              </Button>
             </Block>
           </Block>
         </Block>
