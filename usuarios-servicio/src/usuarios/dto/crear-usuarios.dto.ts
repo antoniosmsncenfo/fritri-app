@@ -8,8 +8,8 @@ export class CrearUsuariosDto {
 
   readonly nombreCompleto: string;
 
-  readonly genero: number;
+  readonly genero: string;
 
-  readonly pais: number;
+  readonly pais: string;
 
 }
