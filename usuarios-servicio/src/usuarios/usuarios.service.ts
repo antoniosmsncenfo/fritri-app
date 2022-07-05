@@ -23,7 +23,12 @@ export class UsuariosService {
         ...crearUsuarioDto,
         contrasena: hash
       }
-      resultado = await this.usuarioModel.create(crearUsuarioDto);
+      const resultadoUsuario = await this.usuarioModel.findOne({ correoElectronico: crearUsuarioDto.correoElectronico }).exec();
+      if(!resultadoUsuario) {
+        resultado = await this.usuarioModel.create(crearUsuarioDto);
+      } else {
+        throw new Error('Email duplicado');
+      }
     } catch(error) {
       throw new BadRequestException(`Error al tratar de crear el usuario-email::${error.message}`);
     }
