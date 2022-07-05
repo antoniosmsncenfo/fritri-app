@@ -1,44 +1,44 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Linking, Platform } from 'react-native';
-import { useNavigation } from '@react-navigation/core';
+import React, {useCallback, useEffect, useState} from 'react';
+import {Linking, Platform} from 'react-native';
+import {useNavigation} from '@react-navigation/core';
 
-import { useData, useTheme, useTranslation } from '../hooks/';
+import {useData, useTheme, useTranslation} from '../hooks';
 import * as regex from '../constants/regex';
-import { Block, Button, Input, Image, Text, Checkbox } from '../components/';
-import { useGoogleLogin } from '../hooks/useGoogleLogin';
+import {Block, Button, Input, Image, Text, Checkbox} from '../components';
+import { useFacebook } from '../hooks/useFacebook';
 
 const isAndroid = Platform.OS === 'android';
 
 interface ILogin {
   email: string;
   password: string;
+  agreed: boolean;
 }
 interface ILoginValidation {
   email: boolean;
   password: boolean;
+  agreed: boolean;
 }
 
-const Login = () => {
-  const { isDark } = useData();
-  const { t } = useTranslation();
+const LoginFacebook = () => {
+  const {isDark} = useData();
+  const {t} = useTranslation();
   const navigation = useNavigation();
   const [isValid, setIsValid] = useState<ILoginValidation>({
     email: false,
     password: false,
+    agreed: false,
   });
   const [login, setLoginData] = useState<ILogin>({
     email: '',
     password: '',
+    agreed: false,
   });
-
-
-  const { assets, colors, gradients, sizes } = useTheme();
-
-  const { isGoogleUserLogged, signInWithGoogleAsync, googleUser } = useGoogleLogin();
+  const {assets, colors, gradients, sizes} = useTheme();
 
   const handleChange = useCallback(
     (value) => {
-      setLoginData((state) => ({ ...state, ...value }));
+      setLoginData((state) => ({...state, ...value}));
     },
     [setLoginData],
   );
@@ -48,22 +48,21 @@ const Login = () => {
     console.log('handleSignIn', login);
   }, [login]);
 
+  const {facebookLogin, facebookLogout, userData, isLoggedIn} = useFacebook();
+
   useEffect(() => {
     setIsValid((state) => ({
       ...state,
       email: regex.email.test(login.email),
       password: regex.password.test(login.password),
+      agreed: login.agreed,
     }));
   }, [login, setIsValid]);
-
-  useEffect(() => {
-    console.log(`Usuario ${isGoogleUserLogged ? 'sí' : 'no'} inició sesión con Google`);
-  }, [isGoogleUserLogged]);
 
   return (
     <Block safe marginTop={sizes.md}>
       <Block paddingHorizontal={sizes.s}>
-        <Block flex={0} style={{ zIndex: 0 }}>
+        <Block flex={0} style={{zIndex: 0}}>
           <Image
             background
             resizeMode="cover"
@@ -71,7 +70,7 @@ const Login = () => {
             radius={sizes.cardRadius}
             source={assets.background}
             height={sizes.height * 0.3}>
-            {/* <Button
+            <Button
               row
               flex={0}
               justify="flex-start"
@@ -82,12 +81,13 @@ const Login = () => {
                 height={18}
                 color={colors.white}
                 source={assets.arrow}
-                transform={[{ rotate: '180deg' }]}
+                transform={[{rotate: '180deg'}]}
               />
               <Text p white marginLeft={sizes.s}>
                 {t('common.goBack')}
               </Text>
-            </Button> */}
+            </Button>
+
             <Text h4 center white marginBottom={sizes.md}>
               {t('login.title')}
             </Text>
@@ -118,7 +118,7 @@ const Login = () => {
               </Text>
               {/* social buttons */}
               <Block row center justify="space-evenly" marginVertical={sizes.m}>
-                <Button outlined gray shadow={!isAndroid}>
+                <Button outlined gray shadow={!isAndroid} onPress={() => facebookLogin()}>
                   <Image
                     source={assets.facebook}
                     height={sizes.m}
@@ -126,7 +126,7 @@ const Login = () => {
                     color={isDark ? colors.icon : undefined}
                   />
                 </Button>
-                {/* <Button outlined gray shadow={!isAndroid}>
+                <Button outlined gray shadow={!isAndroid}>
                   <Image
                     source={assets.apple}
                     height={sizes.m}
@@ -134,13 +134,7 @@ const Login = () => {
                     color={isDark ? colors.icon : undefined}
                   />
                 </Button>
-                <Button outlined gray shadow={!isAndroid}
-                  onPress={signInWithGoogleAsync}
-                >
-                </Button> */}
-                <Button outlined gray shadow={!isAndroid}
-                onPress={signInWithGoogleAsync}
-                >
+                <Button outlined gray shadow={!isAndroid}>
                   <Image
                     source={assets.google}
                     height={sizes.m}
@@ -186,7 +180,7 @@ const Login = () => {
                   placeholder={t('common.emailPlaceholder')}
                   success={Boolean(login.email && isValid.email)}
                   danger={Boolean(login.email && !isValid.email)}
-                  onChangeText={(value) => handleChange({ email: value })}
+                  onChangeText={(value) => handleChange({email: value})}
                 />
                 <Input
                   secureTextEntry
@@ -194,17 +188,17 @@ const Login = () => {
                   autoCapitalize="none"
                   marginBottom={sizes.m}
                   placeholder={t('common.passwordPlaceholder')}
-                  onChangeText={(value) => handleChange({ password: value })}
+                  onChangeText={(value) => handleChange({password: value})}
                   success={Boolean(login.password && isValid.password)}
                   danger={Boolean(login.password && !isValid.password)}
                 />
               </Block>
               {/* checkbox terms */}
-              {/* <Block row flex={0} align="center" paddingHorizontal={sizes.sm}>
+              <Block row flex={0} align="center" paddingHorizontal={sizes.sm}>
                 <Checkbox
                   marginRight={sizes.sm}
                   checked={login?.agreed}
-                  onPress={(value) => handleChange({ agreed: value })}
+                  onPress={(value) => handleChange({agreed: value})}
                 />
                 <Text paddingRight={sizes.s}>
                   {t('common.agree')}
@@ -216,7 +210,7 @@ const Login = () => {
                     {t('common.terms')}
                   </Text>
                 </Text>
-              </Block> */}
+              </Block>
               <Button
                 onPress={handleSignIn}
                 marginVertical={sizes.s}
@@ -227,17 +221,6 @@ const Login = () => {
                   {t('common.signin')}
                 </Text>
               </Button>
-              <Button
-                primary
-                outlined
-                shadow={!isAndroid}
-                marginVertical={sizes.s}
-                marginHorizontal={sizes.sm}
-                onPress={() => navigation.navigate('Register')}>
-                <Text bold primary transform="uppercase">
-                  {t('common.signup')}
-                </Text>
-              </Button>
             </Block>
           </Block>
         </Block>
@@ -246,4 +229,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginFacebook;

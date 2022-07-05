@@ -127,3 +127,5 @@ yarn-debug.log*
 yarn-error.log*
 package-lock.json
 **/package-lock.json
+fritri-app/src/secrets/googleSecrets.tsx
+fritri-app/yarn.lock
