@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/core';
 
 import {Block, Button, Image, Text} from '../components/';
 import {useData, useTheme, useTranslation} from '../hooks/';
+import { email } from '../constants/regex';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -82,7 +83,7 @@ const Profile = () => {
               <Text p center white>
                 {user?.department}
               </Text>
-              <Block row marginVertical={sizes.m}>
+              {/* <Block row marginVertical={sizes.m}>
                 <Button
                   white
                   outlined
@@ -114,7 +115,7 @@ const Profile = () => {
                     color={colors.white}
                   />
                 </Button>
-                <Button
+                 <Button
                   shadow={false}
                   radius={sizes.m}
                   color="rgba(255,255,255,0.2)"
@@ -126,12 +127,12 @@ const Profile = () => {
                     color={colors.white}
                   />
                 </Button>
-              </Block>
+              </Block> */}
             </Block>
           </Image>
 
           {/* profile: stats */}
-          <Block
+          {/* <Block
             flex={0}
             radius={sizes.sm}
             shadow={!isAndroid} // disabled shadow on Android due to blur overlay + elevation issue
@@ -164,7 +165,7 @@ const Profile = () => {
             </Block>
           </Block>
 
-          {/* profile: about me */}
+
           <Block paddingHorizontal={sizes.sm}>
             <Text h5 semibold marginBottom={sizes.s} marginTop={sizes.sm}>
               {t('profile.aboutMe')}
@@ -174,7 +175,7 @@ const Profile = () => {
             </Text>
           </Block>
 
-          {/* profile: photo album */}
+
           <Block paddingHorizontal={sizes.sm} marginTop={sizes.s}>
             <Block row align="center" justify="space-between">
               <Text h5 semibold>
@@ -215,7 +216,7 @@ const Profile = () => {
                 />
               </Block>
             </Block>
-          </Block>
+          </Block> */}
         </Block>
       </Block>
     </Block>

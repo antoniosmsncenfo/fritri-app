@@ -6,6 +6,7 @@ import { useData, useTheme, useTranslation } from '../hooks/';
 import * as regex from '../constants/regex';
 import { Block, Button, Input, Image, Text, Checkbox } from '../components/';
 import { useGoogleLogin } from '../hooks/useGoogleLogin';
+import { IUser } from '../constants/types/index';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -19,7 +20,7 @@ interface ILoginValidation {
 }
 
 const Login = () => {
-  const { isDark } = useData();
+  const { isDark, handleUser, user } = useData();
   const { t } = useTranslation();
   const navigation = useNavigation();
   const [isValid, setIsValid] = useState<ILoginValidation>({
@@ -34,7 +35,7 @@ const Login = () => {
 
   const { assets, colors, gradients, sizes } = useTheme();
 
-  const { signInWithGoogleAsync } = useGoogleLogin();
+  const { signInWithGoogleAsync, fritriUserFromGoogle, isFritriUserFromGoogleLogged, googleLogout } = useGoogleLogin();
 
   const handleChange = useCallback(
     (value) => {
@@ -56,9 +57,27 @@ const Login = () => {
     }));
   }, [login, setIsValid]);
 
-  // useEffect(() => {
-  //   console.log(`Usuario ${isGoogleUserLogged ? 'sí' : 'no'} inició sesión con Google`);
-  // }, [isGoogleUserLogged]);
+  useEffect(() => {
+    if (isFritriUserFromGoogleLogged) {
+      handleUser({
+        ...user,
+        avatar: fritriUserFromGoogle?.urlFoto,
+        name: fritriUserFromGoogle?.nombreCompleto!,
+        department: fritriUserFromGoogle?.correoElectronico!,
+      });
+      navigation.navigate('Profile');
+    }
+  }, [isFritriUserFromGoogleLogged]);
+
+  const loginGoogleUser = () => {
+    googleLogout();
+    signInWithGoogleAsync();
+  };
+
+  const loginFacebookUser = () => {
+    facebookLogout();
+    facebookLogin();
+  };
 
   return (
     <Block safe marginTop={sizes.md}>
@@ -118,7 +137,9 @@ const Login = () => {
               </Text>
               {/* social buttons */}
               <Block row center justify="space-evenly" marginVertical={sizes.m}>
-                <Button outlined gray shadow={!isAndroid}>
+                <Button outlined gray shadow={!isAndroid}
+                  onPress={loginFacebookUser}
+                >
                   <Image
                     source={assets.facebook}
                     height={sizes.m}
@@ -139,7 +160,7 @@ const Login = () => {
                 >
                 </Button> */}
                 <Button outlined gray shadow={!isAndroid}
-                  onPress={signInWithGoogleAsync}
+                  onPress={loginGoogleUser}
                 >
                   <Image
                     source={assets.google}
