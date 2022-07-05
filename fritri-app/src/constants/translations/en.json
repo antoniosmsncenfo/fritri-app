@@ -68,7 +68,8 @@
     "profile": "Profile",
     "settings": "Settings",
     "register": "Create account",
-    "extra": "Extra - Automotive"
+    "extra": "Extra - Automotive",
+    "loginFacebook": "Login Facebook"
   },
   "navigation": {
     "home": "Soft UI",
