@@ -7,6 +7,8 @@ import * as regex from '../constants/regex';
 import { Block, Button, Input, Image, Text, Checkbox } from '../components/';
 import { useLogin } from '../hooks/useUsuario';
 import { email } from '../constants/regex';
+import { useGoogleLogin } from '../hooks/useGoogleLogin';
+import { IUser } from '../constants/types/index';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -20,7 +22,7 @@ interface ILoginValidation {
 }
 
 const Login = () => {
-  const { isDark } = useData();
+  const { isDark, handleUser, user } = useData();
   const { t } = useTranslation();
   const navigation = useNavigation();
   const { loginUsuarioEmail } = useLogin();
@@ -34,6 +36,8 @@ const Login = () => {
     password: '',
   });
   const { assets, colors, gradients, sizes } = useTheme();
+
+  const { signInWithGoogleAsync, fritriUserFromGoogle, isFritriUserFromGoogleLogged, googleLogout } = useGoogleLogin();
 
   const handleChange = useCallback(
     (value) => {
@@ -98,16 +102,21 @@ const Login = () => {
     }));
   }, [login, setIsValid]);
   useEffect(() => {
-    console.log("Fetch!");
-    fetch('http:/192.168.1.3:3000/usuarios/findAll').then((response) => {
-      console.log(response);
-      response.json().then((data) => {
-        console.log(data);
+    if (isFritriUserFromGoogleLogged) {
+      handleUser({
+        ...user,
+        avatar: fritriUserFromGoogle?.urlFoto,
+        name: fritriUserFromGoogle?.nombreCompleto!,
+        department: fritriUserFromGoogle?.correoElectronico!,
       });
-    });
-  }, []);
+      navigation.navigate('Profile');
+    }
+  }, [isFritriUserFromGoogleLogged]);
 
-
+  const loginGoogleUser = () => {
+    googleLogout();
+    signInWithGoogleAsync();
+  };
 
   return (
     <Block safe marginTop={sizes.md}>
@@ -183,7 +192,9 @@ const Login = () => {
                     color={isDark ? colors.icon : undefined}
                   />
                 </Button> */}
-                <Button outlined gray shadow={!isAndroid}>
+                <Button outlined gray shadow={!isAndroid}
+                  onPress={loginGoogleUser}
+                >
                   <Image
                     source={assets.google}
                     height={sizes.m}

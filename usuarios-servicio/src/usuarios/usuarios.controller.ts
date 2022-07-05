@@ -12,7 +12,7 @@ export class UsuariosController {
   @Post('crear-usuario')
   @HttpCode(200)
   async create(@Body() crearUsuariosDto: CrearUsuariosDto) {
-    await this.usuariosService.create(crearUsuariosDto);
+    return await this.usuariosService.create(crearUsuariosDto);
   }
 
   @Get('findAll')
@@ -31,8 +31,9 @@ export class UsuariosController {
   }
 
   @Post('login-terceros')
+  @HttpCode(200)
   async loginTerceros(@Body() loginTercerosDto: LoginTercerosDto) {
-    await this.usuariosService.loginTerceros(loginTercerosDto);
+    return await this.usuariosService.loginTerceros(loginTercerosDto);
   }
 
   @Post('login-email')

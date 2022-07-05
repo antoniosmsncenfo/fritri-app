@@ -9,7 +9,7 @@ import { UsuariosModule } from './usuarios/usuarios.module';
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot('mongodb://localhost:27017/Usuarios_FriTri'),
-    UsuariosModule
+    UsuariosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
