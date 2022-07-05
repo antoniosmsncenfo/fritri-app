@@ -17,13 +17,11 @@ export interface IUser {
 }
 
 export interface IUsuario {
-  id: number | string;
+  id?: number | string;
   tipoLogin?: string;
   correoElectronico?: string;
   contrasena?: string;
-  nombre?: string;
-  apellidos?: string;
-  foto?: string;
+  nombreCompleto?: string;
   genero?: string;
   pais?: string; 
 }

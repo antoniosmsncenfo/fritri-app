@@ -54,7 +54,7 @@
     }
   },
   "app": {
-    "name": "Soft UI",
+    "name": "FriTri",
     "fullname": "Soft UI Kit",
     "native": "React Native",
     "link": "creative-tim.com"
@@ -96,7 +96,7 @@
   "home": {
     "title": "Soft UI",
     "following": "Following",
-    "trending": "Trending"
+    "trending": "Completed"
   },
   "extras": {
     "title1": "Want to try before",
@@ -113,7 +113,9 @@
   },
   "register": {
     "title": "Welcome to FriTri",
-    "subtitle": "Register with email"
+    "subtitle": "Register with email",
+    "welcome": "Welcome!",
+    "success": "Your user was created successfully!"
   },
   "login": {
     "title": "Welcome",
