@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "rn-soft-ui-kit",
-    "slug": "rn-soft-ui-kit",
-    "description": "React Native - Soft UI Kit",
-    "primaryColor": "#CB0C9F",
+    "name": "TRIFRI-APP",
+    "slug": "TRIFRI-APP",
+    "description": "TRIFRI-APP",
+    "primaryColor": "#eeeeee",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#CB0C9F"
+      "backgroundColor": "#eeeeee"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -24,7 +24,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#CB0C9F"
+        "backgroundColor": "#005b94"
       }
     },
     "web": {
