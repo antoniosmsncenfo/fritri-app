@@ -9,14 +9,30 @@ export const useGoogleLogin = () => {
 
     const [googleUser, setGoogleUser] = useState<IUsuarioDeTerceros | null>(null);
     const [isGoogleUserLogged, setIsLogged] = useState(false);
+    const [fritriUser, setFritriUser] = useState<IUsuarioDeTerceros | null>(null);
+    const [isFritriUserLogged, setIsFritriUserLogged] = useState(false);
 
     useEffect(() => {
-        if (isGoogleUserLogged) { guardarUsuarioTerceros(googleUser!); }
-    }, [isGoogleUserLogged]);
+        console.log('efect de guardar 1');
+        if (isGoogleUserLogged) {
+            console.log('efect de guardar 2');
+            guardarUsuarioTerceros(googleUser!)
+                .then(result => {
+                    console.log('efect de guardar 3');
+                    if (result !== null) {
+                        console.log('Poniendo usuario en el estado');
+                        setFritriUser(result);
+                        setIsFritriUserLogged(true);
+                    }
+                    else {
+                        setIsFritriUserLogged(false);
+                    }
+                });
+        }
+    }, [googleUser, isGoogleUserLogged]);
 
 
     async function signInWithGoogleAsync() {
-
         try {
             const result = await Google.logInAsync({
                 iosClientId: GOOGLE_SECRETS.iosClientId,
@@ -43,8 +59,18 @@ export const useGoogleLogin = () => {
         }
     }
 
+    const googleLogout = () => {
+        console.log('Google logout');
+        setIsFritriUserLogged(false);
+        setFritriUser(null);
+    };
+
+
     return {
         signInWithGoogleAsync,
+        googleLogout,
+        fritriUserFromGoogle: fritriUser,
+        isFritriUserFromGoogleLogged: isFritriUserLogged,
     };
 
 };
