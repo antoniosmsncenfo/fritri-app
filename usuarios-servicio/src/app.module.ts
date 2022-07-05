@@ -8,8 +8,8 @@ import { UsuariosModule } from './usuarios/usuarios.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGO_DB),
-    UsuariosModule
+    MongooseModule.forRoot('mongodb://localhost:27017/Usuarios_FriTri'),
+    UsuariosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
