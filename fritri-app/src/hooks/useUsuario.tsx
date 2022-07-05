@@ -13,27 +13,38 @@ export const useUsuario = () => {
         tipoLogin:'',
         correoElectronico:'',
         contrasena:'',
-        nombre:'',
-        foto:'',
+        nombreCompleto:'',
         genero:'',
         pais:'',
     })
 
-    const registrarUsuario = async () => {
+    const registrarUsuario = async (usuarioNuevo:IUsuario) => {
 
-        const resp = await usuariosAPI.post<IUsuario>('/create', {
-            params: {
-                
-            }
-        })
+        console.log('Usuario Nuevo');
+        
+        console.log(usuarioNuevo);
 
-        if(resp.data){
-            setUsuario(resp.data);
+        try {
+
+            let request = {
+                method: 'post',
+                url: `http://192.168.3.12:3000/usuarios/crear-usuario`,
+                headers: {},
+                data: usuarioNuevo
+              };
+
+              const resultado = await axios(request);
+              if(resultado.status === 201) {
+                // Redireccionar a dashboard
+              } else {
+                // Mostrar mensaje de error
+              }
+        } catch(error) {
+            console.log(error);
         }
-
     }
 
-    return (
-        usuario
-    )
+    return {
+        registrarUsuario
+    }
 }
