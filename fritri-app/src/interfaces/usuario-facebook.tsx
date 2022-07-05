@@ -1,9 +1,9 @@
-export interface IUsuarioFacebook {
+export interface IUsuarioDeTerceros {
 
     idTerceros: string;
-    
+
     tipoLogin: string;
-    
+
     correoElectronico?: string;
 
     nombreCompleto: string;

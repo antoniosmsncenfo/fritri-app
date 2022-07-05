@@ -34,7 +34,7 @@ const Login = () => {
 
   const { assets, colors, gradients, sizes } = useTheme();
 
-  const { isGoogleUserLogged, signInWithGoogleAsync, googleUser } = useGoogleLogin();
+  const { signInWithGoogleAsync } = useGoogleLogin();
 
   const handleChange = useCallback(
     (value) => {
@@ -56,9 +56,9 @@ const Login = () => {
     }));
   }, [login, setIsValid]);
 
-  useEffect(() => {
-    console.log(`Usuario ${isGoogleUserLogged ? 'sí' : 'no'} inició sesión con Google`);
-  }, [isGoogleUserLogged]);
+  // useEffect(() => {
+  //   console.log(`Usuario ${isGoogleUserLogged ? 'sí' : 'no'} inició sesión con Google`);
+  // }, [isGoogleUserLogged]);
 
   return (
     <Block safe marginTop={sizes.md}>
@@ -139,7 +139,7 @@ const Login = () => {
                 >
                 </Button> */}
                 <Button outlined gray shadow={!isAndroid}
-                onPress={signInWithGoogleAsync}
+                  onPress={signInWithGoogleAsync}
                 >
                   <Image
                     source={assets.google}

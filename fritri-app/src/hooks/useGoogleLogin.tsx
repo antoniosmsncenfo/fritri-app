@@ -1,12 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as Google from 'expo-google-app-auth';
 import { GOOGLE_SECRETS } from '../secrets/googleSecrets';
+import { IUsuarioDeTerceros } from '../interfaces/usuario-facebook';
+import { guardarUsuarioTerceros } from '../api/usuarioDB';
 
 
 export const useGoogleLogin = () => {
 
-    const [googleUser, setGoogleUser] = useState<Google.LogInResult>();
+    const [googleUser, setGoogleUser] = useState<IUsuarioDeTerceros | null>(null);
     const [isGoogleUserLogged, setIsLogged] = useState(false);
+
+    useEffect(() => {
+        if (isGoogleUserLogged) { guardarUsuarioTerceros(googleUser!); }
+    }, [isGoogleUserLogged]);
+
 
     async function signInWithGoogleAsync() {
 
@@ -18,8 +25,14 @@ export const useGoogleLogin = () => {
             });
 
             if (result.type === 'success') {
-                console.log(JSON.stringify(result, null, 2));
-                setGoogleUser(result);
+                setGoogleUser({
+                    idTerceros: result.user.id,
+                    nombreCompleto: result.user.name,
+                    tipoLogin: 'Google',
+                    token: result.idToken,
+                    urlFoto: result.user.photoUrl,
+                    correoElectronico: result.user.email,
+                } as IUsuarioDeTerceros);
                 setIsLogged(true);
             } else {
                 setIsLogged(false);
@@ -32,8 +45,6 @@ export const useGoogleLogin = () => {
 
     return {
         signInWithGoogleAsync,
-        googleUser,
-        isGoogleUserLogged,
     };
 
 };
