@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import * as Google from 'expo-google-app-auth';
-import { GOOGLE_SECRETS } from '../secrets/googleSecrets';
 import { IUsuarioDeTerceros } from '../interfaces/usuario-facebook';
 import { guardarUsuarioTerceros } from '../api/usuarioDB';
+import { GOOGLE_IOS_CLIENT_ID, GOOGLE_ANDROID_CLIENT_ID } from '@env';
 
 
 export const useGoogleLogin = () => {
@@ -13,14 +13,10 @@ export const useGoogleLogin = () => {
     const [isFritriUserLogged, setIsFritriUserLogged] = useState(false);
 
     useEffect(() => {
-        console.log('efect de guardar 1');
         if (isGoogleUserLogged) {
-            console.log('efect de guardar 2');
             guardarUsuarioTerceros(googleUser!)
                 .then(result => {
-                    console.log('efect de guardar 3');
                     if (result !== null) {
-                        console.log('Poniendo usuario en el estado');
                         setFritriUser(result);
                         setIsFritriUserLogged(true);
                     }
@@ -35,8 +31,8 @@ export const useGoogleLogin = () => {
     async function signInWithGoogleAsync() {
         try {
             const result = await Google.logInAsync({
-                iosClientId: GOOGLE_SECRETS.iosClientId,
-                androidClientId: GOOGLE_SECRETS.androidClientId,
+                iosClientId: GOOGLE_IOS_CLIENT_ID,
+                androidClientId: GOOGLE_ANDROID_CLIENT_ID,
                 scopes: ['profile', 'email'],
             });
 
@@ -60,7 +56,6 @@ export const useGoogleLogin = () => {
     }
 
     const googleLogout = () => {
-        console.log('Google logout');
         setIsFritriUserLogged(false);
         setFritriUser(null);
     };

@@ -1,27 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as Facebook from 'expo-facebook';
 import axios from 'axios';
 import { IUsuarioDeTerceros } from '../interfaces/usuario-facebook';
 import { IRespuestaFacebook } from '../interfaces/respuesta-facebook';
-import { useEffect } from 'react';
+import { FACEBOOK_APP_ID} from '@env';
 
 let VALOR_INICIAL = {
-    id: '',
-    name: '',
-    picture: {
-        data: {
-            height: 720,
-            is_silhouette: false,
-            url: '',
-            width: 720,
-        },
+  id: '',
+  name: '',
+  picture: {
+    data: {
+      height: 720,
+      is_silhouette: false,
+      url: '',
+      width: 720,
     },
+  },
 };
 
 export const useFacebook = () => {
-  const [ isLoggedIn, setIsLoggedIn ] = useState(false);
-  const [ token, setToken ] = useState('');
-  const [ userData, setUserData ] = useState<IRespuestaFacebook>(VALOR_INICIAL);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [token, setToken] = useState('');
+  const [userData, setUserData] = useState<IRespuestaFacebook>(VALOR_INICIAL);
 
   const guardarUsuario = async () => {
     try {
@@ -63,7 +63,7 @@ export const useFacebook = () => {
   const facebookLogin = async () => {
     try {
       await Facebook.initializeAsync({
-        appId: '624952212446449',
+        appId: FACEBOOK_APP_ID,
       });
       const resultadoLogin = await Facebook.logInWithReadPermissionsAsync({
         permissions: ['public_profile'],
@@ -75,7 +75,7 @@ export const useFacebook = () => {
         let request = {
           method: 'get',
           url: `https://graph.facebook.com/me?access_token=${resultadoLogin.token}&fields=id,name,email,picture.height(500)`,
-          headers: { },
+          headers: {},
         };
         const resultado = await axios(request);
         const datos = JSON.parse(JSON.stringify(resultado.data));
