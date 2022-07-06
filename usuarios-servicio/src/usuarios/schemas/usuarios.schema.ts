@@ -12,10 +12,7 @@ export class Usuario {
 	})
 	tipoLogin: string;
 
-	@Prop({
-		unique: true,
-		index: true
-	})
+	@Prop()
 	correoElectronico: string;
 
 	@Prop()
@@ -37,7 +34,7 @@ export class Usuario {
 
 	@Prop({
 		required: true,
-		default: new Date()
+		default: () => new Date() 
 	})
 	fechaCreacion: Date;
 
