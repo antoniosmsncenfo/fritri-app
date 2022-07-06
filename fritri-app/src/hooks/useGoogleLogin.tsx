@@ -3,19 +3,20 @@ import * as Google from 'expo-google-app-auth';
 import { IUsuarioDeTerceros } from '../interfaces/usuario-facebook';
 import { guardarUsuarioTerceros } from '../api/usuarioDB';
 import { GOOGLE_IOS_CLIENT_ID, GOOGLE_ANDROID_CLIENT_ID } from '@env';
+import { IUsuarioFritri } from '../interfaces/usuario-fritri';
 
 
 export const useGoogleLogin = () => {
 
     const [googleUser, setGoogleUser] = useState<IUsuarioDeTerceros | null>(null);
     const [isGoogleUserLogged, setIsLogged] = useState(false);
-    const [fritriUser, setFritriUser] = useState<IUsuarioDeTerceros | null>(null);
+    const [fritriUser, setFritriUser] = useState<IUsuarioFritri | null>(null);
     const [isFritriUserLogged, setIsFritriUserLogged] = useState(false);
 
     useEffect(() => {
         if (isGoogleUserLogged) {
             guardarUsuarioTerceros(googleUser!)
-                .then(result => {
+                .then((result: IUsuarioFritri) => {
                     if (result !== null) {
                         setFritriUser(result);
                         setIsFritriUserLogged(true);
@@ -26,7 +27,6 @@ export const useGoogleLogin = () => {
                 });
         }
     }, [googleUser, isGoogleUserLogged]);
-
 
     async function signInWithGoogleAsync() {
         try {
