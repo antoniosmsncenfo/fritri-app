@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { IUsuarioDeTerceros } from '../interfaces/usuario-facebook';
 
-const BASE_URL = 'http://192.168.2.28:3000/usuarios';
+const BASE_URL = 'http://192.168.1.239:3000/usuarios';
 
 
 export const guardarUsuarioTerceros = async (usuarioTercero: IUsuarioDeTerceros) => {
