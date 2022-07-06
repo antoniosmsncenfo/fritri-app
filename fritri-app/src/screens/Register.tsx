@@ -16,7 +16,6 @@ interface IRegistration {
   email: string;
   gender: string;
   country: string;
-  photo: string;
   password: string;
   confirmPassword: string;
   agreed: boolean;
@@ -103,7 +102,6 @@ const Register = () => {
     email: '',
     gender: GENDER_TYPES['1'],
     country: COUNTRIES['1'],
-    photo:'',
     password: '',
     confirmPassword: '',
     agreed: true
@@ -335,12 +333,12 @@ const Register = () => {
                   label={t('common.country')}
                   onPress={() => setModal('country')}
                 />
-                <TouchableInput
+                {/* <TouchableInput
                   icon="more"
                   value={"Me.jpg"}
                   label={t('common.avatar')}
                   onPress={() => setModal(undefined)}
-                />                                                 
+                />                                                  */}
                 {/* 
                 <Text bold marginBottom={sizes.s}>
                   {t('common.gender')}
