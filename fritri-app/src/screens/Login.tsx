@@ -63,8 +63,8 @@ const Login = () => {
       handleUser({
         ...user,
         avatar: fritriUserFromGoogle?.urlFoto,
-        name: fritriUserFromGoogle?.nombreCompleto!,
-        department: fritriUserFromGoogle?.correoElectronico!,
+        name: fritriUserFromGoogle?.nombreCompleto,
+        department: fritriUserFromGoogle?.correoElectronico,
       });
       navigation.navigate('Profile');
     }
