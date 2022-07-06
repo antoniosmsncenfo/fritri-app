@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from 'react';
 import { IUsuario, ILogin } from '../constants/types/index';
+import { USUARIOS_BASE_URL } from '@env';
 
 const usuariosAPI = axios.create({
     baseURL: 'http://192.168.1.2:3000/usuarios'
@@ -23,7 +24,7 @@ export const useLogin = () => {
 
             let request = {
                 method: 'post',
-                url: `http://192.168.1.2:3000/usuarios/login-email`,
+                url: `${USUARIOS_BASE_URL}/login-email`,
                 headers: {},
                 data: usuarioLogin
             };
