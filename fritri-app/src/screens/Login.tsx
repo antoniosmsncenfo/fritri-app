@@ -8,7 +8,7 @@ import { Block, Button, Input, Image, Text, Checkbox } from '../components/';
 import { useLogin } from '../hooks/useUsuario';
 import { email } from '../constants/regex';
 import { useGoogleLogin } from '../hooks/useGoogleLogin';
-import { IUser } from '../constants/types/index';
+import { useFacebook } from '../hooks/useFacebook';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -38,6 +38,7 @@ const Login = () => {
   const { assets, colors, gradients, sizes } = useTheme();
 
   const { signInWithGoogleAsync, fritriUserFromGoogle, isFritriUserFromGoogleLogged, googleLogout } = useGoogleLogin();
+  const { facebookLogin } = useFacebook();
 
   const handleChange = useCallback(
     (value) => {
@@ -176,7 +177,9 @@ const Login = () => {
               </Text>
               {/* social buttons */}
               <Block row center justify="space-evenly" marginVertical={sizes.m}>
-                <Button outlined gray shadow={!isAndroid}>
+                <Button outlined gray shadow={!isAndroid}
+                  onPress={facebookLogin}
+                >
                   <Image
                     source={assets.facebook}
                     height={sizes.m}
