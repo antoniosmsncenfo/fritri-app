@@ -1,10 +1,10 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Linking, Platform, Alert} from 'react-native';
+import {Platform, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 
 import {useData, useTheme, useTranslation} from '../hooks/';
 import * as regex from '../constants/regex';
-import {Block, Button, Input, Image, Text, Checkbox, Modal} from '../components/';
+import {Block, Button, Input, Image, Text, Modal} from '../components/';
 import { ITheme } from '../constants/types';
 import { FlatList } from 'react-native-gesture-handler';
 import { useUsuario } from '../hooks/useUsuario';
@@ -19,7 +19,9 @@ interface IRegistration {
   password: string;
   confirmPassword: string;
   agreed: boolean;
+  status: 'new' | 'success' | 'duplicated' | 'error';
 }
+
 interface IRegistrationValidation {
   name: boolean;
   email: boolean;
@@ -104,7 +106,8 @@ const Register = () => {
     country: COUNTRIES['1'],
     password: '',
     confirmPassword: '',
-    agreed: true
+    agreed: true,
+    status: 'new'
   });
 
   const [gender, setGender] = useState(GENDER_TYPES['1']);
@@ -118,7 +121,6 @@ const Register = () => {
   >();
 
   const {assets, colors, gradients, sizes} = useTheme();
-
 
   const handleChange = useCallback(
     (value) => {
