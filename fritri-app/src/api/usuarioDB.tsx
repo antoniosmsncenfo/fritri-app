@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { IUsuarioDeTerceros } from '../interfaces/usuario-facebook';
+import { USUARIOS_BASE_URL} from '@env';
 
-const BASE_URL = 'http://192.168.1.239:3000/usuarios';
 
 
 export const guardarUsuarioTerceros = async (usuarioTercero: IUsuarioDeTerceros) => {
-
+    console.log(USUARIOS_BASE_URL, '201');
     let request = {
         method: 'post',
-        url: `${BASE_URL}/login-terceros`,
+        url: `${USUARIOS_BASE_URL}/login-terceros`,
         headers: {},
         data: usuarioTercero,
     };
