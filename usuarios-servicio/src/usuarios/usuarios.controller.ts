@@ -25,6 +25,11 @@ export class UsuariosController {
     return this.usuariosService.findOne(id);
   }
 
+  @Get(':email')
+  async findEmail(@Param('email') email: string): Promise<Usuario> {
+    return this.usuariosService.findEmail(email);
+  }
+
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return this.usuariosService.delete(id);

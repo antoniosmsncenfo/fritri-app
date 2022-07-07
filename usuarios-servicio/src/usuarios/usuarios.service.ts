@@ -43,6 +43,10 @@ export class UsuariosService {
     return this.usuarioModel.findOne({ _id: id }).exec();
   }
 
+  async findEmail(email: string): Promise<Usuario> {
+    return this.usuarioModel.findOne({ correoElectronico: email }).exec();
+  }
+
   async delete(id: string) {
     const deletedPaseo = await this.usuarioModel
       .findByIdAndRemove({ _id: id })
