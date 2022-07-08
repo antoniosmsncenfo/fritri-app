@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "rn-soft-ui-kit",
-    "slug": "rn-soft-ui-kit",
-    "description": "React Native - Soft UI Kit",
-    "primaryColor": "#CB0C9F",
+    "name": "FRITRI-APP",
+    "slug": "FRITRI-APP",
+    "description": "FRITRI-APP",
+    "primaryColor": "#005B94",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#CB0C9F"
+      "backgroundColor": "#005B94"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -24,7 +24,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#CB0C9F"
+        "backgroundColor": "#005B94"
       }
     },
     "web": {

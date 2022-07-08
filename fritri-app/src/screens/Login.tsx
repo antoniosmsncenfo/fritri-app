@@ -7,8 +7,8 @@ import * as regex from '../constants/regex';
 import { Block, Button, Input, Image, Text, Checkbox } from '../components/';
 import { useGoogleLogin } from '../hooks/useGoogleLogin';
 import { useFacebook } from '../hooks/useFacebook';
-import { IUsuarioDeTerceros } from '../interfaces/usuario-facebook';
-import { IUsuarioFritri } from '../interfaces/usuario-fritri';
+import { email, password } from '../constants/regex';
+
 
 const isAndroid = Platform.OS === 'android';
 
@@ -48,8 +48,16 @@ const Login = () => {
   );
 
   const handleSignIn = useCallback(() => {
-    /** send/save registratin data */
-    console.log('handleSignIn', login);
+    /**LOGIN EMAIL */
+    if (Object.values(isValid).includes(false)) {
+      alert('Favor ingrese valores en los campos');
+      console.log('handleSignIn', login);
+      } else{
+        
+        //navigation.navigate('Home');
+
+      }
+
   }, [login]);
 
   const loginGoogleUser = () => {
@@ -64,6 +72,7 @@ const Login = () => {
       password: regex.password.test(login.password),
     }));
   }, [login, setIsValid]);
+
 
   useEffect(() => {
     if (isFritriUserFromGoogleLogged) {
