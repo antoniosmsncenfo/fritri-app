@@ -8,6 +8,7 @@ import { LoginTercerosDto } from './dto/login-terceros.dto';
 import { CompararContrasena, HashContrasena } from '../helpers/hash.contrasena';
 import { LoginEmailDto } from './dto/login-email.dto';
 import { NoUsuario } from './interface/no-usuario';
+import { ActualizarUsuariosDto } from './dto/actualizar-usuarios';
 
 @Injectable()
 export class UsuariosService {
@@ -32,7 +33,7 @@ export class UsuariosService {
     } catch(error) {
       throw new BadRequestException(`Error al tratar de crear el usuario-email::${error.message}`);
     }
-    return resultado;
+    return this.eliminarPropiedades(resultado.toObject());
   }
 
   async findAll(): Promise<Usuario[]> {
@@ -93,5 +94,20 @@ export class UsuariosService {
     }
     return resultado;
   }
+
+  // TODO: Obtener el idUsuario del JWT token
+  async actualizarUsuario(actualizarUsuariosDto: ActualizarUsuariosDto): Promise<Usuario> {
+    let resultado;
+    try {
+      const idUsuario = actualizarUsuariosDto._id;
+      resultado = await this.usuarioModel.findOneAndUpdate({ _id: idUsuario }, actualizarUsuariosDto, {
+        returnOriginal: false
+      });
+    } catch(error) {
+      throw new BadRequestException(`Error al tratar de actualizar el usuario::${error.message}`);
+    }
+    return this.eliminarPropiedades(resultado);
+  }
+
 
 }
