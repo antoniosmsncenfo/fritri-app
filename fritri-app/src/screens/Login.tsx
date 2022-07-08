@@ -7,6 +7,7 @@ import * as regex from '../constants/regex';
 import { Block, Button, Input, Image, Text, Checkbox } from '../components/';
 import { useGoogleLogin } from '../hooks/useGoogleLogin';
 import { useFacebook } from '../hooks/useFacebook';
+import { email, password } from '../constants/regex';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -46,9 +47,21 @@ const Login = () => {
   );
 
   const handleSignIn = useCallback(() => {
-    /** send/save registratin data */
-    console.log('handleSignIn', login);
+    /**LOGIN EMAIL */
+    if (Object.values(isValid).includes(false)) {
+      alert('Favor ingrese valores en los campos');
+      console.log('handleSignIn', login);
+      } else{
+        
+        //navigation.navigate('Home');
+
+      }
+
   }, [login]);
+
+
+
+
 
   useEffect(() => {
     setIsValid((state) => ({
@@ -58,13 +71,15 @@ const Login = () => {
     }));
   }, [login, setIsValid]);
 
+
+
   useEffect(() => {
     if (isFritriUserFromGoogleLogged) {
       handleUser({
         ...user,
         avatar: fritriUserFromGoogle?.urlFoto,
-        name: fritriUserFromGoogle?.nombreCompleto!,
-        department: fritriUserFromGoogle?.correoElectronico!,
+        name: fritriUserFromGoogle?.nombreCompleto,
+        department: fritriUserFromGoogle?.correoElectronico,
       });
       navigation.navigate('Profile');
     }
