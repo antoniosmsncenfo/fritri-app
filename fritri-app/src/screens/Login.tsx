@@ -7,6 +7,8 @@ import * as regex from '../constants/regex';
 import { Block, Button, Input, Image, Text, Checkbox } from '../components/';
 import { useGoogleLogin } from '../hooks/useGoogleLogin';
 import { useFacebook } from '../hooks/useFacebook';
+import { useUsuario, useLogin } from '../hooks/useUsuario';
+
 import { email, password } from '../constants/regex';
 
 
@@ -39,6 +41,7 @@ const Login = () => {
 
   const { signInWithGoogleAsync, fritriUserFromGoogle, isFritriUserFromGoogleLogged, googleLogout } = useGoogleLogin();
   const { facebookLogin } = useFacebook();
+  const { loginUsuarioEmail, emailLogout, fritriUserEmail} = useLogin();
 
   const handleChange = useCallback(
     (value) => {
@@ -49,14 +52,13 @@ const Login = () => {
 
   const handleSignIn = useCallback(() => {
     /**LOGIN EMAIL */
-    if (Object.values(isValid).includes(false)) {
-      alert('Favor ingrese valores en los campos');
-      console.log('handleSignIn', login);
+    if (isValid.email && isValid.password) {
+      loginUsuarioEmail(login);
       } else{
-        
-        //navigation.navigate('Home');
-
+        alert('Favor ingrese valores en los campos');
       }
+      console.log(`${isValid.email?'email Valido':'email Invalido'}`); 
+      console.log(`${isValid.password?'password Valido':'password Invalido'}`); 
 
   }, [login]);
 
@@ -80,6 +82,14 @@ const Login = () => {
       fritriUserFromGoogle?.pais == null ? navigation.navigate('Profile') : navigation.navigate('Home');
     }
   }, [isFritriUserFromGoogleLogged]);
+  
+  useEffect(() => {
+    if (fritriUserEmail) {
+      handleUser(fritriUserEmail!);
+      navigation.navigate('Home');
+    }
+  }, [fritriUserEmail]);
+  
 
   return (
     <Block safe marginTop={sizes.md}>
@@ -207,8 +217,8 @@ const Login = () => {
                   marginBottom={sizes.m}
                   keyboardType="email-address"
                   placeholder={t('common.emailPlaceholder')}
-                  success={Boolean(login.email && isValid.email)}
-                  danger={Boolean(login.email && !isValid.email)}
+                  success={(login.email !=='' && isValid.email)}
+                  danger={(login.email  ===''|| !isValid.email)}
                   onChangeText={(value) => handleChange({ email: value })}
                 />
                 <Input
