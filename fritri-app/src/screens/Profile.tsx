@@ -1,19 +1,19 @@
-import React, {useCallback} from 'react';
-import {Platform, Linking} from 'react-native';
-import {Ionicons} from '@expo/vector-icons';
-import {useNavigation} from '@react-navigation/core';
+import React, { useCallback } from 'react';
+import { Platform, Linking } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/core';
 
-import {Block, Button, Image, Text} from '../components/';
-import {useData, useTheme, useTranslation} from '../hooks/';
+import { Block, Button, Image, Text } from '../components/';
+import { useData, useTheme, useTranslation } from '../hooks/';
 import { email } from '../constants/regex';
 
 const isAndroid = Platform.OS === 'android';
 
 const Profile = () => {
-  const {user} = useData();
-  const {t} = useTranslation();
+  const { user } = useData();
+  const { t } = useTranslation();
   const navigation = useNavigation();
-  const {assets, colors, sizes} = useTheme();
+  const { assets, colors, sizes } = useTheme();
 
   const IMAGE_SIZE = (sizes.width - (sizes.padding + sizes.sm) * 2) / 3;
   const IMAGE_VERTICAL_SIZE =
@@ -44,7 +44,7 @@ const Profile = () => {
         scroll
         paddingHorizontal={sizes.s}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: sizes.padding}}>
+        contentContainerStyle={{ paddingBottom: sizes.padding }}>
         <Block flex={0}>
           <Image
             background
@@ -64,7 +64,7 @@ const Profile = () => {
                 height={18}
                 color={colors.white}
                 source={assets.arrow}
-                transform={[{rotate: '180deg'}]}
+                transform={[{ rotate: '180deg' }]}
               />
               <Text p white marginLeft={sizes.s}>
                 {t('profile.title')}
@@ -75,13 +75,13 @@ const Profile = () => {
                 width={64}
                 height={64}
                 marginBottom={sizes.sm}
-                source={{uri: user?.avatar}}
+                source={{ uri: user?.urlFoto }}
               />
               <Text h5 center white>
-                {user?.name}
+                {user?.nombreCompleto}
               </Text>
               <Text p center white>
-                {user?.department}
+                {user?.correoElectronico}
               </Text>
               {/* <Block row marginVertical={sizes.m}>
                 <Button

@@ -7,6 +7,8 @@ import * as regex from '../constants/regex';
 import { Block, Button, Input, Image, Text, Checkbox } from '../components/';
 import { useGoogleLogin } from '../hooks/useGoogleLogin';
 import { useFacebook } from '../hooks/useFacebook';
+import { IUsuarioDeTerceros } from '../interfaces/usuario-facebook';
+import { IUsuarioFritri } from '../interfaces/usuario-fritri';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -50,6 +52,11 @@ const Login = () => {
     console.log('handleSignIn', login);
   }, [login]);
 
+  const loginGoogleUser = () => {
+    googleLogout();
+    signInWithGoogleAsync();
+  };
+
   useEffect(() => {
     setIsValid((state) => ({
       ...state,
@@ -60,20 +67,10 @@ const Login = () => {
 
   useEffect(() => {
     if (isFritriUserFromGoogleLogged) {
-      handleUser({
-        ...user,
-        avatar: fritriUserFromGoogle?.urlFoto,
-        name: fritriUserFromGoogle?.nombreCompleto,
-        department: fritriUserFromGoogle?.correoElectronico,
-      });
-      navigation.navigate('Profile');
+      handleUser(fritriUserFromGoogle!);
+      fritriUserFromGoogle?.pais == null ? navigation.navigate('Profile') : navigation.navigate('Home');
     }
   }, [isFritriUserFromGoogleLogged]);
-
-  const loginGoogleUser = () => {
-    googleLogout();
-    signInWithGoogleAsync();
-  };
 
   return (
     <Block safe marginTop={sizes.md}>
