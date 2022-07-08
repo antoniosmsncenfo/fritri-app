@@ -1,14 +1,11 @@
-import axios from "axios";
 import {useState} from 'react';
 import { IUsuario } from '../constants/types/index';
-
-const usuariosAPI = axios.create({
-    baseURL: 'http://192.168.3.12:3000/usuarios'
-});
+import { guardarUsuarioFriTri } from "../api/usuarioDB";
+import { RegistrationStatus } from '../interfaces/registro-usuario';
 
 export const useUsuario = () => {
   
-    const [usuario, setUsuario] = useState<IUsuario>({
+    const [usuarioFriTri, setUsuarioFriTri] = useState<IUsuario>({
         id: '',
         tipoLogin:'',
         correoElectronico:'',
@@ -18,33 +15,39 @@ export const useUsuario = () => {
         pais:'',
     })
 
-    const registrarUsuario = async (usuarioNuevo:IUsuario) => {
+    const [registrarStatus, setRegistrarStatus] = useState<RegistrationStatus>(
+        RegistrationStatus.New
+    )
 
-        console.log('Usuario Nuevo');
-        
-        console.log(usuarioNuevo);
+    const resetRegistrarEstatus = () => {
+        setRegistrarStatus(RegistrationStatus.New);
+    }
 
-        try {
+    const registrarUsuario = (usuarioNuevo:IUsuario) => {
 
-            let request = {
-                method: 'post',
-                url: `http://192.168.3.12:3000/usuarios/crear-usuario`,
-                headers: {},
-                data: usuarioNuevo
-              };
-
-              const resultado = await axios(request);
-              if(resultado.status === 201) {
-                // Redireccionar a dashboard
-              } else {
-                // Mostrar mensaje de error
-              }
-        } catch(error) {
-            console.log(error);
-        }
+            guardarUsuarioFriTri(usuarioNuevo)
+            .then((result: IUsuario) => {
+                if (result !== null) {
+                    setUsuarioFriTri(result);
+                    setRegistrarStatus(RegistrationStatus.Success);
+                    console.log("Usuario registrado:");
+                    console.log(usuarioFriTri);
+                }
+            })
+            .catch((e) => {
+                console.log("Error capturado: " + e.response.data.message)
+                if (e.response.data.message==="Error al tratar de crear el usuario-email::Email duplicado")
+                {
+                    setRegistrarStatus(RegistrationStatus.Duplicated);
+                }   
+            }
+            );
     }
 
     return {
-        registrarUsuario
+        resetRegistrarEstatus,
+        registrarUsuario,
+        usuarioFriTri,
+        registrarStatus
     }
 }

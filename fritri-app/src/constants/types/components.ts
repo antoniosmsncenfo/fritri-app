@@ -605,6 +605,10 @@ export interface IInputProps extends TextInputProps, ISpacing {
    * Renders the label top text
    */
   label?: string;
+    /**
+   * Renders the label with rules under the input
+   */
+  rules?: string;
   /**
    * Renders a left side icon image from the Theme assets
    */

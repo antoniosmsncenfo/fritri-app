@@ -23,7 +23,13 @@ export interface IUsuario {
   contrasena?: string;
   nombreCompleto?: string;
   genero?: string;
-  pais?: string; 
+  pais?: string;
+  foto?: string;
+}
+
+export enum FotoUsuario {
+  Hombre = 'https://res.cloudinary.com/fritri-app/image/upload/v1657257441/fritri-app/Batman_mci2ra.png',
+  Mujer = 'https://res.cloudinary.com/fritri-app/image/upload/v1657257441/fritri-app/Wonder_tox5bu.png'
 }
 
 export interface ICategory {
@@ -152,8 +158,8 @@ export interface INotification {
     | 'office';
 }
 
-export interface ICalendar extends CalendarProps {
-  dates?: any[];
-  calendar?: {start: number; end: number};
-  onClose?: (calendar?: {start?: number; end?: number}) => void;
-}
+// export interface ICalendar extends CalendarProps {
+//   dates?: any[];
+//   calendar?: {start: number; end: number};
+//   onClose?: (calendar?: {start?: number; end?: number}) => void;
+// }
