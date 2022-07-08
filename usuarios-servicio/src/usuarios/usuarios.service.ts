@@ -44,6 +44,7 @@ export class UsuariosService {
   }
 
   async findEmail(email: string): Promise<Usuario> {
+    console.log(email);
     return this.usuarioModel.findOne({ correoElectronico: email }).exec();
   }
 
