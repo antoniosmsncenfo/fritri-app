@@ -11,14 +11,18 @@ export const guardarUsuarioTerceros = async (usuarioTercero: IUsuarioDeTerceros)
         headers: {},
         data: usuarioTercero,
     };
-    const resultado = await axios(request);
     try {
+        const resultado = await axios(request);
 
-        if (resultado.status === 200) { return usuarioTercero; }
-        else { return null; }
+        if (resultado.status === 200) {
+            return resultado.data;
+        }
+        else {
+            return null;
+        }
     }
     catch (e) {
-        console.log(JSON.stringify(e, null, 2), 'error');
+        console.log('API usuario error:',JSON.stringify(e.message, null, 2));
         return null;
     }
 };
