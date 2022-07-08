@@ -8,8 +8,7 @@ import { Block, Button, Input, Image, Text, Checkbox } from '../components/';
 import { useGoogleLogin } from '../hooks/useGoogleLogin';
 import { useFacebook } from '../hooks/useFacebook';
 import { email, password } from '../constants/regex';
-import { IUsuarioDeTerceros } from '../interfaces/usuario-facebook';
-import { IUsuarioFritri } from '../interfaces/usuario-fritri';
+
 
 const isAndroid = Platform.OS === 'android';
 
@@ -75,16 +74,8 @@ const Login = () => {
   }, [login, setIsValid]);
 
 
-
   useEffect(() => {
     if (isFritriUserFromGoogleLogged) {
-      handleUser({
-        ...user,
-        avatar: fritriUserFromGoogle?.urlFoto,
-        name: fritriUserFromGoogle?.nombreCompleto,
-        department: fritriUserFromGoogle?.correoElectronico,
-      });
-      navigation.navigate('Profile');
       handleUser(fritriUserFromGoogle!);
       fritriUserFromGoogle?.pais == null ? navigation.navigate('Profile') : navigation.navigate('Home');
     }
