@@ -1,20 +1,21 @@
 import i18n from 'i18n-js';
-import {ImageSourcePropType} from 'react-native';
-import {CalendarProps} from 'react-native-calendars';
-import {ITheme} from './theme';
+import { ImageSourcePropType } from 'react-native';
+import { CalendarProps } from 'react-native-calendars';
+import { ITheme } from './theme';
+import { IUsuarioFritri } from '../../interfaces/usuario-fritri';
 
 export * from './components';
 export * from './theme';
 
-export interface IUser {
-  id: number | string;
-  name?: string;
-  department?: string;
-  avatar?: string;
-  stats?: {posts?: number; followers?: number; following?: number};
-  social?: {twitter?: string; dribbble?: string};
-  about?: string;
-}
+// export interface IUser {
+//   id: number | string;
+//   name?: string;
+//   department?: string;
+//   avatar?: string;
+//   stats?: { posts?: number; followers?: number; following?: number };
+//   social?: { twitter?: string; dribbble?: string };
+//   about?: string;
+// }
 
 export interface IUsuario {
   id?: number | string;
@@ -23,7 +24,7 @@ export interface IUsuario {
   contrasena?: string;
   nombreCompleto?: string;
   genero?: string;
-  pais?: string; 
+  pais?: string;
 }
 
 export interface ICategory {
@@ -35,10 +36,10 @@ export interface IArticleOptions {
   title?: string;
   description?: string;
   type?: 'room' | 'apartment' | 'house'; // private room | entire apartment | entire house
-  sleeping?: {total?: number; type?: 'sofa' | 'bed'};
+  sleeping?: { total?: number; type?: 'sofa' | 'bed' };
   guests?: number;
   price?: number;
-  user?: IUser;
+  user?: IUsuarioFritri;
   image?: string;
 }
 export interface IArticle {
@@ -49,7 +50,7 @@ export interface IArticle {
   image?: string;
   location?: ILocation;
   rating?: number;
-  user?: IUser;
+  user?: IUsuarioFritri;
   offers?: IProduct[];
   options?: IArticleOptions[];
   timestamp?: number;
@@ -75,10 +76,10 @@ export interface IUseData {
   handleIsDark: (isDark?: boolean) => void;
   theme: ITheme;
   setTheme: (theme?: ITheme) => void;
-  user: IUser;
-  users: IUser[];
-  handleUser: (data?: IUser) => void;
-  handleUsers: (data?: IUser[]) => void;
+  user: IUsuarioFritri;
+  users: IUsuarioFritri[];
+  handleUser: (data?: IUsuarioFritri) => void;
+  handleUsers: (data?: IUsuarioFritri[]) => void;
   basket: IBasket;
   handleBasket: (data?: IBasket) => void;
   following: IProduct[];
@@ -143,17 +144,17 @@ export interface INotification {
   business?: boolean;
   createdAt?: number | Date;
   type:
-    | 'document'
-    | 'documentation'
-    | 'payment'
-    | 'notification'
-    | 'profile'
-    | 'extras'
-    | 'office';
+  | 'document'
+  | 'documentation'
+  | 'payment'
+  | 'notification'
+  | 'profile'
+  | 'extras'
+  | 'office';
 }
 
 export interface ICalendar extends CalendarProps {
   dates?: any[];
-  calendar?: {start: number; end: number};
-  onClose?: (calendar?: {start?: number; end?: number}) => void;
+  calendar?: { start: number; end: number };
+  onClose?: (calendar?: { start?: number; end?: number }) => void;
 }
