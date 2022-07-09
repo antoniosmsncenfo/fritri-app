@@ -1,12 +1,9 @@
 import axios from "axios";
 import { useState } from 'react';
 import { IUsuario, ILogin } from '../constants/types/index';
+import { guardarUsuarioFriTri } from "../api/usuarioDB";
+import { RegistrationStatus } from '../interfaces/registro-usuario';
 import { USUARIOS_BASE_URL } from '@env';
-
-const usuariosAPI = axios.create({
-    baseURL: 'http://192.168.1.2:3000/usuarios'
-});
-
 
 export const useLogin = () => {
     const [usuarioLogin, setUsuarioLogin] = useState<ILogin>({
@@ -45,47 +42,53 @@ export const useLogin = () => {
     }
 
 }
+
 export const useUsuario = () => {
 
-    const [usuario, setUsuario] = useState<IUsuario>({
+    const [usuarioFriTri, setUsuarioFriTri] = useState<IUsuario>({
         id: '',
-        tipoLogin: '',
-        correoElectronico: '',
-        contrasena: '',
-        nombreCompleto: '',
-        genero: '',
-        pais: '',
+        tipoLogin:'',
+        correoElectronico:'',
+        contrasena:'',
+        nombreCompleto:'',
+        genero:'',
+        pais:'',
     })
 
-    const registrarUsuario = async (usuarioNuevo: IUsuario) => {
+    const [registrarStatus, setRegistrarStatus] = useState<RegistrationStatus>(
+        RegistrationStatus.New
+    )
 
-        console.log('Usuario Nuevo');
+    const resetRegistrarEstatus = () => {
+        setRegistrarStatus(RegistrationStatus.New);
+    }
 
-        console.log(usuarioNuevo);
+    const registrarUsuario = (usuarioNuevo:IUsuario) => {
 
-        try {
-
-            let request = {
-                method: 'post',
-                url: `http://192.168.1.2:3000/usuarios/crear-usuario`,
-                headers: {},
-                data: usuarioNuevo
-            };
-
-            const resultado = await axios(request);
-            if (resultado.status === 201) {
-                // Redireccionar a dashboard
-            } else {
-                // Mostrar mensaje de error
+            guardarUsuarioFriTri(usuarioNuevo)
+            .then((result: IUsuario) => {
+                if (result !== null) {
+                    setUsuarioFriTri(result);
+                    setRegistrarStatus(RegistrationStatus.Success);
+                    console.log("Usuario registrado:");
+                    console.log(usuarioFriTri);
+                }
+            })
+            .catch((e) => {
+                console.log("Error capturado: " + e.response.data.message)
+                if (e.response.data.message==="Error al tratar de crear el usuario-email::Email duplicado")
+                {
+                    setRegistrarStatus(RegistrationStatus.Duplicated);
+                }   
             }
-        } catch (error) {
-            console.log(error);
-        }
+            );
     }
 
     return {
-        registrarUsuario
+        resetRegistrarEstatus,
+        registrarUsuario,
+        usuarioFriTri,
+        registrarStatus
     }
 
 }
-

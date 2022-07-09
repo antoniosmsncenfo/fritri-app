@@ -31,6 +31,7 @@ const Input = ({
   search,
   disabled,
   label,
+  rules,
   icon,
   marginBottom,
   marginTop,
@@ -168,6 +169,13 @@ const Input = ({
           />
         )}
       </Block>
+      {danger && assets.warning && rules && (
+          <Text style={{
+            marginLeft: sizes.s,
+            color: colors.danger,
+          }}>{rules}</Text>
+        )}      
+      
     </Block>
   );
 };
