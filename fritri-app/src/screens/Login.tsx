@@ -222,7 +222,7 @@ const Login = () => {
                   danger={Boolean(login.password && !isValid.password)}
                 />
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('ForgotPassword')}>
+                  onPress={() => navigation.navigate('ResetPassword')}>
                   <Block row flex={0} align="center">
                     <Text
                       color={colors.danger}

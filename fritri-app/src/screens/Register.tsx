@@ -378,7 +378,7 @@ const Register = () => {
                   autoCapitalize="none"
                   marginBottom={sizes.m}
                   label={t('common.password')}
-                  rules={t('register.emailRules')}
+                  rules={t('register.passwordRules')}
                   placeholder={t('common.passwordPlaceholder')}
                   onChangeText={(value) => handleChange({password: value})}
                   success={Boolean(registration.password && isValid.password)}
@@ -389,7 +389,7 @@ const Register = () => {
                   autoCapitalize="none"
                   marginBottom={sizes.m}
                   label={t('common.confirmPassword')}
-                  rules={t('register.emailRules')}
+                  rules={t('register.passwordRules')}
                   placeholder={t('common.confirmPasswordPlaceholder')}
                   onChangeText={(value) => handleChange({confirmPassword: value})}
                   success={Boolean(registration.confirmPassword && isValid.confirmPassword)}
