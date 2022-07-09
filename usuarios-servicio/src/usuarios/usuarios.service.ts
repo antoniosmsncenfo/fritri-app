@@ -80,7 +80,7 @@ export class UsuariosService {
     return usuario;
   }
 
-  async loginEmail(loginEmailDto: LoginEmailDto): Promise<Usuario | NoUsuario> {
+  async loginEmail(loginEmailDto: LoginEmailDto): Promise<Usuario> | null {
     let resultado;
     let resultadoNoExiste = {
       message: 'No existe usuario',
@@ -89,10 +89,10 @@ export class UsuariosService {
     try {
       const resultadoUsuario: UsuarioDocument = await this.usuarioModel.findOne({ correoElectronico: loginEmailDto.correoElectronico }).exec();
       if(!resultadoUsuario) {
-        return resultadoNoExiste;
+        return null;
       }
       const compararContrasena = await CompararContrasena(loginEmailDto.contrasena, resultadoUsuario.contrasena);
-      resultado = compararContrasena ? this.eliminarPropiedades(resultadoUsuario.toObject()) : resultadoNoExiste;
+      resultado = compararContrasena && this.eliminarPropiedades(resultadoUsuario.toObject());
     } catch(error) {
       console.log(error);
       throw new BadRequestException(`Error al tratar de iniciar sesión con el email::${error.message}`);
