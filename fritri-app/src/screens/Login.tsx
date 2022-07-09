@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Linking, Platform } from 'react-native';
+import { Linking, Platform, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 
 import { useData, useTheme, useTranslation } from '../hooks/';
@@ -215,13 +215,26 @@ const Login = () => {
                   secureTextEntry
                   label={t('common.password')}
                   autoCapitalize="none"
-                  marginBottom={sizes.m}
+                  marginBottom={sizes.s}
                   placeholder={t('common.passwordPlaceholder')}
                   onChangeText={(value) => handleChange({ password: value })}
                   success={Boolean(login.password && isValid.password)}
                   danger={Boolean(login.password && !isValid.password)}
                 />
-              </Block>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('ForgotPassword')}>
+                  <Block row flex={0} align="center">
+                    <Text
+                      color={colors.danger}
+                      semibold
+                      size={sizes.linkSize}
+                      marginRight={sizes.s}>
+                      {t('login.forgotPassword')}
+                    </Text>
+                    <Image source={assets.arrow} color={colors.danger} />
+                  </Block>
+                </TouchableOpacity>                 
+              </Block>             
               {/* checkbox terms */}
               {/* <Block row flex={0} align="center" paddingHorizontal={sizes.sm}>
                 <Checkbox

@@ -128,7 +128,8 @@
   },
   "login": {
     "title": "Welcome",
-    "subtitle": "Sign In with"
+    "subtitle": "Sign In with",
+    "forgotPassword": "I forgot my password"
   },
   "settings": {
     "recommended": {

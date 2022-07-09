@@ -191,7 +191,7 @@ const Register = () => {
         [
           {text: 'OK', onPress: () => {
             console.log('OK button clicked');
-            navigation.navigate('Profile');},
+            navigation.navigate('Home');},
           }
         ],
         { 
@@ -225,24 +225,6 @@ const Register = () => {
             radius={sizes.cardRadius}
             source={assets.background}
             height={sizes.height * 0.3}>
-            {/* <Button
-              row
-              flex={0}
-              justify="flex-start"
-              onPress={() => navigation.goBack()}>
-              <Image
-                radius={0}
-                width={10}
-                height={18}
-                color={colors.white}
-                source={assets.arrow}
-                transform={[{rotate: '180deg'}]}
-              />
-              <Text p white marginLeft={sizes.s}>
-                {t('common.goBack')}
-              </Text>
-            </Button> */}
-
             <Text h4 center white marginTop={20}>
               {t('register.title')}
             </Text>

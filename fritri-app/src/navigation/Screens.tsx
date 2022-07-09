@@ -47,7 +47,12 @@ export default () => {
         name="Register"
         component={Register}
         options={{headerShown: false}}
-      />      
+      />
+      <Stack.Screen
+        name="ForgotPassword"
+        component={Register}
+        options={{headerShown: false}}
+      />        
       <Stack.Screen
         name="Components"
         component={Components}
