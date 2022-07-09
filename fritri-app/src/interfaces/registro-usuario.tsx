@@ -15,3 +15,10 @@ export interface IRegistration {
     Duplicated = 'DUPLICATED',
     Error = 'ERROR'
   }
+
+  export enum ResetPasswordStatus {
+    Pending = 'PENDING',
+    Success = 'SUCCESS',
+    WrongEmail = 'WRONG_EMAIL',
+    Error = 'ERROR'
+  }

@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState } from 'react';
 import { IUsuario, ILogin } from '../constants/types/index';
 import { guardarUsuarioFriTri } from "../api/usuarioDB";
-import { RegistrationStatus } from '../interfaces/registro-usuario';
+import { RegistrationStatus, ResetPasswordStatus } from '../interfaces/registro-usuario';
 import { USUARIOS_BASE_URL } from '@env';
 
 export const useLogin = () => {
@@ -89,6 +89,58 @@ export const useUsuario = () => {
         registrarUsuario,
         usuarioFriTri,
         registrarStatus
+    }
+
+}
+
+export const usePassword = () => {
+
+    const [usuarioFriTri, setUsuarioFriTri] = useState<IUsuario>({
+        id: '',
+        tipoLogin:'',
+        correoElectronico:'',
+        contrasena:'',
+        nombreCompleto:'',
+        genero:'',
+        pais:'',
+    })
+
+    const [resetPasswordResult, setResetPasswordResult] = useState<ResetPasswordStatus>(
+        ResetPasswordStatus.Pending
+    )
+
+    const restartResetPasswordStatus = () => {
+        setResetPasswordResult(ResetPasswordStatus.Pending);
+    }
+
+    const resetPassword = (emailUsuario:string) => {
+
+        setResetPasswordResult(ResetPasswordStatus.Success);
+
+        // guardarUsuarioFriTri(usuarioNuevo)
+        // .then((result: IUsuario) => {
+        //     if (result !== null) {
+        //         setUsuarioFriTri(result);
+        //         setResetPasswordStatus(ResetPasswordStatus.Success);
+        //         console.log("Usuario registrado:");
+        //         console.log(usuarioFriTri);
+        //     }
+        // })
+        // .catch((e) => {
+        //     console.log("Error capturado: " + e.response.data.message)
+        //     if (e.response.data.message==="Error al tratar de crear el usuario-email::Email duplicado")
+        //     {
+        //         setResetPasswordStatus(ResetPasswordStatus.WrongEmail);
+        //     }   
+        // }
+        // );
+    }
+
+    return {
+        restartResetPasswordStatus,
+        resetPassword,
+        usuarioFriTri,
+        resetPasswordResult
     }
 
 }

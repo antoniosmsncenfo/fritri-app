@@ -1,19 +1,21 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Platform, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
-
-import {useData, useTheme, useTranslation} from '../hooks/';
+import {useTheme, useTranslation} from '../hooks/';
 import * as regex from '../constants/regex';
 import {Block, Button, Input, Image, Text, Modal} from '../components/';
-import { FotoUsuario, ITheme } from '../constants/types';
-import { FlatList } from 'react-native-gesture-handler';
-import { useUsuario } from '../hooks/useUsuario';
-import { IRegistration, RegistrationStatus } from '../interfaces/registro-usuario';
+import { usePassword } from '../hooks/useUsuario';
+import { ResetPasswordStatus } from '../interfaces/registro-usuario';
 
 const isAndroid = Platform.OS === 'android';
 
 interface IResetPasswordValidation {
     email: boolean;
+}
+
+interface IResetPassword {
+    email: string;
+    status: ResetPasswordStatus;
 }
 
 const ResetPassword = () => {
@@ -23,56 +25,53 @@ const ResetPassword = () => {
 
     const [isValid, setIsValid] = useState<IResetPasswordValidation>({
         email: false,
-      });
+    });
 
-    interface IResetPassword {
-        email: string;
-        status: RegistrationStatus;
-    }
-
-    const [resetPassword, setResetPassword] = useState<IResetPassword>({
+    const [resetUserPassword, setResetUserPassword] = useState<IResetPassword>({
         email: '',
-        status: RegistrationStatus.New
+        status: ResetPasswordStatus.Pending
     });
 
     const {assets, colors, gradients, sizes} = useTheme();
 
+    //Cambiar a usePassword
     const {
-        resetRegistrarEstatus, 
-        registrarUsuario, 
-        registrarStatus
-    } = useUsuario();
+        restartResetPasswordStatus, //funcion para resetear
+        resetPassword, //funcion
+        resetPasswordResult, //resultado
+        usuarioFriTri //usuario obtenido
+    } = usePassword();
 
     const handleChange = useCallback(
         (value) => {
-            setResetPassword((state) => ({...state, ...value}));
+            setResetUserPassword((state) => ({...state, ...value}));
         },
-        [setResetPassword],
+        [setResetUserPassword],
       );
-    
+
     const handleReset = useCallback(() => {
-    if (!Object.values(isValid).includes(false)) {
-        //enviar informacion de reset
-    }
+        if (!Object.values(isValid).includes(false)) {
+            //Llamado a la función de resetear
+            resetPassword(resetUserPassword.email);
+        }
     }, [isValid, resetPassword]);
 
     useEffect(() => {
         setIsValid((state) => ({
             ...state,
-            email: regex.email.test(resetPassword.email),
+            email: regex.email.test(resetUserPassword.email),
         }));
-    }, [resetPassword, setIsValid]);
+    }, [resetUserPassword, setIsValid]);
 
     useEffect(() => {
-        if(registrarStatus===RegistrationStatus.Success)
+        if(resetPasswordResult===ResetPasswordStatus.Success)
         {
           Alert.alert(
-            t('register.welcome'),
-            t('register.success'),
+            t('resetPassword.passwordSent'),
+            t('resetPassword.checkEmail'),
             [
               {text: 'OK', onPress: () => {
-                console.log('OK button clicked');
-                navigation.navigate('Home');},
+                navigation.navigate('Login');},
               }
             ],
             { 
@@ -80,10 +79,10 @@ const ResetPassword = () => {
             }
           );
         }
-        else if (registrarStatus===RegistrationStatus.Error){
+        else if (resetPasswordResult===ResetPasswordStatus.Error){
           Alert.alert(
-            t('register.validation'),
-            t('register.emailExists'),
+            t('resetPassword.passwordError'),
+            t('register.errorMessage'),
             [
               {text: 'OK'}
             ],
@@ -91,9 +90,9 @@ const ResetPassword = () => {
               cancelable: false 
             }
           );
-          resetRegistrarEstatus();
+          restartResetPasswordStatus();
         }
-    }, [registrarStatus])
+    }, [resetPasswordResult])
 
     return (
         <Block safe marginTop={sizes.md}>
@@ -142,8 +141,8 @@ const ResetPassword = () => {
                       label={t('common.email')}
                       keyboardType="email-address"
                       placeholder={t('common.emailPlaceholder')}
-                      success={Boolean(resetPassword.email && isValid.email)}
-                      danger={Boolean(resetPassword.email && !isValid.email)}
+                      success={Boolean(resetUserPassword.email && isValid.email)}
+                      danger={Boolean(resetUserPassword.email && !isValid.email)}
                       onChangeText={(value) => handleChange({email: value})}
                     />
                   </Block>
@@ -154,7 +153,7 @@ const ResetPassword = () => {
                     gradient={gradients.primary}
                     disabled={Object.values(isValid).includes(false)}>
                     <Text bold white transform="uppercase">
-                      {t('common.signup')}
+                      {t('resetPassword.sendTempPass')}
                     </Text>
                   </Button>
                 </Block>
