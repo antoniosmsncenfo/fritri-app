@@ -5,7 +5,7 @@ import { BadRequestException } from  '@nestjs/common';
 import { Usuario, UsuarioDocument } from './schemas/usuarios.schema';
 import { CrearUsuariosDto } from './dto/crear-usuarios.dto';
 import { LoginTercerosDto } from './dto/login-terceros.dto';
-import { CompararContrasena, HashContrasena } from '../helpers/hash.contrasena';
+import { CompararContrasena, GenerarContrasenaTemporal, HashContrasena, LongitudPassword } from '../helpers/hash.contrasena';
 import { LoginEmailDto } from './dto/login-email.dto';
 import { NoUsuario } from './interface/no-usuario';
 import { ActualizarUsuariosDto } from './dto/actualizar-usuarios';
@@ -45,7 +45,6 @@ export class UsuariosService {
   }
 
   async findEmail(email: string): Promise<Usuario> {
-    console.log(email);
     return this.usuarioModel.findOne({ correoElectronico: email }).exec();
   }
 
@@ -73,9 +72,13 @@ export class UsuariosService {
   }
 
   private eliminarPropiedades(usuario: UsuarioDocument): UsuarioDocument {
-    const propiedadesEliminar = ['contrasena'];
+    const propiedadesEliminar = ['contrasena','contrasenaTemporal'];
+    
     for (const propiedadEliminar of propiedadesEliminar) {
-      delete usuario[propiedadEliminar];
+      if (propiedadEliminar in usuario){
+        console.log("Delete" + propiedadEliminar)
+        delete usuario[propiedadEliminar]
+      }
     }
     return usuario;
   }
@@ -98,6 +101,49 @@ export class UsuariosService {
       throw new BadRequestException(`Error al tratar de iniciar sesión con el email::${error.message}`);
     }
     return resultado;
+  }
+
+  async resetPassword(email: string): Promise<Usuario | NoUsuario> {
+    let resultado;
+    let resultadoNoExiste = {
+      message: 'No existe usuario',
+      statusCode: 200
+    };
+    try {
+      let resultadoUsuario = await this.usuarioModel.findOne({ correoElectronico: email }).exec();
+      if(!resultadoUsuario) {
+        return resultadoNoExiste;
+      }
+      else{
+
+        const contrasenaTemporal = await GenerarContrasenaTemporal(LongitudPassword.Ocho);
+  
+        const { hash } = await HashContrasena(contrasenaTemporal);
+
+        resultadoUsuario.contrasenaTemporal = hash;
+
+        console.log(resultadoUsuario);
+
+        const actualizado = await this.actualizarUsuario({
+          _id: resultadoUsuario._id,
+          correoElectronico: resultadoUsuario.correoElectronico,
+          nombreCompleto: resultadoUsuario.nombreCompleto,
+          contrasena: resultadoUsuario.contrasena,
+          contrasenaTemporal: resultadoUsuario.contrasenaTemporal,
+          urlFoto: resultadoUsuario.urlFoto,
+          pais: resultadoUsuario.pais,
+          genero: resultadoUsuario.genero
+        })
+
+        resultado = actualizado;
+
+        console.log(resultado);
+      }
+    } catch(error) {
+      console.log(error);
+      throw new BadRequestException(`Error al tratar de iniciar sesión con el email::${error.message}`);
+    }
+    return this.eliminarPropiedades(resultado.toObject());
   }
 
   // TODO: Obtener el idUsuario del JWT token

@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query } from
 import { UsuariosService } from './usuarios.service';
 import { CrearUsuariosDto } from './dto/crear-usuarios.dto';
 import { Usuario } from './schemas/usuarios.schema';
+import { NoUsuario } from './interface/no-usuario';
 import { LoginTercerosDto } from './dto/login-terceros.dto';
 import { LoginEmailDto } from './dto/login-email.dto';
 import { ActualizarUsuariosDto } from './dto/actualizar-usuarios';
@@ -30,6 +31,11 @@ export class UsuariosController {
   async findEmail(@Query('email') email: string): Promise<Usuario> {
     console.log(email)
     return this.usuariosService.findEmail(email);
+  }
+
+  @Get('resetPassword')
+  async resetPassword(@Query('email') email: string): Promise<Usuario | NoUsuario> {
+    return this.usuariosService.resetPassword(email);
   }
 
   @Delete(':id')

@@ -18,6 +18,9 @@ export class Usuario {
 	@Prop()
 	contrasena: string;
 
+	@Prop()
+	contrasenaTemporal: string;
+
 	@Prop({
 		required: true,
 	})
