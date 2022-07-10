@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, ObjectId } from 'mongoose';
+import { Document, Schema as SchemaM} from 'mongoose';
 
 export type IntegranteDocument = Integrante & Document;
 
@@ -9,7 +9,7 @@ export class Integrante {
 	@Prop({
 		required: true
 	})
-	idIntegrante: ObjectId;
+	idIntegrante: SchemaM.Types.ObjectId;
 
   @Prop({
     required: true

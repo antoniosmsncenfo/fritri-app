@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, ObjectId } from 'mongoose';
+import { Document, Schema as SchemaM} from 'mongoose';
 
 export type VotacionDocument = Votacion & Document;
 
@@ -9,7 +9,7 @@ export class Votacion {
   @Prop({
     required: true,
   })
-	idVotante: ObjectId;
+	idVotante: SchemaM.Types.ObjectId;
 
   @Prop({
     required: true,

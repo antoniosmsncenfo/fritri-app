@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, ObjectId } from 'mongoose';
+import { Document, Schema as SchemaM } from 'mongoose';
 import { Destino } from './destinos.schema';
 import { SeccionRestaurantes } from './secciones-restaurantes.schema';
 import { SeccionAtraccionesTuristicas } from './secciones-atracciones-turisticas.schema';
@@ -13,7 +13,7 @@ export class Paseo {
 	@Prop({
 		required: true
 	})
-	idCreador: ObjectId;
+	idCreador: SchemaM.Types.ObjectId;
 
 	@Prop({
 		required: true
