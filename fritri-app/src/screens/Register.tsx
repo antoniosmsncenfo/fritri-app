@@ -1,26 +1,28 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Linking, Platform, Alert} from 'react-native';
+import {Platform, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 
 import {useData, useTheme, useTranslation} from '../hooks/';
 import * as regex from '../constants/regex';
-import {Block, Button, Input, Image, Text, Checkbox, Modal} from '../components/';
-import { ITheme } from '../constants/types';
+import {Block, Button, Input, Image, Text, Modal} from '../components/';
+import { FotoUsuario, ITheme } from '../constants/types';
 import { FlatList } from 'react-native-gesture-handler';
 import { useUsuario } from '../hooks/useUsuario';
+import { IRegistration, RegistrationStatus } from '../interfaces/registro-usuario';
 
 const isAndroid = Platform.OS === 'android';
 
-interface IRegistration {
-  name: string;
-  email: string;
-  gender: string;
-  country: string;
-  photo: string;
-  password: string;
-  confirmPassword: string;
-  agreed: boolean;
-}
+// interface IRegistration {
+//   name: string;
+//   email: string;
+//   gender: string;
+//   country: string;
+//   password: string;
+//   confirmPassword: string;
+//   agreed: boolean;
+//   status: 'new' | 'success' | 'duplicated' | 'error';
+// }
+
 interface IRegistrationValidation {
   name: boolean;
   email: boolean;
@@ -35,10 +37,6 @@ interface ITouchableInput {
   value?: number | string;
   onPress?: () => void;
 }
-
-const GENDER_TYPES: {
-  [key: string]: string;
-} = {'1': 'Mujer', '2': 'Hombre', '3': 'Otro'};
 
 const COUNTRIES: {
   [key: string]: string;
@@ -87,10 +85,11 @@ const TouchableInput = ({label, value, icon, onPress}: ITouchableInput) => {
   );
 };
 
-const Register = () => {
+const Register = () => { 
   const {isDark} = useData();
   const {t} = useTranslation();
   const navigation = useNavigation();
+
   const [isValid, setIsValid] = useState<IRegistrationValidation>({
     name: false,
     email: false,
@@ -98,29 +97,34 @@ const Register = () => {
     confirmPassword: false,
     agreed: true,
   });
+
+  const GENDER_TYPES: { [key: string]: string; } = 
+  {'1': t('common.genders.woman'), 
+   '2': t('common.genders.man'), 
+   '3': t('common.genders.other')};
+
   const [registration, setRegistration] = useState<IRegistration>({
     name: '',
     email: '',
     gender: GENDER_TYPES['1'],
     country: COUNTRIES['1'],
-    photo:'',
     password: '',
     confirmPassword: '',
-    agreed: true
+    agreed: true,
+    status: RegistrationStatus.New
   });
 
   const [gender, setGender] = useState(GENDER_TYPES['1']);
 
   const [country, setCountry] = useState(COUNTRIES['1']);
 
-  const {registrarUsuario} = useUsuario();
+  const {resetRegistrarEstatus, registrarUsuario, registrarStatus} = useUsuario();
 
   const [modal, setModal] = useState<
     'gender' | 'country' |  undefined
   >();
 
   const {assets, colors, gradients, sizes} = useTheme();
-
 
   const handleChange = useCallback(
     (value) => {
@@ -133,32 +137,19 @@ const Register = () => {
 
   const handleSignUp = useCallback(() => {
     if (!Object.values(isValid).includes(false)) {
-      /** send/save registratin data */
-      console.log('handleSignUp', registration);
-      
       registrarUsuario({
         tipoLogin: 'Email',
         correoElectronico: registration.email,
         contrasena: registration.password,
         nombreCompleto: registration.name,
         genero: registration.gender,
+        foto: registration.gender===t('common.genders.woman')
+          ? FotoUsuario.Mujer
+          : FotoUsuario.Hombre,
         pais: registration.country
       })
 
-      Alert.alert(
-        t('register.welcome'),
-        t('register.success'),
-        [
-          {text: 'OK', onPress: () => {
-            console.log('OK button clicked');
-            navigation.navigate('Home');},
-          }
-        ],
-        { 
-          cancelable: false 
-        }
-      );
-      
+      console.log(registrarStatus);
     }
   }, [isValid, registration]);
 
@@ -191,6 +182,38 @@ const Register = () => {
     }));
   }, [registration, setIsValid]);
 
+  useEffect(() => {
+    if(registrarStatus===RegistrationStatus.Success)
+    {
+      Alert.alert(
+        t('register.welcome'),
+        t('register.success'),
+        [
+          {text: 'OK', onPress: () => {
+            console.log('OK button clicked');
+            navigation.navigate('Profile');},
+          }
+        ],
+        { 
+          cancelable: false 
+        }
+      );
+    }
+    else if (registrarStatus===RegistrationStatus.Duplicated){
+      Alert.alert(
+        t('register.validation'),
+        t('register.emailExists'),
+        [
+          {text: 'OK'}
+        ],
+        { 
+          cancelable: false 
+        }
+      );
+      resetRegistrarEstatus();
+    }
+  }, [registrarStatus])
+  
   return (
     <Block safe marginTop={sizes.md}>
       <Block paddingHorizontal={sizes.s}>
@@ -335,12 +358,12 @@ const Register = () => {
                   label={t('common.country')}
                   onPress={() => setModal('country')}
                 />
-                <TouchableInput
+                {/* <TouchableInput
                   icon="more"
                   value={"Me.jpg"}
                   label={t('common.avatar')}
                   onPress={() => setModal(undefined)}
-                />                                                 
+                />                                                  */}
                 {/* 
                 <Text bold marginBottom={sizes.s}>
                   {t('common.gender')}
@@ -373,6 +396,7 @@ const Register = () => {
                   autoCapitalize="none"
                   marginBottom={sizes.m}
                   label={t('common.password')}
+                  rules={t('register.emailRules')}
                   placeholder={t('common.passwordPlaceholder')}
                   onChangeText={(value) => handleChange({password: value})}
                   success={Boolean(registration.password && isValid.password)}
@@ -383,6 +407,7 @@ const Register = () => {
                   autoCapitalize="none"
                   marginBottom={sizes.m}
                   label={t('common.confirmPassword')}
+                  rules={t('register.emailRules')}
                   placeholder={t('common.confirmPasswordPlaceholder')}
                   onChangeText={(value) => handleChange({confirmPassword: value})}
                   success={Boolean(registration.confirmPassword && isValid.confirmPassword)}

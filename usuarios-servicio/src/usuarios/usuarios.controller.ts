@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query } from '@nestjs/common';
 import { UsuariosService } from './usuarios.service';
 import { CrearUsuariosDto } from './dto/crear-usuarios.dto';
 import { Usuario } from './schemas/usuarios.schema';
@@ -21,9 +21,15 @@ export class UsuariosController {
     return this.usuariosService.findAll();
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Usuario> {
-    return this.usuariosService.findOne(id);
+  // @Get(':id')
+  // async findOne(@Param('id') id: string): Promise<Usuario> {
+  //   return this.usuariosService.findOne(id);
+  // }
+
+  @Get('findEmail')
+  async findEmail(@Query('email') email: string): Promise<Usuario> {
+    console.log(email)
+    return this.usuariosService.findEmail(email);
   }
 
   @Delete(':id')

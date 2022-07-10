@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Linking, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
+import { ILogin, ILoginValidation} from '../constants/types/index';
 
 import { useData, useTheme, useTranslation } from '../hooks/';
 import * as regex from '../constants/regex';
@@ -8,20 +9,12 @@ import { Block, Button, Input, Image, Text, Checkbox } from '../components/';
 import { useGoogleLogin } from '../hooks/useGoogleLogin';
 import { useFacebook } from '../hooks/useFacebook';
 import { useUsuario, useLogin } from '../hooks/useUsuario';
+import { email } from '../constants/regex';
 
-import { email, password } from '../constants/regex';
 
 
 const isAndroid = Platform.OS === 'android';
 
-interface ILogin {
-  email: string;
-  password: string;
-}
-interface ILoginValidation {
-  email: boolean;
-  password: boolean;
-}
 
 const Login = () => {
   const { isDark, handleUser, user } = useData();
