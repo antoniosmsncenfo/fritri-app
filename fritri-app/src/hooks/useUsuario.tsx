@@ -8,8 +8,8 @@ import { RegistrationStatus } from '../interfaces/registro-usuario';
 
 export const useLogin = () => {
     const [usuarioLogin, setUsuarioLogin] = useState<ILogin>({
-        correoElectronico: '',
-        contrasena: '',
+        email: '',
+        password: '',
     })
 
     const [fritriUser, setFritriUser] = useState<IUsuarioFritri | null>(null);
@@ -107,4 +107,3 @@ export const useUsuario = () => {
 
 }
 
-}
