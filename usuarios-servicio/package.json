@@ -21,6 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@nestjs-modules/mailer": "^1.7.1",
     "@nestjs/common": "^8.4.7",
     "@nestjs/config": "^2.1.0",
     "@nestjs/core": "^8.4.7",
@@ -30,6 +31,7 @@
     "bcrypt": "^5.0.1",
     "mongoose": "^6.4.2",
     "nest-cli": "^0.0.5",
+    "nodemailer": "^6.7.7",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"
