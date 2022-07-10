@@ -95,10 +95,6 @@ export class UsuariosService {
 
   async loginEmail(loginEmailDto: LoginEmailDto): Promise<Usuario> | null {
     let resultado;
-    let resultadoNoExiste = {
-      message: 'No existe usuario',
-      statusCode: 200
-    };
     try {
       const resultadoUsuario: UsuarioDocument = await this.usuarioModel.findOne({ correoElectronico: loginEmailDto.correoElectronico }).exec();
       if(!resultadoUsuario) {
@@ -106,6 +102,11 @@ export class UsuariosService {
       }
       const compararContrasena = await CompararContrasena(loginEmailDto.contrasena, resultadoUsuario.contrasena);
       resultado = compararContrasena && this.eliminarPropiedades(resultadoUsuario.toObject());
+      const token = await this.authService.login({ correoElectronico: resultadoUsuario.correoElectronico, _id: resultadoUsuario.id });
+      resultado = {
+        ...resultado,
+        ...token
+      }
     } catch(error) {
       console.log(error);
       throw new BadRequestException(`Error al tratar de iniciar sesión con el email::${error.message}`);
@@ -113,7 +114,6 @@ export class UsuariosService {
     return resultado;
   }
 
-  // TODO: Obtener el idUsuario del JWT token
   async actualizarUsuario(actualizarUsuariosDto: ActualizarUsuariosDto): Promise<Usuario> {
     let resultado;
     try {
