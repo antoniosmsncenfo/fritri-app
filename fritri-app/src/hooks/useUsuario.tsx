@@ -123,23 +123,6 @@ export const usePassword = () => {
 
         setResetPasswordResult(ResetPasswordStatus.Success);
 
-        // guardarUsuarioFriTri(usuarioNuevo)
-        // .then((result: IUsuario) => {
-        //     if (result !== null) {
-        //         setUsuarioFriTri(result);
-        //         setResetPasswordStatus(ResetPasswordStatus.Success);
-        //         console.log("Usuario registrado:");
-        //         console.log(usuarioFriTri);
-        //     }
-        // })
-        // .catch((e) => {
-        //     console.log("Error capturado: " + e.response.data.message)
-        //     if (e.response.data.message==="Error al tratar de crear el usuario-email::Email duplicado")
-        //     {
-        //         setResetPasswordStatus(ResetPasswordStatus.WrongEmail);
-        //     }   
-        // }
-        // );
     }
 
     return {

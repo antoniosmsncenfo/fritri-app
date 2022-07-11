@@ -89,7 +89,6 @@ export class UsuariosService {
     
     for (const propiedadEliminar of propiedadesEliminar) {
       if (propiedadEliminar in usuario){
-        console.log("Delete" + propiedadEliminar)
         delete usuario[propiedadEliminar]
       }
     }
@@ -132,13 +131,11 @@ export class UsuariosService {
 
         const contrasenaTemporal = await GenerarContrasenaTemporal(LongitudPassword.Ocho);
   
+        console.log("Temporal: " + contrasenaTemporal);
+
         const { hash } = await HashContrasena(contrasenaTemporal);
 
-        console.log("Temporal: " + hash);
-
         resultadoUsuario.contrasenaTemporal = hash;
-
-        console.log(resultadoUsuario);
 
         const actualizado = await this.actualizarUsuario({
           _id: resultadoUsuario._id,
@@ -153,10 +150,8 @@ export class UsuariosService {
 
         resultado = actualizado;
 
-        console.log(resultado);
       }
     } catch(error) {
-      console.log(error);
       throw new BadRequestException(`Error al tratar de iniciar sesión con el email::${error.message}`);
     }
     return this.eliminarPropiedades(resultado.toObject());

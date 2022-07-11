@@ -37,10 +37,8 @@ export const guardarUsuarioFriTri = async (usuarioNuevo: IUsuario) => {
     };
     try {
         const resultado = await axios(request);
-        console.log(resultado.status);
 
         if (resultado.status === 200) {
-            console.log(resultado.data);
             return resultado.data;
         }
         else {

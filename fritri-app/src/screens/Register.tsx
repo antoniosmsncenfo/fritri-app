@@ -148,8 +148,6 @@ const Register = () => {
           : FotoUsuario.Hombre,
         pais: registration.country
       })
-
-      console.log(registrarStatus);
     }
   }, [isValid, registration]);
 
@@ -190,7 +188,6 @@ const Register = () => {
         t('register.success'),
         [
           {text: 'OK', onPress: () => {
-            console.log('OK button clicked');
             navigation.navigate('Home');},
           }
         ],

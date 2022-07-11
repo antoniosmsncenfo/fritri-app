@@ -29,7 +29,6 @@ export class UsuariosController {
 
   @Get('findEmail')
   async findEmail(@Query('email') email: string): Promise<Usuario> {
-    console.log(email)
     return this.usuariosService.findEmail(email);
   }
 
