@@ -133,7 +133,7 @@
   },
   "resetPassword": {
     "title": "Reset your Password",
-    "subtitle": "Please type your email",
+    "subtitle": "Please enter your email address",
     "sendTempPass": "Send temporary password",
     "passwordSent": "Temporary password sent",
     "checkEmail": "Please check your inbox/spam folder, and use the temporary password to login.",

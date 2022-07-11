@@ -21,7 +21,7 @@ export class EmailController {
         var response = await this.mailService.sendMail({
             to: 'andreshj28@hotmail.com',
             from: 'fritri.app@gmail.com',
-            subject: 'HTML Dynamic Template',
+            subject: 'Envío de contraseña temporal',
             template: 'resetPassword',
             context: {
                 resetPassword:resetPassword
