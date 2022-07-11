@@ -16,10 +16,6 @@ export const useLogin = () => {
 
     const loginUsuarioEmail = async (usuarioLogin: ILogin) => {
 
-        console.log(' Logueando...');
-
-        console.log(usuarioLogin);
-
         try {
 
             let request = {
@@ -31,7 +27,6 @@ export const useLogin = () => {
 
             const resultado = await axios(request);
             if (resultado.status === 200) {
-                console.log(resultado.data)
                 if ('message' in resultado.data && resultado.data.message === "No existe usuario") {
                     setFritriUser(null)
                 } 
@@ -43,11 +38,9 @@ export const useLogin = () => {
                 setFritriUser(null)
             }
         } catch (error) {
-            console.log(error);
         }
     }
     const emailLogout = () => {
-        console.log('emailLogout');
         
         setFritriUser(null);
     };
@@ -86,12 +79,9 @@ export const useUsuario = () => {
                 if (result !== null) {
                     setUsuarioFriTri(result);
                     setRegistrarStatus(RegistrationStatus.Success);
-                    console.log("Usuario registrado:");
-                    console.log(usuarioFriTri);
                 }
             })
             .catch((e) => {
-                console.log("Error capturado: " + e.response.data.message)
                 if (e.response.data.message==="Error al tratar de crear el usuario-email::Email duplicado")
                 {
                     setRegistrarStatus(RegistrationStatus.Duplicated);

@@ -61,9 +61,6 @@ const Login = () => {
         }
       );
     }
-    console.log(`${isValid.email ? 'email Valido' : 'email Invalido'}`);
-    console.log(`${isValid.password ? 'password Valido' : 'password Invalido'}`);
-
   };
 
   const loginGoogleUser = () => {
@@ -112,7 +109,6 @@ const Login = () => {
   }, [isFritriUserFromGoogleLogged]);
 
   useEffect(() => {
-    console.log(fritriUserEmail);
     if (fritriUserEmail) {
       handleUser(fritriUserEmail!);
       navigation.navigate('Home');
