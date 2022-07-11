@@ -16,8 +16,10 @@ export class DestinosService {
       nombre,
       idioma,
     );
-    console.log(JSON.stringify(destinosGoogle, null, 2));
-    const destinos: Destino[] = destinosGoogle.map(this.mapearGoogleADestino);
+
+    const destinos: Destino[] = destinosGoogle.map((destinoGoogle) =>
+      this.mapearGoogleADestino(destinoGoogle),
+    );
 
     return destinos;
   }
@@ -36,7 +38,7 @@ export class DestinosService {
     return destino;
   }
 
-  private mapearGoogleADestino = (destinoGoogle: GeocodeResult): Destino => {
+  private mapearGoogleADestino(destinoGoogle: GeocodeResult) {
     const { place_id, address_components, formatted_address, geometry } =
       destinoGoogle;
     const { lat, lng } = geometry.location;
@@ -59,6 +61,5 @@ export class DestinosService {
       pais: paises[0]?.long_name || '', //en el caso de que no tenga provincia pone ''
       urlFoto: '',
     };
-    //destinoGoogle.
-  };
+  }
 }
