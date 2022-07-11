@@ -27,6 +27,14 @@ export interface IUsuario {
   pais?: string;
   foto?: string;
 }
+export interface ILogin {
+  correoElectronico: string;
+  contrasena: string;
+}
+export interface ILoginValidation {
+  email: boolean;
+  password: boolean;
+}
 
 export enum FotoUsuario {
   Hombre = 'https://res.cloudinary.com/fritri-app/image/upload/v1657257441/fritri-app/Batman_mci2ra.png',
