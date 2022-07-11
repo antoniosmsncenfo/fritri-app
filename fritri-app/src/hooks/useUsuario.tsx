@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { IUsuario, ILogin } from '../constants/types/index';
 import { USUARIOS_BASE_URL } from '@env';
 import { IUsuarioFritri } from "../interfaces/usuario-fritri";
-import { guardarUsuarioFriTri } from "../api/usuarioDB";
+import { guardarUsuarioFriTri, resetearPassword } from "../api/usuarioDB";
 import { RegistrationStatus, ResetPasswordStatus } from '../interfaces/registro-usuario';
 
 export const useLogin = () => {
@@ -74,20 +74,20 @@ export const useUsuario = () => {
 
     const registrarUsuario = (usuarioNuevo:IUsuario) => {
 
-            guardarUsuarioFriTri(usuarioNuevo)
-            .then((result: IUsuario) => {
-                if (result !== null) {
-                    setUsuarioFriTri(result);
-                    setRegistrarStatus(RegistrationStatus.Success);
-                }
-            })
-            .catch((e) => {
-                if (e.response.data.message==="Error al tratar de crear el usuario-email::Email duplicado")
-                {
-                    setRegistrarStatus(RegistrationStatus.Duplicated);
-                }   
+        guardarUsuarioFriTri(usuarioNuevo)
+        .then((result: IUsuario) => {
+            if (result !== null) {
+                setUsuarioFriTri(result);
+                setRegistrarStatus(RegistrationStatus.Success);
             }
-            );
+        })
+        .catch((e) => {
+            if (e.response.data.message==="Error al tratar de crear el usuario-email::Email duplicado")
+            {
+                setRegistrarStatus(RegistrationStatus.Duplicated);
+            }   
+        }
+        );
     }
 
     return {
@@ -121,7 +121,17 @@ export const usePassword = () => {
 
     const resetPassword = (emailUsuario:string) => {
 
-        setResetPasswordResult(ResetPasswordStatus.Success);
+        resetearPassword(emailUsuario)
+        .then((resultado) => {
+            console.log(resultado);
+            if (resultado !== null) {
+                setResetPasswordResult(ResetPasswordStatus.Success);
+            }
+        })
+        .catch((e) => {
+            setResetPasswordResult(ResetPasswordStatus.Error);
+        }
+        );
 
     }
 

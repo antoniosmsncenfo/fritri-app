@@ -49,3 +49,24 @@ export const guardarUsuarioFriTri = async (usuarioNuevo: IUsuario) => {
         throw e;
     }
 };
+
+export const resetearPassword = async (email:string) => {
+    let request = {
+        method: 'get',
+        url: `${USUARIOS_BASE_URL}/resetPassword?email=${email}`,
+        headers: {},
+    };
+    try {
+        const resultado = await axios(request);
+
+        if (resultado.status === 200) {
+            return resultado.data;
+        }
+        else {
+            return null;
+        }
+    }
+    catch (e) {
+        throw e;
+    }
+};
