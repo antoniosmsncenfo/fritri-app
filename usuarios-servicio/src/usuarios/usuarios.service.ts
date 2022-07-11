@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BadRequestException } from  '@nestjs/common';
@@ -101,7 +101,7 @@ export class UsuariosService {
     try {
       const resultadoUsuario: UsuarioDocument = await this.usuarioModel.findOne({ correoElectronico: loginEmailDto.correoElectronico }).exec();
       if(!resultadoUsuario) {
-        return null;
+        throw new NotFoundException("Email no encontrado");
       }
       const compararContrasena = await CompararContrasena(loginEmailDto.contrasena, resultadoUsuario.contrasena);
       resultado = compararContrasena && this.eliminarPropiedades(resultadoUsuario.toObject());
