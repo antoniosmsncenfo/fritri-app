@@ -28,8 +28,8 @@ export interface IUsuario {
   foto?: string;
 }
 export interface ILogin {
-  email: string;
-  password: string;
+  correoElectronico: string;
+  contrasena: string;
 }
 export interface ILoginValidation {
   email: boolean;

@@ -8,8 +8,8 @@ import { RegistrationStatus } from '../interfaces/registro-usuario';
 
 export const useLogin = () => {
     const [usuarioLogin, setUsuarioLogin] = useState<ILogin>({
-        email: '',
-        password: '',
+        correoElectronico: '',
+        contrasena: '',
     })
 
     const [fritriUser, setFritriUser] = useState<IUsuarioFritri | null>(null);
@@ -31,12 +31,13 @@ export const useLogin = () => {
 
             const resultado = await axios(request);
             if (resultado.status === 200) {
+                console.log(resultado.data)
                 if ('message' in resultado.data && resultado.data.message === "No existe usuario") {
                     setFritriUser(null)
-                }
-                else {
+                } 
+                else if('tipoLogin' in resultado.data && resultado.data.tipoLogin === "Email") {
                     setFritriUser(resultado.data)
-                }
+                } 
             }
             else {
                 setFritriUser(null)
@@ -44,9 +45,10 @@ export const useLogin = () => {
         } catch (error) {
             console.log(error);
         }
-
     }
     const emailLogout = () => {
+        console.log('emailLogout');
+        
         setFritriUser(null);
     };
     return {

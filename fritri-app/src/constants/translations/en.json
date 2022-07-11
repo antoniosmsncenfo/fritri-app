@@ -128,7 +128,11 @@
   },
   "login": {
     "title": "Welcome",
-    "subtitle": "Sign In with"
+    "subtitle": "Sign In with",
+    "errorFields": "Please check the password or email!",
+    "errorLogin": "Error Login!"
+
+
   },
   "settings": {
     "recommended": {
