@@ -120,6 +120,8 @@ export class UsuariosService {
   
         const { hash } = await HashContrasena(contrasenaTemporal);
 
+        console.log("Temporal: " + hash);
+
         resultadoUsuario.contrasenaTemporal = hash;
 
         console.log(resultadoUsuario);

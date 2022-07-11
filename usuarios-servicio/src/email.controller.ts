@@ -1,5 +1,5 @@
 import { MailerService } from '@nestjs-modules/mailer';
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, Post, Body } from '@nestjs/common';
  
 @Controller('email')
 export class EmailController {
@@ -14,5 +14,20 @@ export class EmailController {
             text: 'Welcome NestJS Email Sending Tutorial', 
         });
         return response;
+    }
+
+    @Post('html-email')
+    async postHTMLEmail(@Body() resetPassword: any) {
+        var response = await this.mailService.sendMail({
+            to: 'andreshj28@hotmail.com',
+            from: 'fritri.app@gmail.com',
+            subject: 'HTML Dynamic Template',
+            template: 'resetPassword',
+            context: {
+                resetPassword:resetPassword
+            },
+        });
+        console.log(response);
+        return 'success';
     }
 }
