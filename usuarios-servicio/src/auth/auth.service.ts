@@ -12,7 +12,7 @@ export class AuthService {
 
   async validarUsuario(correoElectronico: string, contrasena: string): Promise<any> {
     const usuario = await this.usuariosService.loginEmail({ correoElectronico, contrasena });
-    if (!usuario) {
+    if (usuario['message'] === 'Credenciales no válidas') {
       return null;
     }
     return usuario;

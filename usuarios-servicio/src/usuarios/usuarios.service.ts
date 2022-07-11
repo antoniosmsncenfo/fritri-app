@@ -95,12 +95,16 @@ export class UsuariosService {
     return usuario;
   }
 
-  async loginEmail(loginEmailDto: LoginEmailDto): Promise<Usuario> | null {
+  async loginEmail(loginEmailDto: LoginEmailDto): Promise<Usuario | NoUsuario> {
     let resultado;
+    let resultadoNoExiste = {
+      message: 'Credenciales no válidas',
+      statusCode: 200
+    };
     try {
       const resultadoUsuario: UsuarioDocument = await this.usuarioModel.findOne({ correoElectronico: loginEmailDto.correoElectronico }).exec();
       if(!resultadoUsuario) {
-        throw new NotFoundException("Email no encontrado");
+        return resultadoNoExiste;
       }
       const compararContrasena = await CompararContrasena(loginEmailDto.contrasena, resultadoUsuario.contrasena);
       resultado = compararContrasena && this.eliminarPropiedades(resultadoUsuario.toObject());
