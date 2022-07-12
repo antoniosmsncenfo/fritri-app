@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BadRequestException } from  '@nestjs/common';
@@ -9,11 +9,14 @@ import { CompararContrasena, HashContrasena } from '../helpers/hash.contrasena';
 import { LoginEmailDto } from './dto/login-email.dto';
 import { NoUsuario } from './interface/no-usuario';
 import { ActualizarUsuariosDto } from './dto/actualizar-usuarios';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class UsuariosService {
   constructor(
     @InjectModel(Usuario.name) private readonly usuarioModel: Model<UsuarioDocument>,
+    @Inject(forwardRef(() => AuthService))
+    private authService: AuthService,
   ) {}
 
   async create(crearUsuarioDto: CrearUsuariosDto): Promise<Usuario> {
@@ -30,10 +33,15 @@ export class UsuariosService {
       } else {
         throw new Error('Email duplicado');
       }
+      const token = await this.authService.login({ correoElectronico: resultado.correoElectronico, _id: resultado.id });
+      resultado = {
+        ...resultado.toObject(),
+        ...token
+      }
     } catch(error) {
       throw new BadRequestException(`Error al tratar de crear el usuario-email::${error.message}`);
     }
-    return this.eliminarPropiedades(resultado.toObject());
+    return this.eliminarPropiedades(resultado);
   }
 
   async findAll(): Promise<Usuario[]> {
@@ -64,7 +72,12 @@ export class UsuariosService {
         new: true,
         upsert: true
       }).exec();
-      resultado = this.eliminarPropiedades(resultadoUsuario.toObject());
+      const token = await this.authService.loginTerceros({ tokenTerceros: resultadoUsuario.token, _id: resultadoUsuario.id });
+      resultado = {
+        ...resultadoUsuario.toObject(),
+        ...token
+      }
+      resultado = this.eliminarPropiedades(resultado);
     } catch(error) {
       console.log(error);
       throw new BadRequestException(`Error al tratar de crear el usuario::${error.message}`);
@@ -83,7 +96,7 @@ export class UsuariosService {
   async loginEmail(loginEmailDto: LoginEmailDto): Promise<Usuario | NoUsuario> {
     let resultado;
     let resultadoNoExiste = {
-      message: 'No existe usuario',
+      message: 'Credenciales no válidas',
       statusCode: 200
     };
     try {
@@ -92,7 +105,12 @@ export class UsuariosService {
         return resultadoNoExiste;
       }
       const compararContrasena = await CompararContrasena(loginEmailDto.contrasena, resultadoUsuario.contrasena);
-      resultado = compararContrasena ? this.eliminarPropiedades(resultadoUsuario.toObject()) : resultadoNoExiste;
+      resultado = compararContrasena && this.eliminarPropiedades(resultadoUsuario.toObject());
+      const token = await this.authService.login({ correoElectronico: resultadoUsuario.correoElectronico, _id: resultadoUsuario.id });
+      resultado = {
+        ...resultado,
+        ...token
+      }
     } catch(error) {
       console.log(error);
       throw new BadRequestException(`Error al tratar de iniciar sesión con el email::${error.message}`);
@@ -100,7 +118,6 @@ export class UsuariosService {
     return resultado;
   }
 
-  // TODO: Obtener el idUsuario del JWT token
   async actualizarUsuario(actualizarUsuariosDto: ActualizarUsuariosDto): Promise<Usuario> {
     let resultado;
     try {

@@ -1,25 +1,20 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Linking, Platform } from 'react-native';
+import { Alert, Linking, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
+import { ILogin, ILoginValidation } from '../constants/types/index';
 
 import { useData, useTheme, useTranslation } from '../hooks/';
 import * as regex from '../constants/regex';
 import { Block, Button, Input, Image, Text, Checkbox } from '../components/';
 import { useGoogleLogin } from '../hooks/useGoogleLogin';
 import { useFacebook } from '../hooks/useFacebook';
-import { email, password } from '../constants/regex';
+import { useUsuario, useLogin } from '../hooks/useUsuario';
+import { email } from '../constants/regex';
+
 
 
 const isAndroid = Platform.OS === 'android';
 
-interface ILogin {
-  email: string;
-  password: string;
-}
-interface ILoginValidation {
-  email: boolean;
-  password: boolean;
-}
 
 const Login = () => {
   const { isDark, handleUser, user } = useData();
@@ -30,8 +25,8 @@ const Login = () => {
     password: false,
   });
   const [login, setLoginData] = useState<ILogin>({
-    email: '',
-    password: '',
+    correoElectronico: '',
+    contrasena: '',
   });
 
 
@@ -39,6 +34,7 @@ const Login = () => {
 
   const { signInWithGoogleAsync, fritriUserFromGoogle, isFritriUserFromGoogleLogged, googleLogout } = useGoogleLogin();
   const { facebookLogin } = useFacebook();
+  const { loginUsuarioEmail, emailLogout, fritriUserEmail } = useLogin();
 
   const handleChange = useCallback(
     (value) => {
@@ -47,29 +43,60 @@ const Login = () => {
     [setLoginData],
   );
 
-  const handleSignIn = useCallback(() => {
+  const handleSignIn = () => {
+    emailLogout();
     /**LOGIN EMAIL */
-    if (Object.values(isValid).includes(false)) {
-      alert('Favor ingrese valores en los campos');
-      console.log('handleSignIn', login);
-      } else{
-        
-        //navigation.navigate('Home');
+    if (isValid.email && isValid.password) {
+      loginUsuarioEmail(login);
+    } else {
+      Alert.alert(
+        t('login.errorLogin'),
+        t('login.errorFields'),
 
-      }
-
-  }, [login]);
+        [
+          { text: 'OK' }
+        ],
+        {
+          cancelable: false
+        }
+      );
+    }
+  };
 
   const loginGoogleUser = () => {
     googleLogout();
     signInWithGoogleAsync();
   };
+  useEffect(() => {
+    emailLogout();
+    setIsValid({
+      email: false,
+      password: false
+    });
+    setLoginData({
+      correoElectronico: '',
+      contrasena: '',
+    });
+    return limpiar();
+  }, []);
+  const limpiar = () => {
+
+    setIsValid({
+      email: false,
+      password: false
+    });
+    setLoginData({
+      correoElectronico: '',
+      contrasena: '',
+    });
+  }
+
 
   useEffect(() => {
     setIsValid((state) => ({
       ...state,
-      email: regex.email.test(login.email),
-      password: regex.password.test(login.password),
+      email: regex.email.test(login.correoElectronico),
+      password: regex.password.test(login.contrasena),
     }));
   }, [login, setIsValid]);
 
@@ -80,6 +107,14 @@ const Login = () => {
       fritriUserFromGoogle?.pais == null ? navigation.navigate('Profile') : navigation.navigate('Home');
     }
   }, [isFritriUserFromGoogleLogged]);
+
+  useEffect(() => {
+    if (fritriUserEmail) {
+      handleUser(fritriUserEmail!);
+      navigation.navigate('Home');
+    }
+  }, [fritriUserEmail]);
+
 
   return (
     <Block safe marginTop={sizes.md}>
@@ -207,9 +242,9 @@ const Login = () => {
                   marginBottom={sizes.m}
                   keyboardType="email-address"
                   placeholder={t('common.emailPlaceholder')}
-                  success={Boolean(login.email && isValid.email)}
-                  danger={Boolean(login.email && !isValid.email)}
-                  onChangeText={(value) => handleChange({ email: value })}
+                  success={(login.correoElectronico !== '' && isValid.email)}
+                  danger={Boolean(login.correoElectronico && !isValid.email)}
+                  onChangeText={(value) => handleChange({ correoElectronico: value })}
                 />
                 <Input
                   secureTextEntry
@@ -217,9 +252,9 @@ const Login = () => {
                   autoCapitalize="none"
                   marginBottom={sizes.m}
                   placeholder={t('common.passwordPlaceholder')}
-                  onChangeText={(value) => handleChange({ password: value })}
-                  success={Boolean(login.password && isValid.password)}
-                  danger={Boolean(login.password && !isValid.password)}
+                  onChangeText={(value) => handleChange({ contrasena: value })}
+                  success={Boolean(login.contrasena && isValid.password)}
+                  danger={Boolean(login.contrasena  && !isValid.password)}
                 />
               </Block>
               {/* checkbox terms */}
