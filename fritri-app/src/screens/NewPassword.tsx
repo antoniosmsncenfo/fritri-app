@@ -6,30 +6,35 @@ import * as regex from '../constants/regex';
 import {Block, Button, Input, Image, Text} from '../components/';
 import { usePassword } from '../hooks/useUsuario';
 import { ResetPasswordStatus } from '../interfaces/registro-usuario';
+import { password } from '../constants/regex';
 
 const isAndroid = Platform.OS === 'android';
 
-interface IResetPasswordValidation {
-    email: boolean;
+interface INewPasswordValidation {
+    password: boolean;
+    passwordConfirmation: boolean;
 }
 
-interface IResetPassword {
-    email: string;
+interface INewPassword {
+    newPassword: string;
+    newPasswordConfirmation: string;
     status: ResetPasswordStatus;
 }
 
-const ResetPassword = () => {
+const NewPassword = () => {
 
     const {t} = useTranslation();
     const navigation = useNavigation();
 
-    const [isValid, setIsValid] = useState<IResetPasswordValidation>({
-        email: false,
+    const [isValid, setIsValid] = useState<INewPasswordValidation>({
+      password: false,
+      passwordConfirmation: false,
     });
 
-    const [resetUserPassword, setResetUserPassword] = useState<IResetPassword>({
-        email: '',
-        status: ResetPasswordStatus.Pending
+    const [newPassword, setNewPassword] = useState<INewPassword>({
+      newPassword: '',
+      newPasswordConfirmation: '',
+      status: ResetPasswordStatus.Pending
     });
 
     const {assets, colors, gradients, sizes} = useTheme();
@@ -44,31 +49,32 @@ const ResetPassword = () => {
 
     const handleChange = useCallback(
         (value) => {
-            setResetUserPassword((state) => ({...state, ...value}));
+          setNewPassword((state) => ({...state, ...value}));
         },
-        [setResetUserPassword],
+        [setNewPassword],
       );
 
     const handleReset = useCallback(() => {
         if (!Object.values(isValid).includes(false)) {
             //Llamado a la función de resetear
-            resetPassword(resetUserPassword.email);
+            //resetPassword(resetUserPassword.email);
         }
     }, [isValid, resetPassword]);
 
     useEffect(() => {
         setIsValid((state) => ({
             ...state,
-            email: regex.email.test(resetUserPassword.email),
+            password: regex.email.test(newPassword.newPassword),
+            passwordConfirmation: regex.email.test(newPassword.newPasswordConfirmation),
         }));
-    }, [resetUserPassword, setIsValid]);
+    }, [newPassword, setIsValid]);
 
     useEffect(() => {
         if(resetPasswordResult===ResetPasswordStatus.Success)
         {
           Alert.alert(
-            t('resetPassword.passwordSent'),
-            t('resetPassword.checkEmail'),
+            t('newPassword.passwordSent'),
+            t('newPassword.checkEmail'),
             [
               {text: 'OK', onPress: () => {
                 navigation.navigate('Login');},
@@ -81,8 +87,8 @@ const ResetPassword = () => {
         }
         else if (resetPasswordResult===ResetPasswordStatus.Error){
           Alert.alert(
-            t('resetPassword.passwordError'),
-            t('register.errorMessage'),
+            t('newPassword.passwordError'),
+            t('newPassword.errorMessage'),
             [
               {text: 'OK'}
             ],
@@ -106,7 +112,7 @@ const ResetPassword = () => {
                 source={assets.background}
                 height={sizes.height * 0.3}>
                 <Text h4 center white marginTop={20}>
-                  {t('resetPassword.title')}
+                  {t('newPassword.title')}
                 </Text>
               </Image>
             </Block>
@@ -131,31 +137,44 @@ const ResetPassword = () => {
                   tint={colors.blurTint}
                   paddingVertical={sizes.sm}>
                   <Text p semibold center>
-                    {t('resetPassword.subtitle')}
+                    {t('newPassword.subtitle')}
                   </Text>
-                  {/* form inputs */}
-                  <Block paddingHorizontal={sizes.sm}>
+                  <Block 
+                    paddingHorizontal={sizes.sm}
+                    paddingTop={sizes.sm}>
                     <Input
+                    secureTextEntry
+                    autoCapitalize="none"
+                    marginBottom={sizes.m}
+                    label={t('common.password')}
+                    rules={t('register.passwordRules')}
+                    placeholder={t('common.passwordPlaceholder')}
+                    onChangeText={(value) => handleChange({password: value})}
+                    success={Boolean(newPassword.newPassword && isValid.password)}
+                    danger={Boolean(newPassword.newPasswordConfirmation && !isValid.password)}
+                    />
+                    <Input
+                      secureTextEntry
                       autoCapitalize="none"
                       marginBottom={sizes.m}
-                      label={t('common.email')}
-                      keyboardType="email-address"
-                      placeholder={t('common.emailPlaceholder')}
-                      success={Boolean(resetUserPassword.email && isValid.email)}
-                      danger={Boolean(resetUserPassword.email && !isValid.email)}
-                      onChangeText={(value) => handleChange({email: value})}
-                    />
+                      label={t('common.confirmPassword')}
+                      rules={t('register.passwordRules')}
+                      placeholder={t('common.confirmPasswordPlaceholder')}
+                      onChangeText={(value) => handleChange({confirmPassword: value})}
+                      success={Boolean(newPassword.newPasswordConfirmation && isValid.passwordConfirmation)}
+                      danger={Boolean(newPassword.newPasswordConfirmation && !isValid.passwordConfirmation)}
+                    /> 
+                    <Button
+                      onPress={handleReset}
+                      marginVertical={sizes.s}
+                      marginHorizontal={sizes.sm}
+                      gradient={gradients.primary}
+                      disabled={Object.values(isValid).includes(false)}>
+                      <Text bold white transform="uppercase">
+                        {t('newPassword.sendTempPass')}
+                      </Text>
+                    </Button>
                   </Block>
-                  <Button
-                    onPress={handleReset}
-                    marginVertical={sizes.s}
-                    marginHorizontal={sizes.sm}
-                    gradient={gradients.primary}
-                    disabled={Object.values(isValid).includes(false)}>
-                    <Text bold white transform="uppercase">
-                      {t('resetPassword.sendTempPass')}
-                    </Text>
-                  </Button>
                 </Block>
               </Block>
             </Block>
@@ -164,4 +183,4 @@ const ResetPassword = () => {
     );
 }
 
-export default ResetPassword;
+export default NewPassword;

@@ -27,15 +27,20 @@ export const useLogin = () => {
 
             const resultado = await axios(request);
             if (resultado.status === 200) {
-                if ('message' in resultado.data && resultado.data.message === "No existe usuario") {
-                    setFritriUser(null)
+                console.log(resultado.data);
+                if (resultado.data.statusCode === 401) {
+                    setFritriUser(null);
                 } 
-                else if('tipoLogin' in resultado.data && resultado.data.tipoLogin === "Email") {
-                    setFritriUser(resultado.data)
-                } 
+                else if('tipoLogin' in resultado.data) {
+                    console.log(resultado.data);
+                    setFritriUser(resultado.data);
+                }
+                else {
+                    setFritriUser(null);
+                }
             }
             else {
-                setFritriUser(null)
+                setFritriUser(null);
             }
         } catch (error) {
         }
@@ -44,6 +49,7 @@ export const useLogin = () => {
         
         setFritriUser(null);
     };
+    
     return {
         loginUsuarioEmail,
         emailLogout,

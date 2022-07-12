@@ -67,6 +67,7 @@ const Login = () => {
     googleLogout();
     signInWithGoogleAsync();
   };
+
   useEffect(() => {
     emailLogout();
     setIsValid({
@@ -79,8 +80,8 @@ const Login = () => {
     });
     return limpiar();
   }, []);
-  const limpiar = () => {
 
+  const limpiar = () => {
     setIsValid({
       email: false,
       password: false
@@ -91,7 +92,6 @@ const Login = () => {
     });
   }
 
-
   useEffect(() => {
     setIsValid((state) => ({
       ...state,
@@ -99,7 +99,6 @@ const Login = () => {
       password: regex.password.test(login.contrasena),
     }));
   }, [login, setIsValid]);
-
 
   useEffect(() => {
     if (isFritriUserFromGoogleLogged) {
@@ -111,10 +110,14 @@ const Login = () => {
   useEffect(() => {
     if (fritriUserEmail) {
       handleUser(fritriUserEmail!);
-      navigation.navigate('Home');
+      if (fritriUserEmail.tipoLogin==="Temporal") {
+        navigation.navigate('NewPassword');
+      }
+      else {
+        navigation.navigate('Home');
+      }
     }
   }, [fritriUserEmail]);
-
 
   return (
     <Block safe marginTop={sizes.md}>

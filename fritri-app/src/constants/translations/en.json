@@ -141,7 +141,16 @@
     "checkEmail": "Please check your inbox/spam folder, and use the temporary password to login.",
     "passwordError": "Something went wrong!",
     "errorMessage": "Please try again. If problem persists, please contact customer support."
-  },  
+  }, 
+  "newPassword": {
+    "title": "New Password",
+    "subtitle": "Please enter your new password",
+    "sendTempPass": "Save New Password",
+    "passwordSent": "New Password Registered",
+    "checkEmail": "Please login with your new password.",
+    "passwordError": "Something went wrong!",
+    "errorMessage": "Please try again. If problem persists, please contact customer support."
+  },   
   "settings": {
     "recommended": {
       "title": "Recommended Settings",
