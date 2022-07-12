@@ -71,7 +71,10 @@ export const useUsuario = () => {
     const resetRegistrarEstatus = () => {
         setRegistrarStatus(RegistrationStatus.New);
     }
+    const emailLogout = () => {
+        setRegistrarStatus(RegistrationStatus.LogOut);
 
+    };
     const registrarUsuario = (usuarioNuevo:IUsuario) => {
 
             guardarUsuarioFriTri(usuarioNuevo)
@@ -109,7 +112,8 @@ return {
     registrarUsuario,
     updateUsuario,
     usuarioFriTri,
-    registrarStatus
+    registrarStatus,
+    emailLogout
 }
 
 

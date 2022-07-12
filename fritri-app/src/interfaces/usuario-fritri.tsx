@@ -10,4 +10,5 @@ export interface IUsuarioFritri {
     urlFoto: string;
     pais?: string;
     genero?: string;
+
 }
