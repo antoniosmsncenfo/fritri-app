@@ -21,7 +21,6 @@ export class Paseo {
 	nombre: string;
 
 	@Prop({
-    required: true,
 		default: () => new Date()
   })
 	fechaCreacion: string;
@@ -29,7 +28,7 @@ export class Paseo {
 	@Prop({
     required: true,
   })
-	fechaPaseo: string;
+	fechaPaseo: Date;
 
 	@Prop()
 	pinPaseo: number;
@@ -55,7 +54,12 @@ export class Paseo {
 	seccionAtraccionesTuristicas: SeccionAtraccionesTuristicas;
 
   @Prop()
-  integrantes: Integrante[]
+  integrantes: Integrante[];
+
+	@Prop({
+		default: false
+	})
+  eliminado: boolean
 }
 
 export const PaseoSchema = SchemaFactory.createForClass(Paseo);
