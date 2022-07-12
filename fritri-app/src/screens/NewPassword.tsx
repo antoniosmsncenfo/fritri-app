@@ -11,8 +11,8 @@ import { password } from '../constants/regex';
 const isAndroid = Platform.OS === 'android';
 
 interface INewPasswordValidation {
-    password: boolean;
-    passwordConfirmation: boolean;
+    passwordValidation: boolean;
+    passwordConfirmationValidation: boolean;
 }
 
 interface INewPassword {
@@ -27,11 +27,11 @@ const NewPassword = () => {
     const navigation = useNavigation();
 
     const [isValid, setIsValid] = useState<INewPasswordValidation>({
-      password: false,
-      passwordConfirmation: false,
+      passwordValidation: false,
+      passwordConfirmationValidation: false,
     });
 
-    const [newPassword, setNewPassword] = useState<INewPassword>({
+    const [passwordState, setPasswordState] = useState<INewPassword>({
       newPassword: '',
       newPasswordConfirmation: '',
       status: ResetPasswordStatus.Pending
@@ -49,12 +49,15 @@ const NewPassword = () => {
 
     const handleChange = useCallback(
         (value) => {
-          setNewPassword((state) => ({...state, ...value}));
+          setPasswordState((state) => ({
+            ...state, 
+            ...value
+          }));
         },
-        [setNewPassword],
+        [setPasswordState],
       );
 
-    const handleReset = useCallback(() => {
+    const handleNewPassword = useCallback(() => {
         if (!Object.values(isValid).includes(false)) {
             //Llamado a la función de resetear
             //resetPassword(resetUserPassword.email);
@@ -64,10 +67,10 @@ const NewPassword = () => {
     useEffect(() => {
         setIsValid((state) => ({
             ...state,
-            password: regex.email.test(newPassword.newPassword),
-            passwordConfirmation: regex.email.test(newPassword.newPasswordConfirmation),
+            passwordValidation: regex.password.test(passwordState.newPassword),
+            passwordConfirmationValidation: passwordState.newPassword===passwordState.newPasswordConfirmation,
         }));
-    }, [newPassword, setIsValid]);
+    }, [passwordState, setIsValid]);
 
     useEffect(() => {
         if(resetPasswordResult===ResetPasswordStatus.Success)
@@ -149,9 +152,9 @@ const NewPassword = () => {
                     label={t('common.password')}
                     rules={t('register.passwordRules')}
                     placeholder={t('common.passwordPlaceholder')}
-                    onChangeText={(value) => handleChange({password: value})}
-                    success={Boolean(newPassword.newPassword && isValid.password)}
-                    danger={Boolean(newPassword.newPasswordConfirmation && !isValid.password)}
+                    onChangeText={(value) => handleChange({newPassword: value})}
+                    success={Boolean(passwordState.newPassword && isValid.passwordValidation)}
+                    danger={Boolean(passwordState.newPassword && !isValid.passwordValidation)}
                     />
                     <Input
                       secureTextEntry
@@ -160,12 +163,12 @@ const NewPassword = () => {
                       label={t('common.confirmPassword')}
                       rules={t('register.passwordRules')}
                       placeholder={t('common.confirmPasswordPlaceholder')}
-                      onChangeText={(value) => handleChange({confirmPassword: value})}
-                      success={Boolean(newPassword.newPasswordConfirmation && isValid.passwordConfirmation)}
-                      danger={Boolean(newPassword.newPasswordConfirmation && !isValid.passwordConfirmation)}
+                      onChangeText={(value) => handleChange({newPasswordConfirmation: value})}
+                      success={Boolean(passwordState.newPasswordConfirmation && isValid.passwordConfirmationValidation)}
+                      danger={Boolean(passwordState.newPasswordConfirmation && !isValid.passwordConfirmationValidation)}
                     /> 
                     <Button
-                      onPress={handleReset}
+                      onPress={handleNewPassword}
                       marginVertical={sizes.s}
                       marginHorizontal={sizes.sm}
                       gradient={gradients.primary}
