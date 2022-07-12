@@ -40,6 +40,10 @@
     "terms": "Terms and Conditions",
     "signup": "Sign Up",
     "signin": "Sign In",
+    "changeData": "Update",
+    "changePass": "Change Password",
+
+
     "goBack": "Go back",
     "inStock": "In stock",
     "outStock": "Out of stock",
@@ -125,7 +129,11 @@
     "validation": "Validation Error",
     "emailExists": "Email already exists.",
     "emailRules": "At least one digit.\nAt least one lower case.\nAt least one upper case.\nAt least 6 from the mentioned characters.",
-    "subtitleUpdate" : "Update your Profile"
+    "subtitleUpdate" : "Update your Profile",
+    "updateUser" : "Your Profile was updated",
+    "titleUpdated" : "Successfully"
+
+
   },
   "login": {
     "title": "Welcome",

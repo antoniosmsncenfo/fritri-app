@@ -1,12 +1,12 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Platform, Linking, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/core';
 import { email, name } from '../constants/regex';
 
-import {useData, useTheme, useTranslation} from '../hooks/';
+import { useData, useTheme, useTranslation } from '../hooks/';
 import * as regex from '../constants/regex';
-import {Block, Button, Input, Image, Text, Modal} from '../components/';
+import { Block, Button, Input, Image, Text, Modal } from '../components/';
 import { FotoUsuario, ITheme } from '../constants/types';
 import { FlatList } from 'react-native-gesture-handler';
 import { useUsuario } from '../hooks/useUsuario';
@@ -32,9 +32,11 @@ interface ITouchableInput {
 
 const COUNTRIES: {
   [key: string]: string;
-} = {'1': 'Costa Rica', '2': 'Nicaragua', 
-      '3': 'Panamá', '4': 'Guatemala', 
-      '5': 'El Salvador'};
+} = {
+  '1': 'Costa Rica', '2': 'Nicaragua',
+  '3': 'Panamá', '4': 'Guatemala',
+  '5': 'El Salvador'
+};
 
 const options = {
   title: 'Selecciona foto de perfil',
@@ -44,8 +46,8 @@ const options = {
   noData: true,
 };
 
-const TouchableInput = ({label, value, icon, onPress}: ITouchableInput) => {
-  const {assets, colors, sizes} = useTheme();
+const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
+  const { assets, colors, sizes } = useTheme();
 
   return (
     <Button
@@ -80,28 +82,30 @@ const TouchableInput = ({label, value, icon, onPress}: ITouchableInput) => {
 
 const Profile = () => {
 
-  const {user} = useData();
-  const {t} = useTranslation();
+  const { user, handleUser } = useData();
+  const { t } = useTranslation();
   const navigation = useNavigation();
 
   const [isValid, setIsValid] = useState<IRegistrationValidation>({
     name: false,
     email: false,
-    password: false,
-    confirmPassword: false,
+    password: true,
+    confirmPassword: true,
     agreed: true,
   });
 
-  const GENDER_TYPES: { [key: string]: string; } = 
-  {'1': t('common.genders.woman'), 
-   '2': t('common.genders.man'), 
-   '3': t('common.genders.other')};
+  const GENDER_TYPES: { [key: string]: string; } =
+  {
+    '1': t('common.genders.woman'),
+    '2': t('common.genders.man'),
+    '3': t('common.genders.other')
+  };
 
   const [registration, setRegistration] = useState<IRegistration>({
-    name: '',
-    email: '',
-    gender: GENDER_TYPES['1'],
-    country: COUNTRIES['1'],
+    name: user.nombreCompleto,
+    email: user.correoElectronico,
+    gender: user.genero!,
+    country: user.pais!,
     password: '',
     confirmPassword: '',
     agreed: true,
@@ -112,38 +116,33 @@ const Profile = () => {
 
   const [country, setCountry] = useState(COUNTRIES['1']);
 
-  const {resetRegistrarEstatus, registrarUsuario, registrarStatus} = useUsuario();
+  const { resetRegistrarEstatus, updateUsuario, registrarStatus } = useUsuario();
 
   const [modal, setModal] = useState<
-    'gender' | 'country' |  undefined
+    'gender' | 'country' | undefined
   >();
 
-  const {assets, colors, gradients, sizes} = useTheme();
+  const { assets, colors, gradients, sizes } = useTheme();
 
   const handleChange = useCallback(
     (value) => {
-      setRegistration((state) => ({...state, ...value}));
+      setRegistration((state) => ({ ...state, ...value }));
 
       setModal(undefined);
     },
     [setRegistration],
   );
 
-  const handleSignUp = useCallback(() => {
+  const handleUpdateData = useCallback(() => {
     if (!Object.values(isValid).includes(false)) {
-      registrarUsuario({
+      updateUsuario({
+        id: user._id,
         tipoLogin: 'Email',
         correoElectronico: registration.email,
-        contrasena: registration.password,
         nombreCompleto: registration.name,
         genero: registration.gender,
-        foto: registration.gender===t('common.genders.woman')
-          ? FotoUsuario.Mujer
-          : FotoUsuario.Hombre,
         pais: registration.country
       })
-
-      console.log(registrarStatus);
     }
   }, [isValid, registration]);
 
@@ -170,48 +169,46 @@ const Profile = () => {
       ...state,
       name: regex.name.test(registration.name),
       email: regex.email.test(registration.email),
-      password: regex.password.test(registration.password),
-      confirmPassword: registration.confirmPassword===registration.password,
-      agreed: registration.agreed,
     }));
   }, [registration, setIsValid]);
 
   useEffect(() => {
-    if(registrarStatus===RegistrationStatus.Success)
-    {
+    if (registrarStatus === RegistrationStatus.Success) {
       Alert.alert(
-        t('register.welcome'),
-        t('register.success'),
+        t('register.updateUser'),
+        t('register.titleUpdated'),
         [
-          {text: 'OK', onPress: () => {
-            console.log('OK button clicked');
-            navigation.navigate('Profile');},
+          {
+            text: 'OK', onPress: () => {
+              console.log('OK button clicked');
+              navigation.navigate('Profile');
+            },
           }
         ],
-        { 
-          cancelable: false 
+        {
+          cancelable: false
         }
       );
     }
-    else if (registrarStatus===RegistrationStatus.Duplicated){
+    else if (registrarStatus === RegistrationStatus.Duplicated) {
       Alert.alert(
         t('register.validation'),
         t('register.emailExists'),
         [
-          {text: 'OK'}
+          { text: 'OK' }
         ],
-        { 
-          cancelable: false 
+        {
+          cancelable: false
         }
       );
       resetRegistrarEstatus();
     }
   }, [registrarStatus])
-  
+
   return (
     <Block safe marginTop={sizes.md}>
       <Block paddingHorizontal={sizes.s}>
-        <Block flex={0} style={{zIndex: 0}}>
+        <Block flex={0} style={{ zIndex: 0 }}>
           <Image
             background
             resizeMode="cover"
@@ -265,7 +262,7 @@ const Profile = () => {
               <Text p semibold center>
                 {t('register.subtitleUpdate')}
               </Text>
-              
+
               {/* form inputs */}
               <Block paddingHorizontal={sizes.sm}>
                 <Input
@@ -273,34 +270,58 @@ const Profile = () => {
                   marginBottom={sizes.m}
                   label={t('common.name')}
                   placeholder={t('common.namePlaceholder')}
-                  value ={user?.nombreCompleto}
+                  value={registration.name}
                   success={Boolean(registration.name && isValid.name)}
                   danger={Boolean(registration.name && !isValid.name)}
-                  onChangeText={(value) => handleChange({name: value})}
+                  onChangeText={(value) => handleChange({ name: value })}
                 />
                 <Input
+                  disabled={true}
+
                   autoCapitalize="none"
                   marginBottom={sizes.m}
                   label={t('common.email')}
                   keyboardType="email-address"
                   placeholder={t('common.emailPlaceholder')}
-                  value ={user?.correoElectronico}
-                  success={Boolean(registration.email && isValid.email)}
+                  value={registration.email}
+                  // success={Boolean(registration.email && isValid.email)}
                   danger={Boolean(registration.email && !isValid.email)}
-                  onChangeText={(value) => handleChange({email: value})}
+                  onChangeText={(value) => handleChange({ email: value })}
                 />
                 <TouchableInput
                   icon="users"
-                  value={user?.genero}
+                  value={registration.gender}
                   label={t('common.gender')}
                   onPress={() => setModal('gender')}
                 />
                 <TouchableInput
                   icon="home"
-                  value={user?.pais}
+                  value={registration.country}
                   label={t('common.country')}
                   onPress={() => setModal('country')}
                 />
+                <Button
+                  //onPress={}
+                  primary
+                  outlined
+                  shadow={!isAndroid}
+                  marginVertical={sizes.s}
+                  marginHorizontal={sizes.sm}
+                  disabled={Object.values(isValid).includes(false)}>
+                  <Text bold primary transform="uppercase">
+                    {t('common.changePass')}
+                  </Text>
+                </Button>
+                <Button
+                  onPress={handleUpdateData}
+                  marginVertical={sizes.s}
+                  marginHorizontal={sizes.sm}
+                  gradient={gradients.primary}
+                  disabled={Object.values(isValid).includes(false)}>
+                  <Text bold white transform="uppercase">
+                    {t('common.changeData')}
+                  </Text>
+                </Button>
                 {/* <TouchableInput
                   icon="more"
                   value={"Me.jpg"}
@@ -334,7 +355,7 @@ const Profile = () => {
                     />
                   </Block>
                 </Button>                 */}
-                <Input
+                {/* <Input
                   secureTextEntry
                   autoCapitalize="none"
                   marginBottom={sizes.m}
@@ -357,7 +378,7 @@ const Profile = () => {
                   onChangeText={(value) => handleChange({confirmPassword: value})}
                   success={Boolean(registration.confirmPassword && isValid.confirmPassword)}
                   danger={Boolean(registration.confirmPassword && !isValid.confirmPassword)}
-                />                
+                />                 */}
               </Block>
               {/* checkbox terms */}
               {/* <Block row flex={0} align="center" paddingHorizontal={sizes.sm}>
@@ -377,16 +398,7 @@ const Profile = () => {
                   </Text>
                 </Text>
               </Block> */}
-              <Button
-                onPress={handleSignUp}
-                marginVertical={sizes.s}
-                marginHorizontal={sizes.sm}
-                gradient={gradients.primary}
-                disabled={Object.values(isValid).includes(false)}>
-                <Text bold white transform="uppercase">
-                  {t('common.signup')}
-                </Text>
-              </Button>
+
               {/* <Button
                 primary
                 outlined
@@ -405,30 +417,30 @@ const Profile = () => {
       <Modal
         visible={Boolean(modal)}
         onRequestClose={() => setModal(undefined)}>
-          <FlatList
-            keyExtractor={(index) => `${index}`}
-            data={modal === 'gender' ? [1, 2, 3] : [1, 2, 3, 5]}
-            renderItem={({item}) => (
-              <Button
-                marginBottom={sizes.sm}
-                onPress={() =>
-                  modal === 'gender'
-                    //? handleGender(GENDER_TYPES[item])
-                    //: handleCountry(COUNTRIES[item])
-                    ? handleChange({gender: GENDER_TYPES[item]})
-                    : handleChange({country: COUNTRIES[item]})
-                }>
-                <Text p white semibold transform="uppercase">
-                  {modal === 'gender' ? GENDER_TYPES[item] : COUNTRIES[item]}
-                </Text>
-              </Button>
-            )}
-          />
-      </Modal>      
+        <FlatList
+          keyExtractor={(index) => `${index}`}
+          data={modal === 'gender' ? [1, 2, 3] : [1, 2, 3, 5]}
+          renderItem={({ item }) => (
+            <Button
+              marginBottom={sizes.sm}
+              onPress={() =>
+                modal === 'gender'
+                  //? handleGender(GENDER_TYPES[item])
+                  //: handleCountry(COUNTRIES[item])
+                  ? handleChange({ gender: GENDER_TYPES[item] })
+                  : handleChange({ country: COUNTRIES[item] })
+              }>
+              <Text p white semibold transform="uppercase">
+                {modal === 'gender' ? GENDER_TYPES[item] : COUNTRIES[item]}
+              </Text>
+            </Button>
+          )}
+        />
+      </Modal>
     </Block>
   );
 };
-  export default Profile;
+export default Profile;
 
 
   // const { user } = useData();
