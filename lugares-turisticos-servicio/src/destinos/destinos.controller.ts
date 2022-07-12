@@ -14,7 +14,7 @@ export class DestinosController {
   }
 
   @Get('buscar-destino/:id')
-  buscarDestino(@Param('id') id: string) {
-    return this.destinosService.buscarDestino(id);
+  async buscarDestino(@Param('id') id: string) {
+    return await this.destinosService.buscarDestino(id);
   }
 }
