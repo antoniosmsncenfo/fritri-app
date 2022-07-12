@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { IUsuario, ILogin } from '../constants/types/index';
 import { USUARIOS_BASE_URL } from '@env';
 import { IUsuarioFritri } from "../interfaces/usuario-fritri";
-import { guardarUsuarioFriTri } from "../api/usuarioDB";
+import { guardarUsuarioFriTri, updateUsuarioFriTri } from "../api/usuarioDB";
 import { RegistrationStatus } from '../interfaces/registro-usuario';
 
 export const useLogin = () => {
@@ -71,7 +71,10 @@ export const useUsuario = () => {
     const resetRegistrarEstatus = () => {
         setRegistrarStatus(RegistrationStatus.New);
     }
+    const emailLogout = () => {
+        setRegistrarStatus(RegistrationStatus.LogOut);
 
+    };
     const registrarUsuario = (usuarioNuevo:IUsuario) => {
 
             guardarUsuarioFriTri(usuarioNuevo)
@@ -89,13 +92,30 @@ export const useUsuario = () => {
             }
             );
     }
+    const updateUsuario = (usuarioActualizado:IUsuario) => {
 
-    return {
-        resetRegistrarEstatus,
-        registrarUsuario,
-        usuarioFriTri,
-        registrarStatus
-    }
+        updateUsuarioFriTri(usuarioActualizado)
+        .then((result: IUsuario) => {
+            if (result !== null) {
+                setUsuarioFriTri(result);
+                setRegistrarStatus(RegistrationStatus.Success);
+            }
+        })
+        .catch((e) => {
+    
+        }
+        );
+}
+
+return {
+    resetRegistrarEstatus,
+    registrarUsuario,
+    updateUsuario,
+    usuarioFriTri,
+    registrarStatus,
+    emailLogout
+}
+
 
 }
 

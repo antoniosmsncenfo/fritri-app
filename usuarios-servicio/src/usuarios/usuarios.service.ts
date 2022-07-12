@@ -121,7 +121,7 @@ export class UsuariosService {
   async actualizarUsuario(actualizarUsuariosDto: ActualizarUsuariosDto): Promise<Usuario> {
     let resultado;
     try {
-      const idUsuario = actualizarUsuariosDto._id;
+      const idUsuario = actualizarUsuariosDto.id;
       resultado = await this.usuarioModel.findOneAndUpdate({ _id: idUsuario }, actualizarUsuariosDto, {
         returnOriginal: false
       });

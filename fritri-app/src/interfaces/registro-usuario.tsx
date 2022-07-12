@@ -13,5 +13,5 @@ export interface IRegistration {
     New = 'NEW',
     Success = 'SUCCESS',
     Duplicated = 'DUPLICATED',
-    Error = 'ERROR'
+    Error = 'ERROR',
   }

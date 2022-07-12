@@ -28,6 +28,33 @@ export const guardarUsuarioTerceros = async (usuarioTercero: IUsuarioDeTerceros)
     }
 };
 
+
+export const updateUsuarioFriTri = async (usuarioActualizado: IUsuario) => {
+    let request = {
+        method: 'put',
+        url: `${USUARIOS_BASE_URL}/actualizar-usuario`,
+        headers: {},
+        data: usuarioActualizado,
+    };
+    try {
+        const resultado = await axios(request);
+        console.log(resultado.status);
+
+        if (resultado.status === 200) {
+            console.log(resultado.data);
+            return resultado.data;
+        }
+        else {
+            return null;
+        }
+    }
+    catch (e) {
+        throw e;
+    }
+   
+};
+
+
 export const guardarUsuarioFriTri = async (usuarioNuevo: IUsuario) => {
     let request = {
         method: 'post',
@@ -50,4 +77,5 @@ export const guardarUsuarioFriTri = async (usuarioNuevo: IUsuario) => {
     catch (e) {
         throw e;
     }
+   
 };

@@ -1,5 +1,5 @@
 export class ActualizarUsuariosDto {
-  readonly _id: string;
+  readonly id: string;
   readonly correoElectronico: string;
   readonly fechaCreacion: Date;
   readonly idTerceros: string;
