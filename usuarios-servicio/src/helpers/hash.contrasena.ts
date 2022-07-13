@@ -22,9 +22,12 @@ export const CompararContrasena = async(contrasena, hash) => {
 }
 
 export const GenerarContrasenaTemporal = async(longitud:LongitudPassword) => {
-  const pwdChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  const pwdNums = "0123456789";
+  const pwdChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-  let randPassword = Array(longitud).fill(pwdChars).map(function(x) { return x[Math.floor(Math.random() * x.length)] }).join('');
+  let randPassword = Array(longitud-3).fill(pwdChars).map(function(x) { return x[Math.floor(Math.random() * x.length)] }).join('');
+
+  randPassword += Array(3).fill(pwdNums).map(function(x) { return x[Math.floor(Math.random() * x.length)] }).join('');
 
   return randPassword;
 }

@@ -131,7 +131,8 @@
     "subtitle": "Sign In with",
     "forgotPassword": "I forgot my password",
     "errorFields": "Please check the password or email!",
-    "errorLogin": "Error Login!"
+    "errorLogin": "Login Error",
+    "invalidCredentials": "The provided credentials are not valid."
   },
   "resetPassword": {
     "title": "Reset your Password",

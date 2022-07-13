@@ -1,12 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Platform, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
-import {useTheme, useTranslation} from '../hooks/';
+import {useData, useTheme, useTranslation} from '../hooks/';
 import * as regex from '../constants/regex';
 import {Block, Button, Input, Image, Text} from '../components/';
-import { usePassword } from '../hooks/useUsuario';
+import { useChangePassword } from '../hooks/useUsuario';
 import { ResetPasswordStatus } from '../interfaces/registro-usuario';
-import { password } from '../constants/regex';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -23,6 +22,7 @@ interface INewPassword {
 
 const NewPassword = () => {
 
+    const {user} = useData();
     const {t} = useTranslation();
     const navigation = useNavigation();
 
@@ -41,11 +41,10 @@ const NewPassword = () => {
 
     //Cambiar a usePassword
     const {
-        restartResetPasswordStatus, //funcion para resetear
-        resetPassword, //funcion
-        resetPasswordResult, //resultado
-        usuarioFriTri //usuario obtenido
-    } = usePassword();
+      restartChangePasswordStatus,
+      changePassword,
+      changePasswordResult
+    } = useChangePassword();
 
     const handleChange = useCallback(
         (value) => {
@@ -59,10 +58,13 @@ const NewPassword = () => {
 
     const handleNewPassword = useCallback(() => {
         if (!Object.values(isValid).includes(false)) {
-            //Llamado a la función de resetear
-            //resetPassword(resetUserPassword.email);
+            //Llamado a la función de cambiar el password
+            changePassword({
+              _id: user._id!,
+              contrasena: passwordState.newPassword
+            });
         }
-    }, [isValid, resetPassword]);
+    }, [isValid, changePassword]);
 
     useEffect(() => {
         setIsValid((state) => ({
@@ -73,7 +75,7 @@ const NewPassword = () => {
     }, [passwordState, setIsValid]);
 
     useEffect(() => {
-        if(resetPasswordResult===ResetPasswordStatus.Success)
+        if(changePasswordResult===ResetPasswordStatus.Success)
         {
           Alert.alert(
             t('newPassword.passwordSent'),
@@ -88,7 +90,7 @@ const NewPassword = () => {
             }
           );
         }
-        else if (resetPasswordResult===ResetPasswordStatus.Error){
+        else if (changePasswordResult===ResetPasswordStatus.Error){
           Alert.alert(
             t('newPassword.passwordError'),
             t('newPassword.errorMessage'),
@@ -99,9 +101,9 @@ const NewPassword = () => {
               cancelable: false 
             }
           );
-          restartResetPasswordStatus();
+          restartChangePasswordStatus();
         }
-    }, [resetPasswordResult])
+    }, [changePasswordResult])
 
     return (
         <Block safe marginTop={sizes.md}>

@@ -111,6 +111,7 @@ const Login = () => {
     if (fritriUserEmail) {
       handleUser(fritriUserEmail!);
       if (fritriUserEmail.tipoLogin==="Temporal") {
+        limpiar();
         navigation.navigate('NewPassword');
       }
       else {
@@ -245,6 +246,7 @@ const Login = () => {
                   marginBottom={sizes.m}
                   keyboardType="email-address"
                   placeholder={t('common.emailPlaceholder')}
+                  value={login.correoElectronico}
                   success={(login.correoElectronico !== '' && isValid.email)}
                   danger={Boolean(login.correoElectronico && !isValid.email)}
                   onChangeText={(value) => handleChange({ correoElectronico: value })}
@@ -255,6 +257,7 @@ const Login = () => {
                   autoCapitalize="none"
                   marginBottom={sizes.s}
                   placeholder={t('common.passwordPlaceholder')}
+                  value={login.contrasena}
                   onChangeText={(value) => handleChange({ contrasena: value })}
                   success={Boolean(login.contrasena && isValid.password)}
                   danger={Boolean(login.contrasena  && !isValid.password)}

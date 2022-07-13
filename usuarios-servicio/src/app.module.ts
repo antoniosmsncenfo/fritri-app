@@ -22,8 +22,8 @@ import { AuthModule } from './auth/auth.module';
         ignoreTLS: true,
         secure: true,
         auth: {
-            user: 'fritri.app@gmail.com',
-            pass: 'dekipmbzxffbhvya',
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASSWORD,
         },
       },
       template: {

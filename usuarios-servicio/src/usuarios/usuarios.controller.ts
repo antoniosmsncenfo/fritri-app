@@ -6,6 +6,7 @@ import { NoUsuario } from './interface/no-usuario';
 import { LoginTercerosDto } from './dto/login-terceros.dto';
 import { LoginEmailDto } from './dto/login-email.dto';
 import { ActualizarUsuariosDto } from './dto/actualizar-usuarios';
+import { ActualizarContrasenaDto } from './dto/actualizar-contrasena';
 
 @Controller('usuarios')
 export class UsuariosController {
@@ -58,6 +59,12 @@ export class UsuariosController {
   @HttpCode(200)
   async actualizarUsuario(@Body() actualizarUsuariosDto: ActualizarUsuariosDto) {
     return await this.usuariosService.actualizarUsuario(actualizarUsuariosDto);
+  }
+
+  @Put('actualizar-contrasenas')
+  @HttpCode(200)
+  async actualizarContrasenas(@Body() actualizarContrasenaDto: ActualizarContrasenaDto) {
+    return await this.usuariosService.actualizarContrasenas(actualizarContrasenaDto);
   }
 
 }

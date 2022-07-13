@@ -82,7 +82,7 @@ const ResetPassword = () => {
         else if (resetPasswordResult===ResetPasswordStatus.Error){
           Alert.alert(
             t('resetPassword.passwordError'),
-            t('register.errorMessage'),
+            t('resetPassword.errorMessage'),
             [
               {text: 'OK'}
             ],

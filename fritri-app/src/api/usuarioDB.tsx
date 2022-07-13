@@ -3,6 +3,7 @@ import { IUsuarioDeTerceros } from '../interfaces/usuario-facebook';
 import { IUsuario } from '../constants/types/index';
 import { USUARIOS_BASE_URL } from '@env';
 import { MESSSAGES } from '../constants/mocks';
+import { IUsuarioContrasena } from '../interfaces/usuario-fritri';
 
 
 export const guardarUsuarioTerceros = async (usuarioTercero: IUsuarioDeTerceros) => {
@@ -55,6 +56,28 @@ export const resetearPassword = async (email:string) => {
         method: 'get',
         url: `${USUARIOS_BASE_URL}/resetPassword?email=${email}`,
         headers: {},
+    };
+    try {
+        const resultado = await axios(request);
+
+        if (resultado.status === 200) {
+            return resultado.data;
+        }
+        else {
+            return null;
+        }
+    }
+    catch (e) {
+        throw e;
+    }
+};
+
+export const cambiarPassword = async (usuarioContrasena:IUsuarioContrasena) => {
+    let request = {
+        method: 'put',
+        url: `${USUARIOS_BASE_URL}/actualizar-contrasenas`,
+        headers: {},
+        data: usuarioContrasena,
     };
     try {
         const resultado = await axios(request);

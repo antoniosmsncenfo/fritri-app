@@ -11,3 +11,9 @@ export interface IUsuarioFritri {
     pais?: string;
     genero?: string;
 }
+
+export interface IUsuarioContrasena {
+    _id: string;
+    contrasena?: string;
+    contrasenaTemporal?: string;
+}

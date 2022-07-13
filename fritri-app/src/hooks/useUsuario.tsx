@@ -2,8 +2,8 @@ import axios from "axios";
 import { useState } from 'react';
 import { IUsuario, ILogin } from '../constants/types/index';
 import { USUARIOS_BASE_URL } from '@env';
-import { IUsuarioFritri } from "../interfaces/usuario-fritri";
-import { guardarUsuarioFriTri, resetearPassword } from "../api/usuarioDB";
+import { IUsuarioContrasena, IUsuarioFritri } from "../interfaces/usuario-fritri";
+import { guardarUsuarioFriTri, resetearPassword, cambiarPassword } from "../api/usuarioDB";
 import { RegistrationStatus, ResetPasswordStatus } from '../interfaces/registro-usuario';
 
 export const useLogin = () => {
@@ -26,9 +26,10 @@ export const useLogin = () => {
             };
 
             const resultado = await axios(request);
+            console.log(resultado.status);
             if (resultado.status === 200) {
-                console.log(resultado.data);
-                if (resultado.data.statusCode === 401) {
+                console.log(resultado.data.statusCode);
+                if (resultado.data.statusCode === 404) {
                     setFritriUser(null);
                 } 
                 else if('tipoLogin' in resultado.data) {
@@ -146,6 +147,40 @@ export const usePassword = () => {
         resetPassword,
         usuarioFriTri,
         resetPasswordResult
+    }
+
+}
+
+export const useChangePassword = () => {
+
+    const [changePasswordResult, setChangePasswordResult] = useState<ResetPasswordStatus>(
+        ResetPasswordStatus.Pending
+    )
+
+    const restartChangePasswordStatus = () => {
+        setChangePasswordResult(ResetPasswordStatus.Pending);
+    }
+
+    const changePassword = (usuarioContrasena:IUsuarioContrasena) => {
+
+        cambiarPassword(usuarioContrasena)
+        .then((resultado) => {
+            console.log(resultado);
+            if (resultado !== null) {
+                setChangePasswordResult(ResetPasswordStatus.Success);
+            }
+        })
+        .catch((e) => {
+            setChangePasswordResult(ResetPasswordStatus.Error);
+        }
+        );
+
+    }
+
+    return {
+        restartChangePasswordStatus,
+        changePassword,
+        changePasswordResult
     }
 
 }

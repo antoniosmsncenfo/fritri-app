@@ -11,6 +11,7 @@ import { NoUsuario } from './interface/no-usuario';
 import { ActualizarUsuariosDto } from './dto/actualizar-usuarios';
 import { AuthService } from 'src/auth/auth.service';
 import { EmailsService } from './emails.service';
+import { ActualizarContrasenaDto } from './dto/actualizar-contrasena';
 
 @Injectable()
 export class UsuariosService {
@@ -101,7 +102,7 @@ export class UsuariosService {
     let resultado;
     let resultadoNoExiste = {
       message: 'Credenciales no válidas',
-      statusCode: 401
+      statusCode: 404
     };
     //Se asume inicialmente que las credenciales no son validas
     resultado = resultadoNoExiste;
@@ -109,7 +110,7 @@ export class UsuariosService {
     try {
       //Primero se valida si existe un usuario con el correo recibido
       const resultadoUsuario: UsuarioDocument = await this.usuarioModel.findOne({ correoElectronico: loginEmailDto.correoElectronico }).exec();
-      //Si no se encontró el correo se retorna credenciales no válidas: status 401
+      //Si no se encontró el correo se retorna credenciales no válidas: status 404
       if(!resultadoUsuario) {
         return resultadoNoExiste;
       }
@@ -136,10 +137,11 @@ export class UsuariosService {
 
         //Se valida si el resultado contiene contrasena temporal
         if ('contrasenaTemporal' in resultadoUsuario){
-          console.log("El resultado contiene temporal");
-
-          //Se compara la contrasena recibida con la temporal
-          compararContrasenaTemporal = await CompararContrasena(loginEmailDto.contrasena, resultadoUsuario.contrasenaTemporal);
+          //Se valida si está vacía
+          if (resultadoUsuario.contrasenaTemporal.trim().length>0) {
+            //Se compara la contrasena recibida con la temporal
+            compararContrasenaTemporal = await CompararContrasena(loginEmailDto.contrasena, resultadoUsuario.contrasenaTemporal);            
+          }
         }
 
         //Esta variable es true si el resultado contiene contrasena temporal y es igual a la de login 
@@ -158,9 +160,9 @@ export class UsuariosService {
               ...token
             }
         }
-        //Entra en esta condicion si la temporal no era igual a la de login. Se retorna credenciales no válidas: status 401 
+        //Entra en esta condicion si la temporal no era igual a la de login. Se retorna credenciales no válidas: status 404 
         else {
-          console.log("La temporal NO era igual a la recibida");
+          console.log(resultadoNoExiste);
           return resultadoNoExiste;
         }
       }
@@ -179,41 +181,47 @@ export class UsuariosService {
       statusCode: 404
     };
     try {
+      //Esperar el resultado de la busqueda de usuario por email
       let resultadoUsuario = await this.usuarioModel.findOne({ correoElectronico: email }).exec();
       if(!resultadoUsuario) {
+        //si no lo encontró retorna que no existe un usuario
         return resultadoNoExiste;
       }
       else{
 
+        //Como si se encontró un usuario con ese correo, se procede a generar un password temporal
         const contrasenaTemporal = await GenerarContrasenaTemporal(LongitudPassword.Ocho);
         console.log("Temporal: " + contrasenaTemporal);
 
+        //Esperar el resultado del envío por correo, si se produce un error es capturado
+        //y elevado al cliente de este servicio
         const resultadoEmail = await this.mailService.postHTMLEmail({
           nombreCompleto: resultadoUsuario.nombreCompleto,
           correoElectronico: resultadoUsuario.correoElectronico,
           contrasenaTemporal: contrasenaTemporal
         });
 
+        //Si llegó a este punto significa que se envió el correo
+        //se procede a hashar la contraseña y a guardarla en el campo
+        //de contrasena temporal
         const { hash } = await HashContrasena(contrasenaTemporal);
 
+        //Se le actualiza la propiedad de contrasena temporal
         resultadoUsuario.contrasenaTemporal = hash;
 
-        const actualizado = await this.actualizarUsuario({
+        console.log("Usuario obtenido:" + resultadoUsuario);
+
+        const actualizado = await this.actualizarContrasenasEncriptadas({
           _id: resultadoUsuario._id,
-          correoElectronico: resultadoUsuario.correoElectronico,
-          nombreCompleto: resultadoUsuario.nombreCompleto,
           contrasena: resultadoUsuario.contrasena,
-          contrasenaTemporal: resultadoUsuario.contrasenaTemporal,
-          urlFoto: resultadoUsuario.urlFoto,
-          pais: resultadoUsuario.pais,
-          genero: resultadoUsuario.genero
+          contrasenaTemporal: resultadoUsuario.contrasenaTemporal
         })
 
         resultado = actualizado;
 
       }
     } catch(error) {
-      throw new BadRequestException(`Error al tratar de iniciar sesión con el email::${error.message}`);
+      throw (error);
     }
     return this.eliminarPropiedades(resultado.toObject());
   }
@@ -232,5 +240,52 @@ export class UsuariosService {
     return this.eliminarPropiedades(resultado);
   }
 
+    // TODO: Obtener el idUsuario del JWT token
+    async actualizarContrasenasEncriptadas(actualizarContrasenaDto: ActualizarContrasenaDto): Promise<Usuario> {
+      let resultado;
+      try {
+        console.log ("Usuario final:" + JSON.stringify(actualizarContrasenaDto));
+
+        const idUsuario = actualizarContrasenaDto._id;
+        resultado = await this.usuarioModel.findOneAndUpdate({ _id: idUsuario }, actualizarContrasenaDto, {
+          returnOriginal: false
+        });
+      } catch(error) {
+        throw new BadRequestException(`Error al tratar de actualizar las contrasenas encriptadas::${error.message}`);
+      }
+      return this.eliminarPropiedades(resultado);
+    }
+
+    async actualizarContrasenas(actualizarContrasenaDto: ActualizarContrasenaDto): Promise<Usuario> {
+      let resultado;
+      let hash1 = "";
+      let hash2 = "";
+      try {
+
+        console.log ("Usuario recibido:" + JSON.stringify(actualizarContrasenaDto));
+
+        if ('contrasena' in actualizarContrasenaDto){
+          hash1 = (await HashContrasena(actualizarContrasenaDto.contrasena)).hash;
+        }
+        if ('contrasenaTemporal' in actualizarContrasenaDto){
+          hash2 = (await HashContrasena(actualizarContrasenaDto.contrasenaTemporal)).hash;
+        }
+
+        console.log("Hash1: " + hash1 + ", Hash2: " + hash2);
+
+        resultado = await this.actualizarContrasenasEncriptadas({
+          _id: actualizarContrasenaDto._id,
+          contrasena: hash1,
+          contrasenaTemporal: hash2
+        });
+
+      } catch(error) {
+        throw new BadRequestException(`Error al tratar de actualizar las contrasenas::${error.message}`);
+      }
+      if (resultado) {
+        this.eliminarPropiedades(resultado);
+      }
+      return resultado;
+    }
 
 }

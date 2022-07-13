@@ -12,17 +12,6 @@ import { IRegistration, RegistrationStatus } from '../interfaces/registro-usuari
 
 const isAndroid = Platform.OS === 'android';
 
-// interface IRegistration {
-//   name: string;
-//   email: string;
-//   gender: string;
-//   country: string;
-//   password: string;
-//   confirmPassword: string;
-//   agreed: boolean;
-//   status: 'new' | 'success' | 'duplicated' | 'error';
-// }
-
 interface IRegistrationValidation {
   name: boolean;
   email: boolean;
@@ -43,14 +32,6 @@ const COUNTRIES: {
 } = {'1': 'Costa Rica', '2': 'Nicaragua', 
       '3': 'Panamá', '4': 'Guatemala', 
       '5': 'El Salvador'};
-
-const options = {
-  title: 'Selecciona foto de perfil',
-  cancelButton: 'Cancelar',
-  takePhotoButtonTitle: 'Tomar Foto',
-  chooseFromLibraryButtonTitle: 'Abrir Galeria',
-  noData: true,
-};
 
 const TouchableInput = ({label, value, icon, onPress}: ITouchableInput) => {
   const {assets, colors, sizes} = useTheme();
