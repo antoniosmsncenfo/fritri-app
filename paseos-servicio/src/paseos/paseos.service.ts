@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { BadRequestException } from  '@nestjs/common';
 import { Paseo, PaseoDocument } from './schemas/paseos.schema';
 import { CrearPaseoDto } from './dto/crear-paseo.dto';
+import { ActualizarPaseoDto } from './dto/actualizar-paseo.dto';
 
 @Injectable()
 export class PaseosService {
@@ -45,8 +46,29 @@ export class PaseosService {
     return resultadoPaseo;
   }
 
-  async actualizar() {
-    return 'actualizar paseo';
+  async actualizar(actualizarPaseoDto: ActualizarPaseoDto): Promise<Paseo> {
+    let resultadoPaseo = null;
+    let resultado;
+    const idPaseo = actualizarPaseoDto.idPaseo;
+    try {
+      resultadoPaseo = await this.paseoModel.findOneAndUpdate({ _id: idPaseo, eliminado: false }, actualizarPaseoDto , {
+        returnOriginal: false
+      });
+      if(!resultadoPaseo) {
+        throw new Error(`No existe el paseo solicitado con el id::${idPaseo}`);
+      }
+      resultado = {
+        statusCode: 200,
+        message: `Paseo con el id::${idPaseo} fue actualizado`,
+        data: resultadoPaseo
+      }
+    } catch(error) {
+      if(error.message.match(/No existe/)) {
+        throw new NotFoundException(`No existe el paseo solicitado con el id::${idPaseo} para actualizar`)
+      }
+      throw new BadRequestException(`Error al tratar de eliminar el paseo::${error.message}`);
+    }
+    return resultado;
   }
 
   async eliminar(idPaseo: string) {
