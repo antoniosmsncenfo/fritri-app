@@ -29,7 +29,6 @@ export const guardarUsuarioTerceros = async (usuarioTercero: IUsuarioDeTerceros)
     }
 };
 
-
 export const updateUsuarioFriTri = async (usuarioActualizado: IUsuario) => {
     let request = {
         method: 'put',
@@ -54,7 +53,6 @@ export const updateUsuarioFriTri = async (usuarioActualizado: IUsuario) => {
     }
    
 };
-
 
 export const guardarUsuarioFriTri = async (usuarioNuevo: IUsuario) => {
     let request = {
