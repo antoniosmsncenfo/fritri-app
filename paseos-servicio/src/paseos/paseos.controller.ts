@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { PaseosService } from './paseos.service';
 import { CrearPaseoDto } from './dto/crear-paseo.dto';
+import { ActualizarPaseoDto } from './dto/actualizar-paseo.dto';
 
 @Controller('paseos')
 export class PaseosController {
@@ -21,8 +22,8 @@ export class PaseosController {
 
   @Put('actualizar-paseo')
   @HttpCode(200)
-  async actualizar() {
-    return await this.paseosService.actualizar();
+  async actualizar(@Body() actualizarPaseoDto: ActualizarPaseoDto) {
+    return await this.paseosService.actualizar(actualizarPaseoDto);
   }
 
   @Delete('eliminar-paseo/:idPaseo')
