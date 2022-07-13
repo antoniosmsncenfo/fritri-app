@@ -24,11 +24,11 @@ const Login = () => {
     email: false,
     password: false,
   });
+
   const [login, setLoginData] = useState<ILogin>({
     correoElectronico: '',
     contrasena: '',
   });
-
 
   const { assets, colors, gradients, sizes } = useTheme();
 
@@ -92,6 +92,11 @@ const Login = () => {
     });
   }
 
+  const handleResetPassword = () => {
+    limpiar();
+    navigation.navigate('ResetPassword');
+  }
+
   useEffect(() => {
     setIsValid((state) => ({
       ...state,
@@ -115,6 +120,7 @@ const Login = () => {
         navigation.navigate('NewPassword');
       }
       else {
+        limpiar();
         navigation.navigate('Home');
       }
     }
@@ -263,7 +269,7 @@ const Login = () => {
                   danger={Boolean(login.contrasena  && !isValid.password)}
                 />
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('ResetPassword')}>
+                  onPress={handleResetPassword}>
                   <Block row flex={0} align="center">
                     <Text
                       color={colors.danger}
