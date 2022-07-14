@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { GoogleApiService, Categorias } from '../google-api/google-api.service';
-import { GeocodeResult, PlaceData } from '@googlemaps/google-maps-services-js';
+import { Language } from '@googlemaps/google-maps-services-js';
+import {
+  GeocodeResult,
+  PlaceData,
+  LatLng,
+} from '@googlemaps/google-maps-services-js';
 import {
   AddressComponent,
   AddressType,

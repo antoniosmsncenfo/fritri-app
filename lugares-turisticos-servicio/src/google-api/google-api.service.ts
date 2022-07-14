@@ -1,6 +1,7 @@
 import {
   Client,
   Language,
+  LatLng,
   PlaceData,
 } from '@googlemaps/google-maps-services-js';
 import { Injectable, Logger } from '@nestjs/common';
@@ -64,7 +65,7 @@ export class GoogleApiService {
     }
   }
 
-  /**Obtiene el lugare que coinciden con el id de google */
+  /**Obtiene el lugar que coinciden con el id de google */
   async obtenerInfoDestino(id: string, categorias: Categorias[]) {
     const client = new Client({});
     const resultadoVacio: Partial<PlaceData> = null;
@@ -123,6 +124,42 @@ export class GoogleApiService {
         'GoogleApiService',
       );
       return '';
+    }
+  }
+
+  /**Obtiene lista de restaurantes cerca de un destino*/
+  async obtenerLugaresARedondaDelDestino(
+    coordendas: LatLng,
+    radio: number,
+    tipoLugar: string,
+    tokenPaginacion: string,
+    idioma: Language = Language.es,
+  ) {
+    const client = new Client({});
+    try {
+      const response = await client.placesNearby({
+        params: {
+          location: coordendas,
+          radius: radio,
+          keyword: tipoLugar,
+          key: this.key,
+          language: idioma,
+          pagetoken: tokenPaginacion,
+        },
+        timeout: 1000, // milliseconds
+      });
+
+      if (response.statusText === 'OK') {
+        return response.data;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      Logger.error(
+        `Error obtenerLugaresARedondaDelDestino: ${JSON.stringify(error)}`,
+        'GoogleApiService',
+      );
+      return null;
     }
   }
 }
