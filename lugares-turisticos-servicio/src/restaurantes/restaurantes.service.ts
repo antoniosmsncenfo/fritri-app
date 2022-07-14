@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { GoogleApiService } from '../google-api/google-api.service';
 
 import {
@@ -37,20 +37,27 @@ export class RestaurantesService {
         idioma,
       );
 
-    const tokenPaginacion = respuestaRestaurantesGoogle.next_page_token ?? '';
+    if (respuestaRestaurantesGoogle) {
+      const tokenPaginacion =
+        respuestaRestaurantesGoogle?.next_page_token ?? '';
 
-    const restaurantesObtenidos = Promise.all(
-      respuestaRestaurantesGoogle.results.map((destinoGoogle) =>
-        this.mapearPlaceDataARestaurante(destinoGoogle),
-      ),
-    );
+      const restaurantesObtenidos = Promise.all(
+        respuestaRestaurantesGoogle?.results.map((destinoGoogle) =>
+          this.mapearPlaceDataARestaurante(destinoGoogle),
+        ),
+      );
 
-    const respuestaRestaurantes: RestauranteRespuesta = {
-      tokenPaginacion,
-      restaurantes: await restaurantesObtenidos,
-    };
-
-    return respuestaRestaurantes;
+      return {
+        tokenPaginacion,
+        restaurantes: await restaurantesObtenidos,
+      };
+    } else {
+      return {
+        //Respuesta en caso de no encontrar restaurantes
+        tokenPaginacion: '',
+        restaurantes: [],
+      };
+    }
   }
 
   async obtenerFotoDeGoogle(referenciaFoto: string) {
@@ -63,13 +70,13 @@ export class RestaurantesService {
 
     const { lat, lng } = geometry.location;
 
-    const urlsFotos = photos.map((foto) => {
+    const urlsFotos = photos?.map((foto) => {
       return foto.photo_reference;
     });
 
     let urlFoto = '';
 
-    if (urlsFotos.length > 0) {
+    if (urlsFotos && urlsFotos.length > 0) {
       const indexFoto = Math.floor(Math.random() * urlsFotos.length); //para obtener un index aleatorio de las posibles fotos
       urlFoto = await this.obtenerFotoDeGoogle(urlsFotos[indexFoto]);
     }

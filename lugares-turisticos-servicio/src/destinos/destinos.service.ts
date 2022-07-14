@@ -105,20 +105,21 @@ export class DestinosService {
     } = destinoGoogle;
     const { lat, lng } = geometry.location;
 
-    const paises: AddressComponent[] = address_components.filter((c) =>
+    const paises: AddressComponent[] = address_components?.filter((c) =>
       c.types.includes(AddressType.country),
     );
 
-    const provincias: AddressComponent[] = address_components.filter((c) =>
+    const provincias: AddressComponent[] = address_components?.filter((c) =>
       c.types.includes(AddressType.administrative_area_level_1),
     );
 
-    const urlsFotos = photos.map((foto) => {
+    const urlsFotos = photos?.map((foto) => {
       return foto.photo_reference;
     });
+
     let urlFoto = '';
 
-    if (urlsFotos.length > 0) {
+    if (urlsFotos && urlsFotos.length > 0) {
       const indexFoto = Math.floor(Math.random() * urlsFotos.length); //para obtener un index aleatorio de las posibles fotos
       urlFoto = await this.obtenerFotoDeGoogle(urlsFotos[indexFoto]);
     }

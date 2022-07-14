@@ -156,7 +156,9 @@ export class GoogleApiService {
       }
     } catch (error) {
       Logger.error(
-        `Error obtenerLugaresARedondaDelDestino: ${JSON.stringify(error)}`,
+        `Error obtenerLugaresARedondaDelDestino: ${JSON.stringify(
+          error.message,
+        )}`,
         'GoogleApiService',
       );
       return null;
