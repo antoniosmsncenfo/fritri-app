@@ -2,9 +2,11 @@ import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query } from
 import { UsuariosService } from './usuarios.service';
 import { CrearUsuariosDto } from './dto/crear-usuarios.dto';
 import { Usuario } from './schemas/usuarios.schema';
+import { NoUsuario } from './interface/no-usuario';
 import { LoginTercerosDto } from './dto/login-terceros.dto';
 import { LoginEmailDto } from './dto/login-email.dto';
 import { ActualizarUsuariosDto } from './dto/actualizar-usuarios';
+import { ActualizarContrasenaDto } from './dto/actualizar-contrasena';
 
 @Controller('usuarios')
 export class UsuariosController {
@@ -28,8 +30,12 @@ export class UsuariosController {
 
   @Get('findEmail')
   async findEmail(@Query('email') email: string): Promise<Usuario> {
-    console.log(email)
     return this.usuariosService.findEmail(email);
+  }
+
+  @Get('resetPassword')
+  async resetPassword(@Query('email') email: string): Promise<Usuario | NoUsuario> {
+    return this.usuariosService.resetPassword(email);
   }
 
   @Delete(':id')
@@ -53,6 +59,12 @@ export class UsuariosController {
   @HttpCode(200)
   async actualizarUsuario(@Body() actualizarUsuariosDto: ActualizarUsuariosDto) {
     return await this.usuariosService.actualizarUsuario(actualizarUsuariosDto);
+  }
+
+  @Put('actualizar-contrasenas')
+  @HttpCode(200)
+  async actualizarContrasenas(@Body() actualizarContrasenaDto: ActualizarContrasenaDto) {
+    return await this.usuariosService.actualizarContrasenas(actualizarContrasenaDto);
   }
 
 }

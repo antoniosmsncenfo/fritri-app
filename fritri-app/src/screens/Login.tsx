@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Alert, Linking, Platform } from 'react-native';
+import { Linking, Platform, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import { ILogin, ILoginValidation } from '../constants/types/index';
 
@@ -24,11 +24,11 @@ const Login = () => {
     email: false,
     password: false,
   });
+
   const [login, setLoginData] = useState<ILogin>({
     correoElectronico: '',
     contrasena: '',
   });
-
 
   const { assets, colors, gradients, sizes } = useTheme();
 
@@ -67,6 +67,7 @@ const Login = () => {
     googleLogout();
     signInWithGoogleAsync();
   };
+
   useEffect(() => {
     emailLogout();
     setIsValid({
@@ -79,8 +80,8 @@ const Login = () => {
     });
     return limpiar();
   }, []);
-  const limpiar = () => {
 
+  const limpiar = () => {
     setIsValid({
       email: false,
       password: false
@@ -91,6 +92,10 @@ const Login = () => {
     });
   }
 
+  const handleResetPassword = () => {
+    limpiar();
+    navigation.navigate('ResetPassword');
+  }
 
   useEffect(() => {
     setIsValid((state) => ({
@@ -99,7 +104,6 @@ const Login = () => {
       password: regex.password.test(login.contrasena),
     }));
   }, [login, setIsValid]);
-
 
   useEffect(() => {
     if (isFritriUserFromGoogleLogged) {
@@ -111,10 +115,16 @@ const Login = () => {
   useEffect(() => {
     if (fritriUserEmail) {
       handleUser(fritriUserEmail!);
-      navigation.navigate('Home');
+      if (fritriUserEmail.tipoLogin==="Temporal") {
+        limpiar();
+        navigation.navigate('NewPassword');
+      }
+      else {
+        limpiar();
+        navigation.navigate('Home');
+      }
     }
   }, [fritriUserEmail]);
-
 
   return (
     <Block safe marginTop={sizes.md}>
@@ -242,6 +252,7 @@ const Login = () => {
                   marginBottom={sizes.m}
                   keyboardType="email-address"
                   placeholder={t('common.emailPlaceholder')}
+                  value={login.correoElectronico}
                   success={(login.correoElectronico !== '' && isValid.email)}
                   danger={Boolean(login.correoElectronico && !isValid.email)}
                   onChangeText={(value) => handleChange({ correoElectronico: value })}
@@ -250,13 +261,27 @@ const Login = () => {
                   secureTextEntry
                   label={t('common.password')}
                   autoCapitalize="none"
-                  marginBottom={sizes.m}
+                  marginBottom={sizes.s}
                   placeholder={t('common.passwordPlaceholder')}
+                  value={login.contrasena}
                   onChangeText={(value) => handleChange({ contrasena: value })}
                   success={Boolean(login.contrasena && isValid.password)}
                   danger={Boolean(login.contrasena  && !isValid.password)}
                 />
-              </Block>
+                <TouchableOpacity
+                  onPress={handleResetPassword}>
+                  <Block row flex={0} align="center">
+                    <Text
+                      color={colors.danger}
+                      semibold
+                      size={sizes.linkSize}
+                      marginRight={sizes.s}>
+                      {t('login.forgotPassword')}
+                    </Text>
+                    <Image source={assets.arrow} color={colors.danger} />
+                  </Block>
+                </TouchableOpacity>                 
+              </Block>             
               {/* checkbox terms */}
               {/* <Block row flex={0} align="center" paddingHorizontal={sizes.sm}>
                 <Checkbox
