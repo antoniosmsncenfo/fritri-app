@@ -18,3 +18,9 @@ export interface IUsuarioContrasena {
     contrasena?: string;
     contrasenaTemporal?: string;
 }
+
+export enum LoginStatus {
+    New = 'NEW',
+    InvalidMail = 'INVALID',
+  
+  }

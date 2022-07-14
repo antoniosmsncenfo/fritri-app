@@ -43,6 +43,9 @@
     "changeData": "Update",
     "changePass": "Change Password",
     "logOut": "logOut",
+    "loginFailed": "Login Failed",
+    "loginFailedText": "Please check email or password",
+
 
 
 

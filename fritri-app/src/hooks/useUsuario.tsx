@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState } from 'react';
 import { IUsuario, ILogin } from '../constants/types/index';
 import { USUARIOS_BASE_URL } from '@env';
-import { IUsuarioContrasena, IUsuarioFritri } from "../interfaces/usuario-fritri";
+import { IUsuarioContrasena, IUsuarioFritri, LoginStatus } from '../interfaces/usuario-fritri';
 import { guardarUsuarioFriTri, resetearPassword, cambiarPassword, updateUsuarioFriTri } from "../api/usuarioDB";
 import { RegistrationStatus, ResetPasswordStatus } from '../interfaces/registro-usuario';
 
@@ -13,6 +13,13 @@ export const useLogin = () => {
     })
 
     const [fritriUser, setFritriUser] = useState<IUsuarioFritri | null>(null);
+    const [LoginMailStatus, setLoginStatus] = useState<LoginStatus>(
+        LoginStatus.New
+    )
+
+    const resetLoginEstatus = () => {
+        setLoginStatus(LoginStatus.New);
+    }
 
     const loginUsuarioEmail = async (usuarioLogin: ILogin) => {
 
@@ -24,18 +31,23 @@ export const useLogin = () => {
                 headers: {},
                 data: usuarioLogin
             };
+            console.log("TEST3");
 
             const resultado = await axios(request);
             console.log(resultado.status);
             if (resultado.status === 200) {
                 console.log(resultado.data.statusCode);
                 if (resultado.data.statusCode === 404) {
+                    console.log(resultado.data.statusCode);
+
+                    setLoginStatus(LoginStatus.InvalidMail);
                     setFritriUser(null);
                 } 
                 else if('tipoLogin' in resultado.data) {
                     console.log(resultado.data);
                     setFritriUser(resultado.data);
-                }
+                } 
+            
                 else {
                     setFritriUser(null);
                 }
@@ -54,6 +66,8 @@ export const useLogin = () => {
     return {
         loginUsuarioEmail,
         emailLogout,
+        LoginMailStatus,
+        resetLoginEstatus,
         fritriUserEmail: fritriUser
     }
 

@@ -83,7 +83,7 @@ const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
 
 const Profile = () => {
 
-  const { user, handleUser } = useData();
+  const { user, handleUser  } = useData();
   const { t } = useTranslation();
   const navigation = useNavigation();
 
@@ -118,8 +118,6 @@ const Profile = () => {
   const [country, setCountry] = useState(COUNTRIES['1']);
 
   const { resetRegistrarEstatus, updateUsuario, registrarStatus } = useUsuario();
-
-  const [fritriUser, setFritriUser] = useState<IUsuarioFritri | null>(null);
 
 
   const [modal, setModal] = useState<
@@ -170,7 +168,6 @@ const Profile = () => {
 
   const emailLogout = () => {
 
-    setFritriUser(null);
     navigation.navigate('Login');
 
 
