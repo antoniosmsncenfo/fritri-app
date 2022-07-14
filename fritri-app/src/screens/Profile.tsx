@@ -177,6 +177,9 @@ const Profile = () => {
   };
 
 
+  const handlePasswordChange = () => {
+    navigation.navigate('NewPassword');
+  };
 
   useEffect(() => {
     setIsValid((state) => ({
@@ -277,7 +280,7 @@ const Profile = () => {
             radius={sizes.sm}
             marginHorizontal="8%"
             shadow={!isAndroid} // disabled shadow on Android due to blur overlay + elevation issue
-          >
+            >
             <Block
             
               blur
@@ -291,8 +294,6 @@ const Profile = () => {
               <Text p semibold center>
                 {t('register.subtitleUpdate')}
               </Text>
-
-              {/* form inputs */}
               <Block paddingHorizontal={sizes.sm}>
                 <Input
                   autoCapitalize="none"
@@ -306,7 +307,6 @@ const Profile = () => {
                 />
                 <Input
                   disabled={true}
-
                   autoCapitalize="none"
                   marginBottom={sizes.m}
                   label={t('common.email')}
@@ -332,6 +332,7 @@ const Profile = () => {
                 <Button
                   primary
                   outlined
+                  onPress={handlePasswordChange}
                   shadow={!isAndroid}
                   marginVertical={sizes.s}
                   marginHorizontal={sizes.sm}
@@ -461,8 +462,6 @@ const Profile = () => {
               marginBottom={sizes.sm}
               onPress={() =>
                 modal === 'gender'
-                  //? handleGender(GENDER_TYPES[item])
-                  //: handleCountry(COUNTRIES[item])
                   ? handleChange({ gender: GENDER_TYPES[item] })
                   : handleChange({ country: COUNTRIES[item] })
               }>

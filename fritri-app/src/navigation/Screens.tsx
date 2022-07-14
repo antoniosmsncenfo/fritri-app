@@ -14,6 +14,8 @@ import {
   Profile,
   Register,
   Login,
+  ResetPassword,
+  NewPassword,
   Rental,
   Rentals,
   Booking,
@@ -36,6 +38,16 @@ export default () => {
       <Stack.Screen
         name="Login"
         component={Login}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ResetPassword"
+        component={ResetPassword}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="NewPassword"
+        component={NewPassword}
         options={{headerShown: false}}
       />      
       <Stack.Screen
