@@ -1,8 +1,10 @@
 export class Restaurante {
   nombre: string;
   urlFoto: string;
-  descripcion: string;
-  rangoPrecios?: string;
-  horario?: string;
+  rangoPrecios?: number;
+  vecindario: string;
+  latitud: number;
+  longitud: number;
+  calificacion?: number;
   idGoogle: string;
 }
