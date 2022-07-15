@@ -1,5 +1,5 @@
 import { ConsoleLogger, Injectable } from '@nestjs/common';
-import { GoogleApiService } from '../google-api/google-api.service';
+import { Categorias, GoogleApiService } from '../google-api/google-api.service';
 
 import {
   LatLng,
@@ -8,16 +8,17 @@ import {
   PlaceData,
 } from '@googlemaps/google-maps-services-js';
 
-import { RestauranteSolicitudDto } from './dto/restaurante-solicitud.dto';
+import { RestaurantesSolicitudDto } from './dto/restaurantes-solicitud.dto';
 import { RestauranteRespuesta } from './entities/restaurante-respuesta.entity';
 import { Restaurante } from './entities/restaurante.entity';
+import { IdGoogleSolicitudDto } from './dto/id-google-solicitud.dto';
 
 @Injectable()
 export class RestaurantesService {
   constructor(private googleApiService: GoogleApiService) {}
 
   async obtenerRestaurantesDelDestino(
-    restauranteSolicitud: RestauranteSolicitudDto,
+    restauranteSolicitud: RestaurantesSolicitudDto,
   ): Promise<RestauranteRespuesta> {
     const coordenadas: LatLng = {
       lat: restauranteSolicitud.latitud,
@@ -57,6 +58,35 @@ export class RestaurantesService {
         tokenPaginacion: '',
         restaurantes: [],
       };
+    }
+  }
+
+  async obtenerRestaurante(
+    idGoogle: IdGoogleSolicitudDto,
+  ): Promise<Restaurante> {
+    const categorias: Categorias[] = [
+      Categorias.place_id,
+      Categorias.geometry,
+      Categorias.photo,
+      Categorias.name,
+      Categorias.rating,
+      Categorias.vicinity,
+      Categorias.price_level,
+    ];
+
+    const idioma: Language = Language[idGoogle.idioma] || 'es';
+
+    const respuestaRestaurantesGoogle: Partial<PlaceData> =
+      await this.googleApiService.obtenerDetalleLugar(
+        idGoogle.idGoogle,
+        categorias,
+        idioma,
+      );
+
+    if (respuestaRestaurantesGoogle) {
+      return this.mapearPlaceDataARestaurante(respuestaRestaurantesGoogle);
+    } else {
+      return null;
     }
   }
 
