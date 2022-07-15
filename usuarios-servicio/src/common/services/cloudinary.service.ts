@@ -24,8 +24,6 @@ export class CloudinaryService {
       if(borrarArchivo) {
         fs.unlinkSync(rutaImagen);
       }
-      console.log('upload');
-      console.log(upload);
       return upload;
     } catch(error) {
       console.error('Error en servicio de cloudinary::', error);
