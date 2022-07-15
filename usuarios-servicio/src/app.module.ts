@@ -9,6 +9,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { EmailController } from './email.controller';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { AuthModule } from './auth/auth.module';
+import { CloudinaryService } from './common/services/cloudinary.service';
 
 @Module({
   imports: [
@@ -37,6 +38,6 @@ import { AuthModule } from './auth/auth.module';
     AuthModule
   ],
   controllers: [AppController, EmailController],
-  providers: [AppService],
+  providers: [AppService, CloudinaryService],
 })
 export class AppModule {}
