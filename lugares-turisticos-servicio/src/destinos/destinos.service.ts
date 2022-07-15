@@ -1,19 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { GoogleApiService, Categorias } from '../google-api/google-api.service';
-import { GeocodeResult, PlaceData } from '@googlemaps/google-maps-services-js';
+import {
+  GeocodeResult,
+  PlaceData,
+  LatLng,
+} from '@googlemaps/google-maps-services-js';
 import {
   AddressComponent,
   AddressType,
 } from '@googlemaps/google-maps-services-js';
+import { DestinoSolicitudDto } from './dto/destino-solicitud.dto';
+import { IdGoogleSolicitudDto } from './dto/id-google-solicitud.dto';
 
 @Injectable()
 export class DestinosService {
   constructor(private googleApiService: GoogleApiService) {}
 
-  async buscarDestinos(nombre: string, idioma = 'es') {
+  async buscarDestinos(destinoDto: DestinoSolicitudDto) {
     const destinosGoogle = await this.googleApiService.obtenerDestinos(
-      nombre,
-      idioma,
+      destinoDto.nombre,
+      destinoDto.idioma,
     );
 
     const destinos = Promise.all(
@@ -25,7 +31,7 @@ export class DestinosService {
     return destinos;
   }
 
-  async buscarDestino(id: string) {
+  async obtenerDestino(idGoogle: IdGoogleSolicitudDto) {
     const infoLugar: Categorias[] = [
       Categorias.place_id,
       Categorias.formatted_address,
@@ -34,8 +40,8 @@ export class DestinosService {
       Categorias.address_components,
     ];
 
-    const destino = await this.googleApiService.obtenerInfoDestino(
-      id,
+    const destino = await this.googleApiService.obtenerDetalleLugar(
+      idGoogle.idGoogle,
       infoLugar,
     );
     return this.mapearPlaceDataADestino(destino);
@@ -44,7 +50,10 @@ export class DestinosService {
   async obtenerReferenciasFotosDestino(id: string) {
     const infoLugar: Categorias[] = [Categorias.photo];
 
-    const fotos = await this.googleApiService.obtenerInfoDestino(id, infoLugar);
+    const fotos = await this.googleApiService.obtenerDetalleLugar(
+      id,
+      infoLugar,
+    );
 
     const referenciasFotos = fotos.photos.map((foto) => {
       return foto.photo_reference;
@@ -100,20 +109,21 @@ export class DestinosService {
     } = destinoGoogle;
     const { lat, lng } = geometry.location;
 
-    const paises: AddressComponent[] = address_components.filter((c) =>
+    const paises: AddressComponent[] = address_components?.filter((c) =>
       c.types.includes(AddressType.country),
     );
 
-    const provincias: AddressComponent[] = address_components.filter((c) =>
+    const provincias: AddressComponent[] = address_components?.filter((c) =>
       c.types.includes(AddressType.administrative_area_level_1),
     );
 
-    const urlsFotos = photos.map((foto) => {
+    const urlsFotos = photos?.map((foto) => {
       return foto.photo_reference;
     });
+
     let urlFoto = '';
 
-    if (urlsFotos.length > 0) {
+    if (urlsFotos && urlsFotos.length > 0) {
       const indexFoto = Math.floor(Math.random() * urlsFotos.length); //para obtener un index aleatorio de las posibles fotos
       urlFoto = await this.obtenerFotoDeGoogle(urlsFotos[indexFoto]);
     }
