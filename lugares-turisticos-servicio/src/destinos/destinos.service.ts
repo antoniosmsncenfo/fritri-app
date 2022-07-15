@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { GoogleApiService, Categorias } from '../google-api/google-api.service';
-import { Language } from '@googlemaps/google-maps-services-js';
 import {
   GeocodeResult,
   PlaceData,
@@ -10,15 +9,17 @@ import {
   AddressComponent,
   AddressType,
 } from '@googlemaps/google-maps-services-js';
+import { DestinoSolicitudDto } from './dto/destino-solicitud.dto';
+import { IdGoogleSolicitudDto } from './dto/id-google-solicitud.dto';
 
 @Injectable()
 export class DestinosService {
   constructor(private googleApiService: GoogleApiService) {}
 
-  async buscarDestinos(nombre: string, idioma = 'es') {
+  async buscarDestinos(destinoDto: DestinoSolicitudDto) {
     const destinosGoogle = await this.googleApiService.obtenerDestinos(
-      nombre,
-      idioma,
+      destinoDto.nombre,
+      destinoDto.idioma,
     );
 
     const destinos = Promise.all(
@@ -30,7 +31,7 @@ export class DestinosService {
     return destinos;
   }
 
-  async buscarDestino(id: string) {
+  async buscarDestino(idGoogle: IdGoogleSolicitudDto) {
     const infoLugar: Categorias[] = [
       Categorias.place_id,
       Categorias.formatted_address,
@@ -39,8 +40,8 @@ export class DestinosService {
       Categorias.address_components,
     ];
 
-    const destino = await this.googleApiService.obtenerInfoDestino(
-      id,
+    const destino = await this.googleApiService.obtenerDetalleLugar(
+      idGoogle.idGoogle,
       infoLugar,
     );
     return this.mapearPlaceDataADestino(destino);
@@ -49,7 +50,10 @@ export class DestinosService {
   async obtenerReferenciasFotosDestino(id: string) {
     const infoLugar: Categorias[] = [Categorias.photo];
 
-    const fotos = await this.googleApiService.obtenerInfoDestino(id, infoLugar);
+    const fotos = await this.googleApiService.obtenerDetalleLugar(
+      id,
+      infoLugar,
+    );
 
     const referenciasFotos = fotos.photos.map((foto) => {
       return foto.photo_reference;
