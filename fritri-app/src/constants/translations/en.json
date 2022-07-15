@@ -43,6 +43,10 @@
     "changeData": "Update",
     "changePass": "Change Password",
     "logOut": "logOut",
+    "loginFailed": "Login Failed",
+    "loginFailedText": "Please check email or password",
+    "logOutConfirmT": "LogOut",
+    "logOutConfirmC": "Are you sure you want to logout?",
 
 
 
