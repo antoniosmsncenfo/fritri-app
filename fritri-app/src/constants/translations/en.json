@@ -130,21 +130,37 @@
     "success": "Your user was created successfully!",
     "validation": "Validation Error",
     "emailExists": "Email already exists.",
-    "emailRules": "At least one digit.\nAt least one lower case.\nAt least one upper case.\nAt least 6 from the mentioned characters.",
+    "passwordRules": "At least one digit.\nAt least one lower case.\nAt least one upper case.\nAt least 6 from the mentioned characters.",
     "subtitleUpdate" : "Update your Profile",
     "updateUser" : "Your Profile was updated",
     "titleUpdated" : "Successfully"
-
-
   },
   "login": {
     "title": "Welcome",
     "subtitle": "Sign In with",
+    "forgotPassword": "I forgot my password",
     "errorFields": "Please check the password or email!",
-    "errorLogin": "Error Login!"
-
-
+    "errorLogin": "Login Error",
+    "invalidCredentials": "The provided credentials are not valid."
   },
+  "resetPassword": {
+    "title": "Reset your Password",
+    "subtitle": "Please enter your email address",
+    "sendTempPass": "Send temporary password",
+    "passwordSent": "Temporary password sent",
+    "checkEmail": "Please check your inbox/spam folder, and use the temporary password to login.",
+    "passwordError": "Something went wrong!",
+    "errorMessage": "Please try again. If problem persists, please contact customer support."
+  }, 
+  "newPassword": {
+    "title": "New Password",
+    "subtitle": "Please enter your new password",
+    "sendTempPass": "Save New Password",
+    "passwordSent": "New Password Registered",
+    "checkEmail": "Please login with your new password.",
+    "passwordError": "Something went wrong!",
+    "errorMessage": "Please try again. If problem persists, please contact customer support."
+  },   
   "settings": {
     "recommended": {
       "title": "Recommended Settings",

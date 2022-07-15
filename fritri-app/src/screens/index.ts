@@ -11,6 +11,8 @@ export {default as Privacy} from './Privacy';
 export {default as Profile} from './Profile';
 export {default as Register} from './Register';
 export {default as Login} from './Login';
+export {default as ResetPassword} from './ResetPassword';
+export {default as NewPassword} from './NewPassword';
 export {default as Rental} from './Rental';
 export {default as Rentals} from './Rentals';
 export {default as Booking} from './Booking';

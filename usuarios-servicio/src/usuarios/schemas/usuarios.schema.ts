@@ -8,7 +8,7 @@ export class Usuario {
 
 	@Prop({
 		required: true,
-		enum: ['Google', 'Facebook', 'Email'],
+		enum: ['Google', 'Facebook', 'Email', 'Temporal'],
 	})
 	tipoLogin: string;
 
@@ -17,6 +17,9 @@ export class Usuario {
 
 	@Prop()
 	contrasena: string;
+
+	@Prop()
+	contrasenaTemporal: string;
 
 	@Prop({
 		required: true,

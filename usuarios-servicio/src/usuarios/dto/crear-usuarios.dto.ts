@@ -6,6 +6,8 @@ export class CrearUsuariosDto {
 
   readonly contrasena: string;
 
+  readonly contrasenaTemporal: string;
+
   readonly nombreCompleto: string;
 
   readonly genero: string;

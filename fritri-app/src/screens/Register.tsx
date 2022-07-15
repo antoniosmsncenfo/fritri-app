@@ -12,17 +12,6 @@ import { IRegistration, RegistrationStatus } from '../interfaces/registro-usuari
 
 const isAndroid = Platform.OS === 'android';
 
-// interface IRegistration {
-//   name: string;
-//   email: string;
-//   gender: string;
-//   country: string;
-//   password: string;
-//   confirmPassword: string;
-//   agreed: boolean;
-//   status: 'new' | 'success' | 'duplicated' | 'error';
-// }
-
 interface IRegistrationValidation {
   name: boolean;
   email: boolean;
@@ -43,14 +32,6 @@ const COUNTRIES: {
 } = {'1': 'Costa Rica', '2': 'Nicaragua', 
       '3': 'Panamá', '4': 'Guatemala', 
       '5': 'El Salvador'};
-
-const options = {
-  title: 'Selecciona foto de perfil',
-  cancelButton: 'Cancelar',
-  takePhotoButtonTitle: 'Tomar Foto',
-  chooseFromLibraryButtonTitle: 'Abrir Galeria',
-  noData: true,
-};
 
 const TouchableInput = ({label, value, icon, onPress}: ITouchableInput) => {
   const {assets, colors, sizes} = useTheme();
@@ -148,8 +129,6 @@ const Register = () => {
           : FotoUsuario.Hombre,
         pais: registration.country
       })
-
-      console.log(registrarStatus);
     }
   }, [isValid, registration]);
 
@@ -190,8 +169,7 @@ const Register = () => {
         t('register.success'),
         [
           {text: 'OK', onPress: () => {
-            console.log('OK button clicked');
-            navigation.navigate('Profile');},
+            navigation.navigate('Home');},
           }
         ],
         { 
@@ -225,24 +203,6 @@ const Register = () => {
             radius={sizes.cardRadius}
             source={assets.background}
             height={sizes.height * 0.3}>
-            {/* <Button
-              row
-              flex={0}
-              justify="flex-start"
-              onPress={() => navigation.goBack()}>
-              <Image
-                radius={0}
-                width={10}
-                height={18}
-                color={colors.white}
-                source={assets.arrow}
-                transform={[{rotate: '180deg'}]}
-              />
-              <Text p white marginLeft={sizes.s}>
-                {t('common.goBack')}
-              </Text>
-            </Button> */}
-
             <Text h4 center white marginTop={20}>
               {t('register.title')}
             </Text>
@@ -396,7 +356,7 @@ const Register = () => {
                   autoCapitalize="none"
                   marginBottom={sizes.m}
                   label={t('common.password')}
-                  rules={t('register.emailRules')}
+                  rules={t('register.passwordRules')}
                   placeholder={t('common.passwordPlaceholder')}
                   onChangeText={(value) => handleChange({password: value})}
                   success={Boolean(registration.password && isValid.password)}
@@ -407,7 +367,7 @@ const Register = () => {
                   autoCapitalize="none"
                   marginBottom={sizes.m}
                   label={t('common.confirmPassword')}
-                  rules={t('register.emailRules')}
+                  rules={t('register.passwordRules')}
                   placeholder={t('common.confirmPasswordPlaceholder')}
                   onChangeText={(value) => handleChange({confirmPassword: value})}
                   success={Boolean(registration.confirmPassword && isValid.confirmPassword)}
