@@ -23,7 +23,7 @@ export enum Categorias {
   type = 'type',
   url = 'url',
   utc_offset = 'utc_offset',
-  vicini = 'vicinity',
+  vicinity = 'vicinity',
   formatted_phone_number = 'formatted_phone_number',
   international_phone_number = 'international_phone_number',
   opening_hours = 'opening_hours',
@@ -58,7 +58,7 @@ export class GoogleApiService {
       }
     } catch (error) {
       Logger.error(
-        `Error obtenerDestinos: ${JSON.stringify(error.response.data)}`,
+        `Error obtenerDestinos: ${error.response?.data?.error_message}`,
         'GoogleApiService',
       );
       return [];
@@ -66,7 +66,11 @@ export class GoogleApiService {
   }
 
   /**Obtiene el lugar que coinciden con el id de google */
-  async obtenerInfoDestino(id: string, categorias: Categorias[]) {
+  async obtenerDetalleLugar(
+    id: string,
+    categorias: Categorias[],
+    idioma: Language = Language.es,
+  ) {
     const client = new Client({});
     const resultadoVacio: Partial<PlaceData> = null;
     try {
@@ -74,7 +78,7 @@ export class GoogleApiService {
         params: {
           place_id: id,
           key: this.key,
-          language: Language.es,
+          language: idioma,
           fields: categorias,
         },
         timeout: 1000, // milliseconds
@@ -83,7 +87,6 @@ export class GoogleApiService {
       if (response.statusText === 'OK') {
         return response.data.result;
       } else {
-        console.log('sin resultados');
         return resultadoVacio;
       }
     } catch (error) {
