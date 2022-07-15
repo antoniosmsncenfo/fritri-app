@@ -10,6 +10,7 @@ import { useGoogleLogin } from '../hooks/useGoogleLogin';
 import { useFacebook } from '../hooks/useFacebook';
 import { useUsuario, useLogin } from '../hooks/useUsuario';
 import { email } from '../constants/regex';
+import { LoginStatus } from '../interfaces/usuario-fritri';
 
 
 
@@ -24,17 +25,17 @@ const Login = () => {
     email: false,
     password: false,
   });
+
   const [login, setLoginData] = useState<ILogin>({
     correoElectronico: '',
     contrasena: '',
   });
 
-
   const { assets, colors, gradients, sizes } = useTheme();
 
   const { signInWithGoogleAsync, fritriUserFromGoogle, isFritriUserFromGoogleLogged, googleLogout } = useGoogleLogin();
   const { facebookLogin } = useFacebook();
-  const { loginUsuarioEmail, emailLogout, fritriUserEmail } = useLogin();
+  const { loginUsuarioEmail, emailLogout, fritriUserEmail, LoginMailStatus, resetLoginEstatus} = useLogin();
 
   const handleChange = useCallback(
     (value) => {
@@ -43,25 +44,49 @@ const Login = () => {
     [setLoginData],
   );
 
-  const handleSignIn = () => {
-    emailLogout();
-    /**LOGIN EMAIL */
-    if (isValid.email && isValid.password) {
-      loginUsuarioEmail(login);
-    } else {
-      Alert.alert(
-        t('login.errorLogin'),
-        t('login.errorFields'),
 
+
+  useEffect(() => {
+    if (LoginMailStatus === LoginStatus.InvalidMail) {
+      Alert.alert(
+        t('common.loginFailed'),
+        t('common.loginFailedText'),
         [
-          { text: 'OK' }
+          {
+            text: 'OK', onPress: () => {
+              navigation.navigate('Login');
+            },
+          }
         ],
         {
           cancelable: false
         }
       );
+      resetLoginEstatus();
     }
-  };
+
+  }, [LoginMailStatus])
+
+  const handleSignIn = useCallback(()=> {
+    /**LOGIN EMAIL */
+    if (isValid.email && isValid.password) {
+      loginUsuarioEmail(login);
+    }
+
+    // else {
+    //   Alert.alert(
+    //     t('login.errorLogin'),
+    //     t('login.errorFields'),
+
+    //     [
+    //       { text: 'OK' }
+    //     ],
+    //     {
+    //       cancelable: false
+    //     }
+    //   );
+    // }
+  },[isValid, loginUsuarioEmail]);
 
   const loginGoogleUser = () => {
     googleLogout();
@@ -92,6 +117,11 @@ const Login = () => {
     });
   }
 
+  const handleResetPassword = () => {
+    limpiar();
+    navigation.navigate('ResetPassword');
+  }
+
   useEffect(() => {
     setIsValid((state) => ({
       ...state,
@@ -110,11 +140,12 @@ const Login = () => {
   useEffect(() => {
     if (fritriUserEmail) {
       handleUser(fritriUserEmail!);
-      if (fritriUserEmail.tipoLogin==="Temporal") {
+      if (fritriUserEmail.tipoLogin === "Temporal") {
         limpiar();
         navigation.navigate('NewPassword');
       }
       else {
+        limpiar();
         navigation.navigate('Home');
       }
     }
@@ -260,10 +291,10 @@ const Login = () => {
                   value={login.contrasena}
                   onChangeText={(value) => handleChange({ contrasena: value })}
                   success={Boolean(login.contrasena && isValid.password)}
-                  danger={Boolean(login.contrasena  && !isValid.password)}
+                  danger={Boolean(login.contrasena && !isValid.password)}
                 />
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('ResetPassword')}>
+                  onPress={handleResetPassword}>
                   <Block row flex={0} align="center">
                     <Text
                       color={colors.danger}
@@ -274,8 +305,8 @@ const Login = () => {
                     </Text>
                     <Image source={assets.arrow} color={colors.danger} />
                   </Block>
-                </TouchableOpacity>                 
-              </Block>             
+                </TouchableOpacity>
+              </Block>
               {/* checkbox terms */}
               {/* <Block row flex={0} align="center" paddingHorizontal={sizes.sm}>
                 <Checkbox

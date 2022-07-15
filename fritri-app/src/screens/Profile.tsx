@@ -83,7 +83,7 @@ const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
 
 const Profile = () => {
 
-  const { user, handleUser } = useData();
+  const { user, handleUser  } = useData();
   const { t } = useTranslation();
   const navigation = useNavigation();
 
@@ -118,8 +118,6 @@ const Profile = () => {
   const [country, setCountry] = useState(COUNTRIES['1']);
 
   const { resetRegistrarEstatus, updateUsuario, registrarStatus } = useUsuario();
-  
-  const [fritriUser, setFritriUser] = useState<IUsuarioFritri | null>(null);
 
 
   const [modal, setModal] = useState<
@@ -169,14 +167,30 @@ const Profile = () => {
   );
 
   const emailLogout = () => {
-        
-    setFritriUser(null);
-    navigation.navigate('Login');
-    
+    Alert.alert(
+      t('common.logOutConfirmT'),
+      t('common.logOutConfirmC'),
+      [
+        {text: 'Yes', onPress: () =>  navigation.navigate('Login')},
+        {text: 'No', onPress: () =>  ('No button clicked'), style: 'cancel'},
+      ],
+      // [
+      //   {
+      //     text: 'OK', onPress: () => {
+      //       navigation.navigate('Login');
+      //     },
+      //   }
+      // ],
+      {
+        cancelable: false
+      }
+    );
+  };
 
-};
 
-
+  const handlePasswordChange = () => {
+    navigation.navigate('NewPassword');
+  };
 
   useEffect(() => {
     setIsValid((state) => ({
@@ -241,30 +255,45 @@ const Profile = () => {
                 height={18}
                 color={colors.white}
                 source={assets.arrow}
-                transform={[{rotate: '180deg'}]}
+                transform={[{ rotate: '180deg' }]}
               />
               <Text p white marginLeft={sizes.s}>
                 {t('common.goBack')}
               </Text>
             </Button> */}
 
-            <Text h4 center white marginTop={20}>
+            <Block flex={0} align="center">
+              <Image
+                width={64}
+                height={64}
+                 source={{ uri: 'https://engineering.fb.com/wp-content/uploads/2016/04/yearinreview.jpg' }}
+              />
+            </Block>
+            {/* 
+
+            <Text h4 center white marginTop={20} >
               {t('register.title')}
-            </Text>
+            </Text> */}
           </Image>
+          
         </Block>
+
         {/* register form */}
+        
         <Block
+
           keyboard
           behavior={!isAndroid ? 'padding' : 'height'}
-          marginTop={-(sizes.height * 0.25 - sizes.l)}>
+          marginTop={-(sizes.height * 0.20 - sizes.l)}>
+
           <Block
             flex={0}
             radius={sizes.sm}
             marginHorizontal="8%"
             shadow={!isAndroid} // disabled shadow on Android due to blur overlay + elevation issue
-          >
+            >
             <Block
+            
               blur
               flex={0}
               intensity={150}
@@ -276,8 +305,6 @@ const Profile = () => {
               <Text p semibold center>
                 {t('register.subtitleUpdate')}
               </Text>
-
-              {/* form inputs */}
               <Block paddingHorizontal={sizes.sm}>
                 <Input
                   autoCapitalize="none"
@@ -291,7 +318,6 @@ const Profile = () => {
                 />
                 <Input
                   disabled={true}
-
                   autoCapitalize="none"
                   marginBottom={sizes.m}
                   label={t('common.email')}
@@ -317,6 +343,7 @@ const Profile = () => {
                 <Button
                   primary
                   outlined
+                  onPress={handlePasswordChange}
                   shadow={!isAndroid}
                   marginVertical={sizes.s}
                   marginHorizontal={sizes.sm}
@@ -347,98 +374,94 @@ const Profile = () => {
                     {t('common.logOut')}
                   </Text>
                 </Button>
-                {/* <TouchableInput
-                  icon="more"
-                  value={"Me.jpg"}
-                  label={t('common.avatar')}
-                  onPress={() => setModal(undefined)}
-                />                                                  */}
-                {/* 
-                <Text bold marginBottom={sizes.s}>
-                  {t('common.gender')}
-                </Text>                
-                <Button
-                  row
-                  flex={1}
-                  gradient={gradients.primary}
-                  //marginRight={sizes.s}
-                  //onPress={() => onQTY?.()}
-                  marginBottom={sizes.s}
-                  >
-                  <Block
-                    row
-                    align="center"
-                    justify="space-between"
-                    paddingHorizontal={sizes.sm}>
-                    <Text bold white transform="uppercase" marginRight={sizes.sm}>
-                      {registration.gender}
-                    </Text>
-                    <Image
-                      source={assets.arrow}
-                      color={colors.white}
-                      transform={[{rotate: '90deg'}]}
-                    />
-                  </Block>
-                </Button>                 */}
-                {/* <Input
-                  secureTextEntry
-                  autoCapitalize="none"
-                  marginBottom={sizes.m}
-                  label={t('common.password')}
-                  rules={t('register.emailRules')}
-                  placeholder={t('common.passwordPlaceholder')}
-                  // value ={user?.contrasena}
 
-                  onChangeText={(value) => handleChange({password: value})}
-                  success={Boolean(registration.password && isValid.password)}
-                  danger={Boolean(registration.password && !isValid.password)}
-                />
-                <Input
-                  secureTextEntry
-                  autoCapitalize="none"
-                  marginBottom={sizes.m}
-                  label={t('common.confirmPassword')}
-                  rules={t('register.emailRules')}
-                  placeholder={t('common.confirmPasswordPlaceholder')}
-                  onChangeText={(value) => handleChange({confirmPassword: value})}
-                  success={Boolean(registration.confirmPassword && isValid.confirmPassword)}
-                  danger={Boolean(registration.confirmPassword && !isValid.confirmPassword)}
-                />                 */}
+                {/* 
+              <Text bold marginBottom={sizes.s}>
+                {t('common.gender')}
+              </Text>                
+              <Button
+                row
+                flex={1}
+                gradient={gradients.primary}
+                //marginRight={sizes.s}
+                //onPress={() => onQTY?.()}
+                marginBottom={sizes.s}
+                >
+                <Block
+                  row
+                  align="center"
+                  justify="space-between"
+                  paddingHorizontal={sizes.sm}>
+                  <Text bold white transform="uppercase" marginRight={sizes.sm}>
+                    {registration.gender}
+                  </Text>
+                  <Image
+                    source={assets.arrow}
+                    color={colors.white}
+                    transform={[{rotate: '90deg'}]}
+                  />
+                </Block>
+              </Button>                 */}
+                {/* <Input
+                secureTextEntry
+                autoCapitalize="none"
+                marginBottom={sizes.m}
+                label={t('common.password')}
+                rules={t('register.emailRules')}
+                placeholder={t('common.passwordPlaceholder')}
+                // value ={user?.contrasena}
+
+                onChangeText={(value) => handleChange({password: value})}
+                success={Boolean(registration.password && isValid.password)}
+                danger={Boolean(registration.password && !isValid.password)}
+              />
+              <Input
+                secureTextEntry
+                autoCapitalize="none"
+                marginBottom={sizes.m}
+                label={t('common.confirmPassword')}
+                rules={t('register.emailRules')}
+                placeholder={t('common.confirmPasswordPlaceholder')}
+                onChangeText={(value) => handleChange({confirmPassword: value})}
+                success={Boolean(registration.confirmPassword && isValid.confirmPassword)}
+                danger={Boolean(registration.confirmPassword && !isValid.confirmPassword)}
+              />                 */}
               </Block>
               {/* checkbox terms */}
               {/* <Block row flex={0} align="center" paddingHorizontal={sizes.sm}>
-                <Checkbox
-                  marginRight={sizes.sm}
-                  checked={registration?.agreed}
-                  onPress={(value) => handleChange({agreed: value})}
-                />
-                <Text paddingRight={sizes.s}>
-                  {t('common.agree')}
-                  <Text
-                    semibold
-                    onPress={() => {
-                      Linking.openURL('https://www.creative-tim.com/terms');
-                    }}>
-                    {t('common.terms')}
-                  </Text>
+              <Checkbox
+                marginRight={sizes.sm}
+                checked={registration?.agreed}
+                onPress={(value) => handleChange({agreed: value})}
+              />
+              <Text paddingRight={sizes.s}>
+                {t('common.agree')}
+                <Text
+                  semibold
+                  onPress={() => {
+                    Linking.openURL('https://www.creative-tim.com/terms');
+                  }}>
+                  {t('common.terms')}
                 </Text>
-              </Block> */}
+              </Text>
+            </Block> */}
 
               {/* <Button
-                primary
-                outlined
-                shadow={!isAndroid}
-                marginVertical={sizes.s}
-                marginHorizontal={sizes.sm}
-                onPress={() => navigation.navigate('Login')}>
-                <Text bold primary transform="uppercase">
-                  {t('common.signin')}
-                </Text>
-              </Button> */}
+              primary
+              outlined
+              shadow={!isAndroid}
+              marginVertical={sizes.s}
+              marginHorizontal={sizes.sm}
+              onPress={() => navigation.navigate('Login')}>
+              <Text bold primary transform="uppercase">
+                {t('common.signin')}
+              </Text>
+            </Button> */}
             </Block>
           </Block>
         </Block>
       </Block>
+
       <Modal
         visible={Boolean(modal)}
         onRequestClose={() => setModal(undefined)}>
@@ -450,8 +473,6 @@ const Profile = () => {
               marginBottom={sizes.sm}
               onPress={() =>
                 modal === 'gender'
-                  //? handleGender(GENDER_TYPES[item])
-                  //: handleCountry(COUNTRIES[item])
                   ? handleChange({ gender: GENDER_TYPES[item] })
                   : handleChange({ country: COUNTRIES[item] })
               }>

@@ -138,7 +138,7 @@ export class UsuariosService {
         //Se valida si el resultado contiene contrasena temporal
         if ('contrasenaTemporal' in resultadoUsuario){
           //Se valida si está vacía
-          if (resultadoUsuario.contrasenaTemporal.trim().length>0) {
+          if (resultadoUsuario.contrasenaTemporal?.trim().length>0) {
             //Se compara la contrasena recibida con la temporal
             compararContrasenaTemporal = await CompararContrasena(loginEmailDto.contrasena, resultadoUsuario.contrasenaTemporal);            
           }
