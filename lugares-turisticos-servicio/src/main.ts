@@ -13,7 +13,7 @@ async function bootstrap() {
       'API para la obtención de lugares turisticos, utilizando Google como proveedor de información',
     )
     .setVersion('1.0')
-    .addTag('lugaresTuristicos')
+    .addTag('Endpoints', 'Endpoints disponibles para el consumo')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

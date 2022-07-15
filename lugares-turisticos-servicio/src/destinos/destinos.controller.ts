@@ -12,8 +12,8 @@ export class DestinosController {
     return await this.destinosService.buscarDestinos(destinoDto);
   }
 
-  @Get('buscar-destino')
-  async buscarDestino(@Query() idGoogle: IdGoogleSolicitudDto) {
-    return await this.destinosService.buscarDestino(idGoogle);
+  @Get('obtener-destino')
+  async obternerDestino(@Query() idGoogle: IdGoogleSolicitudDto) {
+    return await this.destinosService.obtenerDestino(idGoogle);
   }
 }

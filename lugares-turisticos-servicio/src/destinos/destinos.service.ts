@@ -31,7 +31,7 @@ export class DestinosService {
     return destinos;
   }
 
-  async buscarDestino(idGoogle: IdGoogleSolicitudDto) {
+  async obtenerDestino(idGoogle: IdGoogleSolicitudDto) {
     const infoLugar: Categorias[] = [
       Categorias.place_id,
       Categorias.formatted_address,
