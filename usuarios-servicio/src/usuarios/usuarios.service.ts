@@ -12,6 +12,7 @@ import { ActualizarUsuariosDto } from './dto/actualizar-usuarios';
 import { AuthService } from 'src/auth/auth.service';
 import { EmailsService } from './emails.service';
 import { ActualizarContrasenaDto } from './dto/actualizar-contrasena';
+import { CloudinaryService } from '../common/services/cloudinary.service';
 
 @Injectable()
 export class UsuariosService {
@@ -20,6 +21,7 @@ export class UsuariosService {
     @Inject(forwardRef(() => AuthService))
     private authService: AuthService,
     private mailService: EmailsService,
+    private cloudinaryService: CloudinaryService,
   ) {}
 
   async create(crearUsuarioDto: CrearUsuariosDto): Promise<Usuario> {
