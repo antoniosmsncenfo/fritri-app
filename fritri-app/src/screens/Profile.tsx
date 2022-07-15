@@ -167,10 +167,24 @@ const Profile = () => {
   );
 
   const emailLogout = () => {
-
-    navigation.navigate('Login');
-
-
+    Alert.alert(
+      t('common.logOutConfirmT'),
+      t('common.logOutConfirmC'),
+      [
+        {text: 'Yes', onPress: () =>  navigation.navigate('Login')},
+        {text: 'No', onPress: () =>  ('No button clicked'), style: 'cancel'},
+      ],
+      // [
+      //   {
+      //     text: 'OK', onPress: () => {
+      //       navigation.navigate('Login');
+      //     },
+      //   }
+      // ],
+      {
+        cancelable: false
+      }
+    );
   };
 
 

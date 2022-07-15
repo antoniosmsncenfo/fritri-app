@@ -47,7 +47,6 @@ const Login = () => {
 
 
   useEffect(() => {
-    console.log(LoginMailStatus);
     if (LoginMailStatus === LoginStatus.InvalidMail) {
       Alert.alert(
         t('common.loginFailed'),
@@ -70,11 +69,7 @@ const Login = () => {
 
   const handleSignIn = useCallback(()=> {
     /**LOGIN EMAIL */
-    console.log("test1");
-
     if (isValid.email && isValid.password) {
-      console.log("test2");
-
       loginUsuarioEmail(login);
     }
 

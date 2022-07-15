@@ -31,23 +31,16 @@ export const useLogin = () => {
                 headers: {},
                 data: usuarioLogin
             };
-            console.log("TEST3");
-
             const resultado = await axios(request);
-            console.log(resultado.status);
             if (resultado.status === 200) {
-                console.log(resultado.data.statusCode);
                 if (resultado.data.statusCode === 404) {
-                    console.log(resultado.data.statusCode);
-
                     setLoginStatus(LoginStatus.InvalidMail);
                     setFritriUser(null);
-                } 
-                else if('tipoLogin' in resultado.data) {
-                    console.log(resultado.data);
+                }
+                else if ('tipoLogin' in resultado.data) {
                     setFritriUser(resultado.data);
-                } 
-            
+                }
+
                 else {
                     setFritriUser(null);
                 }
@@ -59,10 +52,9 @@ export const useLogin = () => {
         }
     }
     const emailLogout = () => {
-        
         setFritriUser(null);
     };
-    
+
     return {
         loginUsuarioEmail,
         emailLogout,
@@ -77,12 +69,12 @@ export const useUsuario = () => {
 
     const [usuarioFriTri, setUsuarioFriTri] = useState<IUsuario>({
         id: '',
-        tipoLogin:'',
-        correoElectronico:'',
-        contrasena:'',
-        nombreCompleto:'',
-        genero:'',
-        pais:'',
+        tipoLogin: '',
+        correoElectronico: '',
+        contrasena: '',
+        nombreCompleto: '',
+        genero: '',
+        pais: '',
     })
 
     const [registrarStatus, setRegistrarStatus] = useState<RegistrationStatus>(
@@ -92,46 +84,45 @@ export const useUsuario = () => {
     const resetRegistrarEstatus = () => {
         setRegistrarStatus(RegistrationStatus.New);
     }
-  
-    const registrarUsuario = (usuarioNuevo:IUsuario) => {
+
+    const registrarUsuario = (usuarioNuevo: IUsuario) => {
 
         guardarUsuarioFriTri(usuarioNuevo)
-        .then((result: IUsuario) => {
-            if (result !== null) {
-                setUsuarioFriTri(result);
-                setRegistrarStatus(RegistrationStatus.Success);
+            .then((result: IUsuario) => {
+                if (result !== null) {
+                    setUsuarioFriTri(result);
+                    setRegistrarStatus(RegistrationStatus.Success);
+                }
+            })
+            .catch((e) => {
+                if (e.response.data.message === "Error al tratar de crear el usuario-email::Email duplicado") {
+                    setRegistrarStatus(RegistrationStatus.Duplicated);
+                }
             }
-        })
-        .catch((e) => {
-            if (e.response.data.message==="Error al tratar de crear el usuario-email::Email duplicado")
-            {
-                setRegistrarStatus(RegistrationStatus.Duplicated);
-            }   
-        }
-        );
+            );
     }
-    const updateUsuario = (usuarioActualizado:IUsuario) => {
+    const updateUsuario = (usuarioActualizado: IUsuario) => {
 
         updateUsuarioFriTri(usuarioActualizado)
-        .then((result: IUsuario) => {
-            if (result !== null) {
-                setUsuarioFriTri(result);
-                setRegistrarStatus(RegistrationStatus.Success);
-            }
-        })
-        .catch((e) => {
-    
-        }
-        );
-}
+            .then((result: IUsuario) => {
+                if (result !== null) {
+                    setUsuarioFriTri(result);
+                    setRegistrarStatus(RegistrationStatus.Success);
+                }
+            })
+            .catch((e) => {
 
-return {
-    resetRegistrarEstatus,
-    registrarUsuario,
-    updateUsuario,
-    usuarioFriTri,
-    registrarStatus,
-}
+            }
+            );
+    }
+
+    return {
+        resetRegistrarEstatus,
+        registrarUsuario,
+        updateUsuario,
+        usuarioFriTri,
+        registrarStatus,
+    }
 
 
 }
@@ -140,12 +131,12 @@ export const usePassword = () => {
 
     const [usuarioFriTri, setUsuarioFriTri] = useState<IUsuario>({
         id: '',
-        tipoLogin:'',
-        correoElectronico:'',
-        contrasena:'',
-        nombreCompleto:'',
-        genero:'',
-        pais:'',
+        tipoLogin: '',
+        correoElectronico: '',
+        contrasena: '',
+        nombreCompleto: '',
+        genero: '',
+        pais: '',
     })
 
     const [resetPasswordResult, setResetPasswordResult] = useState<ResetPasswordStatus>(
@@ -156,19 +147,18 @@ export const usePassword = () => {
         setResetPasswordResult(ResetPasswordStatus.Pending);
     }
 
-    const resetPassword = (emailUsuario:string) => {
+    const resetPassword = (emailUsuario: string) => {
 
         resetearPassword(emailUsuario)
-        .then((resultado) => {
-            console.log(resultado);
-            if (resultado !== null) {
-                setResetPasswordResult(ResetPasswordStatus.Success);
+            .then((resultado) => {
+                if (resultado !== null) {
+                    setResetPasswordResult(ResetPasswordStatus.Success);
+                }
+            })
+            .catch((e) => {
+                setResetPasswordResult(ResetPasswordStatus.Error);
             }
-        })
-        .catch((e) => {
-            setResetPasswordResult(ResetPasswordStatus.Error);
-        }
-        );
+            );
 
     }
 
@@ -191,19 +181,18 @@ export const useChangePassword = () => {
         setChangePasswordResult(ResetPasswordStatus.Pending);
     }
 
-    const changePassword = (usuarioContrasena:IUsuarioContrasena) => {
+    const changePassword = (usuarioContrasena: IUsuarioContrasena) => {
 
         cambiarPassword(usuarioContrasena)
-        .then((resultado) => {
-            console.log(resultado);
-            if (resultado !== null) {
-                setChangePasswordResult(ResetPasswordStatus.Success);
+            .then((resultado) => {
+                if (resultado !== null) {
+                    setChangePasswordResult(ResetPasswordStatus.Success);
+                }
+            })
+            .catch((e) => {
+                setChangePasswordResult(ResetPasswordStatus.Error);
             }
-        })
-        .catch((e) => {
-            setChangePasswordResult(ResetPasswordStatus.Error);
-        }
-        );
+            );
 
     }
 
