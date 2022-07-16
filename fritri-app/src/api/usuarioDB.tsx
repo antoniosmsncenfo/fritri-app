@@ -2,7 +2,6 @@ import axios from 'axios';
 import { IUsuarioDeTerceros } from '../interfaces/usuario-facebook';
 import { IUsuario } from '../constants/types/index';
 import { USUARIOS_BASE_URL } from '@env';
-import { MESSSAGES } from '../constants/mocks';
 import { IUsuarioContrasena } from '../interfaces/usuario-fritri';
 
 
@@ -113,5 +112,5 @@ export const cambiarPassword = async (usuarioContrasena:IUsuarioContrasena) => {
     catch (e) {
         throw e;
     }
-   
+
 };

@@ -1,16 +1,16 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Linking, Platform, TouchableOpacity, Alert } from 'react-native';
+import { Platform, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import { ILogin, ILoginValidation } from '../constants/types/index';
 
 import { useData, useTheme, useTranslation } from '../hooks/';
 import * as regex from '../constants/regex';
-import { Block, Button, Input, Image, Text, Checkbox } from '../components/';
+import { Block, Button, Input, Image, Text } from '../components/';
 import { useGoogleLogin } from '../hooks/useGoogleLogin';
 import { useFacebook } from '../hooks/useFacebook';
-import { useUsuario, useLogin } from '../hooks/useUsuario';
-import { email } from '../constants/regex';
+import { useLogin } from '../hooks/useUsuario';
 import { LoginStatus } from '../interfaces/usuario-fritri';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 
@@ -18,7 +18,7 @@ const isAndroid = Platform.OS === 'android';
 
 
 const Login = () => {
-  const { isDark, handleUser, user } = useData();
+  const { isDark, handleUser } = useData();
   const { t } = useTranslation();
   const navigation = useNavigation();
   const [isValid, setIsValid] = useState<ILoginValidation>({
@@ -26,16 +26,18 @@ const Login = () => {
     password: false,
   });
 
-  const [login, setLoginData] = useState<ILogin>({
+  const loginDefault = {
     correoElectronico: '',
     contrasena: '',
-  });
+  };
+
+  const [login, setLoginData] = useState<ILogin>(loginDefault);
 
   const { assets, colors, gradients, sizes } = useTheme();
 
   const { signInWithGoogleAsync, fritriUserFromGoogle, isFritriUserFromGoogleLogged, googleLogout } = useGoogleLogin();
   const { facebookLogin, fritriUserFromFacebook, isFritriUserFacebookLogged, facebookLogout, fritriUserIdDb } = useFacebook();
-  const { loginUsuarioEmail, emailLogout, fritriUserEmail, LoginMailStatus, resetLoginEstatus} = useLogin();
+  const { loginUsuarioEmail, emailLogout, fritriUserEmail, LoginMailStatus, resetLoginEstatus } = useLogin();
 
   const handleChange = useCallback(
     (value) => {
@@ -43,8 +45,6 @@ const Login = () => {
     },
     [setLoginData],
   );
-
-
 
   useEffect(() => {
     if (LoginMailStatus === LoginStatus.InvalidMail) {
@@ -56,78 +56,61 @@ const Login = () => {
             text: 'OK', onPress: () => {
               navigation.navigate('Login');
             },
-          }
+          },
         ],
         {
-          cancelable: false
+          cancelable: false,
         }
       );
       resetLoginEstatus();
     }
+  }, [LoginMailStatus]);
 
-  }, [LoginMailStatus])
-
-  const handleSignIn = useCallback(()=> {
+  const handleSignIn = useCallback(() => {
     /**LOGIN EMAIL */
     if (isValid.email && isValid.password) {
       loginUsuarioEmail(login);
     }
-
-    // else {
-    //   Alert.alert(
-    //     t('login.errorLogin'),
-    //     t('login.errorFields'),
-
-    //     [
-    //       { text: 'OK' }
-    //     ],
-    //     {
-    //       cancelable: false
-    //     }
-    //   );
-    // }
-  },[isValid, loginUsuarioEmail]);
+  }, [isValid, loginUsuarioEmail]);
 
   const loginGoogleUser = () => {
     googleLogout();
     signInWithGoogleAsync();
   };
 
-  useEffect(() => {
-    emailLogout();
-    setIsValid({
-      email: false,
-      password: false
-    });
-    setLoginData({
-      correoElectronico: '',
-      contrasena: '',
-    });
-    return limpiar();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      emailLogout();
+      setIsValid({
+        email: false,
+        password: false,
+      });
+      setLoginData(loginDefault);
+      return () => {
+        limpiar();
+      };
+    }, [])
+  );
+
 
   const limpiar = () => {
     setIsValid({
       email: false,
-      password: false
+      password: false,
     });
-    setLoginData({
-      correoElectronico: '',
-      contrasena: '',
-    });
-  }
+    setLoginData(loginDefault);
+  };
 
   const handleResetPassword = () => {
     limpiar();
     navigation.navigate('ResetPassword');
-  }
+  };
 
   useEffect(() => {
-    setIsValid((state) => ({
-      ...state,
+    setIsValid({
       email: regex.email.test(login.correoElectronico),
       password: regex.password.test(login.contrasena),
-    }));
+    });
   }, [login, setIsValid]);
 
   useEffect(() => {
@@ -140,11 +123,11 @@ const Login = () => {
   useEffect(() => {
     let fritriFinalUser = null;
     if (isFritriUserFacebookLogged) {
-      if(fritriUserIdDb) {
+      if (fritriUserIdDb) {
         fritriFinalUser = {
           ...fritriUserIdDb,
           ...fritriUserFromFacebook,
-        }
+        };
       }
       handleUser(fritriFinalUser!);
       fritriFinalUser?.pais === null ? navigation.navigate('Profile') : navigation.navigate('Home');
@@ -154,7 +137,7 @@ const Login = () => {
   useEffect(() => {
     if (fritriUserEmail) {
       handleUser(fritriUserEmail!);
-      if (fritriUserEmail.tipoLogin === "Temporal") {
+      if (fritriUserEmail.tipoLogin === 'Temporal') {
         limpiar();
         navigation.navigate('NewPassword');
       }
@@ -344,7 +327,7 @@ const Login = () => {
                 marginVertical={sizes.s}
                 marginHorizontal={sizes.sm}
                 gradient={gradients.primary}
-                disabled={Object.values(isValid).includes(false)}>
+                disabled={!(isValid.email && isValid.password)}>
                 <Text bold white transform="uppercase">
                   {t('common.signin')}
                 </Text>
