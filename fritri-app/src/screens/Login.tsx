@@ -34,7 +34,7 @@ const Login = () => {
   const { assets, colors, gradients, sizes } = useTheme();
 
   const { signInWithGoogleAsync, fritriUserFromGoogle, isFritriUserFromGoogleLogged, googleLogout } = useGoogleLogin();
-  const { facebookLogin } = useFacebook();
+  const { facebookLogin, fritriUserFromFacebook, isFritriUserFacebookLogged, facebookLogout, fritriUserIdDb } = useFacebook();
   const { loginUsuarioEmail, emailLogout, fritriUserEmail, LoginMailStatus, resetLoginEstatus} = useLogin();
 
   const handleChange = useCallback(
@@ -136,6 +136,20 @@ const Login = () => {
       fritriUserFromGoogle?.pais == null ? navigation.navigate('Profile') : navigation.navigate('Home');
     }
   }, [isFritriUserFromGoogleLogged]);
+
+  useEffect(() => {
+    let fritriFinalUser = null;
+    if (isFritriUserFacebookLogged) {
+      if(fritriUserIdDb) {
+        fritriFinalUser = {
+          ...fritriUserIdDb,
+          ...fritriUserFromFacebook,
+        }
+      }
+      handleUser(fritriFinalUser!);
+      fritriFinalUser?.pais === null ? navigation.navigate('Profile') : navigation.navigate('Home');
+    }
+  }, [isFritriUserFacebookLogged]);
 
   useEffect(() => {
     if (fritriUserEmail) {
