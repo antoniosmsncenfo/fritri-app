@@ -1,35 +1,29 @@
-import axios from "axios";
+import axios from 'axios';
 import { useState } from 'react';
 import { IUsuario, ILogin } from '../constants/types/index';
 import { USUARIOS_BASE_URL } from '@env';
 import { IUsuarioContrasena, IUsuarioFritri, LoginStatus } from '../interfaces/usuario-fritri';
-import { guardarUsuarioFriTri, resetearPassword, cambiarPassword, updateUsuarioFriTri } from "../api/usuarioDB";
+import { guardarUsuarioFriTri, resetearPassword, cambiarPassword, updateUsuarioFriTri } from '../api/usuarioDB';
 import { RegistrationStatus, ResetPasswordStatus } from '../interfaces/registro-usuario';
 
 export const useLogin = () => {
-    const [usuarioLogin, setUsuarioLogin] = useState<ILogin>({
-        correoElectronico: '',
-        contrasena: '',
-    })
 
     const [fritriUser, setFritriUser] = useState<IUsuarioFritri | null>(null);
     const [LoginMailStatus, setLoginStatus] = useState<LoginStatus>(
         LoginStatus.New
-    )
+    );
 
     const resetLoginEstatus = () => {
         setLoginStatus(LoginStatus.New);
-    }
+    };
 
     const loginUsuarioEmail = async (usuarioLogin: ILogin) => {
-
         try {
-
             let request = {
                 method: 'post',
                 url: `${USUARIOS_BASE_URL}/login-email`,
                 headers: {},
-                data: usuarioLogin
+                data: usuarioLogin,
             };
             const resultado = await axios(request);
             if (resultado.status === 200) {
@@ -49,8 +43,10 @@ export const useLogin = () => {
                 setFritriUser(null);
             }
         } catch (error) {
+            setFritriUser(null);
         }
-    }
+    };
+
     const emailLogout = () => {
         setFritriUser(null);
     };
@@ -60,10 +56,10 @@ export const useLogin = () => {
         emailLogout,
         LoginMailStatus,
         resetLoginEstatus,
-        fritriUserEmail: fritriUser
-    }
+        fritriUserEmail: fritriUser,
+    };
 
-}
+};
 
 export const useUsuario = () => {
 
@@ -75,15 +71,17 @@ export const useUsuario = () => {
         nombreCompleto: '',
         genero: '',
         pais: '',
-    })
+    });
+
+		const [fritriUser, setFritriUser] = useState<IUsuarioFritri | null>(null);
 
     const [registrarStatus, setRegistrarStatus] = useState<RegistrationStatus>(
         RegistrationStatus.New
-    )
+    );
 
     const resetRegistrarEstatus = () => {
         setRegistrarStatus(RegistrationStatus.New);
-    }
+    };
 
     const registrarUsuario = (usuarioNuevo: IUsuario) => {
 
@@ -95,37 +93,35 @@ export const useUsuario = () => {
                 }
             })
             .catch((e) => {
-                if (e.response.data.message === "Error al tratar de crear el usuario-email::Email duplicado") {
+                if (e.response.data.message === 'Error al tratar de crear el usuario-email::Email duplicado') {
                     setRegistrarStatus(RegistrationStatus.Duplicated);
                 }
             }
             );
-    }
-    const updateUsuario = (usuarioActualizado: IUsuario) => {
-
-        updateUsuarioFriTri(usuarioActualizado)
-            .then((result: IUsuario) => {
-                if (result !== null) {
-                    setUsuarioFriTri(result);
-                    setRegistrarStatus(RegistrationStatus.Success);
-                }
-            })
-            .catch((e) => {
-
-            }
-            );
-    }
+    };
+    const updateUsuario = async (usuarioActualizado: IUsuario) => {
+			try {
+				let result = await updateUsuarioFriTri(usuarioActualizado);
+				if (result) {
+					setUsuarioFriTri(result);
+					setFritriUser(result);
+					setRegistrarStatus(RegistrationStatus.Success);
+				}
+			} catch (error) {
+			}
+    };
 
     return {
         resetRegistrarEstatus,
         registrarUsuario,
         updateUsuario,
         usuarioFriTri,
+				fritriUser,
         registrarStatus,
-    }
+    };
 
 
-}
+};
 
 export const usePassword = () => {
 
@@ -137,15 +133,15 @@ export const usePassword = () => {
         nombreCompleto: '',
         genero: '',
         pais: '',
-    })
+    });
 
     const [resetPasswordResult, setResetPasswordResult] = useState<ResetPasswordStatus>(
         ResetPasswordStatus.Pending
-    )
+    );
 
     const restartResetPasswordStatus = () => {
         setResetPasswordResult(ResetPasswordStatus.Pending);
-    }
+    };
 
     const resetPassword = (emailUsuario: string) => {
 
@@ -160,26 +156,26 @@ export const usePassword = () => {
             }
             );
 
-    }
+    };
 
     return {
         restartResetPasswordStatus,
         resetPassword,
         usuarioFriTri,
-        resetPasswordResult
-    }
+        resetPasswordResult,
+    };
 
-}
+};
 
 export const useChangePassword = () => {
 
     const [changePasswordResult, setChangePasswordResult] = useState<ResetPasswordStatus>(
         ResetPasswordStatus.Pending
-    )
+    );
 
     const restartChangePasswordStatus = () => {
         setChangePasswordResult(ResetPasswordStatus.Pending);
-    }
+    };
 
     const changePassword = (usuarioContrasena: IUsuarioContrasena) => {
 
@@ -194,12 +190,11 @@ export const useChangePassword = () => {
             }
             );
 
-    }
+    };
 
     return {
         restartChangePasswordStatus,
         changePassword,
-        changePasswordResult
-    }
-
-}
+        changePasswordResult,
+    };
+};

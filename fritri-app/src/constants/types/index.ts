@@ -26,6 +26,7 @@ export interface IUsuario {
   genero?: string;
   pais?: string;
   foto?: string;
+  idTerceros?: string;
 }
 export interface ILogin {
   correoElectronico: string;

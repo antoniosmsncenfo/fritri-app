@@ -1,4 +1,4 @@
-export class Restaurante {
+export class AtraccionTuristica {
   nombre: string;
   urlFoto: string;
   rangoPrecios?: number;

@@ -2,7 +2,6 @@ import axios from 'axios';
 import { IUsuarioDeTerceros } from '../interfaces/usuario-facebook';
 import { IUsuario } from '../constants/types/index';
 import { USUARIOS_BASE_URL } from '@env';
-import { MESSSAGES } from '../constants/mocks';
 import { IUsuarioContrasena } from '../interfaces/usuario-fritri';
 
 
@@ -30,18 +29,15 @@ export const guardarUsuarioTerceros = async (usuarioTercero: IUsuarioDeTerceros)
 };
 
 export const updateUsuarioFriTri = async (usuarioActualizado: IUsuario) => {
-    let request = {
-        method: 'put',
-        url: `${USUARIOS_BASE_URL}/actualizar-usuario`,
-        headers: {},
-        data: usuarioActualizado,
-    };
     try {
+        let request = {
+            method: 'put',
+            url: `${USUARIOS_BASE_URL}/actualizar-usuario`,
+            headers: {},
+            data: usuarioActualizado,
+        };
         const resultado = await axios(request);
-        console.log(resultado.status);
-
         if (resultado.status === 200) {
-            console.log(resultado.data);
             return resultado.data;
         }
         else {
@@ -51,7 +47,6 @@ export const updateUsuarioFriTri = async (usuarioActualizado: IUsuario) => {
     catch (e) {
         throw e;
     }
-   
 };
 
 export const guardarUsuarioFriTri = async (usuarioNuevo: IUsuario) => {
@@ -117,5 +112,5 @@ export const cambiarPassword = async (usuarioContrasena:IUsuarioContrasena) => {
     catch (e) {
         throw e;
     }
-   
+
 };
