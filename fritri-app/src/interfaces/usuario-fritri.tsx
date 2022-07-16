@@ -10,7 +10,7 @@ export interface IUsuarioFritri {
     urlFoto: string;
     pais?: string;
     genero?: string;
-
+    access_token?: string;
 }
 
 export interface IUsuarioContrasena {
