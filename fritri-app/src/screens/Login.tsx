@@ -86,8 +86,6 @@ const Login = () => {
         password: false,
       });
       setLoginData(loginDefault);
-      console.log('cargando login');
-
       return () => {
         limpiar();
       };
@@ -329,7 +327,7 @@ const Login = () => {
                 marginVertical={sizes.s}
                 marginHorizontal={sizes.sm}
                 gradient={gradients.primary}
-                disabled={isValid}>
+                disabled={!(isValid.email && isValid.password)}>
                 <Text bold white transform="uppercase">
                   {t('common.signin')}
                 </Text>
