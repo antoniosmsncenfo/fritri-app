@@ -11,7 +11,7 @@ import { FotoUsuario, ITheme } from '../constants/types';
 import { FlatList } from 'react-native-gesture-handler';
 import { useUsuario } from '../hooks/useUsuario';
 import { IRegistration, RegistrationStatus } from '../interfaces/registro-usuario';
-import { IUsuarioFritri } from '../interfaces/usuario-fritri';
+import { IUsuario } from '../constants/types/index';
 
 
 const isAndroid = Platform.OS === 'android';
@@ -87,14 +87,6 @@ const Profile = () => {
   const { t } = useTranslation();
   const navigation = useNavigation();
 
-  const [isValid, setIsValid] = useState<IRegistrationValidation>({
-    name: false,
-    email: false,
-    password: true,
-    confirmPassword: true,
-    agreed: true,
-  });
-
   const GENDER_TYPES: { [key: string]: string; } =
   {
     '1': t('common.genders.woman'),
@@ -113,11 +105,19 @@ const Profile = () => {
     status: RegistrationStatus.New
   });
 
+  const [isValid, setIsValid] = useState<IRegistrationValidation>({
+    name: regex.name.test(registration.name || ''),
+    email: regex.email.test(registration.email || ''),
+    password: true,
+    confirmPassword: true,
+    agreed: true,
+  });
+
   const [gender, setGender] = useState(GENDER_TYPES['1']);
 
   const [country, setCountry] = useState(COUNTRIES['1']);
 
-  const { resetRegistrarEstatus, updateUsuario, registrarStatus } = useUsuario();
+  const { resetRegistrarEstatus, updateUsuario, usuarioFriTri, fritriUser, registrarStatus } = useUsuario();
 
 
   const [modal, setModal] = useState<
@@ -136,15 +136,26 @@ const Profile = () => {
   );
 
   const handleUpdateData = useCallback(() => {
-    if (!Object.values(isValid).includes(false)) {
-      updateUsuario({
-        id: user._id,
-        tipoLogin: 'Email',
-        correoElectronico: registration.email,
-        nombreCompleto: registration.name,
-        genero: registration.gender,
-        pais: registration.country
-      })
+      if (!Object.values(isValid).includes(false)) {
+        let userToUpdate: IUsuario = {
+          id: user._id,
+          tipoLogin: user.tipoLogin,
+          correoElectronico: registration.email,
+          nombreCompleto: registration.name,
+          genero: registration.gender,
+          pais: registration.country,
+        }
+        if(user.idTerceros) {
+          userToUpdate = {
+            ...userToUpdate,
+            idTerceros: user.idTerceros
+          }
+        }
+        try {
+          updateUsuario(userToUpdate);
+        }catch(error) {
+        
+        }
     }
   }, [isValid, registration]);
 
@@ -193,11 +204,37 @@ const Profile = () => {
   };
 
   useEffect(() => {
+    setRegistration({
+      name: user.nombreCompleto,
+      email: user.correoElectronico,
+      gender: user.genero!,
+      country: user.pais!,
+      password: '',
+      confirmPassword: '',
+      agreed: true,
+      status: RegistrationStatus.New
+    });
+
     setIsValid((state) => ({
       ...state,
       name: regex.name.test(registration.name),
       email: regex.email.test(registration.email),
     }));
+  }, [])
+
+  useEffect(() => {
+    if(fritriUser) {
+      handleUser(fritriUser!)
+    }
+  }, [fritriUser])
+
+  useEffect(() => {
+    setIsValid((state) => ({
+      ...state,
+      name: regex.name.test(registration.name),
+      email: regex.email.test(registration.email),
+    }));
+    console.log('');
   }, [registration, setIsValid]);
 
   useEffect(() => {
@@ -209,7 +246,7 @@ const Profile = () => {
           {
             text: 'OK', onPress: () => {
               console.log('OK button clicked');
-              navigation.navigate('Profile');
+              navigation.navigate('Home');
             },
           }
         ],

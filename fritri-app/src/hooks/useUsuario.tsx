@@ -75,7 +75,9 @@ export const useUsuario = () => {
         nombreCompleto: '',
         genero: '',
         pais: '',
-    })
+    });
+
+		const [fritriUser, setFritriUser] = useState<IUsuarioFritri | null>(null);
 
     const [registrarStatus, setRegistrarStatus] = useState<RegistrationStatus>(
         RegistrationStatus.New
@@ -101,19 +103,16 @@ export const useUsuario = () => {
             }
             );
     }
-    const updateUsuario = (usuarioActualizado: IUsuario) => {
-
-        updateUsuarioFriTri(usuarioActualizado)
-            .then((result: IUsuario) => {
-                if (result !== null) {
-                    setUsuarioFriTri(result);
-                    setRegistrarStatus(RegistrationStatus.Success);
-                }
-            })
-            .catch((e) => {
-
-            }
-            );
+    const updateUsuario = async (usuarioActualizado: IUsuario) => {
+			try {
+				let result = await updateUsuarioFriTri(usuarioActualizado);
+				if(result) {
+					setUsuarioFriTri(result);
+					setFritriUser(result);
+					setRegistrarStatus(RegistrationStatus.Success);
+				}
+			} catch(error) {
+			}
     }
 
     return {
@@ -121,6 +120,7 @@ export const useUsuario = () => {
         registrarUsuario,
         updateUsuario,
         usuarioFriTri,
+				fritriUser,
         registrarStatus,
     }
 

@@ -93,7 +93,6 @@ export default () => {
       <Stack.Screen
         name="Profile"
         component={Profile}
-        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Settings"
