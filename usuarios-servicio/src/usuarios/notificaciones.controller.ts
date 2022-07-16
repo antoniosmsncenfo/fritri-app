@@ -19,6 +19,11 @@ export class NotificacionesController {
     return this.notificacionesService.findAll();
   }
 
+  @Get('obtenerNotificacionesUsuario')
+  async obtenerNotificacionesUsuario(@Query('idUsuario') idUSuario: string): Promise<Notificacion[]> {
+    return this.notificacionesService.obtenerNotificacionesUsuario(idUSuario);
+  }
+
   @Put('actualizar-notificacion')
   @HttpCode(200)
   async actualizarNotificacion(@Body() actualizarNotificacionDto: ActualizarNotificacionDto) {

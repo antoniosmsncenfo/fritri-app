@@ -35,6 +35,10 @@ export class NotificacionesService {
     return this.notificacionModel.findOne({ _id: id }).exec();
   }
 
+  async obtenerNotificacionesUsuario(idUsuario: string): Promise<Notificacion[]> {
+    return this.notificacionModel.find({ idUsuario: idUsuario }).exec();
+  }
+
   async actualizarNotificacion(actualizarNotificacionDto: ActualizarNotificacionDto): Promise<Notificacion> {
     let resultado;
     try {
