@@ -34,7 +34,9 @@ export const updateUsuarioFriTri = async (usuarioActualizado: IUsuario) => {
         let request = {
             method: 'put',
             url: `${USUARIOS_BASE_URL}/actualizar-usuario`,
-            headers: {},
+            headers: {
+                'Content-Type': 'application/json'
+            },
             data: usuarioActualizado,
         };
         const resultado = await axios(request);
