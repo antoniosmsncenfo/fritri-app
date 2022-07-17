@@ -71,6 +71,30 @@ const Login = () => {
     if (isValid.email && isValid.password) {
       loginUsuarioEmail(login);
     }
+    else if (!isValid.email && !isValid.password) {
+      Alert.alert(
+        t('login.errorLogin'),
+        t('login.errorFields'),
+        [{ text: 'OK' }],
+        { cancelable: false }
+      );
+    }
+    else if (!isValid.email) {
+      Alert.alert(
+        t('login.errorLogin'),
+        t('login.errorEmail'),
+        [{ text: 'OK' }],
+        { cancelable: false }
+      );
+    }
+    else if (!isValid.password) {
+      Alert.alert(
+        t('login.errorLogin'),
+        t('login.errorPassword'),
+        [{ text: 'OK' }],
+        { cancelable: false }
+      );
+    }
   }, [isValid, loginUsuarioEmail]);
 
   const loginGoogleUser = () => {
@@ -159,23 +183,6 @@ const Login = () => {
             radius={sizes.cardRadius}
             source={assets.background}
             height={sizes.height * 0.3}>
-            {/* <Button
-              row
-              flex={0}
-              justify="flex-start"
-              onPress={() => navigation.goBack()}>
-              <Image
-                radius={0}
-                width={10}
-                height={18}
-                color={colors.white}
-                source={assets.arrow}
-                transform={[{ rotate: '180deg' }]}
-              />
-              <Text p white marginLeft={sizes.s}>
-                {t('common.goBack')}
-              </Text>
-            </Button> */}
             <Text h4 center white marginTop={sizes.md}>
               {t('login.title')}
             </Text>
@@ -292,30 +299,11 @@ const Login = () => {
                   </Block>
                 </TouchableOpacity>
               </Block>
-              {/* checkbox terms */}
-              {/* <Block row flex={0} align="center" paddingHorizontal={sizes.sm}>
-                <Checkbox
-                  marginRight={sizes.sm}
-                  checked={login?.agreed}
-                  onPress={(value) => handleChange({ agreed: value })}
-                />
-                <Text paddingRight={sizes.s}>
-                  {t('common.agree')}
-                  <Text
-                    semibold
-                    onPress={() => {
-                      Linking.openURL('https://www.creative-tim.com/terms');
-                    }}>
-                    {t('common.terms')}
-                  </Text>
-                </Text>
-              </Block> */}
               <Button
                 onPress={handleSignIn}
                 marginVertical={sizes.s}
                 marginHorizontal={sizes.sm}
-                gradient={gradients.primary}
-                disabled={!(isValid.email && isValid.password)}>
+                gradient={gradients.primary}>
                 <Text bold white transform="uppercase">
                   {t('common.signin')}
                 </Text>

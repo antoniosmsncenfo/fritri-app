@@ -142,7 +142,9 @@
     "title": "FriTri App",
     "subtitle": "Sign In with",
     "forgotPassword": "I forgot my password",
-    "errorFields": "Please check the password or email!",
+    "errorFields": "Please check the email and password!",
+    "errorEmail": "Please check the email!",
+    "errorPassword": "Please check the password!",
     "errorLogin": "Login Error",
     "invalidCredentials": "The provided credentials are not valid."
   },
