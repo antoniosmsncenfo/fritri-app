@@ -34,7 +34,7 @@ const NewPassword = () => {
     const [passwordState, setPasswordState] = useState<INewPassword>({
       newPassword: '',
       newPasswordConfirmation: '',
-      status: ResetPasswordStatus.Pending
+      status: ResetPasswordStatus.Pending,
     });
 
     const {assets, colors, gradients, sizes} = useTheme();
@@ -43,14 +43,14 @@ const NewPassword = () => {
     const {
       restartChangePasswordStatus,
       changePassword,
-      changePasswordResult
+      changePasswordResult,
     } = useChangePassword();
 
     const handleChange = useCallback(
         (value) => {
           setPasswordState((state) => ({
-            ...state, 
-            ...value
+            ...state,
+            ...value,
           }));
         },
         [setPasswordState],
@@ -61,7 +61,7 @@ const NewPassword = () => {
             //Llamado a la función de cambiar el password
             changePassword({
               _id: user._id!,
-              contrasena: passwordState.newPassword
+              contrasena: passwordState.newPassword,
             });
         }
     }, [isValid, changePassword]);
@@ -70,12 +70,12 @@ const NewPassword = () => {
         setIsValid((state) => ({
             ...state,
             passwordValidation: regex.password.test(passwordState.newPassword),
-            passwordConfirmationValidation: passwordState.newPassword===passwordState.newPasswordConfirmation,
+            passwordConfirmationValidation: passwordState.newPassword === passwordState.newPasswordConfirmation,
         }));
     }, [passwordState, setIsValid]);
 
     useEffect(() => {
-        if(changePasswordResult===ResetPasswordStatus.Success)
+        if (changePasswordResult === ResetPasswordStatus.Success)
         {
           Alert.alert(
             t('newPassword.passwordSent'),
@@ -83,27 +83,27 @@ const NewPassword = () => {
             [
               {text: 'OK', onPress: () => {
                 navigation.navigate('Login');},
-              }
+              },
             ],
-            { 
-              cancelable: false 
+            {
+              cancelable: false,
             }
           );
         }
-        else if (changePasswordResult===ResetPasswordStatus.Error){
+        else if (changePasswordResult === ResetPasswordStatus.Error){
           Alert.alert(
             t('newPassword.passwordError'),
             t('newPassword.errorMessage'),
             [
-              {text: 'OK'}
+              {text: 'OK'},
             ],
-            { 
-              cancelable: false 
+            {
+              cancelable: false,
             }
           );
           restartChangePasswordStatus();
         }
-    }, [changePasswordResult])
+    }, [changePasswordResult]);
 
     return (
         <Block safe marginTop={sizes.md}>
@@ -144,7 +144,7 @@ const NewPassword = () => {
                   <Text p semibold center>
                     {t('newPassword.subtitle')}
                   </Text>
-                  <Block 
+                  <Block
                     paddingHorizontal={sizes.sm}
                     paddingTop={sizes.sm}>
                     <Input
@@ -168,7 +168,7 @@ const NewPassword = () => {
                       onChangeText={(value) => handleChange({newPasswordConfirmation: value})}
                       success={Boolean(passwordState.newPasswordConfirmation && isValid.passwordConfirmationValidation)}
                       danger={Boolean(passwordState.newPasswordConfirmation && !isValid.passwordConfirmationValidation)}
-                    /> 
+                    />
                     <Button
                       onPress={handleNewPassword}
                       marginVertical={sizes.s}
@@ -183,9 +183,9 @@ const NewPassword = () => {
                 </Block>
               </Block>
             </Block>
-          </Block>     
+          </Block>
         </Block>
     );
-}
+};
 
 export default NewPassword;
