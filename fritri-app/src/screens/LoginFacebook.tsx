@@ -45,7 +45,7 @@ const LoginFacebook = () => {
 
   const handleSignIn = useCallback(() => {
     /** send/save registratin data */
-    console.log('handleSignIn', login);
+
   }, [login]);
 
   const {facebookLogin, facebookLogout, userData, isLoggedIn} = useFacebook();
