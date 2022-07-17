@@ -47,10 +47,8 @@
     "loginFailedText": "Please check email or password",
     "logOutConfirmT": "LogOut",
     "logOutConfirmC": "Are you sure you want to logout?",
-
-
-
     "goBack": "Go back",
+    "details": "More details...",
     "inStock": "In stock",
     "outStock": "Out of stock",
     "addToCart": "Add to cart",
@@ -76,7 +74,7 @@
   },
   "darkMode": "Dark Mode",
   "screens": {
-    "home": "Home",
+    "home": "Dashboard",
     "components": "Components",
     "articles": "Articles",
     "rental": "Rental",
@@ -87,7 +85,7 @@
     "loginFacebook": "Login Facebook"
   },
   "navigation": {
-    "home": "Soft UI",
+    "home": "FriTri",
     "components": "Components",
     "articles": "Soft UI",
     "rentals": "Soft UI",
@@ -102,6 +100,7 @@
     "privacy": "Privacy",
     "register": "Register",
     "login": "Login",
+    "resetPassword": "Reset password",
     "extra": "Automotive",
     "shopping": "Shopping Cart"
   },
@@ -110,9 +109,9 @@
     "documentation": "Documentation"
   },
   "home": {
-    "title": "Soft UI",
-    "following": "Following",
-    "trending": "Completed"
+    "title": "FriTri",
+    "pending": "Pending",
+    "completed": "Completed"
   },
   "extras": {
     "title1": "Want to try before",
@@ -140,7 +139,7 @@
     "titleUpdated" : "Successfully"
   },
   "login": {
-    "title": "Welcome",
+    "title": "FriTri App",
     "subtitle": "Sign In with",
     "forgotPassword": "I forgot my password",
     "errorFields": "Please check the password or email!",
