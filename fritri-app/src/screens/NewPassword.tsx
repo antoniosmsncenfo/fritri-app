@@ -141,9 +141,6 @@ const NewPassword = () => {
                   justify="space-evenly"
                   tint={colors.blurTint}
                   paddingVertical={sizes.sm}>
-                  <Text p semibold center>
-                    {t('newPassword.subtitle')}
-                  </Text>
                   <Block 
                     paddingHorizontal={sizes.sm}
                     paddingTop={sizes.sm}>

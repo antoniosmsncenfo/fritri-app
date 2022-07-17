@@ -370,18 +370,20 @@ const Profile = () => {
                   label={t('common.country')}
                   onPress={() => setModal('country')}
                 />
-                <Button
-                  primary
-                  outlined
-                  onPress={handlePasswordChange}
-                  shadow={!isAndroid}
-                  marginVertical={sizes.s}
-                  marginHorizontal={sizes.sm}
-                  disabled={Object.values(isValid).includes(false)}>
-                  <Text bold primary transform="uppercase">
-                    {t('common.changePass')}
-                  </Text>
-                </Button>
+                { user.tipoLogin === 'Email' && 
+                  <Button
+                    primary
+                    outlined
+                    onPress={handlePasswordChange}
+                    shadow={!isAndroid}
+                    marginVertical={sizes.s}
+                    marginHorizontal={sizes.sm}
+                    disabled={Object.values(isValid).includes(false)}>
+                    <Text bold primary transform="uppercase">
+                      {t('common.changePass')}
+                    </Text>
+                  </Button>  
+                }
                 <Button
                   onPress={handleUpdateData}
                   marginVertical={sizes.s}

@@ -45,7 +45,7 @@
     "logOut": "logOut",
     "loginFailed": "Login Failed",
     "loginFailedText": "Please check email or password",
-    "logOutConfirmT": "LogOut",
+    "logOutConfirmT": "Confirm Logout",
     "logOutConfirmC": "Are you sure you want to logout?",
     "goBack": "Go back",
     "details": "More details...",
@@ -82,7 +82,8 @@
     "settings": "Settings",
     "register": "Create account",
     "extra": "Extra - Automotive",
-    "loginFacebook": "Login Facebook"
+    "loginFacebook": "Login Facebook",
+    "verDestino": "Ver Destino"
   },
   "navigation": {
     "home": "FriTri",
@@ -102,7 +103,8 @@
     "login": "Login",
     "resetPassword": "Reset password",
     "extra": "Automotive",
-    "shopping": "Shopping Cart"
+    "shopping": "Shopping Cart",
+    "resetPassword": "Change password"
   },
   "menu": {
     "started": "Getting Started",
@@ -147,7 +149,7 @@
     "invalidCredentials": "The provided credentials are not valid."
   },
   "resetPassword": {
-    "title": "Reset your password",
+    "title": "Change password",
     "subtitle": "Please enter your email address",
     "missingDataTitle": "Reset password error",
     "missingDataMessage": "Please enter your email address.",
@@ -158,7 +160,7 @@
     "errorMessage": "Please try again. If problem persists, please contact customer support."
   }, 
   "newPassword": {
-    "title": "New Password",
+    "title": "Change password",
     "subtitle": "Please enter your new password",
     "sendTempPass": "Save New Password",
     "passwordSent": "New Password Registered",
