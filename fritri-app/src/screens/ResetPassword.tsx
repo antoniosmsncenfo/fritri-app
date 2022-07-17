@@ -54,6 +54,18 @@ const ResetPassword = () => {
             //Llamado a la función de resetear
             resetPassword(resetUserPassword.email);
         }
+        else {
+          Alert.alert(
+            t('resetPassword.missingDataTitle'),
+            t('resetPassword.missingDataMessage'),
+            [
+              {text: 'OK'}
+            ],
+            { 
+              cancelable: false 
+            }
+          );          
+        }
     }, [isValid, resetPassword]);
 
     useEffect(() => {
@@ -105,7 +117,7 @@ const ResetPassword = () => {
                 radius={sizes.cardRadius}
                 source={assets.background}
                 height={sizes.height * 0.3}>
-                <Text h4 center white marginTop={20}>
+                <Text h4 center white marginTop={10}>
                   {t('resetPassword.title')}
                 </Text>
               </Image>
@@ -130,9 +142,9 @@ const ResetPassword = () => {
                   justify="space-evenly"
                   tint={colors.blurTint}
                   paddingVertical={sizes.sm}>
-                  <Text p semibold center>
+                  {/* <Text p semibold center>
                     {t('resetPassword.subtitle')}
-                  </Text>
+                  </Text> */}
                   {/* form inputs */}
                   <Block paddingHorizontal={sizes.sm}>
                     <Input
@@ -151,7 +163,8 @@ const ResetPassword = () => {
                     marginVertical={sizes.s}
                     marginHorizontal={sizes.sm}
                     gradient={gradients.primary}
-                    disabled={Object.values(isValid).includes(false)}>
+                    //</Block>disabled={Object.values(isValid).includes(false)}
+                    >
                     <Text bold white transform="uppercase">
                       {t('resetPassword.sendTempPass')}
                     </Text>
