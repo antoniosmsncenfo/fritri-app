@@ -47,10 +47,8 @@
     "loginFailedText": "Please check email or password",
     "logOutConfirmT": "LogOut",
     "logOutConfirmC": "Are you sure you want to logout?",
-
-
-
     "goBack": "Go back",
+    "details": "More details...",
     "inStock": "In stock",
     "outStock": "Out of stock",
     "addToCart": "Add to cart",
@@ -87,7 +85,7 @@
     "loginFacebook": "Login Facebook"
   },
   "navigation": {
-    "home": "Soft UI",
+    "home": "FriTri",
     "components": "Components",
     "articles": "Soft UI",
     "rentals": "Soft UI",
@@ -110,9 +108,9 @@
     "documentation": "Documentation"
   },
   "home": {
-    "title": "Soft UI",
-    "following": "Following",
-    "trending": "Completed"
+    "title": "FriTri",
+    "pending": "Pending",
+    "completed": "Completed"
   },
   "extras": {
     "title1": "Want to try before",

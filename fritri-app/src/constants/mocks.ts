@@ -86,44 +86,9 @@ export const FOLLOWING: IProduct[] = [
   {
     id: 1,
     type: 'vertical',
-    title: 'Unique activities with local experts.',
+    title: 'Paseo a Puerto Viejo 2022',
     image:
-      'https://images.unsplash.com/photo-1604998103924-89e012e5265a?fit=crop&w=450&q=80',
-  },
-  {
-    id: 2,
-    type: 'vertical',
-    title: 'The highest status people.',
-    image:
-      'https://images.unsplash.com/photo-1563492065599-3520f775eeed?fit=crop&w=450&q=80',
-  },
-  {
-    id: 3,
-    type: 'horizontal',
-    title: 'Experiences and things to do wherever you are.',
-    image:
-      'https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?fit=crop&w=450&q=80',
-  },
-  {
-    id: 4,
-    type: 'vertical',
-    title: 'Get more followers and grow.',
-    image:
-      'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?fit=crop&w=450&q=80',
-  },
-  {
-    id: 5,
-    type: 'vertical',
-    title: 'New ways to meet your business goals.',
-    image:
-      'https://images.unsplash.com/photo-1497215728101-856f4ea42174?fit=crop&w=450&q=80',
-  },
-  {
-    id: 6,
-    type: 'horizontal',
-    title: 'Adventures - Multi day trips with meals and stays.',
-    image:
-      'https://images.unsplash.com/photo-1468078809804-4c7b3e60a478?fit=crop&w=450&q=80',
+      'https://lh3.googleusercontent.com/places/AKR5kUjb2sWEAnv_Xk5GAJJtJI20MzeK8wT1LlZZJW2dq_mnLl7lbsXBEzrmTx4CLwb_lXB-ZJf2U-amxpbveg-8sIefzoHgsBKlNNQ=s1600-w640-h480',
   },
 ];
 
@@ -131,38 +96,31 @@ export const FOLLOWING: IProduct[] = [
 export const TRENDING: IProduct[] = [
   {
     id: 1,
-    type: 'horizontal',
-    title: 'Experiences and things to do wherever you are.',
+    type: 'vertical',
+    title: 'Paseo a Puerto Viejo 2019',
     image:
-      'https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?fit=crop&w=450&q=80',
+      'https://lh3.googleusercontent.com/places/AKR5kUjb2sWEAnv_Xk5GAJJtJI20MzeK8wT1LlZZJW2dq_mnLl7lbsXBEzrmTx4CLwb_lXB-ZJf2U-amxpbveg-8sIefzoHgsBKlNNQ=s1600-w640-h480',
   },
   {
     id: 2,
     type: 'vertical',
-    title: 'The highest status people.',
+    title: 'Paseo a Flamingo 2019',
     image:
-      'https://images.unsplash.com/photo-1563492065599-3520f775eeed?fit=crop&w=450&q=80',
+      'https://lh3.googleusercontent.com/places/AKR5kUhwi1QmDB9OkGrD1kf1u3TQTPRaAiT_f2Pks8druC3_rzVgJnGzcTHBbQFhYE0rwj6bxAY3nTslRUjXLsHShu7qwYdmzqTikcg=s1600-w640-h480',
   },
   {
     id: 3,
     type: 'vertical',
-    title: 'Unique activities with local experts.',
+    title: 'Paseo a Playa Conchal 2018',
     image:
-      'https://images.unsplash.com/photo-1604998103924-89e012e5265a?fit=crop&w=450&q=80',
+      'https://lh3.googleusercontent.com/places/AKR5kUjDAuGmdK4mtqKSzScYQ7CpIySdwUTw5s0yzh_qHiuq-0Sq0cfGe6SIcJDABjC0-Y3SGUeh3cUSnL9s1EETdphhjUvZTmamEEM=s1600-w640-h480',
   },
   {
     id: 4,
     type: 'vertical',
-    title: 'Adventures - Multi day trips with meals and stays.',
+    title: 'Paseo a Playa Uvita 2018',
     image:
-      'https://images.unsplash.com/photo-1468078809804-4c7b3e60a478?fit=crop&w=450&q=80',
-  },
-  {
-    id: 5,
-    type: 'vertical',
-    title: 'New ways to meet your business goals.',
-    image:
-      'https://images.unsplash.com/photo-1497215728101-856f4ea42174?fit=crop&w=450&q=80',
+      'https://lh3.googleusercontent.com/places/AKR5kUj4vOYmvzOIielEJYnJazi6hFr6GLM-Yi2Jd3pT1pBFCyQzxDpNopVfmD9TO-s_XMPYB50J-6xtZ-86sojuPyIJiypP0BsUghg=s1600-w640-h480',
   },
 ];
 
