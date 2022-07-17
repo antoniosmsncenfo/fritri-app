@@ -202,7 +202,7 @@ const Login = () => {
             <Block
               blur
               flex={0}
-              intensity={90}
+              intensity={150}
               radius={sizes.sm}
               overflow="hidden"
               justify="space-evenly"
@@ -220,7 +220,7 @@ const Login = () => {
                     source={assets.facebook}
                     height={sizes.m}
                     width={sizes.m}
-                    color={isDark ? colors.icon : undefined}
+                    color={undefined}
                   />
                 </Button>
                 <Button outlined gray shadow={!isAndroid}
@@ -230,7 +230,7 @@ const Login = () => {
                     source={assets.google}
                     height={sizes.m}
                     width={sizes.m}
-                    color={isDark ? colors.icon : undefined}
+                    color={undefined}
                   />
                 </Button>
               </Block>
