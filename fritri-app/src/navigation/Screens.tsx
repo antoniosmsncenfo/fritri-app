@@ -43,7 +43,7 @@ export default () => {
       <Stack.Screen
         name="ResetPassword"
         component={ResetPassword}
-        options={{ headerStyle:{backgroundColor:'gray'}, title: t('navigation.resetPassword'), ...screenOptions.back}}
+        options={{...screenOptions.back, title: t('navigation.resetPassword')}}
       />
       <Stack.Screen
         name="NewPassword"
@@ -58,7 +58,7 @@ export default () => {
       <Stack.Screen
         name="Register"
         component={Register}
-        options={{headerShown: false}}
+        options={{...screenOptions.back}}
       />      
       <Stack.Screen
         name="Components"
