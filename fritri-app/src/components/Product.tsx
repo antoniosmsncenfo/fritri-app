@@ -45,7 +45,7 @@ const Product = ({image, title, type, linkLabel}: IProduct) => {
               semibold
               size={sizes.linkSize}
               marginRight={sizes.s}>
-              {linkLabel || t('common.readArticle')}
+              {linkLabel || t('common.details')}
             </Text>
             <Image source={assets.arrow} color={colors.link} />
           </Block>
