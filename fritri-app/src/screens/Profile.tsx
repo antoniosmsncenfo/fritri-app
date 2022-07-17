@@ -12,6 +12,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import { useUsuario } from '../hooks/useUsuario';
 import { IRegistration, RegistrationStatus } from '../interfaces/registro-usuario';
 import { IUsuario } from '../constants/types/index';
+import { COUNTRIES } from '../constants/countries';
 
 
 const isAndroid = Platform.OS === 'android';
@@ -30,14 +31,6 @@ interface ITouchableInput {
   value?: number | string;
   onPress?: () => void;
 }
-
-const COUNTRIES: {
-  [key: string]: string;
-} = {
-  '1': 'Costa Rica', '2': 'Nicaragua',
-  '3': 'Panamá', '4': 'Guatemala',
-  '5': 'El Salvador'
-};
 
 const options = {
   title: 'Selecciona foto de perfil',
@@ -504,7 +497,7 @@ const Profile = () => {
         onRequestClose={() => setModal(undefined)}>
         <FlatList
           keyExtractor={(index) => `${index}`}
-          data={modal === 'gender' ? [1, 2, 3] : [1, 2, 3, 5]}
+          data={modal === 'gender' ? [1, 2, 3] : Object.keys(COUNTRIES).map(x => Number(x))}
           renderItem={({ item }) => (
             <Button
               marginBottom={sizes.sm}
