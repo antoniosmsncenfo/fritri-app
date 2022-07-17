@@ -268,9 +268,11 @@ const Profile = () => {
             height={sizes.height * 0.3}>
             <Block flex={0} align="center">
               <Image
-                width={64}
-                height={64}
-                 source={{ uri: user.urlFoto }}
+                width={100}
+                height={100}
+                radius={100}
+
+                source={{ uri: (user.urlFoto ? user.urlFoto : (user.genero === 'Man' ? FotoUsuario.Hombre : FotoUsuario.Mujer)) }}
               />
             </Block>
           </Image>
@@ -283,7 +285,7 @@ const Profile = () => {
 
           keyboard
           behavior={!isAndroid ? 'padding' : 'height'}
-          marginTop={-(sizes.height * 0.20 - sizes.l)}>
+          marginTop={-(sizes.height * 0.19 - sizes.l)}>
 
           <Block
             flex={0}
@@ -344,8 +346,7 @@ const Profile = () => {
                   outlined
                   onPress={handlePasswordChange}
                   shadow={!isAndroid}
-                  marginVertical={sizes.s}
-                  marginHorizontal={sizes.sm}
+                  marginVertical={sizes.sm}
                   disabled={Object.values(isValid).includes(false)}>
                   <Text bold primary transform="uppercase">
                     {t('common.changePass')}
@@ -354,7 +355,6 @@ const Profile = () => {
                 <Button
                   onPress={handleUpdateData}
                   marginVertical={sizes.s}
-                  marginHorizontal={sizes.sm}
                   gradient={gradients.primary}
                   disabled={Object.values(isValid).includes(false)}>
                   <Text bold white transform="uppercase">
@@ -367,7 +367,6 @@ const Profile = () => {
                   outlined
                   shadow={!isAndroid}
                   marginVertical={sizes.s}
-                  marginHorizontal={sizes.sm}
                   disabled={Object.values(isValid).includes(false)}>
                   <Text bold primary transform="uppercase">
                     {t('common.logOut')}
