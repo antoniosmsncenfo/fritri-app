@@ -44,7 +44,7 @@ const Home = () => {
               width={sizes.socialIconSize}
               height={sizes.socialIconSize}
               gradient={gradients?.[tab === 0 ? 'primary' : 'secondary']}>
-              <Image source={assets.extras} color={colors.white} radius={0} />
+              <Image source={assets.flight} color={colors.white} radius={0} />
             </Block>
             <Text p font={fonts?.[tab === 0 ? 'medium' : 'normal']}>
               {t('home.pending')}
@@ -72,7 +72,7 @@ const Home = () => {
               <Image
                 radius={0}
                 color={colors.white}
-                source={assets.documentation}
+                source={assets.document}
               />
             </Block>
             <Text p font={fonts?.[tab === 1 ? 'medium' : 'normal']}>
