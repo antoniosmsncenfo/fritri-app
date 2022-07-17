@@ -151,6 +151,8 @@
   "resetPassword": {
     "title": "Change password",
     "subtitle": "Please enter your email address",
+    "missingDataTitle": "Reset password error",
+    "missingDataMessage": "Please enter your email address.",
     "sendTempPass": "Send temporary password",
     "passwordSent": "Temporary password sent",
     "checkEmail": "Please check your inbox/spam folder, and use the temporary password to login.",
