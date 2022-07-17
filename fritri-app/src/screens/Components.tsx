@@ -140,7 +140,7 @@ const Typography = () => {
 };
 
 // inputs example
-const Inputs = () => {
+export const Inputs = () => {
   const {colors, sizes} = useTheme();
 
   return (

@@ -93,6 +93,7 @@ const DrawerContent = (
     {name: t('screens.register'), to: 'Register', icon: assets.register},
     {name: t('screens.extra'), to: 'Extra', icon: assets.extras},
     {name: t('screens.loginFacebook'), to: 'LoginFacebook', icon: assets.extras},
+    {name: t('screens.newTrip'), to: 'NewTrip', icon: assets.extras},
   ];
 
   return (

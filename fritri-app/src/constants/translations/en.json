@@ -84,7 +84,8 @@
     "settings": "Settings",
     "register": "Create account",
     "extra": "Extra - Automotive",
-    "loginFacebook": "Login Facebook"
+    "loginFacebook": "Login Facebook",
+    "newTrip": "New trip"
   },
   "navigation": {
     "home": "Soft UI",
@@ -103,7 +104,8 @@
     "register": "Register",
     "login": "Login",
     "extra": "Automotive",
-    "shopping": "Shopping Cart"
+    "shopping": "Shopping Cart",
+    "newTrip": "New Trip"
   },
   "menu": {
     "started": "Getting Started",
