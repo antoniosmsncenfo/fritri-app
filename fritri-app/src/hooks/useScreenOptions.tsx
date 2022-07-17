@@ -58,7 +58,7 @@ export default () => {
             gradient={gradients?.primary}
           />
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() =>
             navigation.navigate('Screens', {
               screen: 'Shopping',
@@ -80,7 +80,7 @@ export default () => {
               {basket?.items?.length}
             </Text>
           </Block>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </Block>
     ),
   } as StackHeaderOptions;

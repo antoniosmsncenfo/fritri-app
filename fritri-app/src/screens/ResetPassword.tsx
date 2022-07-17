@@ -71,7 +71,7 @@ const ResetPassword = () => {
             t('resetPassword.checkEmail'),
             [
               {text: 'OK', onPress: () => {
-                navigation.navigate('Login');},
+                navigation.navigate('Login',{email:resetUserPassword.email});},
               }
             ],
             { 

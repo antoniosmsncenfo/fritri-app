@@ -176,7 +176,7 @@ const Login = () => {
                 {t('common.goBack')}
               </Text>
             </Button> */}
-            <Text h4 center white marginBottom={sizes.md}>
+            <Text h4 center white marginTop={sizes.md}>
               {t('login.title')}
             </Text>
           </Image>
@@ -216,18 +216,6 @@ const Login = () => {
                     color={isDark ? colors.icon : undefined}
                   />
                 </Button>
-                {/* <Button outlined gray shadow={!isAndroid}>
-                  <Image
-                    source={assets.apple}
-                    height={sizes.m}
-                    width={sizes.m}
-                    color={isDark ? colors.icon : undefined}
-                  />
-                </Button>
-                <Button outlined gray shadow={!isAndroid}
-                  onPress={signInWithGoogleAsync}
-                >
-                </Button> */}
                 <Button outlined gray shadow={!isAndroid}
                   onPress={loginGoogleUser}
                 >
