@@ -199,26 +199,18 @@ const Register = () => {
   }, [registrarStatus]);
 
   return (
-    <Block safe marginTop={sizes.md}>
+    <Block safe>
       <Block paddingHorizontal={sizes.s}>
-        <Block flex={0} style={{ zIndex: 0 }}>
-          <Image
-            background
-            resizeMode="cover"
-            padding={sizes.sm}
-            radius={sizes.cardRadius}
-            source={assets.background}
-            height={sizes.height * 0.3}>
-            <Text h4 center white marginTop={20}>
-              {t('register.title')}
+        <Block flex={0} gradient={gradients.primary} style={{ zIndex: 0, height: sizes.height * 0.3 }}>
+            <Text h4 center white marginTop={sizes.l}>
+              {t('register.subtitle')}
             </Text>
-          </Image>
         </Block>
         {/* register form */}
         <Block
           keyboard
           behavior={!isAndroid ? 'padding' : 'height'}
-          marginTop={-(sizes.height * 0.25 - sizes.l)}>
+          marginTop={-(sizes.height * 0.20 - sizes.l)}>
           <Block
             flex={0}
             radius={sizes.sm}
@@ -234,9 +226,6 @@ const Register = () => {
               justify="space-evenly"
               tint={colors.blurTint}
               paddingVertical={sizes.sm}>
-              <Text p semibold center>
-                {t('register.subtitle')}
-              </Text>
 
               {/* form inputs */}
               <Block paddingHorizontal={sizes.sm}>

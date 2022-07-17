@@ -175,18 +175,10 @@ const Login = () => {
   return (
     <Block safe marginTop={sizes.md}>
       <Block paddingHorizontal={sizes.s}>
-        <Block flex={0} style={{ zIndex: 0 }}>
-          <Image
-            background
-            resizeMode="cover"
-            padding={sizes.sm}
-            radius={sizes.cardRadius}
-            source={assets.background}
-            height={sizes.height * 0.3}>
-            <Text h4 center white marginTop={sizes.md}>
-              {t('login.title')}
-            </Text>
-          </Image>
+        <Block flex={0} gradient={gradients.primary} style={{ zIndex: 0, height: sizes.height * 0.3 }}>
+          <Text h4 center white marginTop={sizes.l}>
+            {t('login.title')}
+          </Text>
         </Block>
         {/* login form */}
         <Block
