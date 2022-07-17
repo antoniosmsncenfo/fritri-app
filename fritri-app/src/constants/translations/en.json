@@ -74,7 +74,7 @@
   },
   "darkMode": "Dark Mode",
   "screens": {
-    "home": "Home",
+    "home": "Dashboard",
     "components": "Components",
     "articles": "Articles",
     "rental": "Rental",
@@ -100,6 +100,7 @@
     "privacy": "Privacy",
     "register": "Register",
     "login": "Login",
+    "resetPassword": "Reset password",
     "extra": "Automotive",
     "shopping": "Shopping Cart"
   },
@@ -138,7 +139,7 @@
     "titleUpdated" : "Successfully"
   },
   "login": {
-    "title": "Welcome",
+    "title": "FriTri App",
     "subtitle": "Sign In with",
     "forgotPassword": "I forgot my password",
     "errorFields": "Please check the password or email!",

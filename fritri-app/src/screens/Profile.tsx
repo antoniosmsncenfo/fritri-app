@@ -303,7 +303,7 @@ const Profile = () => {
               <Image
                 width={64}
                 height={64}
-                 source={{ uri: 'https://engineering.fb.com/wp-content/uploads/2016/04/yearinreview.jpg' }}
+                 source={{ uri: user.urlFoto }}
               />
             </Block>
             {/* 
@@ -401,7 +401,7 @@ const Profile = () => {
                 </Button>
                 <Button
                   onPress={emailLogout}
-                  tertiary
+                  primary
                   outlined
                   shadow={!isAndroid}
                   marginVertical={sizes.s}
