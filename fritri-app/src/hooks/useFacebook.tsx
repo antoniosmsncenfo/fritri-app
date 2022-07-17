@@ -57,8 +57,8 @@ export const useFacebook = () => {
           nombreCompleto: datos.name || '',
           tipoLogin: 'Facebook',
           token: resultadoLogin.token,
-          urlFoto: datos?.picture?.data?.url
-        })
+          urlFoto: datos?.picture?.data?.url,
+        });
       }
     } catch (error) {
       // TODO: Mostrar error en pantalla
@@ -75,7 +75,7 @@ export const useFacebook = () => {
     facebookLogout,
     fritriUserFromFacebook: fritriUser,
     isFritriUserFacebookLogged,
-    fritriUserIdDb
+    fritriUserIdDb,
   };
 
 };
