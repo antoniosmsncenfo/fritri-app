@@ -48,7 +48,7 @@ export default () => {
       <Stack.Screen
         name="NewPassword"
         component={NewPassword}
-        options={{headerShown: false}}
+        options={{...screenOptions.back}}
       />      
       <Stack.Screen
         name="Home"
