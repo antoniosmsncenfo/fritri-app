@@ -23,6 +23,7 @@ import {
   Shopping,
   NotificationsSettings,
   LoginFacebook,
+  VerDestino
 } from '../screens';
 
 import {useScreenOptions, useTranslation} from '../hooks';
@@ -128,6 +129,11 @@ export default () => {
         name="LoginFacebook"
         component={LoginFacebook}
         options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="VerDestino"
+        component={VerDestino}
       />
 
       <Stack.Screen
