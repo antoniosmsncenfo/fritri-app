@@ -131,3 +131,4 @@ fritri-app/src/secrets/googleSecrets.tsx
 fritri-app/yarn.lock
 **/package-lock.json
 **/.env
+**/.expo
