@@ -77,7 +77,7 @@ export const COLORS: ThemeColors = {
 };
 
 export const GRADIENTS: ThemeGradients = {
-  primary: ['#005B94', '#005B94'],
+  primary: ['#005B94', '#005f9F'],
   secondary: ['#F3CD74', '#EBEBEB'],
   info: ['#21D4FD', '#2152FF'],
   success: ['#98EC2D', '#17AD37'],

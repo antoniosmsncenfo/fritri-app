@@ -76,7 +76,7 @@ const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
 
 const Profile = () => {
 
-  const { user, handleUser  } = useData();
+  const { user, handleUser } = useData();
   const { t } = useTranslation();
   const navigation = useNavigation();
 
@@ -84,7 +84,7 @@ const Profile = () => {
   {
     '1': t('common.genders.woman'),
     '2': t('common.genders.man'),
-    '3': t('common.genders.other')
+    '3': t('common.genders.other'),
   };
 
   const [registration, setRegistration] = useState<IRegistration>({
@@ -95,7 +95,7 @@ const Profile = () => {
     password: '',
     confirmPassword: '',
     agreed: true,
-    status: RegistrationStatus.New
+    status: RegistrationStatus.New,
   });
 
   const [isValid, setIsValid] = useState<IRegistrationValidation>({
@@ -129,26 +129,26 @@ const Profile = () => {
   );
 
   const handleUpdateData = useCallback(() => {
-      if (!Object.values(isValid).includes(false)) {
-        let userToUpdate: IUsuario = {
-          id: user._id,
-          tipoLogin: user.tipoLogin,
-          correoElectronico: registration.email,
-          nombreCompleto: registration.name,
-          genero: registration.gender,
-          pais: registration.country,
-        }
-        if(user.idTerceros) {
-          userToUpdate = {
-            ...userToUpdate,
-            idTerceros: user.idTerceros
-          }
-        }
-        try {
-          updateUsuario(userToUpdate);
-        }catch(error) {
-        
-        }
+    if (!Object.values(isValid).includes(false)) {
+      let userToUpdate: IUsuario = {
+        id: user._id,
+        tipoLogin: user.tipoLogin,
+        correoElectronico: registration.email,
+        nombreCompleto: registration.name,
+        genero: registration.gender,
+        pais: registration.country,
+      };
+      if (user.idTerceros) {
+        userToUpdate = {
+          ...userToUpdate,
+          idTerceros: user.idTerceros,
+        };
+      }
+      try {
+        updateUsuario(userToUpdate);
+      } catch (error) {
+
+      }
     }
   }, [isValid, registration]);
 
@@ -175,18 +175,11 @@ const Profile = () => {
       t('common.logOutConfirmT'),
       t('common.logOutConfirmC'),
       [
-        {text: 'Yes', onPress: () =>  navigation.navigate('Login')},
-        {text: 'No', onPress: () =>  ('No button clicked'), style: 'cancel'},
+        { text: 'Yes', onPress: () => navigation.navigate('Login') },
+        { text: 'No', onPress: () => ('No button clicked'), style: 'cancel' },
       ],
-      // [
-      //   {
-      //     text: 'OK', onPress: () => {
-      //       navigation.navigate('Login');
-      //     },
-      //   }
-      // ],
       {
-        cancelable: false
+        cancelable: false,
       }
     );
   };
@@ -205,7 +198,7 @@ const Profile = () => {
       password: '',
       confirmPassword: '',
       agreed: true,
-      status: RegistrationStatus.New
+      status: RegistrationStatus.New,
     });
 
     setIsValid((state) => ({
@@ -213,13 +206,13 @@ const Profile = () => {
       name: regex.name.test(registration.name),
       email: regex.email.test(registration.email),
     }));
-  }, [])
+  }, []);
 
   useEffect(() => {
-    if(fritriUser) {
-      handleUser(fritriUser!)
+    if (fritriUser) {
+      handleUser(fritriUser!);
     }
-  }, [fritriUser])
+  }, [fritriUser]);
 
   useEffect(() => {
     setIsValid((state) => ({
@@ -238,13 +231,12 @@ const Profile = () => {
         [
           {
             text: 'OK', onPress: () => {
-              console.log('OK button clicked');
               navigation.navigate('Home');
             },
-          }
+          },
         ],
         {
-          cancelable: false
+          cancelable: false,
         }
       );
     }
@@ -253,15 +245,15 @@ const Profile = () => {
         t('register.validation'),
         t('register.emailExists'),
         [
-          { text: 'OK' }
+          { text: 'OK' },
         ],
         {
-          cancelable: false
+          cancelable: false,
         }
       );
       resetRegistrarEstatus();
     }
-  }, [registrarStatus])
+  }, [registrarStatus]);
 
   return (
     <Block safe marginTop={sizes.md}>
@@ -274,56 +266,35 @@ const Profile = () => {
             radius={sizes.cardRadius}
             source={assets.background}
             height={sizes.height * 0.3}>
-            {/* <Button
-              row
-              flex={0}
-              justify="flex-start"
-              onPress={() => navigation.goBack()}>
-              <Image
-                radius={0}
-                width={10}
-                height={18}
-                color={colors.white}
-                source={assets.arrow}
-                transform={[{ rotate: '180deg' }]}
-              />
-              <Text p white marginLeft={sizes.s}>
-                {t('common.goBack')}
-              </Text>
-            </Button> */}
-
             <Block flex={0} align="center">
               <Image
-                width={64}
-                height={64}
-                 source={{ uri: user.urlFoto }}
+                width={100}
+                height={100}
+                radius={100}
+
+                source={{ uri: (user.urlFoto ? user.urlFoto : (user.genero === 'Man' ? FotoUsuario.Hombre : FotoUsuario.Mujer)) }}
               />
             </Block>
-            {/* 
-
-            <Text h4 center white marginTop={20} >
-              {t('register.title')}
-            </Text> */}
           </Image>
-          
+
         </Block>
 
         {/* register form */}
-        
+
         <Block
 
           keyboard
           behavior={!isAndroid ? 'padding' : 'height'}
-          marginTop={-(sizes.height * 0.20 - sizes.l)}>
+          marginTop={-(sizes.height * 0.19 - sizes.l)}>
 
           <Block
             flex={0}
             radius={sizes.sm}
             marginHorizontal="8%"
             shadow={!isAndroid} // disabled shadow on Android due to blur overlay + elevation issue
-            >
+          >
             <Block
-            
+
               blur
               flex={0}
               intensity={150}
@@ -370,24 +341,22 @@ const Profile = () => {
                   label={t('common.country')}
                   onPress={() => setModal('country')}
                 />
-                { user.tipoLogin === 'Email' && 
+                { user.tipoLogin === 'Email' &&
                   <Button
                     primary
                     outlined
                     onPress={handlePasswordChange}
                     shadow={!isAndroid}
                     marginVertical={sizes.s}
-                    marginHorizontal={sizes.sm}
                     disabled={Object.values(isValid).includes(false)}>
                     <Text bold primary transform="uppercase">
                       {t('common.changePass')}
                     </Text>
-                  </Button>  
+                  </Button>
                 }
                 <Button
                   onPress={handleUpdateData}
                   marginVertical={sizes.s}
-                  marginHorizontal={sizes.sm}
                   gradient={gradients.primary}
                   disabled={Object.values(isValid).includes(false)}>
                   <Text bold white transform="uppercase">
@@ -400,95 +369,13 @@ const Profile = () => {
                   outlined
                   shadow={!isAndroid}
                   marginVertical={sizes.s}
-                  marginHorizontal={sizes.sm}
                   disabled={Object.values(isValid).includes(false)}>
                   <Text bold primary transform="uppercase">
                     {t('common.logOut')}
                   </Text>
                 </Button>
 
-                {/* 
-              <Text bold marginBottom={sizes.s}>
-                {t('common.gender')}
-              </Text>                
-              <Button
-                row
-                flex={1}
-                gradient={gradients.primary}
-                //marginRight={sizes.s}
-                //onPress={() => onQTY?.()}
-                marginBottom={sizes.s}
-                >
-                <Block
-                  row
-                  align="center"
-                  justify="space-between"
-                  paddingHorizontal={sizes.sm}>
-                  <Text bold white transform="uppercase" marginRight={sizes.sm}>
-                    {registration.gender}
-                  </Text>
-                  <Image
-                    source={assets.arrow}
-                    color={colors.white}
-                    transform={[{rotate: '90deg'}]}
-                  />
-                </Block>
-              </Button>                 */}
-                {/* <Input
-                secureTextEntry
-                autoCapitalize="none"
-                marginBottom={sizes.m}
-                label={t('common.password')}
-                rules={t('register.emailRules')}
-                placeholder={t('common.passwordPlaceholder')}
-                // value ={user?.contrasena}
-
-                onChangeText={(value) => handleChange({password: value})}
-                success={Boolean(registration.password && isValid.password)}
-                danger={Boolean(registration.password && !isValid.password)}
-              />
-              <Input
-                secureTextEntry
-                autoCapitalize="none"
-                marginBottom={sizes.m}
-                label={t('common.confirmPassword')}
-                rules={t('register.emailRules')}
-                placeholder={t('common.confirmPasswordPlaceholder')}
-                onChangeText={(value) => handleChange({confirmPassword: value})}
-                success={Boolean(registration.confirmPassword && isValid.confirmPassword)}
-                danger={Boolean(registration.confirmPassword && !isValid.confirmPassword)}
-              />                 */}
               </Block>
-              {/* checkbox terms */}
-              {/* <Block row flex={0} align="center" paddingHorizontal={sizes.sm}>
-              <Checkbox
-                marginRight={sizes.sm}
-                checked={registration?.agreed}
-                onPress={(value) => handleChange({agreed: value})}
-              />
-              <Text paddingRight={sizes.s}>
-                {t('common.agree')}
-                <Text
-                  semibold
-                  onPress={() => {
-                    Linking.openURL('https://www.creative-tim.com/terms');
-                  }}>
-                  {t('common.terms')}
-                </Text>
-              </Text>
-            </Block> */}
-
-              {/* <Button
-              primary
-              outlined
-              shadow={!isAndroid}
-              marginVertical={sizes.s}
-              marginHorizontal={sizes.sm}
-              onPress={() => navigation.navigate('Login')}>
-              <Text bold primary transform="uppercase">
-                {t('common.signin')}
-              </Text>
-            </Button> */}
             </Block>
           </Block>
         </Block>
