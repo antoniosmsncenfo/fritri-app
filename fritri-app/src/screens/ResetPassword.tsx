@@ -130,9 +130,6 @@ const ResetPassword = () => {
                   justify="space-evenly"
                   tint={colors.blurTint}
                   paddingVertical={sizes.sm}>
-                  <Text p semibold center>
-                    {t('resetPassword.subtitle')}
-                  </Text>
                   {/* form inputs */}
                   <Block paddingHorizontal={sizes.sm}>
                     <Input
