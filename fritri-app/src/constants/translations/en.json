@@ -40,12 +40,12 @@
     "terms": "Terms and Conditions",
     "signup": "Sign Up",
     "signin": "Sign In",
-    "changeData": "Update",
+    "changeData": "Update profile",
     "changePass": "Change Password",
     "logOut": "logOut",
     "loginFailed": "Login Failed",
     "loginFailedText": "Please check email or password",
-    "logOutConfirmT": "Confirm Logout",
+    "logOutConfirmT": "User logout",
     "logOutConfirmC": "Are you sure you want to logout?",
     "goBack": "Go back",
     "details": "More details...",
@@ -101,7 +101,6 @@
     "privacy": "Privacy",
     "register": "Register",
     "login": "Login",
-    "resetPassword": "Reset password",
     "extra": "Automotive",
     "shopping": "Shopping Cart",
     "resetPassword": "Change password"
@@ -131,14 +130,14 @@
   "register": {
     "title": "FriTri App",
     "subtitle": "Register with email",
-    "welcome": "Welcome!",
+    "welcome": "Welcome to FriTri!",
     "success": "Your user was created successfully!",
     "validation": "Validation error",
     "emailExists": "Email already exists.",
     "passwordRules": "At least one digit.\nAt least one lower case.\nAt least one upper case.\nAt least 6 from the mentioned characters.",
     "subtitleUpdate" : "Update your profile",
-    "updateUser" : "Your profile was updated",
-    "titleUpdated" : "Successfully",
+    "updateUser" : "Update confirmation",
+    "titleUpdated" : "Your profile was updated successfully.",
     "registerError": "Register error",
     "errorPassword": "Please check the password!",
     "fieldsError": "Please check the fields!"
@@ -224,7 +223,11 @@
     "posts": "Posts",
     "followers": "Followers",
     "following": "Following",
-    "aboutMe": "About me"
+    "aboutMe": "About me",
+    "updateError" : "Update error",
+    "fieldsError" : "Please check the fields!",
+    "updateTitle" : "Update confirmation",
+    "updateMessage" : "Your profile was updated successfully."
   },
   "notifications": {
     "title": "Notifications",
