@@ -3,6 +3,7 @@ import { Platform, Linking, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/core';
 import { email, name } from '../constants/regex';
+import * as ImagePicker from 'expo-image-picker';
 
 import { useData, useTheme, useTranslation } from '../hooks/';
 import * as regex from '../constants/regex';
@@ -13,6 +14,7 @@ import { useUsuario } from '../hooks/useUsuario';
 import { IRegistration, RegistrationStatus } from '../interfaces/registro-usuario';
 import { IUsuario } from '../constants/types/index';
 import { COUNTRIES } from '../constants/countries';
+import axios from 'axios';
 
 
 const isAndroid = Platform.OS === 'android';
@@ -32,13 +34,6 @@ interface ITouchableInput {
   onPress?: () => void;
 }
 
-const options = {
-  title: 'Selecciona foto de perfil',
-  cancelButton: 'Cancelar',
-  takePhotoButtonTitle: 'Tomar Foto',
-  chooseFromLibraryButtonTitle: 'Abrir Galeria',
-  noData: true,
-};
 
 const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
   const { assets, colors, sizes } = useTheme();
@@ -128,6 +123,65 @@ const Profile = () => {
     [setRegistration],
   );
 
+  //ImagePicker
+  const [pickedImagePath, setPickedImagePath] = useState('');
+
+  const showImagePicker = async () => {
+    // Ask the user for the permission to access the media library 
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this appp to access your photos!");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync();
+
+    if (!result.cancelled) {
+      setPickedImagePath(result.uri);
+      const resultImg = await uploadImageAsync(result.uri);
+
+
+    }
+  }
+  const changeImgen = (urlFoto: string) => {
+     
+     handleUser({ ...user, urlFoto });
+    
+  }
+   
+  const uploadImageAsync = async (uri: any) => {
+    changeImgen(uri);
+    let apiUrl = 'http://192.168.1.2:3000/subir-imagen';
+    let uriParts = uri.split('.');
+    let fileType = uriParts[uriParts.length - 1];
+
+    let formData = new FormData();
+    formData.append('imagen', {
+      uri,
+      name: `imagen.${fileType}`,
+      type: `imagen/${fileType}`,
+    });
+
+    let config = {
+      method: 'post',
+      url: apiUrl,
+      data: formData,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+
+      },
+
+    };
+    // console.log(apiUrl, options);
+    const result = await axios(config)
+    console.log(result.data);
+    return result.data;
+
+  }
+
+
   const handleUpdateData = useCallback(() => {
     if (!Object.values(isValid).includes(false)) {
       let userToUpdate: IUsuario = {
@@ -146,6 +200,7 @@ const Profile = () => {
       }
       try {
         updateUsuario(userToUpdate);
+
       } catch (error) {
 
       }
@@ -266,15 +321,17 @@ const Profile = () => {
             radius={sizes.cardRadius}
             source={assets.background}
             height={sizes.height * 0.3}>
-            <Block flex={0} align="center">
+            <Block flex={0} align="center"
+              onTouchEnd={showImagePicker}
+            >
               <Image
                 width={100}
                 height={100}
                 radius={100}
-
                 source={{ uri: (user.urlFoto ? user.urlFoto : (user.genero === 'Man' ? FotoUsuario.Hombre : FotoUsuario.Mujer)) }}
               />
             </Block>
+
           </Image>
 
         </Block>
@@ -341,7 +398,7 @@ const Profile = () => {
                   label={t('common.country')}
                   onPress={() => setModal('country')}
                 />
-                { user.tipoLogin === 'Email' &&
+                {user.tipoLogin === 'Email' &&
                   <Button
                     primary
                     outlined
@@ -354,6 +411,7 @@ const Profile = () => {
                     </Text>
                   </Button>
                 }
+
                 <Button
                   onPress={handleUpdateData}
                   marginVertical={sizes.s}

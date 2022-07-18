@@ -1,5 +1,7 @@
 {
   "common": {
+    "selectImg": "Select image",
+
     "appDetails": "App Details",
     "appName": "App name",
     "appVersion": "App version",
