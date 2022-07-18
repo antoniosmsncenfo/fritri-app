@@ -45,7 +45,7 @@
     "logOut": "logOut",
     "loginFailed": "Login Failed",
     "loginFailedText": "Please check email or password",
-    "logOutConfirmT": "LogOut",
+    "logOutConfirmT": "Confirm Logout",
     "logOutConfirmC": "Are you sure you want to logout?",
     "goBack": "Go back",
     "details": "More details...",
@@ -82,7 +82,8 @@
     "settings": "Settings",
     "register": "Create account",
     "extra": "Extra - Automotive",
-    "loginFacebook": "Login Facebook"
+    "loginFacebook": "Login Facebook",
+    "verDestino": "Ver Destino"
   },
   "navigation": {
     "home": "FriTri",
@@ -100,9 +101,9 @@
     "privacy": "Privacy",
     "register": "Register",
     "login": "Login",
-    "resetPassword": "Reset password",
     "extra": "Automotive",
-    "shopping": "Shopping Cart"
+    "shopping": "Shopping Cart",
+    "resetPassword": "Change password"
   },
   "menu": {
     "started": "Getting Started",
@@ -127,27 +128,32 @@
     "contactUs": "Contact us"
   },
   "register": {
-    "title": "Welcome to FriTri",
+    "title": "FriTri App",
     "subtitle": "Register with email",
     "welcome": "Welcome!",
     "success": "Your user was created successfully!",
-    "validation": "Validation Error",
+    "validation": "Validation error",
     "emailExists": "Email already exists.",
     "passwordRules": "At least one digit.\nAt least one lower case.\nAt least one upper case.\nAt least 6 from the mentioned characters.",
-    "subtitleUpdate" : "Update your Profile",
-    "updateUser" : "Your Profile was updated",
-    "titleUpdated" : "Successfully"
+    "subtitleUpdate" : "Update your profile",
+    "updateUser" : "Your profile was updated",
+    "titleUpdated" : "Successfully",
+    "registerError": "Register error",
+    "errorPassword": "Please check the password!",
+    "fieldsError": "Please check the fields!"
   },
   "login": {
     "title": "FriTri App",
     "subtitle": "Sign In with",
     "forgotPassword": "I forgot my password",
-    "errorFields": "Please check the password or email!",
-    "errorLogin": "Login Error",
+    "errorFields": "Please check the email and password!",
+    "errorEmail": "Please check the email!",
+    "errorPassword": "Please check the password!",
+    "errorLogin": "Login error",
     "invalidCredentials": "The provided credentials are not valid."
   },
   "resetPassword": {
-    "title": "Reset your password",
+    "title": "Change password",
     "subtitle": "Please enter your email address",
     "missingDataTitle": "Reset password error",
     "missingDataMessage": "Please enter your email address.",
@@ -158,7 +164,7 @@
     "errorMessage": "Please try again. If problem persists, please contact customer support."
   }, 
   "newPassword": {
-    "title": "New Password",
+    "title": "Change password",
     "subtitle": "Please enter your new password",
     "sendTempPass": "Save New Password",
     "passwordSent": "New Password Registered",
