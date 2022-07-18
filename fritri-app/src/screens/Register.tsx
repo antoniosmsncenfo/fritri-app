@@ -28,8 +28,8 @@ interface ITouchableInput {
   onPress?: () => void;
 }
 
-const TouchableInput = ({label, value, icon, onPress}: ITouchableInput) => {
-  const {assets, colors, sizes} = useTheme();
+const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
+  const { assets, colors, sizes } = useTheme();
 
   return (
     <Button
@@ -127,7 +127,7 @@ const Register = () => {
         pais: registration.country,
       });
     }
-     else {
+    else {
       Alert.alert(
         t('register.registerError'),
         t('register.fieldsError'),
@@ -201,10 +201,13 @@ const Register = () => {
   return (
     <Block safe>
       <Block paddingHorizontal={sizes.s}>
-        <Block flex={0} gradient={gradients.primary} style={{ zIndex: 0, height: sizes.height * 0.3 }}>
-            <Text h4 center white marginTop={sizes.l}>
-              {t('register.subtitle')}
-            </Text>
+        <Block flex={0}
+          gradient={gradients.primary}
+          style={{ zIndex: 0, height: sizes.height * 0.3 }}
+          radius={sizes.sm}>
+          <Text h4 center white marginTop={sizes.l}>
+            {t('register.subtitle')}
+          </Text>
         </Block>
         {/* register form */}
         <Block
@@ -300,23 +303,23 @@ const Register = () => {
       <Modal
         visible={Boolean(modal)}
         onRequestClose={() => setModal(undefined)}>
-          <FlatList
-            keyExtractor={(index) => `${index}`}
-            data={modal === 'gender' ? [1, 2, 3] : Object.keys(COUNTRIES).map(x => Number(x))}
-            renderItem={({item}) => (
-              <Button
-                marginBottom={sizes.sm}
-                onPress={() =>
-                  modal === 'gender'
-                    ? handleChange({gender: GENDER_TYPES[item]})
-                    : handleChange({country: COUNTRIES[item]})
-                }>
-                <Text p white semibold transform="uppercase">
-                  {modal === 'gender' ? GENDER_TYPES[item] : COUNTRIES[item]}
-                </Text>
-              </Button>
-            )}
-          />
+        <FlatList
+          keyExtractor={(index) => `${index}`}
+          data={modal === 'gender' ? [1, 2, 3] : Object.keys(COUNTRIES).map(x => Number(x))}
+          renderItem={({ item }) => (
+            <Button
+              marginBottom={sizes.sm}
+              onPress={() =>
+                modal === 'gender'
+                  ? handleChange({ gender: GENDER_TYPES[item] })
+                  : handleChange({ country: COUNTRIES[item] })
+              }>
+              <Text p white semibold transform="uppercase">
+                {modal === 'gender' ? GENDER_TYPES[item] : COUNTRIES[item]}
+              </Text>
+            </Button>
+          )}
+        />
       </Modal>
     </Block>
   );
