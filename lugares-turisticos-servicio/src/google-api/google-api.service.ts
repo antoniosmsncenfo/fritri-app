@@ -37,6 +37,7 @@ export enum Categorias {
 @Injectable()
 export class GoogleApiService {
   key: string = process.env.GOOGLE_API_KEY;
+  private timeout = 5000;
 
   /**Obtiene lista de lugares que coinciden con texto ingresado */
   async obtenerDestinos(destino: string, idioma = 'es') {
@@ -48,7 +49,7 @@ export class GoogleApiService {
           key: this.key,
           language: idioma,
         },
-        timeout: 1000, // milliseconds
+        timeout: this.timeout, // milliseconds
       });
 
       if (response.statusText === 'OK') {
@@ -81,7 +82,7 @@ export class GoogleApiService {
           language: idioma,
           fields: categorias,
         },
-        timeout: 1000, // milliseconds
+        timeout: this.timeout, // milliseconds
       });
 
       if (response.statusText === 'OK') {
@@ -113,7 +114,7 @@ export class GoogleApiService {
           maxwidth: ancho,
         },
         responseType: 'stream',
-        timeout: 1000, // milliseconds
+        timeout: this.timeout, // milliseconds
       });
 
       if (response.statusText === 'OK') {
@@ -123,7 +124,7 @@ export class GoogleApiService {
       }
     } catch (error) {
       Logger.error(
-        `Error obtenerFoto: ${JSON.stringify(error.response.data)}`,
+        `Error obtenerFoto: ${JSON.stringify(error.response?.data)}`,
         'GoogleApiService',
       );
       return '';
@@ -149,7 +150,7 @@ export class GoogleApiService {
           language: idioma,
           pagetoken: tokenPaginacion,
         },
-        timeout: 1000, // milliseconds
+        timeout: this.timeout, // milliseconds
       });
 
       if (response.statusText === 'OK') {
