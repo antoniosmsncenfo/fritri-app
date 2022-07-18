@@ -289,7 +289,6 @@ export class UsuariosService {
   ): Promise<Usuario> {
     let resultado;
     try {
-
       const idUsuario = actualizarContrasenaDto._id;
       resultado = await this.usuarioModel.findOneAndUpdate(
         { _id: idUsuario },
@@ -313,9 +312,6 @@ export class UsuariosService {
     let hash1 = '';
     let hash2 = '';
     try {
-        'Usuario recibido:' + JSON.stringify(actualizarContrasenaDto),
-      );
-
       if ('contrasena' in actualizarContrasenaDto) {
         hash1 = (await HashContrasena(actualizarContrasenaDto.contrasena)).hash;
       }
