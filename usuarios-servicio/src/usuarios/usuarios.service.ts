@@ -12,7 +12,7 @@ import { CrearUsuariosDto } from './dto/crear-usuarios.dto';
 import { LoginTercerosDto } from './dto/login-terceros.dto';
 import {
   CompararContrasena,
-  GenerarContrasenaTemporal,
+  GenerarContrasenaTemporalV2,
   HashContrasena,
   LongitudPassword,
 } from '../helpers/hash.contrasena';
@@ -227,7 +227,7 @@ export class UsuariosService {
         return resultadoNoExiste;
       } else {
         //Como si se encontró un usuario con ese correo, se procede a generar un password temporal
-        const contrasenaTemporal = await GenerarContrasenaTemporal(
+        const contrasenaTemporal = await GenerarContrasenaTemporalV2(
           LongitudPassword.Ocho,
         );
 
