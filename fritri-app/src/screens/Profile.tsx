@@ -220,7 +220,6 @@ const Profile = () => {
       name: regex.name.test(registration.name),
       email: regex.email.test(registration.email),
     }));
-    console.log('');
   }, [registration, setIsValid]);
 
   useEffect(() => {
