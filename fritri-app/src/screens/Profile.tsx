@@ -22,7 +22,8 @@ interface IRegistrationValidation {
   email: boolean;
   password: boolean;
   confirmPassword: boolean;
-  agreed: boolean;
+  gender: boolean;
+  country: boolean;
 }
 
 interface ITouchableInput {
@@ -103,7 +104,8 @@ const Profile = () => {
     email: regex.email.test(registration.email || ''),
     password: true,
     confirmPassword: true,
-    agreed: true,
+    gender: registration.gender!==undefined,
+    country: registration.country!==undefined,
   });
 
   const [gender, setGender] = useState(GENDER_TYPES['1']);
@@ -129,6 +131,9 @@ const Profile = () => {
   );
 
   const handleUpdateData = useCallback(() => {
+    console.log("isValid: " + JSON.stringify(isValid));
+    console.log("user: " + JSON.stringify(user));
+    console.log("registration: " + JSON.stringify(registration));
     if (!Object.values(isValid).includes(false)) {
       let userToUpdate: IUsuario = {
         id: user._id,
@@ -149,6 +154,14 @@ const Profile = () => {
       } catch (error) {
 
       }
+    }
+    else {
+      Alert.alert(
+        t('profile.updateError'),
+        t('profile.fieldsError'),
+        [{ text: 'OK' }],
+        { cancelable: false }
+      );
     }
   }, [isValid, registration]);
 
@@ -205,6 +218,8 @@ const Profile = () => {
       ...state,
       name: regex.name.test(registration.name),
       email: regex.email.test(registration.email),
+      gender: registration.gender!==undefined,
+      country: registration.country!==undefined,
     }));
   }, []);
 
@@ -219,14 +234,16 @@ const Profile = () => {
       ...state,
       name: regex.name.test(registration.name),
       email: regex.email.test(registration.email),
+      gender: registration.gender!==undefined,
+      country: registration.country!==undefined,   
     }));
   }, [registration, setIsValid]);
 
   useEffect(() => {
     if (registrarStatus === RegistrationStatus.Success) {
       Alert.alert(
-        t('register.updateUser'),
-        t('register.titleUpdated'),
+        t('profile.updateTitle'),
+        t('profile.updateMessage'),
         [
           {
             text: 'OK', onPress: () => {
@@ -296,6 +313,7 @@ const Profile = () => {
                 {t('register.subtitleUpdate')}
               </Text> */}
               <Block paddingHorizontal={sizes.sm}>
+                {user.tipoLogin === 'Email' &&
                 <Input
                   autoCapitalize="none"
                   marginBottom={sizes.m}
@@ -306,6 +324,17 @@ const Profile = () => {
                   danger={Boolean(registration.name && !isValid.name)}
                   onChangeText={(value) => handleChange({ name: value })}
                 />
+                }
+                {user.tipoLogin !== 'Email' &&
+                <Input
+                  disabled={true}
+                  autoCapitalize="none"
+                  marginBottom={sizes.m}
+                  label={t('common.name')}
+                  placeholder={t('common.namePlaceholder')}
+                  value={registration.name}
+                />
+                }                
                 <Input
                   disabled={true}
                   autoCapitalize="none"
@@ -347,7 +376,8 @@ const Profile = () => {
                   onPress={handleUpdateData}
                   marginVertical={sizes.s}
                   gradient={gradients.primary}
-                  disabled={Object.values(isValid).includes(false)}>
+                  //disabled={Object.values(isValid).includes(false)}
+                  >
                   <Text bold white transform="uppercase">
                     {t('common.changeData')}
                   </Text>

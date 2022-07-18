@@ -130,7 +130,7 @@
   "register": {
     "title": "FriTri App",
     "subtitle": "Register with email",
-    "welcome": "Welcome!",
+    "welcome": "Welcome to FriTri!",
     "success": "Your user was created successfully!",
     "validation": "Validation error",
     "emailExists": "Email already exists.",
@@ -223,7 +223,11 @@
     "posts": "Posts",
     "followers": "Followers",
     "following": "Following",
-    "aboutMe": "About me"
+    "aboutMe": "About me",
+    "updateError" : "Update error",
+    "fieldsError" : "Please check the fields!",
+    "updateTitle" : "Update confirmation",
+    "updateMessage" : "Your profile was updated successfully."
   },
   "notifications": {
     "title": "Notifications",
