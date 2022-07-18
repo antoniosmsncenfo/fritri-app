@@ -23,7 +23,6 @@ export const guardarUsuarioTerceros = async (usuarioTercero: IUsuarioDeTerceros)
         }
     }
     catch (e) {
-        console.log('API usuario error:',JSON.stringify(e.message, null, 2));
         return null;
     }
 };
@@ -34,7 +33,7 @@ export const updateUsuarioFriTri = async (usuarioActualizado: IUsuario) => {
             method: 'put',
             url: `${USUARIOS_BASE_URL}/actualizar-usuario`,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
             data: usuarioActualizado,
         };
