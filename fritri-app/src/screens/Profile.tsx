@@ -257,29 +257,19 @@ const Profile = () => {
   return (
     <Block safe marginTop={sizes.md}>
       <Block paddingHorizontal={sizes.s}>
-        <Block flex={0} style={{ zIndex: 0 }}>
-          <Image
-            background
-            resizeMode="cover"
-            padding={sizes.sm}
-            radius={sizes.cardRadius}
-            source={assets.background}
-            height={sizes.height * 0.3}>
+        <Block flex={0} gradient={gradients.primary} style={{ zIndex: 0, height: sizes.height * 0.3 }}>
+
             <Block flex={0} align="center">
               <Image
-                width={100}
-                height={100}
+                width={120}
+                height={120}
                 radius={100}
-
                 source={{ uri: (user.urlFoto ? user.urlFoto : (user.genero === 'Man' ? FotoUsuario.Hombre : FotoUsuario.Mujer)) }}
               />
             </Block>
-          </Image>
 
         </Block>
-
         {/* register form */}
-
         <Block
 
           keyboard
@@ -302,9 +292,9 @@ const Profile = () => {
               justify="space-evenly"
               tint={colors.blurTint}
               paddingVertical={sizes.sm}>
-              <Text p semibold center>
+              {/* <Text p semibold center>
                 {t('register.subtitleUpdate')}
-              </Text>
+              </Text> */}
               <Block paddingHorizontal={sizes.sm}>
                 <Input
                   autoCapitalize="none"
@@ -364,12 +354,13 @@ const Profile = () => {
                 </Button>
                 <Button
                   onPress={emailLogout}
-                  primary
+                  danger
                   outlined
                   shadow={!isAndroid}
                   marginVertical={sizes.s}
-                  disabled={Object.values(isValid).includes(false)}>
-                  <Text bold primary transform="uppercase">
+                  //disabled={Object.values(isValid).includes(false)}
+                  >
+                  <Text bold danger transform="uppercase">
                     {t('common.logOut')}
                   </Text>
                 </Button>
