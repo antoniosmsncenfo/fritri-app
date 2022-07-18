@@ -220,7 +220,6 @@ const Profile = () => {
       name: regex.name.test(registration.name),
       email: regex.email.test(registration.email),
     }));
-    console.log('');
   }, [registration, setIsValid]);
 
   useEffect(() => {
@@ -256,27 +255,20 @@ const Profile = () => {
   }, [registrarStatus]);
 
   return (
-    <Block safe marginTop={sizes.md}>
+    <Block safe>
       <Block paddingHorizontal={sizes.s}>
-        <Block flex={0} style={{ zIndex: 0 }}>
-          <Image
-            background
-            resizeMode="cover"
-            padding={sizes.sm}
-            radius={sizes.cardRadius}
-            source={assets.background}
-            height={sizes.height * 0.3}>
-            <Block flex={0} align="center">
-              <Image
-                width={100}
-                height={100}
-                radius={100}
-
-                source={{ uri: (user.urlFoto ? user.urlFoto : (user.genero === 'Man' ? FotoUsuario.Hombre : FotoUsuario.Mujer)) }}
-              />
-            </Block>
-          </Image>
-
+        <Block flex={0}
+          gradient={gradients.primary}
+          style={{ zIndex: 0, height: sizes.height * 0.3 }}
+          radius={sizes.sm}>
+          <Block flex={0} align="center" marginTop={sizes.m}>
+            <Image
+              width={100}
+              height={100}
+              radius={100}
+              source={{ uri: (user.urlFoto ? user.urlFoto : (user.genero === 'Man' ? FotoUsuario.Hombre : FotoUsuario.Mujer)) }}
+            />
+          </Block>
         </Block>
 
         {/* register form */}
@@ -285,7 +277,7 @@ const Profile = () => {
 
           keyboard
           behavior={!isAndroid ? 'padding' : 'height'}
-          marginTop={-(sizes.height * 0.19 - sizes.l)}>
+          marginTop={-(sizes.height * 0.17 - sizes.l)}>
 
           <Block
             flex={0}
@@ -341,7 +333,7 @@ const Profile = () => {
                   label={t('common.country')}
                   onPress={() => setModal('country')}
                 />
-                { user.tipoLogin === 'Email' &&
+                {user.tipoLogin === 'Email' &&
                   <Button
                     primary
                     outlined

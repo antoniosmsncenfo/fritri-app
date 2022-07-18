@@ -175,7 +175,10 @@ const Login = () => {
   return (
     <Block safe marginTop={sizes.md}>
       <Block paddingHorizontal={sizes.s}>
-        <Block flex={0} gradient={gradients.primary} style={{ zIndex: 0, height: sizes.height * 0.3 }}>
+        <Block flex={0}
+          gradient={gradients.primary}
+          style={{ zIndex: 0, height: sizes.height * 0.3 }}
+          radius={sizes.sm}>
           <Text h4 center white marginTop={sizes.l}>
             {t('login.title')}
           </Text>

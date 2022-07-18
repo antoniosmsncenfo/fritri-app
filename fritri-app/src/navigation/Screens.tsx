@@ -49,7 +49,7 @@ export default () => {
       <Stack.Screen
         name="NewPassword"
         component={NewPassword}
-        options={{...screenOptions.back}}
+        options={{...screenOptions.back, title: t('navigation.resetPassword')}}
       />
       <Stack.Screen
         name="Home"

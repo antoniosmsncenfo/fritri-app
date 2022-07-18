@@ -110,7 +110,10 @@ const ResetPassword = () => {
   return (
     <Block safe>
       <Block paddingHorizontal={sizes.s}>
-        <Block flex={0} gradient={gradients.primary} style={{ zIndex: 0, height: sizes.height * 0.3 }}>
+        <Block flex={0}
+          gradient={gradients.primary}
+          style={{ zIndex: 0, height: sizes.height * 0.3 }}
+          radius={sizes.sm}>
           <Text h4 center white marginTop={sizes.l}>
             {t('resetPassword.title')}
           </Text>
@@ -156,7 +159,6 @@ const ResetPassword = () => {
                 marginVertical={sizes.s}
                 marginHorizontal={sizes.sm}
                 gradient={gradients.primary}
-              //</Block>disabled={Object.values(isValid).includes(false)}
               >
                 <Text bold white transform="uppercase">
                   {t('resetPassword.sendTempPass')}
