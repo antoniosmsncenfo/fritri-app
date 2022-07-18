@@ -102,9 +102,16 @@ const Login = () => {
     signInWithGoogleAsync();
   };
 
+  const loginFacebookUser = () => {
+    facebookLogout();
+    facebookLogin();
+  }
+
   useFocusEffect(
     React.useCallback(() => {
       emailLogout();
+      googleLogout();
+      facebookLogout();
       setIsValid({
         email: false,
         password: false,
@@ -209,7 +216,7 @@ const Login = () => {
               {/* social buttons */}
               <Block row center justify="space-evenly" marginVertical={sizes.m}>
                 <Button outlined gray shadow={!isAndroid}
-                  onPress={facebookLogin}
+                  onPress={loginFacebookUser}
                 >
                   <Image
                     source={assets.facebook}
