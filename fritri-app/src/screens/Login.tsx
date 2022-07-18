@@ -161,7 +161,7 @@ const Login = () => {
         };
       }
       handleUser(fritriFinalUser!);
-      fritriFinalUser?.pais === null ? navigation.navigate('Profile') : navigation.navigate('Home');
+      fritriFinalUser?.pais == null ? navigation.navigate('Profile') : navigation.navigate('Home');
     }
   }, [isFritriUserFacebookLogged]);
 
