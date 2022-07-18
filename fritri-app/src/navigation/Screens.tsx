@@ -48,8 +48,8 @@ export default () => {
       <Stack.Screen
         name="NewPassword"
         component={NewPassword}
-        options={{...screenOptions.back}}
-      />      
+        options={{...screenOptions.back, title: t('navigation.resetPassword')}}
+      />
       <Stack.Screen
         name="Home"
         component={Home}
@@ -59,7 +59,7 @@ export default () => {
         name="Register"
         component={Register}
         options={{...screenOptions.back}}
-      />      
+      />
       <Stack.Screen
         name="Components"
         component={Components}
