@@ -255,7 +255,7 @@ const Profile = () => {
   }, [registrarStatus]);
 
   return (
-    <Block safe marginTop={sizes.md}>
+    <Block safe>
       <Block paddingHorizontal={sizes.s}>
         <Block flex={0} gradient={gradients.primary} style={{ zIndex: 0, height: sizes.height * 0.3 }}>
 
@@ -274,7 +274,7 @@ const Profile = () => {
 
           keyboard
           behavior={!isAndroid ? 'padding' : 'height'}
-          marginTop={-(sizes.height * 0.19 - sizes.l)}>
+          marginTop={-(sizes.height * 0.17 - sizes.l)}>
 
           <Block
             flex={0}
@@ -330,7 +330,7 @@ const Profile = () => {
                   label={t('common.country')}
                   onPress={() => setModal('country')}
                 />
-                { user.tipoLogin === 'Email' &&
+                {user.tipoLogin === 'Email' &&
                   <Button
                     primary
                     outlined

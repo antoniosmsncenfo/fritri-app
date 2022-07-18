@@ -166,11 +166,13 @@
   "newPassword": {
     "title": "Change password",
     "subtitle": "Please enter your new password",
-    "sendTempPass": "Save New Password",
-    "passwordSent": "New Password Registered",
+    "sendTempPass": "Save new password",
+    "passwordSent": "New password registered",
     "checkEmail": "Please login with your new password.",
     "passwordError": "Something went wrong!",
-    "errorMessage": "Please try again. If problem persists, please contact customer support."
+    "errorMessage": "Please try again. If problem persists, please contact customer support.",
+    "errorPassword": "Please check the password!",
+    "errorNewPassword": "Change password error"
   },   
   "settings": {
     "recommended": {
