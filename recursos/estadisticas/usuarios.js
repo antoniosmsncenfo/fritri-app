@@ -1,0 +1,2 @@
+
+db.createCollection( 'usuarios', {validator: {$jsonSchema: {bsonType: 'object',description:'Almacena las estadisticas de los usuarios',title:'usuarios',required: [         'idUsuario',          'paisUsuario',          'nombreUsuario',          'fechaRegistro'],properties: {idUsuario: {bsonType: 'objectId'},paisUsuario: {bsonType: 'string'},nombreUsuario: {bsonType: 'string'},fechaRegistro: {bsonType: 'date'}}         }      }});  

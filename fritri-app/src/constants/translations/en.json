@@ -1,0 +1,247 @@
+{
+  "common": {
+    "appDetails": "App Details",
+    "appName": "App name",
+    "appVersion": "App version",
+    "buildVersion": "Build version",
+    "expoVersion": "Expo version",
+    "about": "About",
+    "visit": "Visit",
+    "posted": "Posted on {{date}}",
+    "recommended": "Recommended for you",
+    "viewall": "View All",
+    "more": "More",
+    "follow": "Follow",
+    "followed": "Followed",
+    "search": "Search",
+    "night": "night",
+    "day": "day",
+    "booknow": "Book Now",
+    "selectDate": "Select date",
+    "checkInOut": "Check-In & Check-Out",
+    "adults": "Adults",
+    "roomType": "Room Type",
+    "luxury": "Luxury",
+    "message": "Enter your message",
+    "album": "Album",
+    "or": "or",
+    "name": "Name",
+    "namePlaceholder": "Enter your full name",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email address",
+    "gender": "Gender",
+    "country": "Country",
+    "avatar": "Picture",
+    "password": "Password",
+    "passwordPlaceholder": "Enter a password",
+    "confirmPassword": "Confirm Password",    
+    "confirmPasswordPlaceholder": "Enter the same password",
+    "agree": "I agree with the ",
+    "terms": "Terms and Conditions",
+    "signup": "Sign Up",
+    "signin": "Sign In",
+    "changeData": "Update profile",
+    "changePass": "Change Password",
+    "logOut": "logOut",
+    "loginFailed": "Login Failed",
+    "loginFailedText": "Please check email or password",
+    "logOutConfirmT": "User logout",
+    "logOutConfirmC": "Are you sure you want to logout?",
+    "goBack": "Go back",
+    "details": "More details...",
+    "inStock": "In stock",
+    "outStock": "Out of stock",
+    "addToCart": "Add to cart",
+    "checkout": "Proceed to checkout",
+    "readArticle": "Read Article",
+    "send": "Send",
+    "guests": {
+      "one": "1 guest",
+      "other": "{{count}} guests",
+      "zero": "0 Guests"
+    },
+    "genders": {
+      "woman": "Woman",
+      "man": "Man",
+      "other": "Other"
+    }    
+  },
+  "app": {
+    "name": "FriTri",
+    "fullname": "Soft UI Kit",
+    "native": "React Native",
+    "link": "creative-tim.com"
+  },
+  "darkMode": "Dark Mode",
+  "screens": {
+    "home": "Dashboard",
+    "components": "Components",
+    "articles": "Articles",
+    "rental": "Rental",
+    "profile": "Profile",
+    "settings": "Settings",
+    "register": "Create account",
+    "extra": "Extra - Automotive",
+    "loginFacebook": "Login Facebook",
+    "verDestino": "Ver Destino"
+  },
+  "navigation": {
+    "home": "FriTri",
+    "components": "Components",
+    "articles": "Soft UI",
+    "rentals": "Soft UI",
+    "rental": "Best Deal",
+    "booking": "Booking",
+    "chat": "Chat",
+    "profile": "Profile",
+    "settings": "Settings",
+    "notifications": "Notifications",
+    "agreement": "User Agreement",
+    "about": "About",
+    "privacy": "Privacy",
+    "register": "Register",
+    "login": "Login",
+    "extra": "Automotive",
+    "shopping": "Shopping Cart",
+    "resetPassword": "Change password"
+  },
+  "menu": {
+    "started": "Getting Started",
+    "documentation": "Documentation"
+  },
+  "home": {
+    "title": "FriTri",
+    "pending": "Pending",
+    "completed": "Completed"
+  },
+  "extras": {
+    "title1": "Want to try before",
+    "title2": "you buy?",
+    "description": "For a start, it does not automatically follow that a record amount of ice will melt this summer.",
+    "schedule": "Schedule a test drive:",
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "save": "Save for later",
+    "saved": "Saved",
+    "book": "Book",
+    "booked": "Booked",
+    "contactUs": "Contact us"
+  },
+  "register": {
+    "title": "FriTri App",
+    "subtitle": "Register with email",
+    "welcome": "Welcome to FriTri!",
+    "success": "Your user was created successfully!",
+    "validation": "Validation error",
+    "emailExists": "Email already exists.",
+    "passwordRules": "At least one digit.\nAt least one lower case.\nAt least one upper case.\nAt least 6 from the mentioned characters.",
+    "subtitleUpdate" : "Update your profile",
+    "updateUser" : "Update confirmation",
+    "titleUpdated" : "Your profile was updated successfully.",
+    "registerError": "Register error",
+    "errorPassword": "Please check the password!",
+    "fieldsError": "Please check the fields!"
+  },
+  "login": {
+    "title": "FriTri App",
+    "subtitle": "Sign In with",
+    "forgotPassword": "I forgot my password",
+    "errorFields": "Please check the email and password!",
+    "errorEmail": "Please check the email!",
+    "errorPassword": "Please check the password!",
+    "errorLogin": "Login error",
+    "invalidCredentials": "The provided credentials are not valid."
+  },
+  "resetPassword": {
+    "title": "Change password",
+    "subtitle": "Please enter your email address",
+    "missingDataTitle": "Reset password error",
+    "missingDataMessage": "Please enter your email address.",
+    "sendTempPass": "Send temporary password",
+    "passwordSent": "Temporary password sent",
+    "checkEmail": "Please check your inbox/spam folder, and use the temporary password to login.",
+    "passwordError": "Something went wrong!",
+    "errorMessage": "Please try again. If problem persists, please contact customer support."
+  }, 
+  "newPassword": {
+    "title": "Change password",
+    "subtitle": "Please enter your new password",
+    "sendTempPass": "Save new password",
+    "passwordSent": "New password registered",
+    "checkEmail": "Please login with your new password.",
+    "passwordError": "Something went wrong!",
+    "errorMessage": "Please try again. If problem persists, please contact customer support.",
+    "errorPassword": "Please check the password!",
+    "errorNewPassword": "Change password error"
+  },   
+  "settings": {
+    "recommended": {
+      "title": "Recommended Settings",
+      "subtitle": "These are the most important settings",
+      "faceid": "Use FaceID to sign in",
+      "autolock": "Auto-Lock security",
+      "notifications": "Notifications",
+      "darkmode": "Dark Mode",
+      "language": "Language"
+    },
+    "payment": {
+      "title": "Payment Settings",
+      "subtitle": "These are the payment settings",
+      "options": "Manage Payment Options",
+      "giftcards": "Manage Gift Cards"
+    },
+    "privacy": {
+      "title": "Privacy Settings",
+      "subtitle": "Third most important settings",
+      "agreement": "User Agreement",
+      "privacy": "Privacy",
+      "about": "About"
+    },
+    "notifications": {
+      "title": "Notifications Settings",
+      "subtitle": "These are the most important settings",
+      "mentions": "Someone mentions me",
+      "follows": "Anyone follows me",
+      "comments": "Someone comments me",
+      "offers": "New Offers"
+    }
+  },
+  "rentals": {
+    "title": "Soft UI",
+    "flight": "Flight",
+    "hotel": "Hotel",
+    "train": "Train",
+    "availability": "Check availability",
+    "interested": "You may also be interested in",
+    "viewoffer": "View Offer",
+    "notFound1": "We didn’t find ",
+    "notFound2": " in our app.",
+    "moreOptions": "You can see more options from other categories."
+  },
+  "profile": {
+    "title": "Profile",
+    "posts": "Posts",
+    "followers": "Followers",
+    "following": "Following",
+    "aboutMe": "About me",
+    "updateError" : "Update error",
+    "fieldsError" : "Please check the fields!",
+    "updateTitle" : "Update confirmation",
+    "updateMessage" : "Your profile was updated successfully."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "read": "Read Notifications",
+    "unread": "Unread Notifications",
+    "personal": "Personal",
+    "business": "Business"
+  },
+  "shop": {
+    "subtotal": {
+      "one": "Cart subtotal (1 item)",
+      "other": "Cart subtotal ({{count}} items)",
+      "zero": "Cart subtotal (0 items)"
+    },
+    "alsoShopped": "Customers who shopped for items in your cart also shopped for"
+  }
+}
