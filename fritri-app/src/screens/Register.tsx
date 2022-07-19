@@ -62,7 +62,7 @@ const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
 };
 
 const Register = () => {
-  const { isDark } = useData();
+  const { handleUser, isDark } = useData();
   const { t } = useTranslation();
   const navigation = useNavigation();
 
@@ -96,7 +96,7 @@ const Register = () => {
 
   const [country, setCountry] = useState(COUNTRIES['1']);
 
-  const { resetRegistrarEstatus, registrarUsuario, registrarStatus } = useUsuario();
+  const { resetRegistrarEstatus, registrarUsuario, fritriUser , registrarStatus } = useUsuario();
 
   const [modal, setModal] = useState<
     'gender' | 'country' | undefined
@@ -165,6 +165,10 @@ const Register = () => {
       agreed: registration.agreed,
     }));
   }, [registration, setIsValid]);
+
+  useEffect(() => {
+    handleUser(fritriUser!);
+  }, [fritriUser]);
 
   useEffect(() => {
     if (registrarStatus === RegistrationStatus.Success) {

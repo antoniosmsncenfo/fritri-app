@@ -274,9 +274,8 @@ const Profile = () => {
   return (
     <Block safe>
       <Block paddingHorizontal={sizes.s}>
-        <Block flex={0} gradient={gradients.primary} style={{ zIndex: 0, height: sizes.height * 0.3 }}>
-
-            <Block flex={0} align="center">
+        <Block flex={0} gradient={gradients.primary} style={{ zIndex: 0, height: sizes.height * 0.3 }} radius={sizes.sm}>
+            <Block flex={0} align="center" marginTop={sizes.sm}>
               <Image
                 width={120}
                 height={120}
