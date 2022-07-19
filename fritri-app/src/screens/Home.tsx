@@ -2,6 +2,7 @@ import React, {useCallback, useState} from 'react';
 
 import {useData, useTheme, useTranslation} from '../hooks/';
 import {Block, Button, Image, Input, Product, Text} from '../components/';
+import { useNavigation } from '@react-navigation/native';
 
 const Home = () => {
   const {t} = useTranslation();
@@ -9,6 +10,7 @@ const Home = () => {
   const {following, trending} = useData();
   const [products, setProducts] = useState(following);
   const {assets, colors, fonts, gradients, sizes} = useTheme();
+  const navigation = useNavigation();
 
   const handleProducts = useCallback(
     (tab: number) => {
@@ -94,6 +96,22 @@ const Home = () => {
           ))}
         </Block>
       </Block>
+      <Block row align="flex-end" bottom={20} onTouchEnd={()=> navigation.navigate('NewTrip')}>
+            <Block
+              flex={0}
+              radius={6}
+              align="center"
+              justify="center"
+              marginRight={sizes.s}
+              width={sizes.socialIconSize}
+              height={sizes.socialIconSize}
+              gradient={gradients?.[tab === 0 ? 'primary' : 'secondary']}>
+              <Image source={assets.register} color={colors.white} radius={0} />
+            </Block>
+            <Text p font={fonts?.[tab === 0 ? 'medium' : 'normal']}>
+              New trip
+            </Text>
+          </Block>
     </Block>
   );
 };
