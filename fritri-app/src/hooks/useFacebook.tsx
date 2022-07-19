@@ -15,7 +15,9 @@ export const useFacebook = () => {
         let request = {
           method: 'post',
           url: `${USUARIOS_BASE_URL}/login-terceros`,
-          headers: {},
+          headers: {
+            'Content-Type': 'application/json',
+          },
           data: fritriUser,
         };
         const resultado = await axios(request);
@@ -40,7 +42,7 @@ export const useFacebook = () => {
         appId: FACEBOOK_APP_ID,
       });
       const resultadoLogin = await Facebook.logInWithReadPermissionsAsync({
-        permissions: ['public_profile'],
+        permissions: ['public_profile', 'email'],
       });
       const { type } = resultadoLogin;
       if (type === 'success') {
@@ -68,6 +70,7 @@ export const useFacebook = () => {
   const facebookLogout = () => {
     setIsFritriUserFacebookLogged(false);
     setFritriUser(null);
+    setFritriUserIdDb(null);
   };
 
   return {
