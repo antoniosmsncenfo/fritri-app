@@ -147,7 +147,6 @@ const Profile = () => {
 
 
   const handleUpdateData = useCallback(() => {
-  
     if (!Object.values(isValid).includes(false)) {
       let userToUpdate: IUsuario = {
         id: user._id,
@@ -262,7 +261,8 @@ const Profile = () => {
         [
           {
             text: 'OK', onPress: () => {
-              navigation.navigate('Home');
+              resetRegistrarEstatus();
+              navigation.navigate('Profile');
             },
           },
         ],
@@ -300,6 +300,8 @@ const Profile = () => {
             <Block flex={0} align="center"
               onTouchEnd={showImagePicker}
             >
+        <Block flex={0} gradient={gradients.primary} style={{ zIndex: 0, height: sizes.height * 0.3 }} radius={sizes.sm}>
+            <Block flex={0} align="center" marginTop={sizes.sm}>
               <Image
                 width={120}
                 height={120}
