@@ -99,15 +99,15 @@ const Profile = () => {
     email: regex.email.test(registration.email || ''),
     password: true,
     confirmPassword: true,
-    gender: registration.gender!==undefined,
-    country: registration.country!==undefined,
+    gender: registration.gender !== undefined,
+    country: registration.country !== undefined,
   });
 
   const [gender, setGender] = useState(GENDER_TYPES['1']);
 
   const [country, setCountry] = useState(COUNTRIES['1']);
 
-  const { resetRegistrarEstatus, updateUsuario, usuarioFriTri, fritriUser, registrarStatus } = useUsuario();
+  const { resetRegistrarEstatus, updateUsuario, usuarioFriTri, fritriUser, registrarStatus, updateUsuarioFoto } = useUsuario();
 
 
   const [modal, setModal] = useState<
@@ -141,53 +141,13 @@ const Profile = () => {
 
     if (!result.cancelled) {
       setPickedImagePath(result.uri);
-      const resultImg = await uploadImageAsync(result.uri);
-
-
+      await updateUsuarioFoto(result.uri, user?._id!);
     }
-  }
-  const changeImgen = (urlFoto: string) => {
-     
-     handleUser({ ...user, urlFoto });
-    
-  }
-   
-  const uploadImageAsync = async (uri: any) => {
-    changeImgen(uri);
-    let apiUrl = 'http://192.168.1.2:3000/subir-imagen';
-    let uriParts = uri.split('.');
-    let fileType = uriParts[uriParts.length - 1];
-
-    let formData = new FormData();
-    formData.append('imagen', {
-      uri,
-      name: `imagen.${fileType}`,
-      type: `imagen/${fileType}`,
-    });
-
-    let config = {
-      method: 'post',
-      url: apiUrl,
-      data: formData,
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-
-      },
-
-    };
-    // console.log(apiUrl, options);
-    const result = await axios(config)
-    console.log(result.data);
-    return result.data;
-
   }
 
 
   const handleUpdateData = useCallback(() => {
-    console.log("isValid: " + JSON.stringify(isValid));
-    console.log("user: " + JSON.stringify(user));
-    console.log("registration: " + JSON.stringify(registration));
+  
     if (!Object.values(isValid).includes(false)) {
       let userToUpdate: IUsuario = {
         id: user._id,
@@ -289,8 +249,8 @@ const Profile = () => {
       ...state,
       name: regex.name.test(registration.name),
       email: regex.email.test(registration.email),
-      gender: registration.gender!==undefined,
-      country: registration.country!==undefined,   
+      gender: registration.gender !== undefined,
+      country: registration.country !== undefined,
     }));
   }, [registration, setIsValid]);
 
@@ -379,27 +339,27 @@ const Profile = () => {
               </Text> */}
               <Block paddingHorizontal={sizes.sm}>
                 {user.tipoLogin === 'Email' &&
-                <Input
-                  autoCapitalize="none"
-                  marginBottom={sizes.m}
-                  label={t('common.name')}
-                  placeholder={t('common.namePlaceholder')}
-                  value={registration.name}
-                  success={Boolean(registration.name && isValid.name)}
-                  danger={Boolean(registration.name && !isValid.name)}
-                  onChangeText={(value) => handleChange({ name: value })}
-                />
+                  <Input
+                    autoCapitalize="none"
+                    marginBottom={sizes.m}
+                    label={t('common.name')}
+                    placeholder={t('common.namePlaceholder')}
+                    value={registration.name}
+                    success={Boolean(registration.name && isValid.name)}
+                    danger={Boolean(registration.name && !isValid.name)}
+                    onChangeText={(value) => handleChange({ name: value })}
+                  />
                 }
                 {user.tipoLogin !== 'Email' &&
-                <Input
-                  disabled={true}
-                  autoCapitalize="none"
-                  marginBottom={sizes.m}
-                  label={t('common.name')}
-                  placeholder={t('common.namePlaceholder')}
-                  value={registration.name}
-                />
-                }                
+                  <Input
+                    disabled={true}
+                    autoCapitalize="none"
+                    marginBottom={sizes.m}
+                    label={t('common.name')}
+                    placeholder={t('common.namePlaceholder')}
+                    value={registration.name}
+                  />
+                }
                 <Input
                   disabled={true}
                   autoCapitalize="none"
@@ -442,8 +402,8 @@ const Profile = () => {
                   onPress={handleUpdateData}
                   marginVertical={sizes.s}
                   gradient={gradients.primary}
-                  //disabled={Object.values(isValid).includes(false)}
-                  >
+                //disabled={Object.values(isValid).includes(false)}
+                >
                   <Text bold white transform="uppercase">
                     {t('common.changeData')}
                   </Text>
@@ -454,8 +414,8 @@ const Profile = () => {
                   outlined
                   shadow={!isAndroid}
                   marginVertical={sizes.s}
-                  //disabled={Object.values(isValid).includes(false)}
-                  >
+                //disabled={Object.values(isValid).includes(false)}
+                >
                   <Text bold danger transform="uppercase">
                     {t('common.logOut')}
                   </Text>
