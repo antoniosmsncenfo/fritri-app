@@ -23,6 +23,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { EmailsService } from './emails.service';
 import { ActualizarContrasenaDto } from './dto/actualizar-contrasena';
 import { CloudinaryService } from '../common/services/cloudinary.service';
+import { ICloudinary } from 'src/common/interface/cloudinary';
 
 @Injectable()
 export class UsuariosService {
@@ -336,4 +337,27 @@ export class UsuariosService {
     }
     return resultado;
   }
+
+  async actualizarFotoPerfil(imagen, idUsuario: string): Promise<Usuario> {
+    let resultadoUsuario;
+    const resultadoNoExiste = {
+      message: 'No existe usuario',
+      statusCode: 404,
+    };
+    try {
+      resultadoUsuario = await this.usuarioModel.findOne({_id: idUsuario});
+      if(!resultadoUsuario) {
+        resultadoNoExiste;
+      }
+      let resultadoImagen:ICloudinary = await this.cloudinaryService.subirImagen(imagen);
+      resultadoUsuario.urlFoto = resultadoImagen.secure_url;
+      await resultadoUsuario.save();
+    } catch (error) {
+      throw new BadRequestException(
+        `Error al tratar de actualizar la imagen de perfil del usuario::${error.message}`,
+      );
+    }
+    return this.eliminarPropiedades(resultadoUsuario.toObject());
+  }
+
 }
