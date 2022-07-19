@@ -103,9 +103,16 @@ const Login = () => {
     signInWithGoogleAsync();
   };
 
+  const loginFacebookUser = () => {
+    facebookLogout();
+    facebookLogin();
+  }
+
   useFocusEffect(
     React.useCallback(() => {
       emailLogout();
+      googleLogout();
+      facebookLogout();
       setIsValid({
         email: false,
         password: false,
@@ -155,7 +162,7 @@ const Login = () => {
         };
       }
       handleUser(fritriFinalUser!);
-      fritriFinalUser?.pais === null ? navigation.navigate('Profile') : navigation.navigate('Home');
+      fritriFinalUser?.pais == null ? navigation.navigate('Profile') : navigation.navigate('Home');
     }
   }, [isFritriUserFacebookLogged]);
 
@@ -176,7 +183,10 @@ const Login = () => {
   return (
     <Block safe marginTop={sizes.md}>
       <Block paddingHorizontal={sizes.s}>
-        <Block flex={0} gradient={gradients.primary} style={{ zIndex: 0, height: sizes.height * 0.3 }}>
+        <Block flex={0}
+          gradient={gradients.primary}
+          style={{ zIndex: 0, height: sizes.height * 0.3 }}
+          radius={sizes.sm}>
           <Text h4 center white marginTop={sizes.l}>
             {t('login.title')}
           </Text>
@@ -207,7 +217,7 @@ const Login = () => {
               {/* social buttons */}
               <Block row center justify="space-evenly" marginVertical={sizes.m}>
                 <Button outlined gray shadow={!isAndroid}
-                  onPress={facebookLogin}
+                  onPress={loginFacebookUser}
                 >
                   <Image
                     source={assets.facebook}
