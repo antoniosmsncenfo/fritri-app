@@ -131,9 +131,6 @@ const Profile = () => {
   );
 
   const handleUpdateData = useCallback(() => {
-    console.log("isValid: " + JSON.stringify(isValid));
-    console.log("user: " + JSON.stringify(user));
-    console.log("registration: " + JSON.stringify(registration));
     if (!Object.values(isValid).includes(false)) {
       let userToUpdate: IUsuario = {
         id: user._id,
@@ -247,7 +244,8 @@ const Profile = () => {
         [
           {
             text: 'OK', onPress: () => {
-              navigation.navigate('Home');
+              resetRegistrarEstatus();
+              navigation.navigate('Profile');
             },
           },
         ],
