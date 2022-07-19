@@ -289,37 +289,52 @@ const Profile = () => {
   return (
     <Block safe>
       <Block paddingHorizontal={sizes.s}>
-        <Block flex={0} style={{ zIndex: 0 }}>
-          <Image
-            background
-            resizeMode="cover"
-            padding={sizes.sm}
-            radius={sizes.cardRadius}
-            source={assets.background}
-            height={sizes.height * 0.3}>
-            <Block flex={0} align="center"
-              onTouchEnd={showImagePicker}
-            >
-        <Block flex={0} gradient={gradients.primary} style={{ zIndex: 0, height: sizes.height * 0.3 }} radius={sizes.sm}>
-            <Block flex={0} align="center" marginTop={sizes.sm}>
-              <Image
-                width={120}
-                height={120}
-                radius={100}
-                source={{ uri: (user.urlFoto ? user.urlFoto : (user.genero === 'Man' ? FotoUsuario.Hombre : FotoUsuario.Mujer)) }}
-              />
-            </Block>
-
-          </Image>
-
+        <Block 
+          flex={0}
+          gradient={gradients.primary}
+          style={{zIndex: 0, height: sizes.height * 0.3}}
+          radius={sizes.sm}>
+          {user.tipoLogin === 'Email' ?
+              <Block
+                flex={0}
+                align="center"
+                marginTop={sizes.sm}
+                onTouchEnd={showImagePicker}>
+                <Image
+                  width={120}
+                  height={120}
+                  radius={100}
+                  source={{
+                    uri: user.urlFoto
+                      ? user.urlFoto
+                      : user.genero === 'Man'
+                      ? FotoUsuario.Hombre
+                      : FotoUsuario.Mujer,
+                  }}
+                />
+              </Block>
+            :
+              <Block flex={0} align="center" marginTop={sizes.sm}>
+                <Image
+                  width={120}
+                  height={120}
+                  radius={100}
+                  source={{
+                    uri: user.urlFoto
+                      ? user.urlFoto
+                      : user.genero === 'Man'
+                      ? FotoUsuario.Hombre
+                      : FotoUsuario.Mujer,
+                  }}
+                />
+              </Block>
+          }
         </Block>
         {/* register form */}
         <Block
-
           keyboard
           behavior={!isAndroid ? 'padding' : 'height'}
           marginTop={-(sizes.height * 0.17 - sizes.l)}>
-
           <Block
             flex={0}
             radius={sizes.sm}
@@ -327,7 +342,6 @@ const Profile = () => {
             shadow={!isAndroid} // disabled shadow on Android due to blur overlay + elevation issue
           >
             <Block
-
               blur
               flex={0}
               intensity={150}
@@ -336,9 +350,6 @@ const Profile = () => {
               justify="space-evenly"
               tint={colors.blurTint}
               paddingVertical={sizes.sm}>
-              {/* <Text p semibold center>
-                {t('register.subtitleUpdate')}
-              </Text> */}
               <Block paddingHorizontal={sizes.sm}>
                 {user.tipoLogin === 'Email' &&
                   <Input
@@ -404,7 +415,6 @@ const Profile = () => {
                   onPress={handleUpdateData}
                   marginVertical={sizes.s}
                   gradient={gradients.primary}
-                //disabled={Object.values(isValid).includes(false)}
                 >
                   <Text bold white transform="uppercase">
                     {t('common.changeData')}
@@ -416,19 +426,16 @@ const Profile = () => {
                   outlined
                   shadow={!isAndroid}
                   marginVertical={sizes.s}
-                //disabled={Object.values(isValid).includes(false)}
                 >
                   <Text bold danger transform="uppercase">
                     {t('common.logOut')}
                   </Text>
                 </Button>
-
               </Block>
             </Block>
           </Block>
         </Block>
       </Block>
-
       <Modal
         visible={Boolean(modal)}
         onRequestClose={() => setModal(undefined)}>
@@ -454,4 +461,3 @@ const Profile = () => {
   );
 };
 export default Profile;
-
