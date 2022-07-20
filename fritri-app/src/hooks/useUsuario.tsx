@@ -32,6 +32,7 @@ export const useLogin = () => {
                     setFritriUser(null);
                 }
                 else if ('tipoLogin' in resultado.data) {
+                    setLoginStatus(LoginStatus.Valid);
                     setFritriUser(resultado.data);
                 }
 

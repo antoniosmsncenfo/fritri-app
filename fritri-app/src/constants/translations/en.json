@@ -178,7 +178,8 @@
     "passwordError": "Something went wrong!",
     "errorMessage": "Please try again. If problem persists, please contact customer support.",
     "errorPassword": "Please check the passwords!",
-    "errorNewPassword": "Change password error"
+    "errorNewPassword": "Change password error",
+    "errorCurrentMessage": "The current password is incorrect."    
   },   
   "settings": {
     "recommended": {

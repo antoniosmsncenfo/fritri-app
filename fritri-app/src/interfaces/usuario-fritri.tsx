@@ -22,5 +22,5 @@ export interface IUsuarioContrasena {
 export enum LoginStatus {
     New = 'NEW',
     InvalidMail = 'INVALID',
-  
+    Valid = 'VALID'
   }
