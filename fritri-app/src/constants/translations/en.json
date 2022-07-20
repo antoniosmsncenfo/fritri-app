@@ -1,5 +1,7 @@
 {
   "common": {
+    "selectImg": "Select image",
+
     "appDetails": "App Details",
     "appName": "App name",
     "appVersion": "App version",
@@ -82,6 +84,7 @@
     "articles": "Articles",
     "rental": "Rental",
     "profile": "Profile",
+    "textImg": "You've refused to allow this appp to access your photos!",
     "settings": "Settings",
     "register": "Create account",
     "extra": "Extra - Automotive",
