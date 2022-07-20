@@ -15,7 +15,7 @@ Aplicación móvil para la creación de paseos de manera automática que se pued
 - Permitir a los usuarios ejercer su opinión por medio de votos de lo que se quiere hacer o planear en el viaje.
 - Permitir a los usuarios la creación de itinerarios de un paseo, los cuales están compuestos por lugar de destino, actividades a visitar y restaurantes; cada uno de estos clasificados según el rango de precios.
 
-###Instalación
+### Instalación
 - Ejecutar  el comando **npm i**  en las siguientes carpetas posicionandose en ellas en la terminal:
 ![image](https://user-images.githubusercontent.com/37186965/180086999-b7ef6f23-8625-4540-b159-e3846f62c068.png)      ![image](https://user-images.githubusercontent.com/37186965/180087138-4d756df1-113e-4bd6-9567-48df787c8b0d.png)
 
