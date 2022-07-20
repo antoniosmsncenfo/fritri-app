@@ -133,7 +133,9 @@ const Profile = () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert("You've refused to allow this appp to access your photos!");
+     alert(
+        t('profile.textImg')
+      );
       return;
     }
 
