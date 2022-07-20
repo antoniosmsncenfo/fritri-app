@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { IUsuario, ILogin } from '../constants/types/index';
 import { USUARIOS_BASE_URL } from '@env';
 import { IUsuarioContrasena, IUsuarioFritri, LoginStatus } from '../interfaces/usuario-fritri';
-import { guardarUsuarioFriTri, resetearPassword, cambiarPassword, updateUsuarioFriTri } from '../api/usuarioDB';
+import { guardarUsuarioFriTri, resetearPassword, cambiarPassword, updateUsuarioFriTri,updateFoto } from '../api/usuarioDB';
 import { RegistrationStatus, ResetPasswordStatus } from '../interfaces/registro-usuario';
 
 export const useLogin = () => {
@@ -25,9 +25,7 @@ export const useLogin = () => {
                 headers: {},
                 data: usuarioLogin,
             };
-
             const resultado = await axios(request);
-
             if (resultado.status === 200) {
                 if (resultado.data.statusCode === 404) {
                     setLoginStatus(LoginStatus.InvalidMail);
@@ -114,12 +112,29 @@ export const useUsuario = () => {
 			}
     };
 
+    const updateUsuarioFoto = async (uri: any,idUsuario:string) => {
+        let uriParts = uri.split('.');
+        let fileType = uriParts[uriParts.length - 1];
+        let formData = new FormData();
+        formData.append('imagen', {
+            uri,
+            name: `imagen.${fileType}`,
+            type: `imagen/${fileType}`,
+        });
+        formData.append('idUsuario',idUsuario);
+        const resulFoto = await updateFoto(formData);
+        setFritriUser(resulFoto);
+        
+    }
+
+
     return {
         resetRegistrarEstatus,
         registrarUsuario,
         updateUsuario,
         usuarioFriTri,
-				fritriUser,
+        fritriUser,
+        updateUsuarioFoto,
         registrarStatus,
     };
 

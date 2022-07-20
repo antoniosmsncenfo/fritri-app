@@ -49,6 +49,29 @@ export const updateUsuarioFriTri = async (usuarioActualizado: IUsuario) => {
         throw e;
     }
 };
+export const updateFoto = async (formData: any) => {
+    try {
+        let config = {
+            method: 'post',
+            url: `${USUARIOS_BASE_URL}/actualizar-imagen-perfil`,
+            data: formData,
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+
+        };
+        const resultado = await axios(config);
+        if (resultado.status === 200) {
+            return resultado.data;
+        }
+        else {
+            return null;
+        }
+    }
+    catch (e) {
+        throw e;
+    }
+};
 
 export const guardarUsuarioFriTri = async (usuarioNuevo: IUsuario) => {
     let request = {
