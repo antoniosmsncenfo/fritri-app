@@ -86,9 +86,10 @@ export const useUsuario = () => {
     const registrarUsuario = (usuarioNuevo: IUsuario) => {
 
         guardarUsuarioFriTri(usuarioNuevo)
-            .then((result: IUsuario) => {
+            .then((result) => {
                 if (result !== null) {
                     setUsuarioFriTri(result);
+                    setFritriUser(result);
                     setRegistrarStatus(RegistrationStatus.Success);
                 }
             })
