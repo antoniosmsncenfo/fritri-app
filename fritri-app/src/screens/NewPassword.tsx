@@ -23,6 +23,7 @@ interface INewPassword {
 const NewPassword = () => {
 
   const { user } = useData();
+  console.log(user);
   const { t } = useTranslation();
   const navigation = useNavigation();
 
@@ -125,7 +126,6 @@ const NewPassword = () => {
             {t('newPassword.title')}
           </Text>
         </Block>
-        {/* register form */}
         <Block
           keyboard
           behavior={!isAndroid ? 'padding' : 'height'}
@@ -148,11 +148,24 @@ const NewPassword = () => {
               <Block
                 paddingHorizontal={sizes.sm}
                 paddingTop={sizes.sm}>
+                {user.tipoLogin==='Email' &&
                 <Input
                   secureTextEntry
                   autoCapitalize="none"
                   marginBottom={sizes.m}
-                  label={t('common.password')}
+                  label={t('common.currentPassword')}
+                  rules={t('register.passwordRules')}
+                  placeholder={t('common.currentPasswordPlaceholder')}
+                  onChangeText={(value) => handleChange({ newPassword: value })}
+                  success={Boolean(passwordState.newPassword && isValid.passwordValidation)}
+                  danger={Boolean(passwordState.newPassword && !isValid.passwordValidation)}
+                />
+                }                  
+                <Input
+                  secureTextEntry
+                  autoCapitalize="none"
+                  marginBottom={sizes.m}
+                  label={t('common.newPassword')}
                   rules={t('register.passwordRules')}
                   placeholder={t('common.passwordPlaceholder')}
                   onChangeText={(value) => handleChange({ newPassword: value })}
