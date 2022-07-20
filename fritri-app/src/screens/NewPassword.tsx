@@ -10,11 +10,13 @@ import { ResetPasswordStatus } from '../interfaces/registro-usuario';
 const isAndroid = Platform.OS === 'android';
 
 interface INewPasswordValidation {
+  currentValidation: boolean;
   passwordValidation: boolean;
   passwordConfirmationValidation: boolean;
 }
 
 interface INewPassword {
+  currentPassword: string;
   newPassword: string;
   newPasswordConfirmation: string;
   status: ResetPasswordStatus;
@@ -23,16 +25,17 @@ interface INewPassword {
 const NewPassword = () => {
 
   const { user } = useData();
-  console.log(user);
   const { t } = useTranslation();
   const navigation = useNavigation();
 
   const [isValid, setIsValid] = useState<INewPasswordValidation>({
+    currentValidation: false,
     passwordValidation: false,
     passwordConfirmationValidation: false,
   });
 
   const [passwordState, setPasswordState] = useState<INewPassword>({
+    currentPassword: '',
     newPassword: '',
     newPasswordConfirmation: '',
     status: ResetPasswordStatus.Pending,
@@ -76,11 +79,22 @@ const NewPassword = () => {
   }, [isValid, changePassword]);
 
   useEffect(() => {
-    setIsValid((state) => ({
-      ...state,
-      passwordValidation: regex.password.test(passwordState.newPassword),
-      passwordConfirmationValidation: passwordState.newPassword === passwordState.newPasswordConfirmation,
-    }));
+    if(user.tipoLogin==='Email'){
+      setIsValid((state) => ({
+        ...state,
+        currentValidation: regex.password.test(passwordState.currentPassword),
+        passwordValidation: regex.password.test(passwordState.newPassword),
+        passwordConfirmationValidation: passwordState.newPassword === passwordState.newPasswordConfirmation,
+      }));
+    }
+    else{
+      setIsValid((state) => ({
+        ...state,
+        currentValidation: true,
+        passwordValidation: regex.password.test(passwordState.newPassword),
+        passwordConfirmationValidation: passwordState.newPassword === passwordState.newPasswordConfirmation,
+      }));
+    }
   }, [passwordState, setIsValid]);
 
   useEffect(() => {
@@ -156,9 +170,9 @@ const NewPassword = () => {
                   label={t('common.currentPassword')}
                   rules={t('register.passwordRules')}
                   placeholder={t('common.currentPasswordPlaceholder')}
-                  onChangeText={(value) => handleChange({ newPassword: value })}
-                  success={Boolean(passwordState.newPassword && isValid.passwordValidation)}
-                  danger={Boolean(passwordState.newPassword && !isValid.passwordValidation)}
+                  onChangeText={(value) => handleChange({ currentPassword: value })}
+                  success={Boolean(passwordState.currentPassword && isValid.currentValidation)}
+                  danger={Boolean(passwordState.currentPassword && !isValid.currentValidation)}
                 />
                 }                  
                 <Input
