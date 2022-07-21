@@ -1,5 +1,7 @@
 {
   "common": {
+    "selectImg": "Select image",
+
     "appDetails": "App Details",
     "appName": "App name",
     "appVersion": "App version",
@@ -33,8 +35,11 @@
     "country": "Country",
     "avatar": "Picture",
     "password": "Password",
+    "currentPassword": "Current password",
+    "currentPasswordPlaceholder": "Enter your current password",
+    "newPassword": "New password",    
     "passwordPlaceholder": "Enter a password",
-    "confirmPassword": "Confirm Password",    
+    "confirmPassword": "Confirm new password",    
     "confirmPasswordPlaceholder": "Enter the same password",
     "agree": "I agree with the ",
     "terms": "Terms and Conditions",
@@ -79,6 +84,7 @@
     "articles": "Articles",
     "rental": "Rental",
     "profile": "Profile",
+    "textImg": "You've refused to allow this appp to access your photos!",
     "settings": "Settings",
     "register": "Create account",
     "extra": "Extra - Automotive",
@@ -173,8 +179,9 @@
     "checkEmail": "Please login with your new password.",
     "passwordError": "Something went wrong!",
     "errorMessage": "Please try again. If problem persists, please contact customer support.",
-    "errorPassword": "Please check the password!",
-    "errorNewPassword": "Change password error"
+    "errorPassword": "Please check the passwords!",
+    "errorNewPassword": "Change password error",
+    "errorCurrentMessage": "The current password is incorrect."    
   },   
   "settings": {
     "recommended": {
