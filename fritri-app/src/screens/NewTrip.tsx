@@ -1,23 +1,99 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { FlatList } from 'react-native';
 
-import { useTheme, useTranslation } from '../hooks';
-import { Block, Button, Input, Text } from '../components';
+import { useData, useTheme, useTranslation } from '../hooks';
+import { Block, Button, Input, Text, Image, Article } from '../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { locale } from 'dayjs';
+import dayjs from 'dayjs';
+import { ITheme } from '../constants/types/theme';
+import { IArticle } from '../constants/types';
+import { useNavigation } from '@react-navigation/native';
+
+
+interface ITouchableInput {
+  icon: keyof ITheme['assets'];
+  label?: string;
+  value?: number | string;
+  onPress?: () => void;
+}
+
+const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
+  const { assets, colors, sizes } = useTheme();
+
+  return (
+    <Button
+      align="flex-start"
+      marginBottom={sizes.sm}
+      onPress={() => onPress?.()}>
+      <Text bold marginBottom={sizes.s}>
+        {label}
+      </Text>
+      <Block
+        row
+        gray
+        outlined
+        width="100%"
+        align="center"
+        radius={sizes.inputRadius}
+        height={sizes.inputHeight}>
+        <Image
+          radius={0}
+          color={colors.primary}
+          source={assets?.[icon]}
+          marginHorizontal={sizes.inputPadding}
+        />
+        <Text p black>
+          {value}
+        </Text>
+      </Block>
+    </Button>
+  );
+};
+
+const RentalHeader = () => {
+  const { t } = useTranslation();
+  const { colors } = useTheme();
+  return (
+    <>
+      <Block>
+        <Text h5 semibold color={colors.primary}>
+          Destinos
+        </Text>
+      </Block>
+    </>
+  );
+};
 
 const NewTrip = () => {
   const { t } = useTranslation();
-  const { colors, sizes, gradients } = useTheme();
+  const { sizes, gradients } = useTheme();
   const [notFound, setNotFound] = useState(false);
   const [search, setSearch] = useState('');
+  const [recommendations, setRecommendations] = useState<IArticle[]>([]);
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(false);
+  const data = useData();
+  const { handleArticle } = data;
+  const navigation = useNavigation();
+
+  // init recommendations list
+  useEffect(() => {
+    setRecommendations(data?.recommendations);
+  }, [data?.recommendations]);
+
+  const handleRental = useCallback(
+    (article: IArticle) => {
+      handleArticle(article);
+      navigation.navigate('Rental');
+    },
+    [handleArticle, navigation],
+  );
 
   const handleSearch = useCallback(() => {
     setNotFound(true);
   }, [setNotFound]);
-  const [date, setDate] = useState(new Date());
-  const [show, setShow] = useState(false);
 
-  const onChange = (event, selectedDate) => {
+  const onDateChange = (event, selectedDate: Date) => {
     const currentDate = selectedDate;
     setShow(false);
     if (selectedDate) {
@@ -28,29 +104,32 @@ const NewTrip = () => {
   return (
     <Block
       scroll
+      nestedScrollEnabled
       showsVerticalScrollIndicator={false}>
-      {/* search input */}
-      <Block color={colors.card} flex={0} paddingHorizontal={sizes.padding}>
+        {/* inputs */}
+      <Block
+        card
+        paddingVertical={sizes.m}
+        paddingHorizontal={sizes.m}
+        margin={sizes.sm}>
         <Input
           label="Trip name"
           returnKeyType="done"
           marginBottom={sizes.sm}
           placeholder="Name for the trip"
         />
-        <Input
+        <TouchableInput
+          icon="calendar"
           label="Trip date"
-          value={date.toLocaleDateString()}
-          marginBottom={sizes.sm}
-          placeholder="Name for the trip"
-          onTouchEnd={() => setShow(true)}
-          editable={false}
+          value={dayjs(date).format('DD-MM-YYYY')}
+          onPress={() => setShow(true)}
         />
         {show && (
           <DateTimePicker
             testID="dateTimePicker"
             value={date}
             mode={'date'}
-            onChange={onChange}
+            onChange={onDateChange}
             minimumDate={new Date()}
           />
         )}
@@ -59,14 +138,18 @@ const NewTrip = () => {
           search
           returnKeyType="search"
           placeholder={t('common.search')}
-          marginBottom={sizes.sm}
           onFocus={() => setNotFound(false)}
           onSubmitEditing={() => handleSearch()}
           onChangeText={(text) => setSearch(text)}
+          marginBottom={sizes.sm}
         />
-        <Text h4 gradient={gradients.primary} end={[0.7, 0]}>
-          {t('extras.title1')}
-        </Text>
+
+        <Button gradient={gradients.primary} onPress={() => handleSearch()}>
+          <Text white semibold transform="uppercase">
+            Buscar destinos
+          </Text>
+        </Button>
+
       </Block>
 
       {/* not found */}
@@ -84,6 +167,20 @@ const NewTrip = () => {
           </Text>
         </Block>
       )}
+
+      {/* rentals list */}
+      <FlatList
+        data={recommendations}
+        // stickyHeaderIndices={[0]}
+        showsHorizontalScrollIndicator={false}
+
+        keyExtractor={(item) => `${item?.id}`}
+        style={{ paddingVertical: sizes.padding }}
+        contentContainerStyle={{ paddingBottom: sizes.l }}
+        renderItem={({ item }) => (
+          <Article {...item} onPress={() => handleRental(item)} />
+        )}
+      />
     </Block>
   );
 };
