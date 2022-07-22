@@ -102,16 +102,17 @@ const NewTrip = () => {
   };
 
   return (
-    <Block
-      scroll
-      nestedScrollEnabled
-      showsVerticalScrollIndicator={false}>
-        {/* inputs */}
+    <Block      >
+      {/* inputs */}
       <Block
+        keyboard
+        nestedScrollEnabled
+        showsVerticalScrollIndicator={false}
         card
         paddingVertical={sizes.m}
         paddingHorizontal={sizes.m}
-        margin={sizes.sm}>
+        margin={sizes.sm}
+        flex={1}>
         <Input
           label="Trip name"
           returnKeyType="done"
@@ -151,36 +152,36 @@ const NewTrip = () => {
         </Button>
 
       </Block>
-
-      {/* not found */}
-      {notFound && (
-        <Block flex={0} padding={sizes.padding}>
-          <Text p>
-            {t('rentals.notFound1')}"
-            <Text p bold>
-              {search}
+        {/* not found */}
+        {show && (
+          <Block >
+            <Text p>
+              {t('rentals.notFound1')}"
+              <Text p bold>
+                {search}
+              </Text>
+              "{t('rentals.notFound2')}
             </Text>
-            "{t('rentals.notFound2')}
-          </Text>
-          <Text p marginTop={sizes.s}>
-            {t('rentals.moreOptions')}
-          </Text>
-        </Block>
-      )}
-
-      {/* rentals list */}
-      <FlatList
-        data={recommendations}
-        // stickyHeaderIndices={[0]}
-        showsHorizontalScrollIndicator={false}
-
-        keyExtractor={(item) => `${item?.id}`}
-        style={{ paddingVertical: sizes.padding }}
-        contentContainerStyle={{ paddingBottom: sizes.l }}
-        renderItem={({ item }) => (
-          <Article {...item} onPress={() => handleRental(item)} />
+            <Text p marginTop={sizes.s}>
+              {t('rentals.moreOptions')}
+            </Text>
+          </Block>
         )}
-      />
+      <Block>
+        {/* rentals list */}
+        <FlatList
+          data={recommendations}
+          // stickyHeaderIndices={[0]}
+          showsHorizontalScrollIndicator={false}
+
+          keyExtractor={(item) => `${item?.id}`}
+          style={{ paddingVertical: sizes.m }}
+          contentContainerStyle={{ paddingBottom: sizes.m }}
+          renderItem={({ item }) => (
+            <Article {...item} onPress={() => handleRental(item)} />
+          )}
+        />
+      </Block>
     </Block>
   );
 };
