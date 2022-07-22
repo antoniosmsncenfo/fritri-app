@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useState} from 'react';
 import dayjs from 'dayjs';
 import PagerView from 'react-native-pager-view';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -123,21 +123,13 @@ const Notifications = () => {
   const {icons, colors, sizes} = useTheme();
 
   const unread = notifications?.filter(
-    (notification) => !notification?.read && notification.business,
+    (notification) => !notification?.read,
   );
   const read = notifications?.filter(
-    (notification) => notification?.read && notification.business,
+    (notification) => notification?.read,
   );
   const personal = notifications?.filter(
     (notification) => !notification.business,
-  );
-
-  const handleTab = useCallback(
-    (key) => {
-      setTab(key);
-      pagerRef.current?.setPage(key === 'business' ? 1 : 0);
-    },
-    [setTab, pagerRef],
   );
 
   return (
@@ -146,7 +138,7 @@ const Notifications = () => {
         ref={pagerRef}
         style={{flex: 1}}
         scrollEnabled={false}
-        initialPage={tab === 'business' ? 1 : 0}>
+        initialPage={1}>
         {/* person notifications */}
         <Block
           scroll
@@ -197,48 +189,6 @@ const Notifications = () => {
           )}
         </Block>
       </PagerView>
-      {/* notifications tabs */}
-      <Block safe flex={0} color={colors.card}>
-        <Block
-          row
-          flex={0}
-          align="center"
-          paddingTop={sizes.sm}
-          justify="space-evenly">
-          <Button onPress={() => handleTab('personal')}>
-            <Image
-              radius={0}
-              width={20}
-              height={20}
-              source={icons.profile}
-              color={colors[tab === 'personal' ? 'primary' : 'secondary']}
-            />
-            <Text
-              semibold
-              size={12}
-              primary={tab === 'personal'}
-              secondary={tab !== 'personal'}>
-              {t('notifications.personal')}
-            </Text>
-          </Button>
-          <Button onPress={() => handleTab('business')}>
-            <Image
-              radius={0}
-              width={20}
-              height={20}
-              source={icons.office}
-              color={colors[tab === 'business' ? 'primary' : 'secondary']}
-            />
-            <Text
-              semibold
-              size={12}
-              primary={tab === 'business'}
-              secondary={tab !== 'business'}>
-              {t('notifications.business')}
-            </Text>
-          </Button>
-        </Block>
-      </Block>
     </Block>
   );
 };

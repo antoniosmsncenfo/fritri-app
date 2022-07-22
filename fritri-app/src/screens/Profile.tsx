@@ -3,6 +3,7 @@ import { Platform, Linking, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/core';
 import { email, name } from '../constants/regex';
+import * as ImagePicker from 'expo-image-picker';
 
 import { useData, useTheme, useTranslation } from '../hooks/';
 import * as regex from '../constants/regex';
@@ -12,6 +13,8 @@ import { FlatList } from 'react-native-gesture-handler';
 import { useUsuario } from '../hooks/useUsuario';
 import { IRegistration, RegistrationStatus } from '../interfaces/registro-usuario';
 import { IUsuario } from '../constants/types/index';
+import { COUNTRIES } from '../constants/countries';
+import axios from 'axios';
 
 
 const isAndroid = Platform.OS === 'android';
@@ -21,7 +24,8 @@ interface IRegistrationValidation {
   email: boolean;
   password: boolean;
   confirmPassword: boolean;
-  agreed: boolean;
+  gender: boolean;
+  country: boolean;
 }
 
 interface ITouchableInput {
@@ -31,21 +35,6 @@ interface ITouchableInput {
   onPress?: () => void;
 }
 
-const COUNTRIES: {
-  [key: string]: string;
-} = {
-  '1': 'Costa Rica', '2': 'Nicaragua',
-  '3': 'Panamá', '4': 'Guatemala',
-  '5': 'El Salvador'
-};
-
-const options = {
-  title: 'Selecciona foto de perfil',
-  cancelButton: 'Cancelar',
-  takePhotoButtonTitle: 'Tomar Foto',
-  chooseFromLibraryButtonTitle: 'Abrir Galeria',
-  noData: true,
-};
 
 const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
   const { assets, colors, sizes } = useTheme();
@@ -75,6 +64,20 @@ const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
         <Text p gray>
           {value}
         </Text>
+        <Block
+          position='absolute'
+          marginLeft="85%"
+          align="center"
+          >
+          <Image
+              radius={0}
+              width={10}
+              height={15}
+              color={colors.icon}
+              source={assets.arrow}
+              transform={[{rotate: '90deg'}]}
+            />
+        </Block>           
       </Block>
     </Button>
   );
@@ -83,7 +86,7 @@ const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
 
 const Profile = () => {
 
-  const { user, handleUser  } = useData();
+  const { user, handleUser } = useData();
   const { t } = useTranslation();
   const navigation = useNavigation();
 
@@ -91,7 +94,7 @@ const Profile = () => {
   {
     '1': t('common.genders.woman'),
     '2': t('common.genders.man'),
-    '3': t('common.genders.other')
+    '3': t('common.genders.other'),
   };
 
   const [registration, setRegistration] = useState<IRegistration>({
@@ -102,7 +105,7 @@ const Profile = () => {
     password: '',
     confirmPassword: '',
     agreed: true,
-    status: RegistrationStatus.New
+    status: RegistrationStatus.New,
   });
 
   const [isValid, setIsValid] = useState<IRegistrationValidation>({
@@ -110,14 +113,15 @@ const Profile = () => {
     email: regex.email.test(registration.email || ''),
     password: true,
     confirmPassword: true,
-    agreed: true,
+    gender: registration.gender !== undefined,
+    country: registration.country !== undefined,
   });
 
   const [gender, setGender] = useState(GENDER_TYPES['1']);
 
   const [country, setCountry] = useState(COUNTRIES['1']);
 
-  const { resetRegistrarEstatus, updateUsuario, usuarioFriTri, fritriUser, registrarStatus } = useUsuario();
+  const { resetRegistrarEstatus, updateUsuario, usuarioFriTri, fritriUser, registrarStatus, updateUsuarioFoto } = useUsuario();
 
 
   const [modal, setModal] = useState<
@@ -135,27 +139,59 @@ const Profile = () => {
     [setRegistration],
   );
 
+  //ImagePicker
+  const [pickedImagePath, setPickedImagePath] = useState('');
+
+  const showImagePicker = async () => {
+    // Ask the user for the permission to access the media library 
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+     alert(
+        t('profile.textImg')
+      );
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync();
+
+    if (!result.cancelled) {
+      setPickedImagePath(result.uri);
+      await updateUsuarioFoto(result.uri, user?._id!);
+    }
+  }
+
+
   const handleUpdateData = useCallback(() => {
-      if (!Object.values(isValid).includes(false)) {
-        let userToUpdate: IUsuario = {
-          id: user._id,
-          tipoLogin: user.tipoLogin,
-          correoElectronico: registration.email,
-          nombreCompleto: registration.name,
-          genero: registration.gender,
-          pais: registration.country,
-        }
-        if(user.idTerceros) {
-          userToUpdate = {
-            ...userToUpdate,
-            idTerceros: user.idTerceros
-          }
-        }
-        try {
-          updateUsuario(userToUpdate);
-        }catch(error) {
-        
-        }
+    if (!Object.values(isValid).includes(false)) {
+      let userToUpdate: IUsuario = {
+        id: user._id,
+        tipoLogin: user.tipoLogin,
+        correoElectronico: registration.email,
+        nombreCompleto: registration.name,
+        genero: registration.gender,
+        pais: registration.country,
+      };
+      if (user.idTerceros) {
+        userToUpdate = {
+          ...userToUpdate,
+          idTerceros: user.idTerceros,
+        };
+      }
+      try {
+        updateUsuario(userToUpdate);
+
+      } catch (error) {
+
+      }
+    }
+    else {
+      Alert.alert(
+        t('profile.updateError'),
+        t('profile.fieldsError'),
+        [{ text: 'OK' }],
+        { cancelable: false }
+      );
     }
   }, [isValid, registration]);
 
@@ -182,18 +218,11 @@ const Profile = () => {
       t('common.logOutConfirmT'),
       t('common.logOutConfirmC'),
       [
-        {text: 'Yes', onPress: () =>  navigation.navigate('Login')},
-        {text: 'No', onPress: () =>  ('No button clicked'), style: 'cancel'},
+        { text: 'Yes', onPress: () => navigation.navigate('Login') },
+        { text: 'No', onPress: () => ('No button clicked'), style: 'cancel' },
       ],
-      // [
-      //   {
-      //     text: 'OK', onPress: () => {
-      //       navigation.navigate('Login');
-      //     },
-      //   }
-      // ],
       {
-        cancelable: false
+        cancelable: false,
       }
     );
   };
@@ -212,46 +241,49 @@ const Profile = () => {
       password: '',
       confirmPassword: '',
       agreed: true,
-      status: RegistrationStatus.New
+      status: RegistrationStatus.New,
     });
 
     setIsValid((state) => ({
       ...state,
       name: regex.name.test(registration.name),
       email: regex.email.test(registration.email),
+      gender: registration.gender!==undefined,
+      country: registration.country!==undefined,
     }));
-  }, [])
+  }, []);
 
   useEffect(() => {
-    if(fritriUser) {
-      handleUser(fritriUser!)
+    if (fritriUser) {
+      handleUser(fritriUser!);
     }
-  }, [fritriUser])
+  }, [fritriUser]);
 
   useEffect(() => {
     setIsValid((state) => ({
       ...state,
       name: regex.name.test(registration.name),
       email: regex.email.test(registration.email),
+      gender: registration.gender !== undefined,
+      country: registration.country !== undefined,
     }));
-    console.log('');
   }, [registration, setIsValid]);
 
   useEffect(() => {
     if (registrarStatus === RegistrationStatus.Success) {
       Alert.alert(
-        t('register.updateUser'),
-        t('register.titleUpdated'),
+        t('profile.updateTitle'),
+        t('profile.updateMessage'),
         [
           {
             text: 'OK', onPress: () => {
-              console.log('OK button clicked');
-              navigation.navigate('Home');
+              resetRegistrarEstatus();
+              navigation.navigate('Profile');
             },
-          }
+          },
         ],
         {
-          cancelable: false
+          cancelable: false,
         }
       );
     }
@@ -260,77 +292,72 @@ const Profile = () => {
         t('register.validation'),
         t('register.emailExists'),
         [
-          { text: 'OK' }
+          { text: 'OK' },
         ],
         {
-          cancelable: false
+          cancelable: false,
         }
       );
       resetRegistrarEstatus();
     }
-  }, [registrarStatus])
+  }, [registrarStatus]);
 
   return (
-    <Block safe marginTop={sizes.md}>
+    <Block safe>
       <Block paddingHorizontal={sizes.s}>
-        <Block flex={0} style={{ zIndex: 0 }}>
-          <Image
-            background
-            resizeMode="cover"
-            padding={sizes.sm}
-            radius={sizes.cardRadius}
-            source={assets.background}
-            height={sizes.height * 0.3}>
-            {/* <Button
-              row
-              flex={0}
-              justify="flex-start"
-              onPress={() => navigation.goBack()}>
-              <Image
-                radius={0}
-                width={10}
-                height={18}
-                color={colors.white}
-                source={assets.arrow}
-                transform={[{ rotate: '180deg' }]}
-              />
-              <Text p white marginLeft={sizes.s}>
-                {t('common.goBack')}
-              </Text>
-            </Button> */}
-
-            <Block flex={0} align="center">
-              <Image
-                width={64}
-                height={64}
-                 source={{ uri: 'https://engineering.fb.com/wp-content/uploads/2016/04/yearinreview.jpg' }}
-              />
-            </Block>
-            {/* 
-
-            <Text h4 center white marginTop={20} >
-              {t('register.title')}
-            </Text> */}
-          </Image>
-          
+        <Block 
+          flex={0}
+          gradient={gradients.primary}
+          style={{zIndex: 0, height: sizes.height * 0.3}}
+          radius={sizes.sm}>
+          {user.tipoLogin === 'Email' ?
+              <Block
+                flex={0}
+                align="center"
+                marginTop={sizes.sm}
+                onTouchEnd={showImagePicker}>
+                <Image
+                  width={120}
+                  height={120}
+                  radius={100}
+                  source={{
+                    uri: user.urlFoto
+                      ? user.urlFoto
+                      : user.genero === 'Man'
+                      ? FotoUsuario.Hombre
+                      : FotoUsuario.Mujer,
+                  }}
+                />
+              </Block>
+            :
+              <Block flex={0} align="center" marginTop={sizes.sm}>
+                <Image
+                  width={120}
+                  height={120}
+                  radius={100}
+                  source={{
+                    uri: user.urlFoto
+                      ? user.urlFoto
+                      : user.genero === 'Man'
+                      ? FotoUsuario.Hombre
+                      : FotoUsuario.Mujer,
+                  }}
+                />
+              </Block>
+          }
         </Block>
-
         {/* register form */}
-        
         <Block
-
           keyboard
           behavior={!isAndroid ? 'padding' : 'height'}
-          marginTop={-(sizes.height * 0.20 - sizes.l)}>
-
+          marginTop={-(sizes.height * 0.17 - sizes.l)}>
           <Block
             flex={0}
             radius={sizes.sm}
             marginHorizontal="8%"
             shadow={!isAndroid} // disabled shadow on Android due to blur overlay + elevation issue
-            >
+          >
             <Block
-            
               blur
               flex={0}
               intensity={150}
@@ -339,20 +366,29 @@ const Profile = () => {
               justify="space-evenly"
               tint={colors.blurTint}
               paddingVertical={sizes.sm}>
-              <Text p semibold center>
-                {t('register.subtitleUpdate')}
-              </Text>
               <Block paddingHorizontal={sizes.sm}>
-                <Input
-                  autoCapitalize="none"
-                  marginBottom={sizes.m}
-                  label={t('common.name')}
-                  placeholder={t('common.namePlaceholder')}
-                  value={registration.name}
-                  success={Boolean(registration.name && isValid.name)}
-                  danger={Boolean(registration.name && !isValid.name)}
-                  onChangeText={(value) => handleChange({ name: value })}
-                />
+                {user.tipoLogin === 'Email' &&
+                  <Input
+                    autoCapitalize="none"
+                    marginBottom={sizes.m}
+                    label={t('common.name')}
+                    placeholder={t('common.namePlaceholder')}
+                    value={registration.name}
+                    success={Boolean(registration.name && isValid.name)}
+                    danger={Boolean(registration.name && !isValid.name)}
+                    onChangeText={(value) => handleChange({ name: value })}
+                  />
+                }
+                {user.tipoLogin !== 'Email' &&
+                  <Input
+                    disabled={true}
+                    autoCapitalize="none"
+                    marginBottom={sizes.m}
+                    label={t('common.name')}
+                    placeholder={t('common.namePlaceholder')}
+                    value={registration.name}
+                  />
+                }
                 <Input
                   disabled={true}
                   autoCapitalize="none"
@@ -377,134 +413,51 @@ const Profile = () => {
                   label={t('common.country')}
                   onPress={() => setModal('country')}
                 />
-                <Button
-                  primary
-                  outlined
-                  onPress={handlePasswordChange}
-                  shadow={!isAndroid}
-                  marginVertical={sizes.s}
-                  marginHorizontal={sizes.sm}
-                  disabled={Object.values(isValid).includes(false)}>
-                  <Text bold primary transform="uppercase">
-                    {t('common.changePass')}
-                  </Text>
-                </Button>
+                {user.tipoLogin === 'Email' &&
+                  <Button
+                    primary
+                    outlined
+                    onPress={handlePasswordChange}
+                    shadow={!isAndroid}
+                    marginVertical={sizes.s}
+                    disabled={Object.values(isValid).includes(false)}>
+                    <Text bold primary transform="uppercase">
+                      {t('common.changePass')}
+                    </Text>
+                  </Button>
+                }
+
                 <Button
                   onPress={handleUpdateData}
                   marginVertical={sizes.s}
-                  marginHorizontal={sizes.sm}
                   gradient={gradients.primary}
-                  disabled={Object.values(isValid).includes(false)}>
+                >
                   <Text bold white transform="uppercase">
                     {t('common.changeData')}
                   </Text>
                 </Button>
                 <Button
                   onPress={emailLogout}
-                  tertiary
+                  danger
                   outlined
                   shadow={!isAndroid}
                   marginVertical={sizes.s}
-                  marginHorizontal={sizes.sm}
-                  disabled={Object.values(isValid).includes(false)}>
-                  <Text bold primary transform="uppercase">
+                >
+                  <Text bold danger transform="uppercase">
                     {t('common.logOut')}
                   </Text>
                 </Button>
-
-                {/* 
-              <Text bold marginBottom={sizes.s}>
-                {t('common.gender')}
-              </Text>                
-              <Button
-                row
-                flex={1}
-                gradient={gradients.primary}
-                //marginRight={sizes.s}
-                //onPress={() => onQTY?.()}
-                marginBottom={sizes.s}
-                >
-                <Block
-                  row
-                  align="center"
-                  justify="space-between"
-                  paddingHorizontal={sizes.sm}>
-                  <Text bold white transform="uppercase" marginRight={sizes.sm}>
-                    {registration.gender}
-                  </Text>
-                  <Image
-                    source={assets.arrow}
-                    color={colors.white}
-                    transform={[{rotate: '90deg'}]}
-                  />
-                </Block>
-              </Button>                 */}
-                {/* <Input
-                secureTextEntry
-                autoCapitalize="none"
-                marginBottom={sizes.m}
-                label={t('common.password')}
-                rules={t('register.emailRules')}
-                placeholder={t('common.passwordPlaceholder')}
-                // value ={user?.contrasena}
-
-                onChangeText={(value) => handleChange({password: value})}
-                success={Boolean(registration.password && isValid.password)}
-                danger={Boolean(registration.password && !isValid.password)}
-              />
-              <Input
-                secureTextEntry
-                autoCapitalize="none"
-                marginBottom={sizes.m}
-                label={t('common.confirmPassword')}
-                rules={t('register.emailRules')}
-                placeholder={t('common.confirmPasswordPlaceholder')}
-                onChangeText={(value) => handleChange({confirmPassword: value})}
-                success={Boolean(registration.confirmPassword && isValid.confirmPassword)}
-                danger={Boolean(registration.confirmPassword && !isValid.confirmPassword)}
-              />                 */}
               </Block>
-              {/* checkbox terms */}
-              {/* <Block row flex={0} align="center" paddingHorizontal={sizes.sm}>
-              <Checkbox
-                marginRight={sizes.sm}
-                checked={registration?.agreed}
-                onPress={(value) => handleChange({agreed: value})}
-              />
-              <Text paddingRight={sizes.s}>
-                {t('common.agree')}
-                <Text
-                  semibold
-                  onPress={() => {
-                    Linking.openURL('https://www.creative-tim.com/terms');
-                  }}>
-                  {t('common.terms')}
-                </Text>
-              </Text>
-            </Block> */}
-
-              {/* <Button
-              primary
-              outlined
-              shadow={!isAndroid}
-              marginVertical={sizes.s}
-              marginHorizontal={sizes.sm}
-              onPress={() => navigation.navigate('Login')}>
-              <Text bold primary transform="uppercase">
-                {t('common.signin')}
-              </Text>
-            </Button> */}
             </Block>
           </Block>
         </Block>
       </Block>
-
       <Modal
         visible={Boolean(modal)}
         onRequestClose={() => setModal(undefined)}>
         <FlatList
           keyExtractor={(index) => `${index}`}
-          data={modal === 'gender' ? [1, 2, 3] : [1, 2, 3, 5]}
+          data={modal === 'gender' ? [1, 2, 3] : Object.keys(COUNTRIES).map(x => Number(x))}
           renderItem={({ item }) => (
             <Button
               marginBottom={sizes.sm}
@@ -524,4 +477,3 @@ const Profile = () => {
   );
 };
 export default Profile;
-

@@ -86,44 +86,9 @@ export const FOLLOWING: IProduct[] = [
   {
     id: 1,
     type: 'vertical',
-    title: 'Unique activities with local experts.',
+    title: 'Paseo a Puerto Viejo 2022',
     image:
-      'https://images.unsplash.com/photo-1604998103924-89e012e5265a?fit=crop&w=450&q=80',
-  },
-  {
-    id: 2,
-    type: 'vertical',
-    title: 'The highest status people.',
-    image:
-      'https://images.unsplash.com/photo-1563492065599-3520f775eeed?fit=crop&w=450&q=80',
-  },
-  {
-    id: 3,
-    type: 'horizontal',
-    title: 'Experiences and things to do wherever you are.',
-    image:
-      'https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?fit=crop&w=450&q=80',
-  },
-  {
-    id: 4,
-    type: 'vertical',
-    title: 'Get more followers and grow.',
-    image:
-      'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?fit=crop&w=450&q=80',
-  },
-  {
-    id: 5,
-    type: 'vertical',
-    title: 'New ways to meet your business goals.',
-    image:
-      'https://images.unsplash.com/photo-1497215728101-856f4ea42174?fit=crop&w=450&q=80',
-  },
-  {
-    id: 6,
-    type: 'horizontal',
-    title: 'Adventures - Multi day trips with meals and stays.',
-    image:
-      'https://images.unsplash.com/photo-1468078809804-4c7b3e60a478?fit=crop&w=450&q=80',
+      'https://lh3.googleusercontent.com/places/AKR5kUjb2sWEAnv_Xk5GAJJtJI20MzeK8wT1LlZZJW2dq_mnLl7lbsXBEzrmTx4CLwb_lXB-ZJf2U-amxpbveg-8sIefzoHgsBKlNNQ=s1600-w640-h480',
   },
 ];
 
@@ -131,38 +96,31 @@ export const FOLLOWING: IProduct[] = [
 export const TRENDING: IProduct[] = [
   {
     id: 1,
-    type: 'horizontal',
-    title: 'Experiences and things to do wherever you are.',
+    type: 'vertical',
+    title: 'Paseo a Puerto Viejo 2019',
     image:
-      'https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?fit=crop&w=450&q=80',
+      'https://lh3.googleusercontent.com/places/AKR5kUjb2sWEAnv_Xk5GAJJtJI20MzeK8wT1LlZZJW2dq_mnLl7lbsXBEzrmTx4CLwb_lXB-ZJf2U-amxpbveg-8sIefzoHgsBKlNNQ=s1600-w640-h480',
   },
   {
     id: 2,
     type: 'vertical',
-    title: 'The highest status people.',
+    title: 'Paseo a Flamingo 2019',
     image:
-      'https://images.unsplash.com/photo-1563492065599-3520f775eeed?fit=crop&w=450&q=80',
+      'https://lh3.googleusercontent.com/places/AKR5kUhwi1QmDB9OkGrD1kf1u3TQTPRaAiT_f2Pks8druC3_rzVgJnGzcTHBbQFhYE0rwj6bxAY3nTslRUjXLsHShu7qwYdmzqTikcg=s1600-w640-h480',
   },
   {
     id: 3,
     type: 'vertical',
-    title: 'Unique activities with local experts.',
+    title: 'Paseo a Playa Conchal 2018',
     image:
-      'https://images.unsplash.com/photo-1604998103924-89e012e5265a?fit=crop&w=450&q=80',
+      'https://lh3.googleusercontent.com/places/AKR5kUjDAuGmdK4mtqKSzScYQ7CpIySdwUTw5s0yzh_qHiuq-0Sq0cfGe6SIcJDABjC0-Y3SGUeh3cUSnL9s1EETdphhjUvZTmamEEM=s1600-w640-h480',
   },
   {
     id: 4,
     type: 'vertical',
-    title: 'Adventures - Multi day trips with meals and stays.',
+    title: 'Paseo a Playa Uvita 2018',
     image:
-      'https://images.unsplash.com/photo-1468078809804-4c7b3e60a478?fit=crop&w=450&q=80',
-  },
-  {
-    id: 5,
-    type: 'vertical',
-    title: 'New ways to meet your business goals.',
-    image:
-      'https://images.unsplash.com/photo-1497215728101-856f4ea42174?fit=crop&w=450&q=80',
+      'https://lh3.googleusercontent.com/places/AKR5kUj4vOYmvzOIielEJYnJazi6hFr6GLM-Yi2Jd3pT1pBFCyQzxDpNopVfmD9TO-s_XMPYB50J-6xtZ-86sojuPyIJiypP0BsUghg=s1600-w640-h480',
   },
 ];
 
@@ -608,97 +566,52 @@ export const BASKET: IBasket = {
 export const NOTIFICATIONS: INotification[] = [
   {
     id: 1,
-    subject: 'New Message',
-    message: 'You have a new message from the owner.',
-    type: 'document',
-    business: true,
+    subject: 'New trip',
+    message: 'Enrique has invited you to Paseo mediados de año',
+    type: 'notification',
     read: false,
     createdAt: dayjs().subtract(2, 'h').toDate(),
   },
   {
     id: 2,
-    subject: 'New Order',
-    message: 'A confirmed request by one client.',
-    type: 'extras',
-    business: true,
+    subject: 'New trip',
+    message: 'Enrique has invited you to Paseo mediados de año',
+    type: 'notification',
     read: false,
     createdAt: dayjs().subtract(4, 'h').toDate(),
   },
   {
     id: 3,
-    subject: 'New Likes',
-    message: 'Your posts have been liked by 2,342.',
+    subject: 'Update from trip',
+    message: 'Owner has added new restaurant',
     type: 'notification',
-    business: true,
-    read: true,
+    read: false,
     createdAt: dayjs().subtract(6, 'h').toDate(),
   },
   {
     id: 4,
-    subject: 'Last Message',
-    message: 'Your posts have been liked by 2,342.',
-    type: 'document',
-    business: true,
-    read: true,
+    subject: 'Update from trip',
+    message: 'Owner has added new restaurant',
+    type: 'notification',
+    read: false,
     createdAt: dayjs().subtract(2, 'd').toDate(),
   },
   {
     id: 5,
-    subject: 'Check your profile',
-    message: 'Your profile has new updates.',
-    type: 'profile',
-    business: true,
+    subject: 'Update from trip',
+    message: 'Owner has added new restaurant',
+    type: 'notification',
     read: true,
     createdAt: dayjs().subtract(3, 'd').toDate(),
   },
   {
     id: 6,
-    subject: 'Product Update',
-    message: 'Your product has been updated',
-    type: 'documentation',
-    business: true,
+    subject: 'Update from trip',
+    message: 'Owner has added new tourist attraction',
+    type: 'notification',
     read: true,
     createdAt: dayjs().subtract(2, 'w').toDate(),
-  },
-  {
-    id: 7,
-    subject: 'Last Message',
-    message: 'Your posts have been liked by 2,342.',
-    type: 'document',
-    business: true,
-    read: true,
-    createdAt: dayjs().subtract(3, 'w').toDate(),
-  },
-  {
-    id: 8,
-    subject: 'Learn new things',
-    message:
-      'Like so many organizations these days, Autodesk is a company in transition. It was until recently.',
-    type: 'document',
-    business: false,
-    read: false,
-    createdAt: dayjs().subtract(2, 'h').toDate(),
-  },
-  {
-    id: 9,
-    subject: 'Give your best',
-    message:
-      'The time is now for it to be okay to be great. People in this world shun people for being great. For being a bright color.',
-    type: 'payment',
-    business: false,
-    read: false,
-    createdAt: dayjs().subtract(9, 'h').toDate(),
-  },
-  {
-    id: 10,
-    subject: 'Come and meet us',
-    message:
-      'Technology is applied science. Science is the study of nature. Mathematics is the language of nature.',
-    type: 'office',
-    business: false,
-    read: false,
-    createdAt: dayjs().subtract(12, 'h').toDate(),
-  },
+  }
 ];
 
 export default {

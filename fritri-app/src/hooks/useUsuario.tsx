@@ -1,35 +1,29 @@
-import axios from "axios";
+import axios from 'axios';
 import { useState } from 'react';
 import { IUsuario, ILogin } from '../constants/types/index';
 import { USUARIOS_BASE_URL } from '@env';
 import { IUsuarioContrasena, IUsuarioFritri, LoginStatus } from '../interfaces/usuario-fritri';
-import { guardarUsuarioFriTri, resetearPassword, cambiarPassword, updateUsuarioFriTri } from "../api/usuarioDB";
+import { guardarUsuarioFriTri, resetearPassword, cambiarPassword, updateUsuarioFriTri,updateFoto } from '../api/usuarioDB';
 import { RegistrationStatus, ResetPasswordStatus } from '../interfaces/registro-usuario';
 
 export const useLogin = () => {
-    const [usuarioLogin, setUsuarioLogin] = useState<ILogin>({
-        correoElectronico: '',
-        contrasena: '',
-    })
 
     const [fritriUser, setFritriUser] = useState<IUsuarioFritri | null>(null);
     const [LoginMailStatus, setLoginStatus] = useState<LoginStatus>(
         LoginStatus.New
-    )
+    );
 
     const resetLoginEstatus = () => {
         setLoginStatus(LoginStatus.New);
-    }
+    };
 
     const loginUsuarioEmail = async (usuarioLogin: ILogin) => {
-
         try {
-
             let request = {
                 method: 'post',
                 url: `${USUARIOS_BASE_URL}/login-email`,
                 headers: {},
-                data: usuarioLogin
+                data: usuarioLogin,
             };
             const resultado = await axios(request);
             if (resultado.status === 200) {
@@ -38,6 +32,7 @@ export const useLogin = () => {
                     setFritriUser(null);
                 }
                 else if ('tipoLogin' in resultado.data) {
+                    setLoginStatus(LoginStatus.Valid);
                     setFritriUser(resultado.data);
                 }
 
@@ -49,8 +44,10 @@ export const useLogin = () => {
                 setFritriUser(null);
             }
         } catch (error) {
+            setFritriUser(null);
         }
-    }
+    };
+
     const emailLogout = () => {
         setFritriUser(null);
     };
@@ -60,10 +57,10 @@ export const useLogin = () => {
         emailLogout,
         LoginMailStatus,
         resetLoginEstatus,
-        fritriUserEmail: fritriUser
-    }
+        fritriUserEmail: fritriUser,
+    };
 
-}
+};
 
 export const useUsuario = () => {
 
@@ -81,51 +78,69 @@ export const useUsuario = () => {
 
     const [registrarStatus, setRegistrarStatus] = useState<RegistrationStatus>(
         RegistrationStatus.New
-    )
+    );
 
     const resetRegistrarEstatus = () => {
         setRegistrarStatus(RegistrationStatus.New);
-    }
+    };
 
     const registrarUsuario = (usuarioNuevo: IUsuario) => {
 
         guardarUsuarioFriTri(usuarioNuevo)
-            .then((result: IUsuario) => {
+            .then((result) => {
                 if (result !== null) {
                     setUsuarioFriTri(result);
+                    setFritriUser(result);
                     setRegistrarStatus(RegistrationStatus.Success);
                 }
             })
             .catch((e) => {
-                if (e.response.data.message === "Error al tratar de crear el usuario-email::Email duplicado") {
+                if (e.response.data.message === 'Error al tratar de crear el usuario-email::Email duplicado') {
                     setRegistrarStatus(RegistrationStatus.Duplicated);
                 }
             }
             );
-    }
+    };
     const updateUsuario = async (usuarioActualizado: IUsuario) => {
 			try {
 				let result = await updateUsuarioFriTri(usuarioActualizado);
-				if(result) {
+				if (result) {
 					setUsuarioFriTri(result);
 					setFritriUser(result);
 					setRegistrarStatus(RegistrationStatus.Success);
 				}
-			} catch(error) {
+			} catch (error) {
 			}
+    };
+
+    const updateUsuarioFoto = async (uri: any,idUsuario:string) => {
+        let uriParts = uri.split('.');
+        let fileType = uriParts[uriParts.length - 1];
+        let formData = new FormData();
+        formData.append('imagen', {
+            uri,
+            name: `imagen.${fileType}`,
+            type: `imagen/${fileType}`,
+        });
+        formData.append('idUsuario',idUsuario);
+        const resulFoto = await updateFoto(formData);
+        setFritriUser(resulFoto);
+        
     }
+
 
     return {
         resetRegistrarEstatus,
         registrarUsuario,
         updateUsuario,
         usuarioFriTri,
-				fritriUser,
+        fritriUser,
+        updateUsuarioFoto,
         registrarStatus,
-    }
+    };
 
 
-}
+};
 
 export const usePassword = () => {
 
@@ -137,15 +152,15 @@ export const usePassword = () => {
         nombreCompleto: '',
         genero: '',
         pais: '',
-    })
+    });
 
     const [resetPasswordResult, setResetPasswordResult] = useState<ResetPasswordStatus>(
         ResetPasswordStatus.Pending
-    )
+    );
 
     const restartResetPasswordStatus = () => {
         setResetPasswordResult(ResetPasswordStatus.Pending);
-    }
+    };
 
     const resetPassword = (emailUsuario: string) => {
 
@@ -160,26 +175,26 @@ export const usePassword = () => {
             }
             );
 
-    }
+    };
 
     return {
         restartResetPasswordStatus,
         resetPassword,
         usuarioFriTri,
-        resetPasswordResult
-    }
+        resetPasswordResult,
+    };
 
-}
+};
 
 export const useChangePassword = () => {
 
     const [changePasswordResult, setChangePasswordResult] = useState<ResetPasswordStatus>(
         ResetPasswordStatus.Pending
-    )
+    );
 
     const restartChangePasswordStatus = () => {
         setChangePasswordResult(ResetPasswordStatus.Pending);
-    }
+    };
 
     const changePassword = (usuarioContrasena: IUsuarioContrasena) => {
 
@@ -194,12 +209,11 @@ export const useChangePassword = () => {
             }
             );
 
-    }
+    };
 
     return {
         restartChangePasswordStatus,
         changePassword,
-        changePasswordResult
-    }
-
-}
+        changePasswordResult,
+    };
+};

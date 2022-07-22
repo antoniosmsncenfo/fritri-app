@@ -33,7 +33,7 @@ const Modal = ({
       <Block justify="flex-end">
         <Block safe card flex={0} color="rgba(0,0,0,0.8)">
           <Button
-            top={0}
+            top={50}
             right={0}
             position="absolute"
             onPress={() => onRequestClose?.()}>

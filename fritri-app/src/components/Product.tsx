@@ -41,13 +41,13 @@ const Product = ({image, title, type, linkLabel}: IProduct) => {
           <Block row flex={0} align="center">
             <Text
               p
-              color={colors.link}
+              color={colors.primary}
               semibold
               size={sizes.linkSize}
               marginRight={sizes.s}>
-              {linkLabel || t('common.readArticle')}
+              {linkLabel || t('common.details')}
             </Text>
-            <Image source={assets.arrow} color={colors.link} />
+            <Image source={assets.arrow} color={colors.primary} />
           </Block>
         </TouchableOpacity>
       </Block>

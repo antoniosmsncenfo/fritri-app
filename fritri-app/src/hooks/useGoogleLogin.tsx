@@ -50,7 +50,6 @@ export const useGoogleLogin = () => {
                 setIsLogged(false);
             }
         } catch (e) {
-            console.log(JSON.stringify(e, null, 2));
             setIsLogged(false);
         }
     }

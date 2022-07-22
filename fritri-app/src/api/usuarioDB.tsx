@@ -2,7 +2,6 @@ import axios from 'axios';
 import { IUsuarioDeTerceros } from '../interfaces/usuario-facebook';
 import { IUsuario } from '../constants/types/index';
 import { USUARIOS_BASE_URL } from '@env';
-import { MESSSAGES } from '../constants/mocks';
 import { IUsuarioContrasena } from '../interfaces/usuario-fritri';
 
 
@@ -24,7 +23,6 @@ export const guardarUsuarioTerceros = async (usuarioTercero: IUsuarioDeTerceros)
         }
     }
     catch (e) {
-        console.log('API usuario error:',JSON.stringify(e.message, null, 2));
         return null;
     }
 };
@@ -34,10 +32,35 @@ export const updateUsuarioFriTri = async (usuarioActualizado: IUsuario) => {
         let request = {
             method: 'put',
             url: `${USUARIOS_BASE_URL}/actualizar-usuario`,
-            headers: {},
+            headers: {
+                'Content-Type': 'application/json',
+            },
             data: usuarioActualizado,
         };
         const resultado = await axios(request);
+        if (resultado.status === 200) {
+            return resultado.data;
+        }
+        else {
+            return null;
+        }
+    }
+    catch (e) {
+        throw e;
+    }
+};
+export const updateFoto = async (formData: any) => {
+    try {
+        let config = {
+            method: 'post',
+            url: `${USUARIOS_BASE_URL}/actualizar-imagen-perfil`,
+            data: formData,
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+
+        };
+        const resultado = await axios(config);
         if (resultado.status === 200) {
             return resultado.data;
         }
@@ -113,5 +136,5 @@ export const cambiarPassword = async (usuarioContrasena:IUsuarioContrasena) => {
     catch (e) {
         throw e;
     }
-   
+
 };
