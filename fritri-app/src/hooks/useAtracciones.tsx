@@ -2,50 +2,56 @@ import axios from 'axios';
 import { useState } from 'react';
 import { ATRACCION_BASE_URL } from '@env';
 
-export const useLogin = () => {
+export const useAtracciones = () => {
 
-    const buscarAtracciones = async () => {
+    const buscarAtracciones = async (formData: any) => {
         try {
-            let request = {
+            let config = {
                 method: 'post',
                 url: `${ATRACCION_BASE_URL}/buscar-atracciones-turisticas`,
-                headers: {},
-                //data: atracciones,
+                data: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+    
             };
-            const resultado = await axios(request);
+            const resultado = await axios(config);
             if (resultado.status === 200) {
-
-
+                return resultado.data;
             }
-            else if (resultado.data.statusCode === 404) {
-
+            else {
+                return null;
             }
-
-
-
-        } catch (error) {
+        }
+        catch (e) {
+            throw e;
         }
     };
-
-    const obtenerAtracciones = async () => {
+ 
+     const obtenerAtracciones = async (idAtraccion: any) => {
         try {
-            let request = {
+            let config = {
                 method: 'get',
                 url: `${ATRACCION_BASE_URL}/obtener-atraccion-turistica`,
-                headers: {},
-                //data: atracciones,
+                data: idAtraccion,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+    
             };
-            const resultado = await axios(request);
+            const resultado = await axios(config);
             if (resultado.status === 200) {
-
-
+                return resultado.data;
             }
-            else if (resultado.data.statusCode === 404) {
-
+            else {
+                return null;
             }
-        } catch (error) {
+        }
+        catch (e) {
+            throw e;
         }
     };
+
 
 
     return {

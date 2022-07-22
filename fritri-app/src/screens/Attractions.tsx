@@ -1,9 +1,10 @@
 import React, {useCallback, useState} from 'react';
-
 import {useData, useTheme, useTranslation} from '../hooks';
 import {Block, Button, Image, Input, Product, Text} from '../components';
+import { useAtracciones } from '../hooks/useAtracciones';
 
 const Attractions = () => {
+  const { buscarAtracciones, obtenerAtracciones } = useAtracciones();
   const {t} = useTranslation();
   const [tab, setTab] = useState<number>(0);
   const {following, trending} = useData();
