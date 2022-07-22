@@ -26,6 +26,7 @@ import {
 } from '../screens';
 
 import {useScreenOptions, useTranslation} from '../hooks';
+import Attractions from '../screens/Attractions';
 
 const Stack = createStackNavigator();
 
@@ -118,6 +119,11 @@ export default () => {
         name="About"
         component={About}
         options={{title: t('navigation.about'), ...screenOptions.back}}
+      />
+      <Stack.Screen
+        name="Attractions"
+        component={Attractions}
+        options={{title: t('navigation.home'), ...screenOptions.back}}
       />
       <Stack.Screen
         name="Privacy"

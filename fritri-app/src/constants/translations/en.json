@@ -93,6 +93,7 @@
   },
   "navigation": {
     "home": "FriTri",
+    "attractions": "Attractions",
     "components": "Components",
     "articles": "Soft UI",
     "rentals": "Soft UI",
@@ -118,6 +119,8 @@
   "home": {
     "title": "FriTri",
     "pending": "Pending",
+    "Attractions": "Attractions",
+
     "completed": "Completed"
   },
   "extras": {
