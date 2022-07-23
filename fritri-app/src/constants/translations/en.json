@@ -37,9 +37,9 @@
     "password": "Password",
     "currentPassword": "Current password",
     "currentPasswordPlaceholder": "Enter your current password",
-    "newPassword": "New password",    
+    "newPassword": "New password",
     "passwordPlaceholder": "Enter a password",
-    "confirmPassword": "Confirm new password",    
+    "confirmPassword": "Confirm new password",
     "confirmPasswordPlaceholder": "Enter the same password",
     "agree": "I agree with the ",
     "terms": "Terms and Conditions",
@@ -69,7 +69,7 @@
       "woman": "Woman",
       "man": "Man",
       "other": "Other"
-    }    
+    }
   },
   "app": {
     "name": "FriTri",
@@ -143,9 +143,9 @@
     "validation": "Validation error",
     "emailExists": "Email already exists.",
     "passwordRules": "At least one digit.\nAt least one lower case.\nAt least one upper case.\nAt least 6 from the mentioned characters.",
-    "subtitleUpdate" : "Update your profile",
-    "updateUser" : "Update confirmation",
-    "titleUpdated" : "Your profile was updated successfully.",
+    "subtitleUpdate": "Update your profile",
+    "updateUser": "Update confirmation",
+    "titleUpdated": "Your profile was updated successfully.",
     "registerError": "Register error",
     "errorPassword": "Please check the password!",
     "fieldsError": "Please check the fields!"
@@ -170,7 +170,7 @@
     "checkEmail": "Please check your inbox/spam folder, and use the temporary password to login.",
     "passwordError": "Something went wrong!",
     "errorMessage": "Please try again. If problem persists, please contact customer support."
-  }, 
+  },
   "newPassword": {
     "title": "Change password",
     "subtitle": "Please enter your new password",
@@ -181,8 +181,8 @@
     "errorMessage": "Please try again. If problem persists, please contact customer support.",
     "errorPassword": "Please check the passwords!",
     "errorNewPassword": "Change password error",
-    "errorCurrentMessage": "The current password is incorrect."    
-  },   
+    "errorCurrentMessage": "The current password is incorrect."
+  },
   "settings": {
     "recommended": {
       "title": "Recommended Settings",
@@ -233,10 +233,10 @@
     "followers": "Followers",
     "following": "Following",
     "aboutMe": "About me",
-    "updateError" : "Update error",
-    "fieldsError" : "Please check the fields!",
-    "updateTitle" : "Update confirmation",
-    "updateMessage" : "Your profile was updated successfully."
+    "updateError": "Update error",
+    "fieldsError": "Please check the fields!",
+    "updateTitle": "Update confirmation",
+    "updateMessage": "Your profile was updated successfully."
   },
   "notifications": {
     "title": "Notifications",
@@ -252,5 +252,32 @@
       "zero": "Cart subtotal (0 items)"
     },
     "alsoShopped": "Customers who shopped for items in your cart also shopped for"
+  },
+  "newTrip": {
+    "tripName": "Trip name",
+    "tripNamePlaceHolder": "Trip name",
+    "tripDate": "Trip date",
+    "destination": "Destination",
+    "destinationPlaceHolder": "Search",
+    "searchDestination": "Search destination",
+    "useGps": "Use GPS to find nearby destinations",
+    "restaurants": "Restaurants",
+    "notFound1": "We didn’t find ",
+    "notFound2": " as destination.",
+    "moreOptions": "Please try to be more specific.",
+    "random": "Random"
+  },
+  "destination": {
+    "select": "Select",
+    "view": "View",
+    "tripDate": "Trip date",
+    "destination": "Destination",
+    "destinationPlaceHolder": "Search",
+    "searchDestination": "Search destination",
+    "useGps": "Use GPS to find nearby destinations",
+    "restaurants": "Restaurants",
+    "notFound1": "We didn’t find ",
+    "notFound2": " as destination.",
+    "moreOptions": "Please try to be more specific."
   }
 }

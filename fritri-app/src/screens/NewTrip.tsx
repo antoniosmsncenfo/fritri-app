@@ -2,13 +2,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 
 import { useData, useTheme, useTranslation } from '../hooks';
-import { Block, Button, Input, Text, Image, Article, Checkbox } from '../components';
+import { Block, Button, Input, Text, Image, Checkbox } from '../components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import dayjs from 'dayjs';
 import { ITheme } from '../constants/types/theme';
 import { IArticle } from '../constants/types';
 import { useNavigation } from '@react-navigation/native';
-import Destiny from '../components/Destiny';
+import Destination from '../components/Destination';
 import { IDestino } from '../interfaces/destino';
 
 
@@ -25,7 +25,7 @@ const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
   return (
     <Button
       align="flex-start"
-      marginBottom={sizes.sm}
+      marginBottom={sizes.s}
       onPress={() => onPress?.()}>
       <Text bold marginBottom={sizes.s}>
         {label}
@@ -102,6 +102,16 @@ const NewTrip = () => {
         'pais': 'México',
         'urlFoto': 'https://lh3.googleusercontent.com/places/AKR5kUhQKB6LvJhD5sx3E5mv583PN4H7VikM71ZHLJD56c-aXUCzwmfRJjXbUFuDnNugrjxD8-7RNOakWOlpA4-9nyPvBQwzEFbDB1I=s1600-w640-h480',
       },
+      {
+        'idGoogle': 'ChIJQeeiKAlWp48R67ZYZuZYfns',
+        'descripcion': 'Tortuguero, Limón, Costa Rica',
+        'latitud': 10.5424838,
+        'longitud': -83.50235520000001,
+        'nombre': 'Tortuguero, Limón, Costa Rica',
+        'estado': 'Limón',
+        'pais': 'Costa Rica',
+        'urlFoto': 'https://lh3.googleusercontent.com/places/AKR5kUjBB_3ZuzZl-UAHHnUFhfNHZkMeQvPRi-aED8qe1SirSX6THe6hUQChwDnVe1jA9yGOBDqCrutISm9mEtFz-aUTD8LhU6dYhZM=s1600-w640-h480',
+      },
     ]);
   }, []);
 
@@ -134,18 +144,18 @@ const NewTrip = () => {
       {/* inputs */}
       <Block
         card
-        paddingVertical={sizes.m}
-        paddingHorizontal={sizes.m}>
+        paddingVertical={sizes.sm}
+        paddingHorizontal={sizes.sm}>
         <Input
-          label="Trip name"
+          label={t('newTrip.tripName')}
           icon="star"
           returnKeyType="done"
-          marginBottom={sizes.sm}
-          placeholder="Name for the trip"
+          marginBottom={sizes.s}
+          placeholder={t('newTrip.tripNamePlaceHolder')}
         />
         <TouchableInput
           icon="calendar"
-          label="Trip date"
+          label={t('newTrip.tripDate')}
           value={dayjs(date).format('DD-MM-YYYY')}
           onPress={() => setShow(true)}
         />
@@ -161,10 +171,10 @@ const NewTrip = () => {
         {!useGps &&
           (<Block>
             <Input
-              label="Destination"
+              label={t('newTrip.destination')}
               search
               returnKeyType="search"
-              placeholder={t('common.search')}
+              placeholder={t('newTrip.searchDestination')}
               onFocus={() => setNotFound(false)}
               onSubmitEditing={() => handleSearch()}
               onChangeText={(text) => setSearch(text)}
@@ -173,56 +183,64 @@ const NewTrip = () => {
             <Button
               gradient={gradients.primary}
               onPress={() => handleSearch()}
-              marginBottom={sizes.sm}>
+              marginBottom={sizes.s}>
               <Text white semibold transform="uppercase">
-                Buscar destinos
+                {t('newTrip.searchDestination')}
               </Text>
             </Button>
           </Block>)}
 
         <Block row flex={0} align="center" >
           <Checkbox marginRight={sizes.sm} onPress={(check) => (setuseGps(check))} />
-          <Text bold paddingRight={sizes.s}>Usar gps</Text>
+          <Text bold paddingRight={sizes.s}>{t('newTrip.useGps')}</Text>
         </Block>
 
       </Block>
       {/* not found */}
-      {show && (
-        <Block >
+      {notFound && (
+        <Block flex={0} paddingHorizontal={sizes.padding} paddingTop={sizes.padding}>
           <Text p>
-            {t('rentals.notFound1')}"
+            {t('newTrip.notFound1')}"
             <Text p bold>
               {search}
             </Text>
-            "{t('rentals.notFound2')}
+            "{t('newTrip.notFound2')}
           </Text>
           <Text p marginTop={sizes.s}>
-            {t('rentals.moreOptions')}
+            {t('newTrip.moreOptions')}
           </Text>
         </Block>
       )}
-      <Block>
-        {/* rentals list */}
-        <FlatList
-          data={destinos}
-          // stickyHeaderIndices={[0]}
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          keyExtractor={(item) => `${item?.idGoogle}`}
-          style={{ paddingVertical: sizes.m }}
-          contentContainerStyle={{ paddingBottom: sizes.m }}
-          renderItem={({ item }) => (
-            <Destiny {...item} onPress={() => handleRental(item)} />
-          )}
-        />
-      </Block>
-      <Block card>
-        {<Button gradient={gradients.primary} onPress={() => handleSearch()}>
-          <Text white semibold transform="uppercase">
-            Restaurantes
-          </Text>
-        </Button>}
-      </Block>
+      {!notFound && (
+        <Block>
+          {/* rentals list */}
+          <FlatList
+            data={destinos}
+            // stickyHeaderIndices={[0]}
+            showsHorizontalScrollIndicator={false}
+            horizontal
+            keyExtractor={(item) => `${item?.idGoogle}`}
+            style={{ paddingVertical: sizes.s }}
+            renderItem={({ item }) => (
+              <Destination destino={item}/>
+            )}
+          />
+
+          <Block row justify="space-between" paddingTop={sizes.s} paddingBottom={sizes.m}>
+            <Button flex={1} paddingRight={sizes.s} gradient={gradients.primary} onPress={() => handleSearch()}>
+              <Text white semibold transform="uppercase">
+                {t('newTrip.restaurants')}
+              </Text>
+            </Button>
+            <Button flex={1} gradient={gradients.primary} onPress={() => handleSearch()}>
+              <Text white semibold transform="uppercase">
+                {t('newTrip.random')}
+              </Text>
+            </Button>
+          </Block>
+        </Block>
+
+      )}
     </Block>
   );
 };
