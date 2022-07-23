@@ -272,15 +272,6 @@
   },
   "destination": {
     "select": "Select",
-    "view": "View",
-    "tripDate": "Trip date",
-    "destination": "Destination",
-    "destinationPlaceHolder": "Search",
-    "searchDestination": "Search destination",
-    "useGps": "Use GPS to find nearby destinations",
-    "restaurants": "Restaurants",
-    "notFound1": "We didn’t find ",
-    "notFound2": " as destination.",
-    "moreOptions": "Please try to be more specific."
+    "view": "View"    
   }
 }
