@@ -36,6 +36,7 @@ export class UsuariosController {
   }
 
   @Get('resetPassword')
+  @HttpCode(200)
   async resetPassword(@Query('email') email: string): Promise<Usuario | NoUsuario> {
     return this.usuariosService.resetPassword(email);
   }
