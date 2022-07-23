@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, UsePi
 import { PaseosService } from './paseos.service';
 import { CrearPaseoDto } from './dto/crear-paseo.dto';
 import { ActualizarPaseoDto } from './dto/actualizar-paseo.dto';
+import { Paseo } from './schemas/paseos.schema';
 
 @Controller('paseos')
 export class PaseosController {
@@ -18,6 +19,13 @@ export class PaseosController {
   @HttpCode(200)
   async obtener(@Param('idPaseo') idPaseo: string) {
     return await this.paseosService.obtener(idPaseo);
+  }
+
+  @Get('obtener-paseos-completados')
+  async findEmail(
+    @Query('idCreador') idCreador: string, 
+    @Query('limite') limite: number): Promise<Paseo[]> {
+    return this.paseosService.obtenerPaseosCompletados(idCreador,limite);
   }
 
   @Put('actualizar-paseo')

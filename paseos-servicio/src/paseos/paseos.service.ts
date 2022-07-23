@@ -46,6 +46,30 @@ export class PaseosService {
     return resultadoPaseo;
   }
 
+  async obtenerPaseosCompletados(idCreador: string, limite: number) {
+    let resultadoPaseo = null;
+    let today = new Date();
+    today.setHours(0,0,0,0);
+
+    console.log(today);
+
+    try {
+      resultadoPaseo = await this.paseoModel.find({
+        idCreador: idCreador,
+        fechaPaseo: {$lt: today},
+        eliminado: false},
+        null,
+        {limit:limite}
+      ).exec();
+
+      console.log(resultadoPaseo);
+
+    } catch(error) {
+      throw new BadRequestException(`Error al tratar de obtener los paseos completados::${error.message}`);
+    }
+    return resultadoPaseo;
+  }  
+
   async actualizar(actualizarPaseoDto: ActualizarPaseoDto): Promise<Paseo> {
     let resultadoPaseo = null;
     let resultado;
