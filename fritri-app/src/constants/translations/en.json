@@ -120,7 +120,8 @@
   "home": {
     "title": "FriTri",
     "pending": "Pending",
-    "completed": "Completed"
+    "completed": "Completed",
+    "new": "New trip"
   },
   "extras": {
     "title1": "Want to try before",
