@@ -218,6 +218,13 @@ export class UsuariosService {
       message: 'No existe usuario',
       statusCode: 404,
     };
+    let resetLimiteTiempo = {
+      message: 'Solicitud de password temporal no permitida debido a límite de tiempo',
+      limit: process.env.TEMP_PASS_EMAIL_LIMIT,
+      wait: 0,
+      statusCode: 405,
+    };
+
     try {
       //Esperar el resultado de la busqueda de usuario por email
       const resultadoUsuario = await this.usuarioModel
@@ -227,6 +234,20 @@ export class UsuariosService {
         //si no lo encontró retorna que no existe un usuario
         return resultadoNoExiste;
       } else {
+        //Como si se encontró un usuario con ese correo, se procede a validar si se generó una
+        //contraseña temporal dentro del límite de tiempo permitido.
+        if(resultadoUsuario.fechaContrasenaTemporal){
+          const limite = parseInt(process.env.TEMP_PASS_EMAIL_LIMIT);
+          const enviado = resultadoUsuario.fechaContrasenaTemporal;
+          const ahora = new Date();    
+          const difMinutos = Math.floor(Math.abs(ahora.getTime() - enviado.getTime()) / (1000 * 60));
+
+          if (difMinutos<limite) {
+            resetLimiteTiempo.wait = limite-difMinutos;
+            return resetLimiteTiempo;
+          }
+        }
+
         //Como si se encontró un usuario con ese correo, se procede a generar un password temporal
         const contrasenaTemporal = await GenerarContrasenaTemporalV2(
           LongitudPassword.Ocho,
@@ -252,6 +273,7 @@ export class UsuariosService {
           _id: resultadoUsuario._id,
           contrasena: resultadoUsuario.contrasena,
           contrasenaTemporal: resultadoUsuario.contrasenaTemporal,
+          fechaContrasenaTemporal: new Date(),
         });
 
         resultado = actualizado;

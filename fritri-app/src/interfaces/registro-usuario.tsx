@@ -20,5 +20,6 @@ export interface IRegistration {
     Pending = 'PENDING',
     Success = 'SUCCESS',
     WrongEmail = 'WRONG_EMAIL',
-    Error = 'ERROR'
+    Error = 'ERROR',
+    TimeLimit = 'TIME_LIMIT'
   }
