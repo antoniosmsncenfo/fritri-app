@@ -221,7 +221,7 @@ export class UsuariosService {
     try {
       //Esperar el resultado de la busqueda de usuario por email
       const resultadoUsuario = await this.usuarioModel
-        .findOne({ correoElectronico: email })
+        .findOne({ correoElectronico: email, tipoLogin: 'Email' })
         .exec();
       if (!resultadoUsuario) {
         //si no lo encontró retorna que no existe un usuario
