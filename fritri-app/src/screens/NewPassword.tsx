@@ -31,8 +31,6 @@ const NewPassword = () => {
 
   const {loginUsuarioEmail, LoginMailStatus, resetLoginEstatus} = useLogin();
 
-  console.log(LoginMailStatus);
-
   const [isValid, setIsValid] = useState<INewPasswordValidation>({
     currentValidation: false,
     passwordValidation: false,
