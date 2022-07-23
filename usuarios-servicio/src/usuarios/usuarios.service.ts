@@ -140,7 +140,7 @@ export class UsuariosService {
     try {
       //Primero se valida si existe un usuario con el correo recibido
       const resultadoUsuario: UsuarioDocument = await this.usuarioModel
-        .findOne({ correoElectronico: loginEmailDto.correoElectronico })
+        .findOne({ correoElectronico: loginEmailDto.correoElectronico, tipoLogin: 'Email' })
         .exec();
       //Si no se encontró el correo se retorna credenciales no válidas: status 404
       if (!resultadoUsuario) {
@@ -228,7 +228,7 @@ export class UsuariosService {
     try {
       //Esperar el resultado de la busqueda de usuario por email
       const resultadoUsuario = await this.usuarioModel
-        .findOne({ correoElectronico: email })
+        .findOne({ correoElectronico: email, tipoLogin: 'Email' })
         .exec();
       if (!resultadoUsuario) {
         //si no lo encontró retorna que no existe un usuario
