@@ -26,6 +26,7 @@ import {
 } from '../screens';
 
 import {useScreenOptions, useTranslation} from '../hooks';
+import NewTrip from '../screens/NewTrip';
 
 const Stack = createStackNavigator();
 
@@ -129,7 +130,6 @@ export default () => {
         component={LoginFacebook}
         options={{headerShown: false}}
       />
-
       <Stack.Screen
         name="Extra"
         component={Extras}
@@ -139,6 +139,11 @@ export default () => {
         name="Shopping"
         component={Shopping}
         options={{title: t('navigation.shopping'), ...screenOptions.back}}
+      />
+      <Stack.Screen
+        name="NewTrip"
+        component={NewTrip}
+        options={{title: t('navigation.newTrip'), headerRight: () => null}}
       />
     </Stack.Navigator>
   );

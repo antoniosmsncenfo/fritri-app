@@ -162,12 +162,26 @@ export const usePassword = () => {
         setResetPasswordResult(ResetPasswordStatus.Pending);
     };
 
+    const [resetPasswordWaitTime, setResetPasswordWaitTime] = useState<number>(0);
+
     const resetPassword = (emailUsuario: string) => {
 
         resetearPassword(emailUsuario)
             .then((resultado) => {
                 if (resultado !== null) {
-                    setResetPasswordResult(ResetPasswordStatus.Success);
+                    if ('statusCode' in resultado) {
+                        if(resultado.statusCode===405){
+                            setResetPasswordWaitTime(parseInt(resultado.wait));
+                            setResetPasswordResult(ResetPasswordStatus.TimeLimit);
+                        }
+                        else {
+                            throw Error("Unknown error");
+                        }                        
+                    }
+                    else {
+                        setResetPasswordWaitTime(0);
+                        setResetPasswordResult(ResetPasswordStatus.Success);
+                    }
                 }
             })
             .catch((e) => {
@@ -182,6 +196,7 @@ export const usePassword = () => {
         resetPassword,
         usuarioFriTri,
         resetPasswordResult,
+        resetPasswordWaitTime
     };
 
 };

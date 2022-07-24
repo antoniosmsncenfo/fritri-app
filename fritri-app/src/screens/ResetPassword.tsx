@@ -40,6 +40,7 @@ const ResetPassword = () => {
     resetPassword, //funcion
     resetPasswordResult, //resultado
     usuarioFriTri, //usuario obtenido
+    resetPasswordWaitTime
   } = usePassword();
 
   const handleChange = useCallback(
@@ -105,6 +106,19 @@ const ResetPassword = () => {
       );
       restartResetPasswordStatus();
     }
+    else if (resetPasswordResult === ResetPasswordStatus.TimeLimit) {
+      Alert.alert(
+        t('resetPassword.timeLimitTitle'),
+        t('resetPassword.timeLimitMessage', {time: resetPasswordWaitTime}),
+        [
+          { text: 'OK' },
+        ],
+        {
+          cancelable: false,
+        }
+      );
+      restartResetPasswordStatus();
+    }    
   }, [resetPasswordResult]);
 
   return (
