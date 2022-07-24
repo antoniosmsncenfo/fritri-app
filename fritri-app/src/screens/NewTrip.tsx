@@ -1,14 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Platform } from 'react-native';
 
-import { useData, useTheme, useTranslation } from '../hooks';
+import { useTheme, useTranslation } from '../hooks';
 import { Block, Button, Input, Text, Image, Checkbox } from '../components';
 import DateTimePicker, { Event } from '@react-native-community/datetimepicker';
 import dayjs from 'dayjs';
 import { ITheme } from '../constants/types/theme';
-import { IArticle } from '../constants/types';
-import { useNavigation } from '@react-navigation/native';
-import Destination, { IDestinationAction } from '../components/Destination';
+import Destination, { IDestinationAction, IDestinationData } from '../components/Destination';
 import { IDestino } from '../interfaces/destino';
 
 
@@ -28,46 +26,13 @@ const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
   const { assets, colors, sizes } = useTheme();
 
   return (
-    <Button
-      align="flex-start"
-      marginBottom={sizes.s}
-      onPress={() => onPress?.()}>
-      <Text bold marginBottom={sizes.s}>
-        {label}
-      </Text>
-      <Block
-        row
-        gray
-        outlined
-        width="100%"
-        align="center"
-        radius={sizes.inputRadius}
-        height={sizes.inputHeight}>
-        <Image
-          radius={0}
-          color={colors.primary}
-          source={assets?.[icon]}
-          marginHorizontal={sizes.inputPadding}
-        />
-        <Text p black>
-          {value}
-        </Text>
+    <Button align="flex-start" marginBottom={sizes.s} onPress={() => onPress?.()}>
+      <Text bold marginBottom={sizes.s}>{label}</Text>
+      <Block row gray outlined width="100%" align="center" radius={sizes.inputRadius} height={sizes.inputHeight}>
+        <Image radius={0} color={colors.primary} source={assets?.[icon]} marginHorizontal={sizes.inputPadding} />
+        <Text p black> {value} </Text>
       </Block>
     </Button>
-  );
-};
-
-const RentalHeader = () => {
-  const { t } = useTranslation();
-  const { colors } = useTheme();
-  return (
-    <>
-      <Block>
-        <Text h5 semibold color={colors.primary}>
-          Destinos
-        </Text>
-      </Block>
-    </>
   );
 };
 
@@ -79,50 +44,65 @@ const NewTrip = () => {
   const [notFound, setNotFound] = useState(false);
   const [search, setSearch] = useState('');
   const [tripName, setTripName] = useState('');
-  const [destinos, setDestinos] = useState<IDestino[]>([]);
-  const [seletedDestino, setSeletedDestino] = useState<IDestino | null>(null);
+  const [destinos, setDestinos] = useState<IDestinationData[]>([]);
+  const [selectedDestino, setSelectedDestino] = useState<IDestino | null>(null);
   const [tripDate, setTripDate] = useState(initialDate);
   const [show, setShow] = useState(false);
   const [isValid, setIsvalid] = useState<IIsvalid>({ destination: false, name: false });
 
+  const initialData: IDestinationData[] = [{
+    selected: false,
+    destination: {
+      'idGoogle': 'ChIJ2RteDZqaNw0R8-7x1PqfhH0',
+      'descripcion': 'León, España',
+      'latitud': 42.59836110000001,
+      'longitud': -5.5718779,
+      'nombre': 'León, España',
+      'estado': 'Castilla y León',
+      'pais': 'España',
+      'urlFoto': 'https://lh3.googleusercontent.com/places/AKR5kUhI4rWgZU1mwHLgT3d3gi4BwwqeiTEzv-CrFiammR6F3tgsi8WbdcWmlD1i9mknHotRik7asvsPUXXAMTNvJfssD68_DKWIzCw=s1600-w640-h480',
+    },
+  },
+  {
+    selected: false,
+    destination: {
+      'idGoogle': 'ChIJIefm1v--K4QRJ0OlYeyVbWA',
+      'descripcion': 'León, Gto., México',
+      'latitud': 21.1250077,
+      'longitud': -101.6859605,
+      'nombre': 'León, Gto., México',
+      'estado': 'Guanajuato',
+      'pais': 'México',
+      'urlFoto': 'https://lh3.googleusercontent.com/places/AKR5kUhQKB6LvJhD5sx3E5mv583PN4H7VikM71ZHLJD56c-aXUCzwmfRJjXbUFuDnNugrjxD8-7RNOakWOlpA4-9nyPvBQwzEFbDB1I=s1600-w640-h480',
+    },
+  },
+  {
+    selected: false,
+    destination: {
+      'idGoogle': 'ChIJQeeiKAlWp48R67ZYZuZYfns',
+      'descripcion': 'Tortuguero, Limón, Costa Rica',
+      'latitud': 10.5424838,
+      'longitud': -83.50235520000001,
+      'nombre': 'Tortuguero, Limón, Costa Rica',
+      'estado': 'Limón',
+      'pais': 'Costa Rica',
+      'urlFoto': 'https://lh3.googleusercontent.com/places/AKR5kUjBB_3ZuzZl-UAHHnUFhfNHZkMeQvPRi-aED8qe1SirSX6THe6hUQChwDnVe1jA9yGOBDqCrutISm9mEtFz-aUTD8LhU6dYhZM=s1600-w640-h480',
+    },
+  },
+  ];
+
   useEffect(() => {
-    setDestinos([
-      {
-        'idGoogle': 'ChIJ2RteDZqaNw0R8-7x1PqfhH0',
-        'descripcion': 'León, España',
-        'latitud': 42.59836110000001,
-        'longitud': -5.5718779,
-        'nombre': 'León, España',
-        'estado': 'Castilla y León',
-        'pais': 'España',
-        'urlFoto': 'https://lh3.googleusercontent.com/places/AKR5kUhI4rWgZU1mwHLgT3d3gi4BwwqeiTEzv-CrFiammR6F3tgsi8WbdcWmlD1i9mknHotRik7asvsPUXXAMTNvJfssD68_DKWIzCw=s1600-w640-h480',
-      },
-      {
-        'idGoogle': 'ChIJIefm1v--K4QRJ0OlYeyVbWA',
-        'descripcion': 'León, Gto., México',
-        'latitud': 21.1250077,
-        'longitud': -101.6859605,
-        'nombre': 'León, Gto., México',
-        'estado': 'Guanajuato',
-        'pais': 'México',
-        'urlFoto': 'https://lh3.googleusercontent.com/places/AKR5kUhQKB6LvJhD5sx3E5mv583PN4H7VikM71ZHLJD56c-aXUCzwmfRJjXbUFuDnNugrjxD8-7RNOakWOlpA4-9nyPvBQwzEFbDB1I=s1600-w640-h480',
-      },
-      {
-        'idGoogle': 'ChIJQeeiKAlWp48R67ZYZuZYfns',
-        'descripcion': 'Tortuguero, Limón, Costa Rica',
-        'latitud': 10.5424838,
-        'longitud': -83.50235520000001,
-        'nombre': 'Tortuguero, Limón, Costa Rica',
-        'estado': 'Limón',
-        'pais': 'Costa Rica',
-        'urlFoto': 'https://lh3.googleusercontent.com/places/AKR5kUjBB_3ZuzZl-UAHHnUFhfNHZkMeQvPRi-aED8qe1SirSX6THe6hUQChwDnVe1jA9yGOBDqCrutISm9mEtFz-aUTD8LhU6dYhZM=s1600-w640-h480',
-      },
-    ]);
+    setDestinos(initialData);
   }, []);
 
   useEffect(() => {
-    setIsvalid({ name: tripName !== '', destination: seletedDestino !== null });
-  }, [tripName, seletedDestino]);
+    setIsvalid({ name: tripName !== '', destination: selectedDestino !== null });
+  }, [tripName, selectedDestino]);
+
+  // Quitar este al final, es solo para debug
+  useEffect(() => {
+    console.log(selectedDestino);
+  }, [selectedDestino]);
 
   const handleSearch = useCallback(() => {
     setNotFound(true);
@@ -141,10 +121,10 @@ const NewTrip = () => {
   };
 
   const onDestinationChange = (action: IDestinationAction) => {
-    console.log(action);
     switch (action.action) {
       case 'select':
-        setSeletedDestino(action.destination);
+        updateDestinationsData(action.destination);
+        setSelectedDestino(action.destination);
         break;
       case 'view':
         //navigation.navigate('ViewDestination', action.destination);
@@ -152,6 +132,19 @@ const NewTrip = () => {
       default:
         break;
     }
+  };
+
+  //Aqui cambio el estado a los otros destinos para solo dejar seleccionado el último que se seleccionado
+  const updateDestinationsData = (destino: IDestino) => {
+    const filtered = destinos.map((d) => {
+      if (destino.idGoogle === d.destination.idGoogle) {
+        return { ...d, selected: true };
+      }
+      else {
+        return { ...d, selected: false };
+      }
+    });
+    setDestinos(filtered);
   };
 
   return (
@@ -233,18 +226,18 @@ const NewTrip = () => {
           </Text>
         </Block>
       )}
-      {!notFound && (
+
         <Block>
-          {/* rentals list */}
+          {/* destinations list */}
           <FlatList
             data={destinos}
             // stickyHeaderIndices={[0]}
             showsHorizontalScrollIndicator={false}
             horizontal
-            keyExtractor={(item) => `${item?.idGoogle}`}
+            keyExtractor={(item) => `${item?.destination.idGoogle}`}
             style={{ paddingVertical: sizes.s }}
             renderItem={({ item }) => (
-              <Destination destino={item} onPress={(value) => onDestinationChange(value)} />
+              <Destination destination={item} onPress={(value) => onDestinationChange(value)} />
             )}
           />
 
@@ -263,7 +256,6 @@ const NewTrip = () => {
             </Block>)}
         </Block>
 
-      )}
     </Block>
   );
 };
