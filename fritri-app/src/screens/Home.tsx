@@ -1,14 +1,16 @@
-import React, {useCallback, useState} from 'react';
+import React, { useCallback, useState } from 'react';
 
-import {useData, useTheme, useTranslation} from '../hooks/';
-import {Block, Button, Image, Input, Product, Text} from '../components/';
+import { useData, useTheme, useTranslation } from '../hooks/';
+import { Block, Button, Image, Input, Product, Text } from '../components/';
+import { useNavigation } from '@react-navigation/native';
 
 const Home = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [tab, setTab] = useState<number>(0);
-  const {following, trending} = useData();
+  const { following, trending } = useData();
   const [products, setProducts] = useState(following);
-  const {assets, colors, fonts, gradients, sizes} = useTheme();
+  const { assets, colors, fonts, gradients, sizes } = useTheme();
+  const navigation = useNavigation();
 
   const handleProducts = useCallback(
     (tab: number) => {
@@ -33,6 +35,7 @@ const Home = () => {
         justify="center"
         color={colors.card}
         paddingBottom={sizes.sm}>
+        {/* Button pending */}
         <Button onPress={() => handleProducts(0)}>
           <Block row align="center">
             <Block
@@ -58,6 +61,7 @@ const Home = () => {
           marginHorizontal={sizes.sm}
           height={sizes.socialIconSize}
         />
+        {/* Button completed */}
         <Button onPress={() => handleProducts(1)}>
           <Block row align="center">
             <Block
@@ -81,13 +85,20 @@ const Home = () => {
           </Block>
         </Button>
       </Block>
+      <Block paddingTop={sizes.padding} paddingHorizontal={sizes.padding} flex={0}>
+        <Button gradient={gradients.primary} onPress={() => navigation.navigate('NewTrip')}>
+          <Text white semibold transform="uppercase">
+            {t('home.new')}
+          </Text>
+        </Button>
+      </Block>
 
       {/* products list */}
       <Block
         scroll
         paddingHorizontal={sizes.padding}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: sizes.l}}>
+        contentContainerStyle={{ paddingBottom: sizes.l }}>
         <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
           {products?.map((product) => (
             <Product {...product} key={`card-${product?.id}`} />

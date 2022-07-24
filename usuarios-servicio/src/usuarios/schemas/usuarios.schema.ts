@@ -21,6 +21,9 @@ export class Usuario {
 	@Prop()
 	contrasenaTemporal: string;
 
+	@Prop()
+	fechaContrasenaTemporal: Date;	
+
 	@Prop({
 		required: true,
 	})
