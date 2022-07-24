@@ -7,4 +7,5 @@ export interface IDestino {
     latitud: number;
     longitud: number;
     idGoogle: string;
+    tipoLugar?: string;
 }
