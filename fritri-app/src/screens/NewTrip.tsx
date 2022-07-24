@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, Platform } from 'react-native';
 
 import { useData, useTheme, useTranslation } from '../hooks';
 import { Block, Button, Input, Text, Image, Checkbox } from '../components';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker, { Event } from '@react-native-community/datetimepicker';
 import dayjs from 'dayjs';
 import { ITheme } from '../constants/types/theme';
 import { IArticle } from '../constants/types';
 import { useNavigation } from '@react-navigation/native';
-import Destination from '../components/Destination';
+import Destination, { IDestinationAction } from '../components/Destination';
 import { IDestino } from '../interfaces/destino';
 
 
@@ -17,6 +17,11 @@ interface ITouchableInput {
   label?: string;
   value?: number | string;
   onPress?: () => void;
+}
+
+interface IIsvalid {
+  name: boolean;
+  destination: boolean;
 }
 
 const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
@@ -67,19 +72,19 @@ const RentalHeader = () => {
 };
 
 const NewTrip = () => {
+  const initialDate = new Date();
   const { t } = useTranslation();
   const { sizes, gradients } = useTheme();
-  const [notFound, setNotFound] = useState(false);
   const [useGps, setuseGps] = useState(false);
+  const [notFound, setNotFound] = useState(false);
   const [search, setSearch] = useState('');
+  const [tripName, setTripName] = useState('');
   const [destinos, setDestinos] = useState<IDestino[]>([]);
-  const [date, setDate] = useState(new Date());
+  const [seletedDestino, setSeletedDestino] = useState<IDestino | null>(null);
+  const [tripDate, setTripDate] = useState(initialDate);
   const [show, setShow] = useState(false);
-  const data = useData();
-  const { handleArticle } = data;
-  const navigation = useNavigation();
+  const [isValid, setIsvalid] = useState<IIsvalid>({ destination: false, name: false });
 
-  // init recommendations list
   useEffect(() => {
     setDestinos([
       {
@@ -115,23 +120,37 @@ const NewTrip = () => {
     ]);
   }, []);
 
-  const handleRental = useCallback(
-    (article: IArticle) => {
-      handleArticle(article);
-      navigation.navigate('Rental');
-    },
-    [handleArticle, navigation],
-  );
+  useEffect(() => {
+    setIsvalid({ name: tripName !== '', destination: seletedDestino !== null });
+  }, [tripName, seletedDestino]);
 
   const handleSearch = useCallback(() => {
     setNotFound(true);
   }, [setNotFound]);
 
-  const onDateChange = (event, selectedDate: Date) => {
-    const currentDate = selectedDate;
-    setShow(false);
-    if (selectedDate) {
-      setDate(currentDate);
+  const onDateChange = (event: Event, selectedDate?: Date): void => {
+    const currentDate = selectedDate || initialDate;
+    if (Platform.OS === 'android') {
+      setShow(false);
+    }
+    if (event.type === 'neutralButtonPressed') {
+      setTripDate(tripDate);
+    } else {
+      setTripDate(currentDate);
+    }
+  };
+
+  const onDestinationChange = (action: IDestinationAction) => {
+    console.log(action);
+    switch (action.action) {
+      case 'select':
+        setSeletedDestino(action.destination);
+        break;
+      case 'view':
+        //navigation.navigate('ViewDestination', action.destination);
+        break;
+      default:
+        break;
     }
   };
 
@@ -147,25 +166,28 @@ const NewTrip = () => {
         paddingVertical={sizes.sm}
         paddingHorizontal={sizes.sm}>
         <Input
-          label={t('newTrip.tripName')}
+          label={t('newTrip.tripName') + ' *'}
           icon="star"
           returnKeyType="done"
           marginBottom={sizes.s}
           placeholder={t('newTrip.tripNamePlaceHolder')}
+          value={tripName}
+          onChangeText={(value) => setTripName(value)}
+          success={tripName !== ''}
         />
         <TouchableInput
           icon="calendar"
-          label={t('newTrip.tripDate')}
-          value={dayjs(date).format('DD-MM-YYYY')}
+          label={t('newTrip.tripDate') + ' *'}
+          value={dayjs(tripDate).format('DD-MM-YYYY')}
           onPress={() => setShow(true)}
         />
         {show && (
           <DateTimePicker
             testID="dateTimePicker"
-            value={date}
+            value={tripDate}
             mode={'date'}
             onChange={onDateChange}
-            minimumDate={new Date()}
+            minimumDate={initialDate}
           />
         )}
         {!useGps &&
@@ -222,22 +244,23 @@ const NewTrip = () => {
             keyExtractor={(item) => `${item?.idGoogle}`}
             style={{ paddingVertical: sizes.s }}
             renderItem={({ item }) => (
-              <Destination destino={item}/>
+              <Destination destino={item} onPress={(value) => onDestinationChange(value)} />
             )}
           />
 
-          <Block row justify="space-between" paddingTop={sizes.s} paddingBottom={sizes.m}>
-            <Button flex={1} paddingRight={sizes.s} gradient={gradients.primary} onPress={() => handleSearch()}>
-              <Text white semibold transform="uppercase">
-                {t('newTrip.restaurants')}
-              </Text>
-            </Button>
-            <Button flex={1} gradient={gradients.primary} onPress={() => handleSearch()}>
-              <Text white semibold transform="uppercase">
-                {t('newTrip.random')}
-              </Text>
-            </Button>
-          </Block>
+          {!Object.values(isValid).includes(false)
+            && (<Block row justify="space-between" paddingTop={sizes.s} paddingBottom={sizes.m}>
+              <Button flex={1} paddingRight={sizes.s} gradient={gradients.primary} onPress={() => handleSearch()}>
+                <Text white semibold transform="uppercase">
+                  {t('newTrip.restaurants')}
+                </Text>
+              </Button>
+              <Button flex={1} gradient={gradients.primary} onPress={() => handleSearch()}>
+                <Text white semibold transform="uppercase">
+                  {t('newTrip.random')}
+                </Text>
+              </Button>
+            </Block>)}
         </Block>
 
       )}

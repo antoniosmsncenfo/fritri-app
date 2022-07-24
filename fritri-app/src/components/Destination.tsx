@@ -1,5 +1,4 @@
-import React, {useState} from 'react';
-import { TouchableWithoutFeedback } from 'react-native';
+import React from 'react';
 
 import Text from './Text';
 import Block from './Block';
@@ -9,28 +8,38 @@ import { IDestino } from '../interfaces/destino';
 import Checkbox from './Checkbox';
 
 export interface IProps {
-destino: IDestino;
-onPress?: (event?: any) => void;
+  destino: IDestino;
+  onPress: (event: IDestinationAction) => void;
 }
 
-const Destination = ({destino}:IProps) => {
+export interface IDestinationAction {
+  action: 'select' | 'view';
+  destination: IDestino;
+}
+
+const Destination = ({ destino, onPress }: IProps) => {
   const { t } = useTranslation();
-  const {selected, setSelected} = useState(true);
-  const { colors, gradients, icons, sizes } = useTheme();
+  const { gradients, icons, sizes } = useTheme();
+
+  const onCheckChange = (value: boolean) => {
+    if (value) {
+      onPress({ action: 'select', destination: destino });
+    }
+  };
+
+  const onViewPress = () => {
+    onPress({ action: 'view', destination: destino });
+  };
+
   return (
-    <TouchableWithoutFeedback>
+    <Block>
       <Block card padding={sizes.sm} marginRight={sizes.s}>
-        <Image height={195} width={260} resizeMode="cover" source={{ uri: destino.urlFoto }} />
+        <Block onTouchEnd={() => onViewPress()} >
+          <Image height={195} width={260} resizeMode="cover" source={{ uri: destino.urlFoto }} />
+        </Block>
 
         {/* nombre */}
-        <Text
-          h5
-          bold
-          size={13}
-          marginTop={sizes.s}
-          transform="uppercase"
-          marginLeft={sizes.xs}
-          gradient={gradients.primary}>
+        <Text h5 bold size={13} marginTop={sizes.s} transform="uppercase" marginLeft={sizes.xs} gradient={gradients.primary}>
           {destino.nombre}
         </Text>
 
@@ -41,13 +50,14 @@ const Destination = ({destino}:IProps) => {
             {destino.estado}, {destino.pais}
           </Text>
         </Block>
+
         <Block row align="center" paddingTop={sizes.s}>
-          <Checkbox checked={true} marginRight={sizes.sm} />
+          <Checkbox checked={true} marginRight={sizes.sm} onPress={(value) => { onCheckChange(value); }} />
           <Text bold paddingRight={sizes.s}>{t('destination.select')}</Text>
-          <Text left={130} bold primary paddingRight={sizes.s}>{t('destination.view')}</Text>
+          <Text left={130} bold primary paddingRight={sizes.s} onPress={() => onViewPress()}>{t('destination.view')}</Text>
         </Block>
       </Block>
-    </TouchableWithoutFeedback>
+    </Block>
   );
 };
 
