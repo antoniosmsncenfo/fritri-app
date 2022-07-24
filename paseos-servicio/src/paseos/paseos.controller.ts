@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
-import { PaseosService } from './paseos.service';
+import { PaseosService, EstadoPaseo } from './paseos.service';
 import { CrearPaseoDto } from './dto/crear-paseo.dto';
 import { ActualizarPaseoDto } from './dto/actualizar-paseo.dto';
 import { Paseo } from './schemas/paseos.schema';
@@ -21,11 +21,12 @@ export class PaseosController {
     return await this.paseosService.obtener(idPaseo);
   }
 
-  @Get('obtener-paseos-completados')
-  async findEmail(
-    @Query('idCreador') idCreador: string, 
+  @Get('obtener-paseos-usuario')
+  async obtenerPaseosUsuario(
+    @Query('idCreador') idCreador: string,
+    @Query('estado') estado: EstadoPaseo,
     @Query('limite') limite: number): Promise<Paseo[]> {
-    return this.paseosService.obtenerPaseosCompletados(idCreador,limite);
+    return this.paseosService.obtenerPaseosUsuario(idCreador, estado, limite);
   }
 
   @Put('actualizar-paseo')
