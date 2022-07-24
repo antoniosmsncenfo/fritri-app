@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import { ITheme } from '../constants/types/theme';
 import Destination, { IDestinationAction, IDestinationData } from '../components/Destination';
 import { IDestino } from '../interfaces/destino';
+import { useNavigation } from '@react-navigation/native';
 
 
 interface ITouchableInput {
@@ -49,6 +50,7 @@ const NewTrip = () => {
   const [tripDate, setTripDate] = useState(initialDate);
   const [show, setShow] = useState(false);
   const [isValid, setIsvalid] = useState<IIsvalid>({ destination: false, name: false });
+  const navigation = useNavigation();
 
   const initialData: IDestinationData[] = [{
     selected: false,
@@ -127,7 +129,7 @@ const NewTrip = () => {
         setSelectedDestino(action.destination);
         break;
       case 'view':
-        //navigation.navigate('ViewDestination', action.destination);
+        navigation.navigate('ViewDestination', action.destination);
         break;
       default:
         break;

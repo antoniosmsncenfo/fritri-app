@@ -23,7 +23,7 @@ import {
   Shopping,
   NotificationsSettings,
   LoginFacebook,
-  VerDestino
+  ViewDestination
 } from '../screens';
 
 import {useScreenOptions, useTranslation} from '../hooks';
@@ -132,8 +132,9 @@ export default () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="VerDestino"
-        component={VerDestino}
+        name="ViewDestination"
+        component={ViewDestination}
+        options={{title: t('navigation.returnToTrip'), ...screenOptions.back}}
       />
 
       <Stack.Screen
