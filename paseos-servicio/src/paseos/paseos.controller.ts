@@ -22,6 +22,7 @@ export class PaseosController {
   }
 
   @Get('obtener-paseos-usuario')
+  @HttpCode(200)
   async obtenerPaseosUsuario(
     @Query('idCreador') idCreador: string,
     @Query('estado') estado: EstadoPaseo,
