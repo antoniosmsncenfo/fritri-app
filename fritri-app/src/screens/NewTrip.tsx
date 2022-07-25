@@ -9,6 +9,7 @@ import { ITheme } from '../constants/types/theme';
 import Destination, { IDestinationAction, IDestinationData } from '../components/Destination';
 import { IDestino } from '../interfaces/destino';
 import { useDestination } from '../hooks/useDestination';
+import { useNavigation } from '@react-navigation/native';
 
 interface ITouchableInput {
   icon: keyof ITheme['assets'];
@@ -50,6 +51,7 @@ const NewTrip = () => {
   const [tripDate, setTripDate] = useState(initialDate);
   const [showCalendar, setshowCalendar] = useState(false);
   const [isValid, setIsvalid] = useState<IIsvalid>({ destination: false, name: false });
+  const navigation = useNavigation();
 
   // se ejecuta cuando se obtienen los detinos del hook de destinos
   useEffect(() => {
@@ -94,7 +96,7 @@ const NewTrip = () => {
         setSelectedDestino(action.destination);
         break;
       case 'view':
-        //navigation.navigate('ViewDestination', action.destination);
+        navigation.navigate('ViewDestination', action.destination);
         break;
       default:
         break;
