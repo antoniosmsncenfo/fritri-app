@@ -55,9 +55,13 @@ export class DestinosService {
       infoLugar,
     );
 
-    const referenciasFotos = fotos.photos.map((foto) => {
-      return foto.photo_reference;
-    });
+    let referenciasFotos: string[] = [];
+
+    if (fotos && fotos.photos.length > 0) {
+      referenciasFotos = fotos.photos.map((foto) => {
+        return foto.photo_reference;
+      });
+    }
 
     return referenciasFotos;
   }

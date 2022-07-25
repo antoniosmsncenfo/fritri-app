@@ -1,51 +1,35 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { LUGARES_TURISTICOS_BASE_URL } from '@env';
+import { useState } from 'react';
 import { ILugarGoogle } from '../interfaces/lugar-google';
 import { IBuscarLugarGoogle } from '../interfaces/buscar-lugar-google';
+import { getDestinations, getGooglePlaceByType } from '../api/lugaresTuristicosDB';
+import { IDestino } from '../interfaces/destino';
+import { useTranslation } from './useTranslation';
 
 export const useGooglePlace = () => {
   const [googlePlace, setGooglePlace] = useState<ILugarGoogle | null>(null);
+  const [destinations, setDestinations] = useState<IDestino[]>([]);
+  const { locale } = useTranslation();
 
-  const getGooglePlace = async (buscarLugar: IBuscarLugarGoogle) => {
-    try {
-      const type = getTypePlace(buscarLugar?.tipoLugar);
-      let request = {
-        method: 'get',
-        url: `${LUGARES_TURISTICOS_BASE_URL}${type?.url}/${type?.endpoint}`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        params: {
-          idGoogle: buscarLugar.idGoogle
-        }
-      };
-      const resultado = await axios(request);
-      if (resultado.status === 200) {
-        setGooglePlace(resultado?.data || null);
-      }
-    } catch (error) {
+  const destinationsSearch = async (destination: string) => {
+    const result = await getDestinations(destination/*, locale*/); // descomentar para usar el idioma que seleccionó el usuario
+    if (result) {
+      setDestinations(result);
     }
   };
 
-  const getTypePlace = (typeOfPlace) => {
-    switch(typeOfPlace) {
-      case 'restaurante': 
-        return {
-          url: 'restaurantes',
-          endpoint: 'obtener-restaurante'
-        }
-      case 'atraccion': 
-      return {
-        url: 'atracciones-turisticas',
-        endpoint: 'obtener-atraccion-turistica'
-      }
+  const getGooglePlace = async (buscarLugar: IBuscarLugarGoogle) => {
+    const result = await getGooglePlaceByType(buscarLugar);
+    if (result) {
+      console.log(result);
+      setGooglePlace(result);
     }
-  }
+  };
 
   return {
     getGooglePlace,
-    googlePlace
+    googlePlace,
+    destinations,
+    destinationsSearch,
   };
 
 };
