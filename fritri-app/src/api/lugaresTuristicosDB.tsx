@@ -4,7 +4,6 @@ import { IDestino } from '../interfaces/destino';
 
 
 export const getDestinations = async (destination: string, language: string = 'en'): Promise<IDestino[]> => {
-    console.log(destination, language);
     if (destination) {
         let request = {
             method: 'get',
