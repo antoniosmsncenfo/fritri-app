@@ -15,6 +15,7 @@ const ViewDestination = (props) => {
   const {assets, sizes, gradients} = useTheme();
   const [destino, setDestino] = useState<IDestino | null>(null);
   const { getGooglePlace, googlePlace } = useGooglePlace();
+  const [ searchMoreInfo, setSearchMoreInfo ] = useState(false);
 
   useEffect(() => {
     setDestino(props.route.params);
@@ -23,7 +24,10 @@ const ViewDestination = (props) => {
       tipoLugar: tipoLugar || null,
       idGoogle: idGoogle || null
     }
-    getGooglePlace(buscarLugar);
+    if(!Object.values(buscarLugar).includes(null)) {
+      getGooglePlace(buscarLugar);
+      setSearchMoreInfo(true);
+    }
   }, [])
 
   const callPlace = (telefono) => {
@@ -32,7 +36,7 @@ const ViewDestination = (props) => {
 
   return (
     <>
-      <Block marginTop={sizes.m} paddingHorizontal={sizes.padding}>
+      <Block marginTop={sizes.m} paddingHorizontal={sizes.padding} marginBottom={sizes.l}>
         <Block>
           <Image
             resizeMode="cover"
@@ -49,39 +53,40 @@ const ViewDestination = (props) => {
       </Block>
 
       {/* Parte del restaurante o actividad turística */}
-      <View style={{
-        flexDirection: "column",
-        height: 200,
-        padding: 15,
-        marginTop: -200
-      }}>
-          <View style={{ flex: 1, flexDirection: 'row', alignItems:'stretch', borderWidth: 0, height: 20, borderColor: 'green', width: '88%', marginTop: -15  }} >
-            <Image source={assets.location} radius={6} style={{ marginRight: 10, marginLeft: 10, marginTop: 2}}/>
-            { googlePlace?.direccion ? 
-              <Text lineHeight={26} >
-                { googlePlace?.direccion }
-              </Text>
-            :
-              <Text lineHeight={26}>
-                { t('common.loading') }
-              </Text>
-            }
-          </View>
+      { searchMoreInfo && 
+        <View style={{
+          flexDirection: "column",
+          height: 150,
+          padding: 15,
+          marginTop: -200
+        }}>
+            <View style={{ flex: 1, flexDirection: 'row', alignItems:'stretch', borderWidth: 0, height: 20, borderColor: 'green', width: '88%', marginTop: -15  }} >
+              <Image source={assets.location} radius={6} style={{ marginRight: 10, marginLeft: 10, marginTop: 2}}/>
+              { googlePlace?.direccion ? 
+                <Text lineHeight={26} >
+                  { googlePlace?.direccion }
+                </Text>
+              :
+                <Text lineHeight={26}>
+                  { t('common.loading') }
+                </Text>
+              }
+            </View>
 
-          <View style={{ flex: 1, flexDirection: 'row', alignItems:'baseline', borderWidth: 0, borderColor: 'red', height: 50,
-          marginTop: -55 }} >
-            <Image source={assets.location} radius={6} style={{ marginRight: 10, marginLeft: 10 }}/>
-            { googlePlace?.direccion ? 
-              <Text lineHeight={26} onPress={() => { callPlace(googlePlace?.telefono) }}>
-                {`${googlePlace?.telefono}`}
-              </Text>
-            :
-              <Text lineHeight={26}>
-                { t('common.loading') }
-              </Text>
-            }
-          </View>
-      </View>
+            <View style={{ flex: 1, flexDirection: 'row', alignItems:'baseline', borderWidth: 0, borderColor: 'red', height: 50, marginTop: -55 }} >
+              <Image source={assets.location} radius={6} style={{ marginRight: 10, marginLeft: 10 }}/>
+              { googlePlace?.direccion ? 
+                <Text lineHeight={26} onPress={() => { callPlace(googlePlace?.telefono) }}>
+                  {`${googlePlace?.telefono}`}
+                </Text>
+              :
+                <Text lineHeight={26}>
+                  { t('common.loading') }
+                </Text>
+              }
+            </View>
+        </View>
+      }
     </>
   );
 };
