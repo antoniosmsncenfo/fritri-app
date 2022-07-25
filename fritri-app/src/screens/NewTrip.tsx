@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, Platform } from 'react-native';
 
 import { useTheme, useTranslation } from '../hooks';
@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import { ITheme } from '../constants/types/theme';
 import Destination, { IDestinationAction, IDestinationData } from '../components/Destination';
 import { IDestino } from '../interfaces/destino';
-
+import { useDestination } from '../hooks/useDestination';
 
 interface ITouchableInput {
   icon: keyof ITheme['assets'];
@@ -39,6 +39,7 @@ const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
 const NewTrip = () => {
   const initialDate = new Date();
   const { t } = useTranslation();
+  const { destinations, destinationsSearch } = useDestination();
   const { sizes, gradients } = useTheme();
   const [useGps, setuseGps] = useState(false);
   const [notFound, setNotFound] = useState(false);
@@ -47,71 +48,36 @@ const NewTrip = () => {
   const [destinos, setDestinos] = useState<IDestinationData[]>([]);
   const [selectedDestino, setSelectedDestino] = useState<IDestino | null>(null);
   const [tripDate, setTripDate] = useState(initialDate);
-  const [show, setShow] = useState(false);
+  const [showCalendar, setshowCalendar] = useState(false);
   const [isValid, setIsvalid] = useState<IIsvalid>({ destination: false, name: false });
 
-  const initialData: IDestinationData[] = [{
-    selected: false,
-    destination: {
-      'idGoogle': 'ChIJ2RteDZqaNw0R8-7x1PqfhH0',
-      'descripcion': 'León, España',
-      'latitud': 42.59836110000001,
-      'longitud': -5.5718779,
-      'nombre': 'León, España',
-      'estado': 'Castilla y León',
-      'pais': 'España',
-      'urlFoto': 'https://lh3.googleusercontent.com/places/AKR5kUhI4rWgZU1mwHLgT3d3gi4BwwqeiTEzv-CrFiammR6F3tgsi8WbdcWmlD1i9mknHotRik7asvsPUXXAMTNvJfssD68_DKWIzCw=s1600-w640-h480',
-    },
-  },
-  {
-    selected: false,
-    destination: {
-      'idGoogle': 'ChIJIefm1v--K4QRJ0OlYeyVbWA',
-      'descripcion': 'León, Gto., México',
-      'latitud': 21.1250077,
-      'longitud': -101.6859605,
-      'nombre': 'León, Gto., México',
-      'estado': 'Guanajuato',
-      'pais': 'México',
-      'urlFoto': 'https://lh3.googleusercontent.com/places/AKR5kUhQKB6LvJhD5sx3E5mv583PN4H7VikM71ZHLJD56c-aXUCzwmfRJjXbUFuDnNugrjxD8-7RNOakWOlpA4-9nyPvBQwzEFbDB1I=s1600-w640-h480',
-    },
-  },
-  {
-    selected: false,
-    destination: {
-      'idGoogle': 'ChIJQeeiKAlWp48R67ZYZuZYfns',
-      'descripcion': 'Tortuguero, Limón, Costa Rica',
-      'latitud': 10.5424838,
-      'longitud': -83.50235520000001,
-      'nombre': 'Tortuguero, Limón, Costa Rica',
-      'estado': 'Limón',
-      'pais': 'Costa Rica',
-      'urlFoto': 'https://lh3.googleusercontent.com/places/AKR5kUjBB_3ZuzZl-UAHHnUFhfNHZkMeQvPRi-aED8qe1SirSX6THe6hUQChwDnVe1jA9yGOBDqCrutISm9mEtFz-aUTD8LhU6dYhZM=s1600-w640-h480',
-    },
-  },
-  ];
-
+  // se ejecuta cuando se obtienen los detinos del hook de destinos
   useEffect(() => {
-    setDestinos(initialData);
-  }, []);
+    let result: IDestinationData[] = [];
+    if (destinations && destinations.length > 0) {
+      //Convierte el destino en DestinationData, para agregar la bandera de seleccionado en falso
+      result = destinations.map((d) => { return { selected: false, destination: d }; });
+      setNotFound(false);
+    }
+    else {
+      setNotFound(true);
+    }
+    setDestinos(result);
+    setSelectedDestino(null);
+  }, [destinations]);
 
   useEffect(() => {
     setIsvalid({ name: tripName !== '', destination: selectedDestino !== null });
   }, [tripName, selectedDestino]);
 
-  // Quitar este al final, es solo para debug
-  useEffect(() => {
-    console.log(selectedDestino);
-  }, [selectedDestino]);
-
-  const handleSearch = useCallback(() => {
-    setNotFound(true);
-  }, [setNotFound]);
+  const handleSearch = () => {
+    destinationsSearch(search);
+  };
 
   const onDateChange = (event: Event, selectedDate?: Date): void => {
     const currentDate = selectedDate || initialDate;
     if (Platform.OS === 'android') {
-      setShow(false);
+      setshowCalendar(false);
     }
     if (event.type === 'neutralButtonPressed') {
       setTripDate(tripDate);
@@ -120,6 +86,7 @@ const NewTrip = () => {
     }
   };
 
+  //este es el callback que revisa si se desea ver el destino o seleccionarlo para agregarlo al paseo
   const onDestinationChange = (action: IDestinationAction) => {
     switch (action.action) {
       case 'select':
@@ -172,9 +139,9 @@ const NewTrip = () => {
           icon="calendar"
           label={t('newTrip.tripDate') + ' *'}
           value={dayjs(tripDate).format('DD-MM-YYYY')}
-          onPress={() => setShow(true)}
+          onPress={() => setshowCalendar(true)}
         />
-        {show && (
+        {showCalendar && (
           <DateTimePicker
             testID="dateTimePicker"
             value={tripDate}
@@ -227,34 +194,33 @@ const NewTrip = () => {
         </Block>
       )}
 
-        <Block>
-          {/* destinations list */}
-          <FlatList
-            data={destinos}
-            // stickyHeaderIndices={[0]}
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            keyExtractor={(item) => `${item?.destination.idGoogle}`}
-            style={{ paddingVertical: sizes.s }}
-            renderItem={({ item }) => (
-              <Destination destination={item} onPress={(value) => onDestinationChange(value)} />
-            )}
-          />
+      <Block>
+        {/* destinations list */}
+        <FlatList
+          data={destinos}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          keyExtractor={(item) => `${item?.destination.idGoogle}`}
+          style={{ paddingVertical: sizes.s }}
+          renderItem={({ item }) => (
+            <Destination destination={item} onPress={(value) => onDestinationChange(value)} isUnique={destinos.length === 1} />
+          )}
+        />
 
-          {!Object.values(isValid).includes(false)
-            && (<Block row justify="space-between" paddingTop={sizes.s} paddingBottom={sizes.m}>
-              <Button flex={1} paddingRight={sizes.s} gradient={gradients.primary} onPress={() => handleSearch()}>
-                <Text white semibold transform="uppercase">
-                  {t('newTrip.restaurants')}
-                </Text>
-              </Button>
-              <Button flex={1} gradient={gradients.primary} onPress={() => handleSearch()}>
-                <Text white semibold transform="uppercase">
-                  {t('newTrip.random')}
-                </Text>
-              </Button>
-            </Block>)}
-        </Block>
+        {!Object.values(isValid).includes(false)
+          && (<Block row justify="space-between" paddingTop={sizes.s} paddingBottom={sizes.m}>
+            <Button flex={1} paddingRight={sizes.s} gradient={gradients.primary} onPress={() => handleSearch()}>
+              <Text white semibold transform="uppercase">
+                {t('newTrip.restaurants')}
+              </Text>
+            </Button>
+            <Button flex={1} gradient={gradients.primary} onPress={() => handleSearch()}>
+              <Text white semibold transform="uppercase">
+                {t('newTrip.random')}
+              </Text>
+            </Button>
+          </Block>)}
+      </Block>
 
     </Block>
   );
