@@ -8,8 +8,8 @@ import dayjs from 'dayjs';
 import { ITheme } from '../constants/types/theme';
 import Destination, { IDestinationAction, IDestinationData } from '../components/Destination';
 import { IDestino } from '../interfaces/destino';
-import { useDestination } from '../hooks/useDestination';
 import { useNavigation } from '@react-navigation/native';
+import { useGooglePlace } from '../hooks/useGooglePlace';
 
 interface ITouchableInput {
   icon: keyof ITheme['assets'];
@@ -40,7 +40,7 @@ const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
 const NewTrip = () => {
   const initialDate = new Date();
   const { t } = useTranslation();
-  const { destinations, destinationsSearch } = useDestination();
+  const { destinations, destinationsSearch } = useGooglePlace();
   const { sizes, gradients } = useTheme();
   const [useGps, setuseGps] = useState(false);
   const [notFound, setNotFound] = useState(false);
