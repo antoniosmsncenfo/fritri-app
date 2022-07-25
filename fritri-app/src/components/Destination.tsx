@@ -9,6 +9,7 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 export interface IProps {
   destination: IDestinationData;
+  isUnique: boolean;
   onPress: (event: IDestinationAction) => void;
 }
 
@@ -23,7 +24,7 @@ export interface IDestinationData {
   destination: IDestino;
 }
 
-const Destination = ({ destination, onPress }: IProps) => {
+const Destination = ({ destination, onPress, isUnique }: IProps) => {
   const { destination: destino, selected } = destination;
   const { t } = useTranslation();
   const [isSelected, setIsSelected] = useState(selected);
@@ -46,7 +47,7 @@ const Destination = ({ destination, onPress }: IProps) => {
     <Block>
       <Block card padding={sizes.sm} marginRight={sizes.s}>
         <Block onTouchEnd={() => onViewPress()} >
-          <Image height={195} width={260} resizeMode="cover" source={{ uri: destino.urlFoto }} />
+          <Image height={isUnique ? 263 : 255} width={isUnique ? 350 : 300} resizeMode="cover" source={{ uri: destino.urlFoto }} />
         </Block>
 
         {/* nombre */}
@@ -62,11 +63,13 @@ const Destination = ({ destination, onPress }: IProps) => {
           </Text>
         </Block>
 
-        <Block row align="center" paddingTop={sizes.s}>
-          <BouncyCheckbox fillColor={colors.primary.toString()} iconStyle={{ borderColor: colors.primary }}
-            unfillColor="#FFFFFF" disableBuiltInState onPress={(isChecked: boolean) => { onCheckChange(isChecked); }} isChecked={isSelected} />
-          <Text bold paddingRight={sizes.s}>{t('destination.select')}</Text>
-          <Text left={130} bold primary paddingRight={sizes.s} onPress={() => onViewPress()}>{t('destination.view')}</Text>
+        <Block row align="center" justify="space-around" paddingTop={sizes.s}>
+          <Block row>
+            <BouncyCheckbox fillColor={colors.primary.toString()} iconStyle={{ borderColor: colors.primary }}
+              unfillColor="#FFFFFF" disableBuiltInState onPress={(isChecked: boolean) => { onCheckChange(isChecked); }} isChecked={isSelected} />
+            <Text bold paddingRight={sizes.s}>{t('destination.select')}</Text>
+          </Block>
+          <Text bold primary paddingRight={sizes.s} onPress={() => onViewPress()}>{t('destination.view')}</Text>
         </Block>
       </Block>
     </Block>

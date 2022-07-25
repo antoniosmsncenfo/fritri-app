@@ -72,6 +72,8 @@ export class RestaurantesService {
       Categorias.rating,
       Categorias.vicinity,
       Categorias.price_level,
+      Categorias.formatted_phone_number,
+      Categorias.formatted_address
     ];
 
     const idioma: Language = Language[idGoogle.idioma] || 'es';
@@ -95,7 +97,7 @@ export class RestaurantesService {
   }
 
   async mapearPlaceDataARestaurante(destinoGoogle: Partial<PlaceData>) {
-    const { place_id, geometry, photos, name, rating, vicinity, price_level } =
+    const { place_id, geometry, photos, name, rating, vicinity, price_level, formatted_phone_number, formatted_address } =
       destinoGoogle;
 
     const { lat, lng } = geometry.location;
@@ -120,6 +122,9 @@ export class RestaurantesService {
       urlFoto: urlFoto, //toma la primera foto, en caso de no tener pone vacio
       rangoPrecios: price_level,
       calificacion: rating,
+      telefono: formatted_phone_number,
+      direccion: formatted_address,
+      tipoLugar: 'restaurante'
     };
   }
 }
