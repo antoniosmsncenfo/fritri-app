@@ -13,7 +13,7 @@ export const getDestinations = async (destination: string, language: string = 'e
             },
             data: '',
         };
-        console.log(request);
+
         try {
             const resultado = await axios(request);
             if (resultado.status === 200) {

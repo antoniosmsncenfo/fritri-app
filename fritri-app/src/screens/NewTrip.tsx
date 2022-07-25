@@ -56,13 +56,16 @@ const NewTrip = () => {
   // se ejecuta cuando se obtienen los detinos del hook de destinos
   useEffect(() => {
     let result: IDestinationData[] = [];
+
     if (destinations && destinations.length > 0) {
       //Convierte el destino en DestinationData, para agregar la bandera de seleccionado en falso
       result = destinations.map((d) => { return { selected: false, destination: d }; });
       setNotFound(false);
     }
     else {
-      setNotFound(true);
+      if (search) {
+        setNotFound(true);
+      }
     }
     setDestinos(result);
     setSelectedDestino(null);

@@ -20,7 +20,6 @@ export const useGooglePlace = () => {
   const getGooglePlace = async (buscarLugar: IBuscarLugarGoogle) => {
     const result = await getGooglePlaceByType(buscarLugar);
     if (result) {
-      console.log(result);
       setGooglePlace(result);
     }
   };
