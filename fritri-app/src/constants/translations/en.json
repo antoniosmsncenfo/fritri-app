@@ -69,7 +69,8 @@
       "woman": "Woman",
       "man": "Man",
       "other": "Other"
-    }
+    },
+    "loading": "Loading information..."
   },
   "app": {
     "name": "FriTri",
@@ -111,7 +112,8 @@
     "extra": "Automotive",
     "shopping": "Shopping Cart",
     "newTrip": "New Trip",
-    "resetPassword": "Change password"
+    "resetPassword": "Change password",
+    "returnToTrip": "Return to trip"
   },
   "menu": {
     "started": "Getting Started",

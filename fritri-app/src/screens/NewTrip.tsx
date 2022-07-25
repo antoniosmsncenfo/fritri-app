@@ -1,16 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { FlatList, Platform } from 'react-native';
 
-import { useData, useTheme, useTranslation } from '../hooks';
+import { useTheme, useTranslation } from '../hooks';
 import { Block, Button, Input, Text, Image, Checkbox } from '../components';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker, { Event } from '@react-native-community/datetimepicker';
 import dayjs from 'dayjs';
 import { ITheme } from '../constants/types/theme';
-import { IArticle } from '../constants/types';
-import { useNavigation } from '@react-navigation/native';
-import Destination from '../components/Destination';
+import Destination, { IDestinationAction, IDestinationData } from '../components/Destination';
 import { IDestino } from '../interfaces/destino';
-
+import { useNavigation } from '@react-navigation/native';
+import { useGooglePlace } from '../hooks/useGooglePlace';
 
 interface ITouchableInput {
   icon: keyof ITheme['assets'];
@@ -19,120 +18,102 @@ interface ITouchableInput {
   onPress?: () => void;
 }
 
+interface IIsvalid {
+  name: boolean;
+  destination: boolean;
+}
+
 const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
   const { assets, colors, sizes } = useTheme();
 
   return (
-    <Button
-      align="flex-start"
-      marginBottom={sizes.s}
-      onPress={() => onPress?.()}>
-      <Text bold marginBottom={sizes.s}>
-        {label}
-      </Text>
-      <Block
-        row
-        gray
-        outlined
-        width="100%"
-        align="center"
-        radius={sizes.inputRadius}
-        height={sizes.inputHeight}>
-        <Image
-          radius={0}
-          color={colors.primary}
-          source={assets?.[icon]}
-          marginHorizontal={sizes.inputPadding}
-        />
-        <Text p black>
-          {value}
-        </Text>
+    <Button align="flex-start" marginBottom={sizes.s} onPress={() => onPress?.()}>
+      <Text bold marginBottom={sizes.s}>{label}</Text>
+      <Block row gray outlined width="100%" align="center" radius={sizes.inputRadius} height={sizes.inputHeight}>
+        <Image radius={0} color={colors.primary} source={assets?.[icon]} marginHorizontal={sizes.inputPadding} />
+        <Text p black> {value} </Text>
       </Block>
     </Button>
   );
 };
 
-const RentalHeader = () => {
-  const { t } = useTranslation();
-  const { colors } = useTheme();
-  return (
-    <>
-      <Block>
-        <Text h5 semibold color={colors.primary}>
-          Destinos
-        </Text>
-      </Block>
-    </>
-  );
-};
-
 const NewTrip = () => {
+  const initialDate = new Date();
   const { t } = useTranslation();
+  const { destinations, destinationsSearch } = useGooglePlace();
   const { sizes, gradients } = useTheme();
-  const [notFound, setNotFound] = useState(false);
   const [useGps, setuseGps] = useState(false);
+  const [notFound, setNotFound] = useState(false);
   const [search, setSearch] = useState('');
-  const [destinos, setDestinos] = useState<IDestino[]>([]);
-  const [date, setDate] = useState(new Date());
-  const [show, setShow] = useState(false);
-  const data = useData();
-  const { handleArticle } = data;
+  const [tripName, setTripName] = useState('');
+  const [destinos, setDestinos] = useState<IDestinationData[]>([]);
+  const [selectedDestino, setSelectedDestino] = useState<IDestino | null>(null);
+  const [tripDate, setTripDate] = useState(initialDate);
+  const [showCalendar, setshowCalendar] = useState(false);
+  const [isValid, setIsvalid] = useState<IIsvalid>({ destination: false, name: false });
   const navigation = useNavigation();
 
-  // init recommendations list
+  // se ejecuta cuando se obtienen los detinos del hook de destinos
   useEffect(() => {
-    setDestinos([
-      {
-        'idGoogle': 'ChIJ2RteDZqaNw0R8-7x1PqfhH0',
-        'descripcion': 'León, España',
-        'latitud': 42.59836110000001,
-        'longitud': -5.5718779,
-        'nombre': 'León, España',
-        'estado': 'Castilla y León',
-        'pais': 'España',
-        'urlFoto': 'https://lh3.googleusercontent.com/places/AKR5kUhI4rWgZU1mwHLgT3d3gi4BwwqeiTEzv-CrFiammR6F3tgsi8WbdcWmlD1i9mknHotRik7asvsPUXXAMTNvJfssD68_DKWIzCw=s1600-w640-h480',
-      },
-      {
-        'idGoogle': 'ChIJIefm1v--K4QRJ0OlYeyVbWA',
-        'descripcion': 'León, Gto., México',
-        'latitud': 21.1250077,
-        'longitud': -101.6859605,
-        'nombre': 'León, Gto., México',
-        'estado': 'Guanajuato',
-        'pais': 'México',
-        'urlFoto': 'https://lh3.googleusercontent.com/places/AKR5kUhQKB6LvJhD5sx3E5mv583PN4H7VikM71ZHLJD56c-aXUCzwmfRJjXbUFuDnNugrjxD8-7RNOakWOlpA4-9nyPvBQwzEFbDB1I=s1600-w640-h480',
-      },
-      {
-        'idGoogle': 'ChIJQeeiKAlWp48R67ZYZuZYfns',
-        'descripcion': 'Tortuguero, Limón, Costa Rica',
-        'latitud': 10.5424838,
-        'longitud': -83.50235520000001,
-        'nombre': 'Tortuguero, Limón, Costa Rica',
-        'estado': 'Limón',
-        'pais': 'Costa Rica',
-        'urlFoto': 'https://lh3.googleusercontent.com/places/AKR5kUjBB_3ZuzZl-UAHHnUFhfNHZkMeQvPRi-aED8qe1SirSX6THe6hUQChwDnVe1jA9yGOBDqCrutISm9mEtFz-aUTD8LhU6dYhZM=s1600-w640-h480',
-      },
-    ]);
-  }, []);
-
-  const handleRental = useCallback(
-    (article: IArticle) => {
-      handleArticle(article);
-      navigation.navigate('Rental');
-    },
-    [handleArticle, navigation],
-  );
-
-  const handleSearch = useCallback(() => {
-    setNotFound(true);
-  }, [setNotFound]);
-
-  const onDateChange = (event, selectedDate: Date) => {
-    const currentDate = selectedDate;
-    setShow(false);
-    if (selectedDate) {
-      setDate(currentDate);
+    let result: IDestinationData[] = [];
+    if (destinations && destinations.length > 0) {
+      //Convierte el destino en DestinationData, para agregar la bandera de seleccionado en falso
+      result = destinations.map((d) => { return { selected: false, destination: d }; });
+      setNotFound(false);
     }
+    else {
+      setNotFound(true);
+    }
+    setDestinos(result);
+    setSelectedDestino(null);
+  }, [destinations]);
+
+  useEffect(() => {
+    setIsvalid({ name: tripName !== '', destination: selectedDestino !== null });
+  }, [tripName, selectedDestino]);
+
+  const handleSearch = () => {
+    destinationsSearch(search);
+  };
+
+  const onDateChange = (event: Event, selectedDate?: Date): void => {
+    const currentDate = selectedDate || initialDate;
+    if (Platform.OS === 'android') {
+      setshowCalendar(false);
+    }
+    if (event.type === 'neutralButtonPressed') {
+      setTripDate(tripDate);
+    } else {
+      setTripDate(currentDate);
+    }
+  };
+
+  //este es el callback que revisa si se desea ver el destino o seleccionarlo para agregarlo al paseo
+  const onDestinationChange = (action: IDestinationAction) => {
+    switch (action.action) {
+      case 'select':
+        updateDestinationsData(action.destination);
+        setSelectedDestino(action.destination);
+        break;
+      case 'view':
+        navigation.navigate('ViewDestination', action.destination);
+        break;
+      default:
+        break;
+    }
+  };
+
+  //Aqui cambio el estado a los otros destinos para solo dejar seleccionado el último que se seleccionado
+  const updateDestinationsData = (destino: IDestino) => {
+    const filtered = destinos.map((d) => {
+      if (destino.idGoogle === d.destination.idGoogle) {
+        return { ...d, selected: true };
+      }
+      else {
+        return { ...d, selected: false };
+      }
+    });
+    setDestinos(filtered);
   };
 
   return (
@@ -147,25 +128,28 @@ const NewTrip = () => {
         paddingVertical={sizes.sm}
         paddingHorizontal={sizes.sm}>
         <Input
-          label={t('newTrip.tripName')}
+          label={t('newTrip.tripName') + ' *'}
           icon="star"
           returnKeyType="done"
           marginBottom={sizes.s}
           placeholder={t('newTrip.tripNamePlaceHolder')}
+          value={tripName}
+          onChangeText={(value) => setTripName(value)}
+          success={tripName !== ''}
         />
         <TouchableInput
           icon="calendar"
-          label={t('newTrip.tripDate')}
-          value={dayjs(date).format('DD-MM-YYYY')}
-          onPress={() => setShow(true)}
+          label={t('newTrip.tripDate') + ' *'}
+          value={dayjs(tripDate).format('DD-MM-YYYY')}
+          onPress={() => setshowCalendar(true)}
         />
-        {show && (
+        {showCalendar && (
           <DateTimePicker
             testID="dateTimePicker"
-            value={date}
+            value={tripDate}
             mode={'date'}
             onChange={onDateChange}
-            minimumDate={new Date()}
+            minimumDate={initialDate}
           />
         )}
         {!useGps &&
@@ -211,22 +195,22 @@ const NewTrip = () => {
           </Text>
         </Block>
       )}
-      {!notFound && (
-        <Block>
-          {/* rentals list */}
-          <FlatList
-            data={destinos}
-            // stickyHeaderIndices={[0]}
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            keyExtractor={(item) => `${item?.idGoogle}`}
-            style={{ paddingVertical: sizes.s }}
-            renderItem={({ item }) => (
-              <Destination destino={item}/>
-            )}
-          />
 
-          <Block row justify="space-between" paddingTop={sizes.s} paddingBottom={sizes.m}>
+      <Block>
+        {/* destinations list */}
+        <FlatList
+          data={destinos}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          keyExtractor={(item) => `${item?.destination.idGoogle}`}
+          style={{ paddingVertical: sizes.s }}
+          renderItem={({ item }) => (
+            <Destination destination={item} onPress={(value) => onDestinationChange(value)} isUnique={destinos.length === 1} />
+          )}
+        />
+
+        {!Object.values(isValid).includes(false)
+          && (<Block row justify="space-between" paddingTop={sizes.s} paddingBottom={sizes.m}>
             <Button flex={1} paddingRight={sizes.s} gradient={gradients.primary} onPress={() => handleSearch()}>
               <Text white semibold transform="uppercase">
                 {t('newTrip.restaurants')}
@@ -237,10 +221,9 @@ const NewTrip = () => {
                 {t('newTrip.random')}
               </Text>
             </Button>
-          </Block>
-        </Block>
+          </Block>)}
+      </Block>
 
-      )}
     </Block>
   );
 };

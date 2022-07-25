@@ -23,6 +23,7 @@ import {
   Shopping,
   NotificationsSettings,
   LoginFacebook,
+  ViewDestination
 } from '../screens';
 
 import {useScreenOptions, useTranslation} from '../hooks';
@@ -130,6 +131,12 @@ export default () => {
         component={LoginFacebook}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="ViewDestination"
+        component={ViewDestination}
+        options={{title: t('navigation.returnToTrip'), ...screenOptions.back}}
+      />
+
       <Stack.Screen
         name="Extra"
         component={Extras}
