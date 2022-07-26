@@ -242,6 +242,8 @@ export interface ThemeIcons {
   train: ImageSourcePropType;
   users: ImageSourcePropType;
   warning: ImageSourcePropType;
+  phone: ImageSourcePropType;
+  locationNew: ImageSourcePropType;
 }
 
 export interface ThemeAssets {
