@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { IPaseo } from '../interfaces/paseo';
+import { CantidadPaseos, IPaseo } from '../interfaces/paseo';
 import { obtenerPaseosUsuarioPorEstado } from '../api/paseoDB';
-import { EstadoPaseo } from '../../../paseos-servicio/src/paseos/paseos.service';
+import { EstadoPaseo } from '../interfaces/paseo';
 
 export const usePaseo = () => {
 
     const [paseosUsuario, setPaseosUsuario] = useState<IPaseo[] | null>(null);
 
-    const obtenerPaseosUsuario = (idUsuario: string, estadoPaseos: EstadoPaseo, cantidad:number) => {
+    const obtenerPaseosUsuario = (idUsuario: string, estadoPaseos: EstadoPaseo, cantidad:CantidadPaseos) => {
 
         obtenerPaseosUsuarioPorEstado(idUsuario,estadoPaseos,cantidad)
             .then((resultado) => {
@@ -19,12 +19,14 @@ export const usePaseo = () => {
                 }
             })
             .catch((e) => {
+                console.log("UsePaseos->obtenerPaseosUsuario::ERROR "+ e.Message);
                 setPaseosUsuario(null);
             });
     };
 
     return{
         paseosUsuario,
+        setPaseosUsuario,
         obtenerPaseosUsuario
     }
 }
