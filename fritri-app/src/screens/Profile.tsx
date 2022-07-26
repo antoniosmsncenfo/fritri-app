@@ -10,7 +10,7 @@ import * as regex from '../constants/regex';
 import { Block, Button, Input, Image, Text, Modal } from '../components/';
 import { FotoUsuario, ITheme } from '../constants/types';
 import { FlatList } from 'react-native-gesture-handler';
-import { useUsuario } from '../hooks/useUsuario';
+import { useUsuario, useLogin } from '../hooks/useUsuario';
 import { IRegistration, RegistrationStatus } from '../interfaces/registro-usuario';
 import { IUsuario } from '../constants/types/index';
 import { COUNTRIES } from '../constants/countries';
@@ -85,6 +85,7 @@ const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
 
 
 const Profile = () => {
+  const {emailLogoutSess} = useLogin();
 
   const { user, handleUser } = useData();
   const { t } = useTranslation();
@@ -225,6 +226,7 @@ const Profile = () => {
         cancelable: false,
       }
     );
+    emailLogoutSess();
   };
 
 

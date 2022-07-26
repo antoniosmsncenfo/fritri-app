@@ -6,7 +6,7 @@
     "primaryColor": "#005B94",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/favicon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
@@ -22,6 +22,8 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.fritri.FRITRIAPP",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#005B94"

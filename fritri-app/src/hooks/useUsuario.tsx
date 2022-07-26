@@ -3,12 +3,12 @@ import { useState } from 'react';
 import { IUsuario, ILogin } from '../constants/types/index';
 import { USUARIOS_BASE_URL } from '@env';
 import { IUsuarioContrasena, IUsuarioFritri, LoginStatus } from '../interfaces/usuario-fritri';
-import { guardarUsuarioFriTri, resetearPassword, cambiarPassword, updateUsuarioFriTri,updateFoto } from '../api/usuarioDB';
+import { guardarUsuarioFriTri, resetearPassword, cambiarPassword, updateUsuarioFriTri, updateFoto } from '../api/usuarioDB';
 import { RegistrationStatus, ResetPasswordStatus } from '../interfaces/registro-usuario';
 import Storage from '@react-native-async-storage/async-storage';
 
 export const useLogin = () => {
-
+    const ACCESS_TOKEN_KEY = 'access_token';
     const [fritriUser, setFritriUser] = useState<IUsuarioFritri | null>(null);
     const [LoginMailStatus, setLoginStatus] = useState<LoginStatus>(
         LoginStatus.New
@@ -27,6 +27,11 @@ export const useLogin = () => {
                 data: usuarioLogin,
             };
             const resultado = await axios(request);
+            //Inicio de sesión activo 
+            const KEY_JWT = resultado.data.access_token;
+            await Storage.setItem(ACCESS_TOKEN_KEY,KEY_JWT);
+            console.log(resultado.data.access_token);
+
             if (resultado.status === 200) {
                 if (resultado.data.statusCode === 404) {
                     setLoginStatus(LoginStatus.InvalidMail);
@@ -35,8 +40,7 @@ export const useLogin = () => {
                 else if ('tipoLogin' in resultado.data) {
                     setLoginStatus(LoginStatus.Valid);
                     setFritriUser(resultado.data);
-                    const token = resultado.data.access_token;
-                    Storage.setItem('access_token',token);
+
                 }
 
                 else {
@@ -51,16 +55,18 @@ export const useLogin = () => {
         }
     };
 
-    const emailLogout = () => {
+    const emailLogoutSess = async() => {
+        await Storage.removeItem(ACCESS_TOKEN_KEY);
         setFritriUser(null);
     };
 
     return {
         loginUsuarioEmail,
-        emailLogout,
+        emailLogoutSess,
         LoginMailStatus,
         resetLoginEstatus,
         fritriUserEmail: fritriUser,
+        ACCESS_TOKEN_KEY,
     };
 
 };
@@ -77,7 +83,7 @@ export const useUsuario = () => {
         pais: '',
     });
 
-		const [fritriUser, setFritriUser] = useState<IUsuarioFritri | null>(null);
+    const [fritriUser, setFritriUser] = useState<IUsuarioFritri | null>(null);
 
     const [registrarStatus, setRegistrarStatus] = useState<RegistrationStatus>(
         RegistrationStatus.New
@@ -105,18 +111,18 @@ export const useUsuario = () => {
             );
     };
     const updateUsuario = async (usuarioActualizado: IUsuario) => {
-			try {
-				let result = await updateUsuarioFriTri(usuarioActualizado);
-				if (result) {
-					setUsuarioFriTri(result);
-					setFritriUser(result);
-					setRegistrarStatus(RegistrationStatus.Success);
-				}
-			} catch (error) {
-			}
+        try {
+            let result = await updateUsuarioFriTri(usuarioActualizado);
+            if (result) {
+                setUsuarioFriTri(result);
+                setFritriUser(result);
+                setRegistrarStatus(RegistrationStatus.Success);
+            }
+        } catch (error) {
+        }
     };
 
-    const updateUsuarioFoto = async (uri: any,idUsuario:string) => {
+    const updateUsuarioFoto = async (uri: any, idUsuario: string) => {
         let uriParts = uri.split('.');
         let fileType = uriParts[uriParts.length - 1];
         let formData = new FormData();
@@ -125,10 +131,10 @@ export const useUsuario = () => {
             name: `imagen.${fileType}`,
             type: `imagen/${fileType}`,
         });
-        formData.append('idUsuario',idUsuario);
+        formData.append('idUsuario', idUsuario);
         const resulFoto = await updateFoto(formData);
         setFritriUser(resulFoto);
-        
+
     }
 
 
@@ -173,13 +179,13 @@ export const usePassword = () => {
             .then((resultado) => {
                 if (resultado !== null) {
                     if ('statusCode' in resultado) {
-                        if(resultado.statusCode===405){
+                        if (resultado.statusCode === 405) {
                             setResetPasswordWaitTime(parseInt(resultado.wait));
                             setResetPasswordResult(ResetPasswordStatus.TimeLimit);
                         }
                         else {
                             throw Error("Unknown error");
-                        }                        
+                        }
                     }
                     else {
                         setResetPasswordWaitTime(0);

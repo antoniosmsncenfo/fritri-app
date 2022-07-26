@@ -3,7 +3,6 @@ import { Platform, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import { ILogin, ILoginValidation } from '../constants/types/index';
 import Storage from '@react-native-async-storage/async-storage';
-
 import { useData, useTheme, useTranslation } from '../hooks/';
 import * as regex from '../constants/regex';
 import { Block, Button, Input, Image, Text } from '../components/';
@@ -39,28 +38,13 @@ const Login = () => {
 
   const { signInWithGoogleAsync, fritriUserFromGoogle, isFritriUserFromGoogleLogged, googleLogout } = useGoogleLogin();
   const { facebookLogin, fritriUserFromFacebook, isFritriUserFacebookLogged, facebookLogout, fritriUserIdDb } = useFacebook();
-  const { loginUsuarioEmail, emailLogout, fritriUserEmail, LoginMailStatus, resetLoginEstatus } = useLogin();
-
+  const { loginUsuarioEmail, emailLogoutSess, fritriUserEmail, LoginMailStatus, resetLoginEstatus,ACCESS_TOKEN_KEY} = useLogin();
   const handleChange = useCallback(
     (value) => {
       setLoginData((state) => ({ ...state, ...value }));
     },
     [setLoginData],
   );
-  //mantener sesión activa
-  const getToken = async () => {
-    const dataToken = await Storage.getItem('access_token');
-    if (!dataToken) {
-      navigation.navigate('Login');
-    }
-    else {
-      navigation.navigate('Home');
-
-    }
-    console.log(dataToken);
-
-  }
-
 
   
   useEffect(() => {
@@ -87,7 +71,7 @@ const Login = () => {
 
 
   const handleSignIn = useCallback(() => {
-    /**LOGIN EMAIL */
+
     if (isValid.email && isValid.password) {
       loginUsuarioEmail(login);
 
@@ -130,7 +114,7 @@ const Login = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      emailLogout();
+    // emailLogoutSess();
       googleLogout();
       facebookLogout();
       setIsValid({
@@ -201,13 +185,22 @@ const Login = () => {
     }
   }, [fritriUserEmail]);
   
+  //mantener sesión activa
+  const getToken = async () => {
+    const dataToken = await Storage.getItem(ACCESS_TOKEN_KEY);
+    if (dataToken !== null) {
+      navigation.navigate('Home');
+      console.log(dataToken);
+    }
+    console.log(dataToken);
+
+  }
+  getToken();
   // useEffect(() => {
   //   setTimeout(() => {
   //     getToken();
   //   },2000)
   // });
-
-
   return (
     <Block safe marginTop={sizes.md}>
       <Block paddingHorizontal={sizes.s}>
