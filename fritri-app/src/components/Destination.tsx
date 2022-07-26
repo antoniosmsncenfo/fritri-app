@@ -6,6 +6,7 @@ import Image from './Image';
 import { useTheme, useTranslation } from '../hooks';
 import { IDestino } from '../interfaces/destino';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import { useWindowDimensions } from 'react-native';
 
 export interface IProps {
   destination: IDestinationData;
@@ -29,6 +30,9 @@ const Destination = ({ destination, onPress, isUnique }: IProps) => {
   const { t } = useTranslation();
   const [isSelected, setIsSelected] = useState(selected);
   const { colors, gradients, icons, sizes } = useTheme();
+  const { width } = useWindowDimensions();
+  const widthImage = isUnique ? width * 0.82 : width * 0.75; // establece el ancho de la imagen al 82% del ancho cuando es un solo destino, si son más usa 75%
+  const heightImage = Math.floor(widthImage / (4 / 3)); // establece el alto de la imagen a una relación de 4/3 (w/h)
 
   const onCheckChange = (value: boolean) => {
     onPress({ action: 'select', destination: destino, select: value });
@@ -47,7 +51,7 @@ const Destination = ({ destination, onPress, isUnique }: IProps) => {
     <Block>
       <Block card padding={sizes.sm} marginRight={sizes.s}>
         <Block onTouchEnd={() => onViewPress()} >
-          <Image height={isUnique ? 263 : 255} width={isUnique ? 350 : 300} resizeMode="cover" source={{ uri: destino.urlFoto }} />
+          <Image height={heightImage} width={widthImage} resizeMode="cover" source={{ uri: destino.urlFoto }} />
         </Block>
 
         {/* nombre */}
