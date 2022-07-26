@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { ILugarGoogle } from '../interfaces/lugar-google';
 import { IBuscarLugarGoogle } from '../interfaces/buscar-lugar-google';
 import { getDestinations, getGooglePlaceByType } from '../api/lugaresTuristicosDB';
-import { IDestino } from '../interfaces/destino';
 import { useTranslation } from './useTranslation';
+import { IDestino } from '../interfaces/paseo';
 
 export const useGooglePlace = () => {
   const [googlePlace, setGooglePlace] = useState<ILugarGoogle | null>(null);
