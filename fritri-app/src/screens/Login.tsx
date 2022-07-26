@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Platform, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import { ILogin, ILoginValidation } from '../constants/types/index';
+import Storage from '@react-native-async-storage/async-storage';
 
 import { useData, useTheme, useTranslation } from '../hooks/';
 import * as regex from '../constants/regex';
@@ -46,7 +47,22 @@ const Login = () => {
     },
     [setLoginData],
   );
+  //mantener sesión activa
+  const getToken = async () => {
+    const dataToken = await Storage.getItem('access_token');
+    if (!dataToken) {
+      navigation.navigate('Login');
+    }
+    else {
+      navigation.navigate('Home');
 
+    }
+    console.log(dataToken);
+
+  }
+
+
+  
   useEffect(() => {
     if (LoginMailStatus === LoginStatus.InvalidMail) {
       Alert.alert(
@@ -64,13 +80,17 @@ const Login = () => {
         }
       );
       resetLoginEstatus();
+
     }
   }, [LoginMailStatus]);
+
+
 
   const handleSignIn = useCallback(() => {
     /**LOGIN EMAIL */
     if (isValid.email && isValid.password) {
       loginUsuarioEmail(login);
+
     }
     else if (!isValid.email && !isValid.password) {
       Alert.alert(
@@ -120,6 +140,7 @@ const Login = () => {
       setLoginData(loginDefault);
       return () => {
         limpiar();
+
       };
     }, [])
   );
@@ -179,6 +200,13 @@ const Login = () => {
       }
     }
   }, [fritriUserEmail]);
+  
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     getToken();
+  //   },2000)
+  // });
+
 
   return (
     <Block safe marginTop={sizes.md}>

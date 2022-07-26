@@ -5,6 +5,7 @@ import { USUARIOS_BASE_URL } from '@env';
 import { IUsuarioContrasena, IUsuarioFritri, LoginStatus } from '../interfaces/usuario-fritri';
 import { guardarUsuarioFriTri, resetearPassword, cambiarPassword, updateUsuarioFriTri,updateFoto } from '../api/usuarioDB';
 import { RegistrationStatus, ResetPasswordStatus } from '../interfaces/registro-usuario';
+import Storage from '@react-native-async-storage/async-storage';
 
 export const useLogin = () => {
 
@@ -34,6 +35,8 @@ export const useLogin = () => {
                 else if ('tipoLogin' in resultado.data) {
                     setLoginStatus(LoginStatus.Valid);
                     setFritriUser(resultado.data);
+                    const token = resultado.data.access_token;
+                    Storage.setItem('access_token',token);
                 }
 
                 else {
