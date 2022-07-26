@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, Platform } from 'react-native';
 
-import { useTheme, useTranslation } from '../hooks';
+import { useData, useTheme, useTranslation } from '../hooks';
 import { Block, Button, Input, Text, Image, Checkbox } from '../components';
 import DateTimePicker, { Event } from '@react-native-community/datetimepicker';
 import dayjs from 'dayjs';
 import { ITheme } from '../constants/types/theme';
 import Destination, { IDestinationAction, IDestinationData } from '../components/Destination';
-import { IDestino } from '../interfaces/destino';
 import { useNavigation } from '@react-navigation/native';
 import { useGooglePlace } from '../hooks/useGooglePlace';
+import { IDestino, IPaseo } from '../interfaces/paseo';
 
 interface ITouchableInput {
   icon: keyof ITheme['assets'];
@@ -40,6 +40,7 @@ const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
 const NewTrip = () => {
   const initialDate = new Date();
   const { t } = useTranslation();
+  const { newTripTemp, setNewTripTemp, user } = useData();
   const { destinations, destinationsSearch } = useGooglePlace();
   const { sizes, gradients } = useTheme();
   const [useGps, setuseGps] = useState(false);
@@ -77,6 +78,19 @@ const NewTrip = () => {
 
   const handleSearch = () => {
     destinationsSearch(search);
+  };
+
+  //Agrega el destino al paseo temporal, para luego navegar a restaurantesw
+  const goToRestaurants = () => {
+    setNewTripTemp({
+      ...newTripTemp,
+      destino: selectedDestino!,
+      fechaPaseo: tripDate,
+      idCreador: user._id!,
+      nombre: tripName,
+    });
+
+    navigation.navigate('Restaurants');
   };
 
   const onDateChange = (event: Event, selectedDate?: Date): void => {
@@ -214,7 +228,7 @@ const NewTrip = () => {
 
         {!Object.values(isValid).includes(false)
           && (<Block row justify="space-between" paddingTop={sizes.s} paddingBottom={sizes.m}>
-            <Button flex={1} paddingRight={sizes.s} gradient={gradients.primary} onPress={() => handleSearch()}>
+            <Button flex={1} paddingRight={sizes.s} gradient={gradients.primary} onPress={() => goToRestaurants()}>
               <Text white semibold transform="uppercase">
                 {t('newTrip.restaurants')}
               </Text>
