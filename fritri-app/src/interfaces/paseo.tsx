@@ -1,26 +1,31 @@
 
 export interface IPaseo {
-    _id:                            string;
-    idCreador:                      string;
-    nombre:                         string;
-    fechaPaseo:                     Date;
-    esCompartido:                   boolean;
-    destino:                        IDestino;
-    seccionRestaurantes:            ISeccionRestaurantes;
-    seccionAtraccionesTuristicas:   ISeccionAtraccionesTuristicas;
-    integrantes:                    Integrante[];
-    eliminado:                      boolean;
-    fechaCreacion:                  string;
-    __v:                            number;
+    _id?: string;
+    idCreador: string;
+    nombre: string;
+    fechaPaseo: Date;
+    esCompartido: boolean;
+    destino: IDestino;
+    seccionRestaurantes?: ISeccionRestaurantes;
+    seccionAtraccionesTuristicas?: ISeccionAtraccionesTuristicas;
+    integrantes?: Integrante[];
+    eliminado: boolean;
+    fechaCreacion: Date;
+    __v?: number;
 }
 
 export interface IDestino {
-    _id: string;
-    nombre:             string;
-    urlFotosDestino:    string[];
-    pais:               string;
-    idLugarGoogle:      string;
-    descripcion:        string;
+    _id?: string;
+    nombre: string;
+    urlFotosDestino?: string[];
+    pais?: string;
+    idLugarGoogle?: string;
+    descripcion?: string;
+    estado?: string;
+    latitud?: number;
+    longitud?: number;
+    idGoogle?: string;
+    tipoLugar?: string;
 }
 
 export interface IRestaurante {
@@ -31,7 +36,7 @@ export interface IRestaurante {
 }
 
 export interface ISeccionRestaurantes {
-    _id: string;
+    _id?: string;
     esFinalizadasVotaciones: boolean;
     fechaFinalizacionVotaciones: Date;
     restaurantes: IRestaurante[];
@@ -45,7 +50,7 @@ export interface IAtraccionesturistica {
 }
 
 export interface ISeccionAtraccionesTuristicas {
-    _id: string;
+    _id?: string;
     esFinalizadasVotaciones: boolean;
     fechaFinalizacionVotaciones: Date;
     atraccionesturisticas: IAtraccionesturistica[];
