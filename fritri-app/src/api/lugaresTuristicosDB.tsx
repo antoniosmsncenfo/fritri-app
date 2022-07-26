@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { LUGARES_TURISTICOS_BASE_URL } from '@env';
-import { IDestino } from '../interfaces/destino';
 import { IBuscarLugarGoogle } from '../interfaces/buscar-lugar-google';
+import { IDestino } from '../interfaces/paseo';
 
 export const getDestinations = async (destination: string, language: string = 'es'): Promise<IDestino[]> => {
     if (destination) {
@@ -16,7 +16,7 @@ export const getDestinations = async (destination: string, language: string = 'e
                 idioma: language
             },
         };
-        console.log(request);
+
         try {
             const resultado = await axios(request);
             if (resultado.status === 200) {
