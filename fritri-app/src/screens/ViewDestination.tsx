@@ -61,7 +61,7 @@ const ViewDestination = (props) => {
           marginTop: -200
         }}>
             <View style={{ flex: 1, flexDirection: 'row', alignItems:'stretch', borderWidth: 0, height: 20, borderColor: 'green', width: '88%', marginTop: -15  }} >
-              <Image source={assets.location} radius={6} style={{ marginRight: 10, marginLeft: 10, marginTop: 2}}/>
+              <Image source={assets.locationNew} radius={6} style={{ marginRight: 10, marginLeft: 10, marginTop: 2, width: 20, height: 20 }}/>
               { googlePlace?.direccion ? 
                 <Text lineHeight={26} >
                   { googlePlace?.direccion }
@@ -74,7 +74,7 @@ const ViewDestination = (props) => {
             </View>
 
             <View style={{ flex: 1, flexDirection: 'row', alignItems:'baseline', borderWidth: 0, borderColor: 'red', height: 50, marginTop: -55 }} >
-              <Image source={assets.location} radius={6} style={{ marginRight: 10, marginLeft: 10 }}/>
+              <Image source={assets.phone} radius={6} style={{ marginTop: 15, marginRight: 10, marginLeft: 10, width: 20, height: 20 }}/>
               { googlePlace?.direccion ? 
                 <Text lineHeight={26} onPress={() => { callPlace(googlePlace?.telefono) }}>
                   {`${googlePlace?.telefono}`}
