@@ -12,7 +12,7 @@ import { IPaseo } from '../interfaces/paseo';
 const DashboardCard = ({nombre, fechaPaseo, destino}: IPaseo) => {
   const {t} = useTranslation();
   const {assets, colors, sizes} = useTheme();
-
+  
   //const isHorizontal = type !== 'vertical';
   const isHorizontal = true;
   const CARD_WIDTH = (sizes.width - sizes.padding * 2 - sizes.sm) / 2;
@@ -26,7 +26,7 @@ const DashboardCard = ({nombre, fechaPaseo, destino}: IPaseo) => {
       width={isHorizontal ? CARD_WIDTH * 2 + sizes.sm : CARD_WIDTH}>
       <Image
         resizeMode="cover"
-        source={{uri: destino.urlFotosDestino[0]}}
+        source={{uri: destino.urlFotosDestino![0]}}
         style={{
           height: isHorizontal ? 114 : 110,
           width: !isHorizontal ? '100%' : sizes.width / 2.435,
