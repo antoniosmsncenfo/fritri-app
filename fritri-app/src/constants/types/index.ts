@@ -3,6 +3,7 @@ import { ImageSourcePropType } from 'react-native';
 import { CalendarProps } from 'react-native-calendars';
 import { ITheme } from './theme';
 import { IUsuarioFritri } from '../../interfaces/usuario-fritri';
+import { IPaseo } from '../../interfaces/paseo';
 
 export * from './components';
 export * from './theme';
@@ -101,6 +102,8 @@ export interface IUseData {
   handleArticle: (data?: IArticle) => void;
   notifications: INotification[];
   handleNotifications: (data?: INotification[]) => void;
+  newTripTemp: IPaseo;
+  setNewTripTemp: (trip: IPaseo) => void;
 }
 
 export interface ITranslate {
