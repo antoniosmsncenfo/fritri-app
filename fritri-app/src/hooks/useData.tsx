@@ -23,27 +23,17 @@ import {
 } from '../constants/mocks';
 
 import {light, dark} from '../constants';
-
-export const DataContext = React.createContext({});
-
-export const DataProvider = ({children}: {children: React.ReactNode}) => {
-
-  //Estados que se mantienen
-  const [isDark, setIsDark] = useState(false);
-  const [theme, setTheme] = useState<ITheme>(light);
-  const [user, setUser] = useState<IUser>(USERS[0]);
-
-  //Estados de la plantilla que debemos eliminar para el final
-import { light, dark } from '../constants';
 import { IUsuarioFritri } from '../interfaces/usuario-fritri';
 import { IPaseo } from '../interfaces/paseo';
 
 export const DataContext = React.createContext({});
 
 export const DataProvider = ({ children }: { children: React.ReactNode }) => {
+  //Estados que se mantienen
   const [isDark, setIsDark] = useState(false);
   const [theme, setTheme] = useState<ITheme>(light);
-  const [user, setUser] = useState<IUsuarioFritri>(USERS[0]);
+  const [user, setUser] = useState<IUser>(USERS[0]);
+
   const [basket, setBasket] = useState<IBasket>(BASKET);
   const [users, setUsers] = useState<IUsuarioFritri[]>(USERS);
   const [following, setFollowing] = useState<IProduct[]>(FOLLOWING);
