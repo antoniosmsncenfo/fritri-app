@@ -9,6 +9,7 @@ import Image from './Image';
 import Article from './Article';
 import Product from './Product';
 import Calendar from './Calendar';
+import DashboardCard from './DashboardCard';
 
 export {
   Block,
@@ -22,4 +23,5 @@ export {
   Product,
   Modal,
   Calendar,
+  DashboardCard,
 };

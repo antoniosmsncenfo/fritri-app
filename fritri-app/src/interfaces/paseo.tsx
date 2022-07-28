@@ -61,3 +61,15 @@ export interface Integrante {
     fechaIntegracion: Date;
     esConfirmadaAsistencia: boolean;
 }
+
+export enum CantidadPaseos {
+    Cinco = 5,
+    Diez = 10,
+    Quince = 15,
+    Veinte = 20
+}
+
+export enum EstadoPaseo{
+    Pendiente=1,
+    Completado=2
+  }

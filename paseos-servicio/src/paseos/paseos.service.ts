@@ -56,8 +56,6 @@ export class PaseosService {
     let today = new Date();
     today.setHours(0,0,0,0);
 
-    console.log(today);
-
     try {
       resultadoPaseo = await this.paseoModel.find({
         idCreador: idCreador,
@@ -68,8 +66,6 @@ export class PaseosService {
         null,
         {limit:limite}
       ).exec();
-
-      console.log(resultadoPaseo);
 
     } catch(error) {
       throw new BadRequestException(`Error al tratar de obtener los paseos del usuario::${error.message}`);
