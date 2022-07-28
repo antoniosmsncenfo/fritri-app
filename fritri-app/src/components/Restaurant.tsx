@@ -9,7 +9,6 @@ import { ILugarGoogle } from '../interfaces/lugar-google';
 
 export interface IProps {
   restaurant: IRestaurantData;
-  isUnique: boolean;
   onPress: (event: IRestaurantAction) => void;
 }
 
@@ -24,19 +23,14 @@ export interface IRestaurantData {
   restaurant: ILugarGoogle;
 }
 
-const Restaurant = ({ restaurant, onPress, isUnique }: IProps) => {
-  const { restaurant: restaurante, selected } = restaurant;
+const Restaurant = ({ restaurant, onPress }: IProps) => {
+  const { restaurant: restaurante} = restaurant;
   const { t } = useTranslation();
-  const [isSelected, setIsSelected] = useState(selected);
   const { colors, gradients, icons, sizes } = useTheme();
 
   const onCheckChange = (value: boolean) => {
     onPress({ action: 'select', restaurant: restaurante, select: value });
   };
-
-  useEffect(() => {
-    setIsSelected(selected);
-  }, [selected]);
 
   const onViewPress = () => {
     onPress({ action: 'view', restaurant: restaurante });
@@ -81,7 +75,8 @@ const Restaurant = ({ restaurant, onPress, isUnique }: IProps) => {
       <Block row align="center" justify="space-around" paddingTop={sizes.s}>
         <Block row>
           <BouncyCheckbox fillColor={colors.primary.toString()} iconStyle={{ borderColor: colors.primary }}
-            unfillColor="#FFFFFF" disableBuiltInState onPress={(isChecked: boolean) => { onCheckChange(isChecked); }} isChecked={isSelected} />
+            unfillColor="#FFFFFF"
+            onPress={(isChecked: boolean) => { onCheckChange(isChecked); }} />
           <Text bold paddingRight={sizes.s}>{t('restaurant.select')}</Text>
         </Block>
         <Text bold primary paddingRight={sizes.s} onPress={() => onViewPress()}>{t('restaurant.view')}</Text>
