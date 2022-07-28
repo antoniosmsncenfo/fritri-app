@@ -54,8 +54,9 @@ const Restaurants = () => {
     } else {
       setNotFound(true);
     }
-    const resultFiltered = result.filter(r => r.restaurant.urlFoto !== ''); // quita los restaurantes sin foto
+    const resultFiltered = result.filter(r => r.restaurant.urlFotos.length > 0); // quita los restaurantes sin foto
     setRestaurantsData(resultFiltered);
+    console.log(resultFiltered);
     setSelectedRestaurants([]);
   }, [restaurantsResponse]);
 
@@ -166,7 +167,7 @@ const Restaurants = () => {
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item) => `${item?.restaurant.idGoogle}`}
             style={{ paddingHorizontal: sizes.s, marginBottom: sizes.s }}
-            contentContainerStyle={{ paddingHorizontal: sizes.s}}
+            contentContainerStyle={{ paddingHorizontal: sizes.s }}
             renderItem={({ item }) => (
               <Restaurant restaurant={item} onPress={(value) => onRestaurantChange(value)} isUnique={restaurantsData.length === 1} />
             )}

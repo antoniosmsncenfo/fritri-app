@@ -83,12 +83,19 @@ export class DestinosService {
       c.types.includes(AddressType.administrative_area_level_1),
     );
 
-    const urlsFotos = await this.obtenerReferenciasFotosDestino(place_id);
-    let urlFoto = '';
+    const urlsFotosReferences = await this.obtenerReferenciasFotosDestino(
+      place_id,
+    );
+    const urlFotos: string[] = [];
 
-    if (urlsFotos.length > 0) {
-      const indexFoto = Math.floor(Math.random() * urlsFotos.length); //para obtener un index aleatorio de las posibles fotos
-      urlFoto = await this.obtenerFotoDeGoogle(urlsFotos[indexFoto]);
+    if (urlsFotosReferences && urlsFotosReferences.length > 0) {
+      const indexFoto = Math.floor(Math.random() * urlsFotosReferences.length); //para obtener un index aleatorio de las posibles fotos
+      const url = await this.obtenerFotoDeGoogle(
+        urlsFotosReferences[indexFoto],
+      );
+      if (url !== '') {
+        urlFotos.push(url);
+      }
     }
 
     return {
@@ -99,7 +106,7 @@ export class DestinosService {
       nombre: formatted_address,
       estado: provincias[0]?.long_name || '', //en el caso de que no tenga provincia pone ''
       pais: paises[0]?.long_name || '', //en el caso de que no tenga pais pone ''
-      urlFotos: [urlFoto], //toma la primera foto, en caso de no tener pone ''
+      urlFotos: urlFotos, //toma la primera foto, en caso de no tener pone ''
     };
   }
 
@@ -121,15 +128,20 @@ export class DestinosService {
       c.types.includes(AddressType.administrative_area_level_1),
     );
 
-    const urlsFotos = photos?.map((foto) => {
+    const urlsFotosReferences = photos?.map((foto) => {
       return foto.photo_reference;
     });
 
-    let urlFoto = '';
+    const urlFotos: string[] = [];
 
-    if (urlsFotos && urlsFotos.length > 0) {
-      const indexFoto = Math.floor(Math.random() * urlsFotos.length); //para obtener un index aleatorio de las posibles fotos
-      urlFoto = await this.obtenerFotoDeGoogle(urlsFotos[indexFoto]);
+    if (urlsFotosReferences && urlsFotosReferences.length > 0) {
+      const indexFoto = Math.floor(Math.random() * urlsFotosReferences.length); //para obtener un index aleatorio de las posibles fotos
+      const url = await this.obtenerFotoDeGoogle(
+        urlsFotosReferences[indexFoto],
+      );
+      if (url !== '') {
+        urlFotos.push(url);
+      }
     }
 
     return {
@@ -140,7 +152,7 @@ export class DestinosService {
       nombre: formatted_address,
       estado: provincias[0]?.long_name || '', //en el caso de que no tenga provincia pone ''
       pais: paises[0]?.long_name || '', //en el caso de que no tenga provincia pone ''
-      urlFotos: [urlFoto], //toma la primera foto, en caso de no tener pone vacio
+      urlFotos: urlFotos, //toma la primera foto, en caso de no tener pone vacio
     };
   }
 }
