@@ -86,8 +86,8 @@ const DrawerContent = (
   const screens = [
     {name: t('screens.home'), to: 'Home', icon: assets.home},
     {name: t('screens.components'), to: 'Components', icon: assets.components},
-    // {name: t('screens.articles'), to: 'Articles', icon: assets.document},
-    // {name: t('screens.rental'), to: 'Rentals', icon: assets.rental},
+    {name: t('screens.articles'), to: 'Articles', icon: assets.document},
+    {name: t('screens.rental'), to: 'Rentals', icon: assets.rental},
     {name: t('screens.profile'), to: 'Profile', icon: assets.profile},
     {name: t('screens.settings'), to: 'Settings', icon: assets.settings},
     {name: t('screens.register'), to: 'Register', icon: assets.register},
@@ -95,7 +95,7 @@ const DrawerContent = (
     {name: t('screens.verDestino'), to: 'ViewDestination', icon: assets.extras},
     // {name: t('screens.settings'), to: 'Settings', icon: assets.settings},
     // {name: t('screens.register'), to: 'Register', icon: assets.register},
-    // {name: t('screens.extra'), to: 'Extra', icon: assets.extras},
+    {name: t('screens.extra'), to: 'Extra', icon: assets.extras},
     // {name: t('screens.loginFacebook'), to: 'LoginFacebook', icon: assets.extras},
     {name: t('navigation.notifications'), to: 'Notifications', icon: assets.bell},
   ];

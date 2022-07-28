@@ -9,7 +9,7 @@ import { ITheme } from '../constants/types/theme';
 import Destination, { IDestinationAction, IDestinationData } from '../components/Destination';
 import { useNavigation } from '@react-navigation/native';
 import { useGooglePlace } from '../hooks/useGooglePlace';
-import { IDestino, IPaseo } from '../interfaces/paseo';
+import { IDestino} from '../interfaces/paseo';
 
 interface ITouchableInput {
   icon: keyof ITheme['assets'];
@@ -24,13 +24,13 @@ interface IIsvalid {
 }
 
 const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
-  const { assets, colors, sizes } = useTheme();
+  const { assets, sizes } = useTheme();
 
   return (
     <Button align="flex-start" marginBottom={sizes.s} onPress={() => onPress?.()}>
       <Text bold marginBottom={sizes.s}>{label}</Text>
       <Block row gray outlined width="100%" align="center" radius={sizes.inputRadius} height={sizes.inputHeight}>
-        <Image radius={0} color={colors.primary} source={assets?.[icon]} marginHorizontal={sizes.inputPadding} />
+        <Image radius={0} source={assets?.[icon]} marginHorizontal={sizes.inputPadding} />
         <Text p black> {value} </Text>
       </Block>
     </Button>
