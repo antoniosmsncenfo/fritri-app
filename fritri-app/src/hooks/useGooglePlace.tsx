@@ -5,12 +5,12 @@ import { getDestinations, getGooglePlaceByType, getGooglePlacesByType } from '..
 import { useTranslation } from './useTranslation';
 import { IDestino } from '../interfaces/paseo';
 import { ISolicitudLugaresGoogle } from '../interfaces/solicitud-lugares-google';
-import { RestauranteRespuesta } from '../interfaces/restaurante-respuesta';
+import { LugarGoogleRespuesta } from '../interfaces/restaurante-respuesta';
 
 export const useGooglePlace = () => {
   const [googlePlace, setGooglePlace] = useState<ILugarGoogle | null>(null);
   const [destinations, setDestinations] = useState<IDestino[]>([]);
-  const [restaurantsResponse, setRestaurantsResponse] = useState<RestauranteRespuesta>({ restaurantes: [], tokenPaginacion: '' });
+  const [restaurantsResponse, setRestaurantsResponse] = useState<LugarGoogleRespuesta>({ restaurantes: [], tokenPaginacion: '' });
   const { locale } = useTranslation();
 
   const destinationsSearch = async (destination: string) => {
