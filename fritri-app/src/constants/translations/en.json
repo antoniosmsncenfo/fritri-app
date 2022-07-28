@@ -1,7 +1,7 @@
 {
   "common": {
     "selectImg": "Select image",
-
+    "dateFormat" : "MM/DD/YYYY",
     "appDetails": "App Details",
     "appName": "App name",
     "appVersion": "App version",
@@ -124,7 +124,8 @@
     "title": "FriTri",
     "pending": "Pending",
     "completed": "Completed",
-    "new": "New trip"
+    "new": "New",
+    "noTrips": "There aren't any trips under this category"
   },
   "extras": {
     "title1": "Want to try before",
