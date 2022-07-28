@@ -99,7 +99,7 @@ export class DestinosService {
       nombre: formatted_address,
       estado: provincias[0]?.long_name || '', //en el caso de que no tenga provincia pone ''
       pais: paises[0]?.long_name || '', //en el caso de que no tenga pais pone ''
-      urlFotosDestino: [urlFoto], //toma la primera foto, en caso de no tener pone ''
+      urlFotos: [urlFoto], //toma la primera foto, en caso de no tener pone ''
     };
   }
 
@@ -140,7 +140,7 @@ export class DestinosService {
       nombre: formatted_address,
       estado: provincias[0]?.long_name || '', //en el caso de que no tenga provincia pone ''
       pais: paises[0]?.long_name || '', //en el caso de que no tenga provincia pone ''
-      urlFotosDestino: [urlFoto], //toma la primera foto, en caso de no tener pone vacio
+      urlFotos: [urlFoto], //toma la primera foto, en caso de no tener pone vacio
     };
   }
 }

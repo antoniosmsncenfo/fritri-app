@@ -45,7 +45,7 @@ const Restaurant = ({ restaurant, onPress, isUnique }: IProps) => {
   return (
     <Block card padding={sizes.sm} marginBottom={sizes.s}>
       <Block onTouchEnd={() => onViewPress()} >
-        <Image height={250} resizeMode="cover" source={{ uri: restaurante.urlFoto }} />
+        <Image height={250} resizeMode="cover" source={{ uri: restaurante.urlFotos![0] }} />
       </Block>
 
       {/* nombre */}

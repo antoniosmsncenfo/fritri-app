@@ -12,7 +12,7 @@ import { IPaseo } from '../interfaces/paseo';
 const DashboardCard = ({nombre, fechaPaseo, destino}: IPaseo) => {
   const {t} = useTranslation();
   const {assets, colors, sizes} = useTheme();
-  
+
   //const isHorizontal = type !== 'vertical';
   const isHorizontal = true;
   const CARD_WIDTH = (sizes.width - sizes.padding * 2 - sizes.sm) / 2;
@@ -26,7 +26,7 @@ const DashboardCard = ({nombre, fechaPaseo, destino}: IPaseo) => {
       width={isHorizontal ? CARD_WIDTH * 2 + sizes.sm : CARD_WIDTH}>
       <Image
         resizeMode="cover"
-        source={{uri: destino.urlFotosDestino![0]}}
+        source={{uri: destino.urlFotos![0]}}
         style={{
           height: isHorizontal ? 114 : 110,
           width: !isHorizontal ? '100%' : sizes.width / 2.435,
@@ -45,15 +45,15 @@ const DashboardCard = ({nombre, fechaPaseo, destino}: IPaseo) => {
               radius={0}
               source={assets.calendar}
               style={{tintColor: colors.black}}
-            />        
-          <Text p 
+            />
+          <Text p
             size={sizes.linkSize}
             marginBottom={sizes.s}
             marginLeft={sizes.s}
             >
             { dayjs(fechaPaseo).format(t('common.dateFormat'))}
           </Text>
-        </Block>      
+        </Block>
         <TouchableOpacity>
           <Block row flex={0} align="center">
             <Text

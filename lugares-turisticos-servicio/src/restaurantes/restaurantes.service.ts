@@ -1,4 +1,4 @@
-import { ConsoleLogger, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Categorias, GoogleApiService } from '../google-api/google-api.service';
 
 import {
@@ -128,7 +128,7 @@ export class RestaurantesService {
       longitud: lng,
       nombre: name,
       vecindario: (vicinity?.split(',')[1] || '').trimStart(), //en el caso de que no tenga provincia pone ''
-      urlFoto: urlFoto, //toma la primera foto, en caso de no tener pone vacio
+      urlFotos: [urlFoto], //toma la primera foto, en caso de no tener pone vacio
       rangoPrecios: price_level || 1,
       calificacion: rating || 2,
       telefono: formatted_phone_number,

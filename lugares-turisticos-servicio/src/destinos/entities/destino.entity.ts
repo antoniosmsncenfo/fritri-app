@@ -1,7 +1,7 @@
 export class Destino {
   nombre: string;
   estado: string;
-  urlFotosDestino: string[];
+  urlFotos: string[];
   descripcion: string;
   pais: string;
   latitud: number;

@@ -1,6 +1,6 @@
 export class Restaurante {
   nombre: string;
-  urlFoto: string;
+  urlFotos: string[];
   rangoPrecios?: number;
   vecindario: string;
   latitud: number;
