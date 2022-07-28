@@ -5,7 +5,9 @@ export interface ILugarGoogle {
   nombre: string;
   vecindario: string;
   urlFoto: string;
+  rangoPrecios?: number;
   calificacion: Number;
   telefono?: string;
   direccion?: string;
+  tipoLugar?: string;
 }

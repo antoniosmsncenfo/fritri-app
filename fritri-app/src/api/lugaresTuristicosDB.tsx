@@ -2,6 +2,9 @@ import axios from 'axios';
 import { LUGARES_TURISTICOS_BASE_URL } from '@env';
 import { IBuscarLugarGoogle } from '../interfaces/buscar-lugar-google';
 import { IDestino } from '../interfaces/paseo';
+import { ISolicitudLugaresGoogle } from '../interfaces/solicitud-lugares-google';
+import { ILugarGoogle } from '../interfaces/lugar-google';
+import { RestauranteRespuesta } from '../interfaces/restaurante-respuesta';
 
 export const getDestinations = async (destination: string, language: string = 'es'): Promise<IDestino[]> => {
     if (destination) {
@@ -13,7 +16,7 @@ export const getDestinations = async (destination: string, language: string = 'e
             },
             params: {
                 nombre: destination,
-                idioma: language
+                idioma: language,
             },
         };
 
@@ -62,6 +65,37 @@ export const getGooglePlaceByType = async (buscarLugar: IBuscarLugarGoogle) => {
     }
 };
 
+export const getGooglePlacesByType = async (solicitudLugaresGoogle: ISolicitudLugaresGoogle, language: string = 'es'): Promise<RestauranteRespuesta> => {
+    const type = getTypePlace(solicitudLugaresGoogle.tipo);
+    let request = {
+        method: 'post',
+        url: `${LUGARES_TURISTICOS_BASE_URL}${type?.url}/${type?.endpoint}`,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        data: { ...solicitudLugaresGoogle, idioma: language },
+    };
+
+    try {
+        const result = await axios(request);
+        if (result.status === 200) {
+            return result.data;
+        }
+        else {
+            return {
+                restaurantes: [],
+                tokenPaginacion: '',
+            };
+        }
+    }
+    catch (e) {
+        return {
+            restaurantes: [],
+            tokenPaginacion: '',
+        };
+    }
+};
+
 const getTypePlace = (typeOfPlace) => {
     switch (typeOfPlace) {
         case 'restaurante':
@@ -73,6 +107,16 @@ const getTypePlace = (typeOfPlace) => {
             return {
                 url: 'atracciones-turisticas',
                 endpoint: 'obtener-atraccion-turistica',
+            };
+        case 'restaurantes':
+            return {
+                url: 'restaurantes',
+                endpoint: 'buscar-restaurantes',
+            };
+        case 'atracciones':
+            return {
+                url: 'atracciones-turisticas',
+                endpoint: 'buscar-atracciones-turisticas',
             };
     }
 };
