@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { RestaurantesService } from './restaurantes.service';
 import { RestaurantesSolicitudDto } from './dto/restaurantes-solicitud.dto';
 import { ApiBody } from '@nestjs/swagger';
@@ -11,6 +19,7 @@ export class RestaurantesController {
   constructor(private readonly restaurantesService: RestaurantesService) {}
 
   @Post('buscar-restaurantes')
+  @HttpCode(200)
   async buscarRestaurantes(
     @Body() restauranteSolicitud: RestaurantesSolicitudDto,
   ): Promise<RestauranteRespuesta> {

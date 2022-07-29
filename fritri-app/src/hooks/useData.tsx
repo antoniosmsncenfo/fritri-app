@@ -1,11 +1,10 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import Storage from '@react-native-async-storage/async-storage';
 
 import {
   IArticle,
   ICategory,
   IProduct,
-  IUser,
   IUseData,
   IBasket,
   INotification,
@@ -22,16 +21,21 @@ import {
   BASKET,
   NOTIFICATIONS,
 } from '../constants/mocks';
+
 import {light, dark} from '../constants';
+import { IUsuarioFritri } from '../interfaces/usuario-fritri';
+import { IPaseo } from '../interfaces/paseo';
 
 export const DataContext = React.createContext({});
 
-export const DataProvider = ({children}: {children: React.ReactNode}) => {
+export const DataProvider = ({ children }: { children: React.ReactNode }) => {
+  //Estados que se mantienen
   const [isDark, setIsDark] = useState(false);
   const [theme, setTheme] = useState<ITheme>(light);
   const [user, setUser] = useState<IUser>(USERS[0]);
+
   const [basket, setBasket] = useState<IBasket>(BASKET);
-  const [users, setUsers] = useState<IUser[]>(USERS);
+  const [users, setUsers] = useState<IUsuarioFritri[]>(USERS);
   const [following, setFollowing] = useState<IProduct[]>(FOLLOWING);
   const [trending, setTrending] = useState<IProduct[]>(TRENDING);
   const [categories, setCategories] = useState<ICategory[]>(CATEGORIES);
@@ -39,8 +43,13 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
     useState<IArticle[]>(RECOMMENDATIONS);
   const [articles, setArticles] = useState<IArticle[]>(ARTICLES);
   const [article, setArticle] = useState<IArticle>({});
+
+  //Este estado está pendiente de analizar si se reulitiza
   const [notifications, setNotifications] =
     useState<INotification[]>(NOTIFICATIONS);
+
+  //hook para el paseo que se está creando
+  const [newTripTemp, setNewTripTemp] = useState<IPaseo | null>(null);
 
   // get isDark mode from storage
   const getIsDark = useCallback(async () => {
@@ -66,10 +75,10 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
 
   // handle users / profiles
   const handleUsers = useCallback(
-    (payload: IUser[]) => {
+    (payload: IUsuarioFritri[]) => {
       // set users / compare if has updated
       if (JSON.stringify(payload) !== JSON.stringify(users)) {
-        setUsers({...users, ...payload});
+        setUsers({ ...users, ...payload });
       }
     },
     [users, setUsers],
@@ -84,7 +93,7 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
           total += (item.price || 0) * (item.qty || 1);
           return total;
         }, 0);
-        setBasket({...basket, ...payload, subtotal});
+        setBasket({ ...basket, ...payload, subtotal });
       }
     },
     [basket, setBasket],
@@ -92,7 +101,7 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
 
   // handle user
   const handleUser = useCallback(
-    (payload: IUser) => {
+    (payload: IUsuarioFritri) => {
       // set user / compare if has updated
       if (JSON.stringify(payload) !== JSON.stringify(user)) {
         setUser(payload);
@@ -125,6 +134,7 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
 
   // get initial data for: isDark & language
   useEffect(() => {
+    console.log("useData->IsDark:" + isDark);
     getIsDark();
   }, [getIsDark]);
 
@@ -159,6 +169,8 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
     handleArticle,
     notifications,
     handleNotifications,
+    newTripTemp,
+    setNewTripTemp,
   };
 
   return (

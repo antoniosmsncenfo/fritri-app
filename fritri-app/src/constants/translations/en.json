@@ -1,7 +1,7 @@
 {
   "common": {
     "selectImg": "Select image",
-
+    "dateFormat" : "MM/DD/YYYY",
     "appDetails": "App Details",
     "appName": "App name",
     "appVersion": "App version",
@@ -69,7 +69,8 @@
       "woman": "Woman",
       "man": "Man",
       "other": "Other"
-    }
+    },
+    "loading": "Loading information..."
   },
   "app": {
     "name": "FriTri",
@@ -111,7 +112,9 @@
     "extra": "Automotive",
     "shopping": "Shopping Cart",
     "newTrip": "New Trip",
-    "resetPassword": "Change password"
+    "resetPassword": "Change password",
+    "returnToTrip": "Return to trip",
+    "restaurants": "Restaurants"
   },
   "menu": {
     "started": "Getting Started",
@@ -121,7 +124,8 @@
     "title": "FriTri",
     "pending": "Pending",
     "completed": "Completed",
-    "new": "New trip"
+    "new": "New",
+    "noTrips": "There aren't any trips under this category"
   },
   "extras": {
     "title1": "Want to try before",
@@ -173,7 +177,7 @@
     "errorMessage": "Please try again. If problem persists, please contact customer support.",
     "timeLimitTitle": "Reset password restriction",
     "timeLimitMessage": "You have to wait {{time}} minutes to request a new temporary password."
-  }, 
+  },
   "newPassword": {
     "title": "Change password",
     "subtitle": "Please enter your new password",
@@ -272,6 +276,18 @@
   },
   "destination": {
     "select": "Select",
-    "view": "View"    
+    "view": "View"
+  },
+  "restaurants": {
+    "sights": "Sights",
+    "recommendations": "Recommendations",
+    "searching": "Searching in a range of",
+    "notFound1": "We didn't find restaurants in the range",
+    "moreOptions": "Please try increasing the amount of km."
+  },
+  "restaurant": {
+    "select": "Select",
+    "view": "View",
+    "price": "Price"
   }
 }

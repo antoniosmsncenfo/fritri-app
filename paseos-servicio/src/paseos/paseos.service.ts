@@ -6,6 +6,11 @@ import { Paseo, PaseoDocument } from './schemas/paseos.schema';
 import { CrearPaseoDto } from './dto/crear-paseo.dto';
 import { ActualizarPaseoDto } from './dto/actualizar-paseo.dto';
 
+export enum EstadoPaseo{
+  Pendiente=1,
+  Completado=2
+}
+
 @Injectable()
 export class PaseosService {
   constructor(
@@ -45,6 +50,28 @@ export class PaseosService {
     }
     return resultadoPaseo;
   }
+
+  async obtenerPaseosUsuario(idCreador: string, estado: EstadoPaseo, limite: number) {
+    let resultadoPaseo = null;
+    let today = new Date();
+    today.setHours(0,0,0,0);
+
+    try {
+      resultadoPaseo = await this.paseoModel.find({
+        idCreador: idCreador,
+        fechaPaseo: estado===EstadoPaseo.Pendiente
+          ? {$gte: today}
+          : {$lt: today},
+        eliminado: false},
+        null,
+        {limit:limite}
+      ).exec();
+
+    } catch(error) {
+      throw new BadRequestException(`Error al tratar de obtener los paseos del usuario::${error.message}`);
+    }
+    return resultadoPaseo;
+  }  
 
   async actualizar(actualizarPaseoDto: ActualizarPaseoDto): Promise<Paseo> {
     let resultadoPaseo = null;
