@@ -4,7 +4,7 @@ import { IBuscarLugarGoogle } from '../interfaces/buscar-lugar-google';
 import { IDestino } from '../interfaces/paseo';
 import { ISolicitudLugaresGoogle } from '../interfaces/solicitud-lugares-google';
 import { ILugarGoogle } from '../interfaces/lugar-google';
-import { RestauranteRespuesta } from '../interfaces/restaurante-respuesta';
+import { LugarGoogleRespuesta } from '../interfaces/restaurante-respuesta';
 
 export const getDestinations = async (destination: string, language: string = 'es'): Promise<IDestino[]> => {
     if (destination) {
@@ -65,7 +65,7 @@ export const getGooglePlaceByType = async (buscarLugar: IBuscarLugarGoogle) => {
     }
 };
 
-export const getGooglePlacesByType = async (solicitudLugaresGoogle: ISolicitudLugaresGoogle, language: string = 'es'): Promise<RestauranteRespuesta> => {
+export const getGooglePlacesByType = async (solicitudLugaresGoogle: ISolicitudLugaresGoogle, language: string = 'es'): Promise<LugarGoogleRespuesta> => {
     const type = getTypePlace(solicitudLugaresGoogle.tipo);
     let request = {
         method: 'post',

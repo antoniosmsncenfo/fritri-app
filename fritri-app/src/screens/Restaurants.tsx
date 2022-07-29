@@ -4,12 +4,12 @@ import { FlatList } from 'react-native';
 import { useData, useTheme, useTranslation } from '../hooks';
 import { Block, Button, Text } from '../components';
 import { useNavigation } from '@react-navigation/native';
-import { ILugarGoogle } from '../interfaces/lugar-google';
 import Restaurant, { IRestaurantAction } from '../components/Restaurant';
 import { IRestaurantData } from '../components/Restaurant';
 import { useGooglePlace } from '../hooks/useGooglePlace';
 import { ISolicitudLugaresGoogle } from '../interfaces/solicitud-lugares-google';
 import Slider from '@react-native-community/slider';
+import { IRestaurante, ISeccionRestaurantes } from '../interfaces/paseo';
 
 const RentalHeader = () => {
   const { t } = useTranslation();
@@ -28,15 +28,15 @@ const RentalHeader = () => {
 const Restaurants = () => {
   const { t } = useTranslation();
   const { sizes, gradients, colors } = useTheme();
-  const { newTripTemp } = useData();
+  const { newTripTemp, setNewTripTemp } = useData();
   const { restaurantsResponse, getRestaurants: getRestaurantsFromService } = useGooglePlace();
-  const [selectedRestaurants, setSelectedRestaurants] = useState<ILugarGoogle[]>([]);
+  const [selectedRestaurants, setSelectedRestaurants] = useState<IRestaurante[]>([]);
   const [restaurantsData, setRestaurantsData] = useState<IRestaurantData[]>([]);
   const [selectedRadio, setSelectedRadio] = useState(1);
   const [notFound, setNotFound] = useState(false);
   const navigation = useNavigation();
   const minDistanceKm = 5;
-  const maxDistanceKm = 50;
+  const maxDistanceKm = 20;
   const stepDistanceKm = 5;
 
   useEffect(() => {
@@ -54,25 +54,33 @@ const Restaurants = () => {
     } else {
       setNotFound(true);
     }
-    const resultFiltered = result.filter(r => r.restaurant.urlFoto !== ''); // quita los restaurantes sin foto
+    const resultFiltered = result.filter(r => r.restaurant.urlFotos.length > 0); // quita los restaurantes sin foto
     setRestaurantsData(resultFiltered);
     setSelectedRestaurants([]);
   }, [restaurantsResponse]);
 
-  //Agrega el destino al paseo temporal, para luego navegar a restaurantesw
+  //Agrega los restaurantes al paseo temporal, para luego navegar a las atracciones
   const goToSights = () => {
     //agregar los reataurantes al paseo temporal
 
-    navigation.navigate('Restaurants');
+    const seccionRestaurantes: ISeccionRestaurantes = {
+      esFinalizadasVotaciones: false,
+      fechaFinalizacionVotaciones: new Date(),
+      restaurantes: selectedRestaurants,
+    };
+
+    setNewTripTemp({
+      ...newTripTemp,
+      seccionRestaurantes: seccionRestaurantes,
+    });
+    //navigation.navigate('Sights');
   };
 
   //este es el callback que revisa si se desea ver el destino o seleccionarlo para agregarlo al paseo
   const onRestaurantChange = (action: IRestaurantAction) => {
     switch (action.action) {
       case 'select':
-        updateRestaurantsData(action.restaurant);
-        setSelectedRestaurants([...selectedRestaurants, action.restaurant]);
-        //setSelectedRestaurants([...restaurants, {...action.restaurant}]);
+        updateRestaurantsData(action);
         break;
       case 'view':
         navigation.navigate('ViewDestination', action.restaurant);
@@ -83,16 +91,21 @@ const Restaurants = () => {
   };
 
   //Aqui agrego los restaurantes seleccionados
-  const updateRestaurantsData = (destino: ILugarGoogle) => {
-    const filtered = restaurantsData.map((r) => {
-      if (destino.idGoogle === r.restaurant.idGoogle) {
-        return { ...r, selected: true };
-      }
-      else {
-        return { ...r, selected: false };
-      }
-    });
-    setRestaurantsData(filtered);
+  const updateRestaurantsData = ({ restaurant, select }: IRestaurantAction) => {
+    if (select) {
+      const selected = {
+        idLugarGoogle: restaurant.idGoogle,
+        nombre: restaurant.nombre,
+        descripcion: `{"calificacion": ${restaurant.calificacion}, "vecindario":"${restaurant.vecindario}"}`,
+        urlFotos: restaurant.urlFotos,
+      };
+
+      setSelectedRestaurants([...selectedRestaurants, selected]);
+    }
+    else {
+      const filtered = selectedRestaurants.filter(r => r.idLugarGoogle !== restaurant.idGoogle);
+      setSelectedRestaurants(filtered);
+    }
   };
 
   const requestRestaurantsToService = () => {
@@ -166,9 +179,9 @@ const Restaurants = () => {
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item) => `${item?.restaurant.idGoogle}`}
             style={{ paddingHorizontal: sizes.s, marginBottom: sizes.s }}
-            contentContainerStyle={{ paddingHorizontal: sizes.s}}
+            contentContainerStyle={{ paddingHorizontal: sizes.s }}
             renderItem={({ item }) => (
-              <Restaurant restaurant={item} onPress={(value) => onRestaurantChange(value)} isUnique={restaurantsData.length === 1} />
+              <Restaurant restaurant={item} onPress={(value) => onRestaurantChange(value)} />
             )}
           />
         </Block>

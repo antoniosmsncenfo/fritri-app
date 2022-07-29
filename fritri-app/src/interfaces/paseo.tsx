@@ -17,7 +17,7 @@ export interface IPaseo {
 export interface IDestino {
     _id?: string;
     nombre: string;
-    urlFotosDestino?: string[];
+    urlFotos?: string[];
     pais?: string;
     idLugarGoogle?: string;
     descripcion?: string;
