@@ -283,7 +283,8 @@
     "recommendations": "Recommendations",
     "searching": "Searching in a range of",
     "notFound1": "We didn't find restaurants in the range",
-    "moreOptions": "Please try increasing the amount of km."
+    "moreOptions": "Please try increasing the amount of km.",
+    "seeMore": "See more"
   },
   "restaurant": {
     "select": "Select",
