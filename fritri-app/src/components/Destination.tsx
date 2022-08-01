@@ -49,7 +49,7 @@ const Destination = ({ destination, onPress, isUnique }: IProps) => {
 
   return (
     <Block>
-      <Block card padding={sizes.sm} marginRight={sizes.s}>
+      <Block card padding={sizes.sm} marginRight={sizes.s} marginVertical={sizes.s}>
         <Block onTouchEnd={() => onViewPress()} >
           <Image height={heightImage} width={widthImage} resizeMode="cover" source={{ uri: destino.urlFotos![0] }} />
         </Block>

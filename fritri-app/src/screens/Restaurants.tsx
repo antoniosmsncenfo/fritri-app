@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList } from 'react-native';
+import { ActivityIndicator, FlatList } from 'react-native';
 
 import { useData, useTheme, useTranslation } from '../hooks';
 import { Block, Button, Text } from '../components';
@@ -11,7 +11,7 @@ import { ISolicitudLugaresGoogle } from '../interfaces/solicitud-lugares-google'
 import Slider from '@react-native-community/slider';
 import { IRestaurante, ISeccionRestaurantes } from '../interfaces/paseo';
 
-const RentalHeader = () => {
+const RestaurantsHeader = () => {
   const { t } = useTranslation();
   const { sizes } = useTheme();
   return (
@@ -25,6 +25,24 @@ const RentalHeader = () => {
   );
 };
 
+interface IRestaurantFooterProps {
+  show: boolean;
+  onPress?: (event?: any) => void
+}
+
+const RestaurantsFooter = ({ show, onPress }: IRestaurantFooterProps) => {
+  const { t } = useTranslation();
+  const { sizes } = useTheme();
+  return (
+    <Block row justify="center" onTouchEnd={onPress} padding={sizes.padding}>
+      {show &&
+        (<Text primary semibold transform="uppercase">
+          {t('restaurants.seeMore')}
+        </Text>)}
+    </Block>
+  );
+};
+
 const Restaurants = () => {
   const { t } = useTranslation();
   const { sizes, gradients, colors } = useTheme();
@@ -34,13 +52,16 @@ const Restaurants = () => {
   const [restaurantsData, setRestaurantsData] = useState<IRestaurantData[]>([]);
   const [selectedRadio, setSelectedRadio] = useState(1);
   const [notFound, setNotFound] = useState(false);
+  const [showPagination, setShowPagination] = useState(false);
+  const [showActivityIndicator, setShowActivityIndicator] = useState(true);
+  const [isPaginationUsed, setIsPaginationUsed] = useState(false);
   const navigation = useNavigation();
   const minDistanceKm = 5;
   const maxDistanceKm = 20;
   const stepDistanceKm = 5;
 
   useEffect(() => {
-    requestRestaurantsToService();
+    requestRestaurantsToService(false);
   }, []);
 
   // se ejecuta cuando se obtienen los restaurantes del servicio
@@ -55,14 +76,22 @@ const Restaurants = () => {
       setNotFound(true);
     }
     const resultFiltered = result.filter(r => r.restaurant.urlFotos.length > 0); // quita los restaurantes sin foto
-    setRestaurantsData(resultFiltered);
+
+    if (isPaginationUsed) {
+      const paginatedRestaurants = restaurantsData.concat(resultFiltered);
+      setRestaurantsData(paginatedRestaurants);
+      setIsPaginationUsed(false);
+    } else {
+      setRestaurantsData(resultFiltered);
+    }
     setSelectedRestaurants([]);
+    setShowPagination(restaurantsResponse.tokenPaginacion !== '' ? true : false);
+    setShowActivityIndicator(false);
   }, [restaurantsResponse]);
 
   //Agrega los restaurantes al paseo temporal, para luego navegar a las atracciones
   const goToSights = () => {
     //agregar los reataurantes al paseo temporal
-
     const seccionRestaurantes: ISeccionRestaurantes = {
       esFinalizadasVotaciones: false,
       fechaFinalizacionVotaciones: new Date(),
@@ -108,15 +137,17 @@ const Restaurants = () => {
     }
   };
 
-  const requestRestaurantsToService = () => {
+  const requestRestaurantsToService = (usePagination: boolean = false) => {
     const request: ISolicitudLugaresGoogle = {
       latitud: newTripTemp.destino.latitud!,
       longitud: newTripTemp.destino.longitud!,
       radio: selectedRadio,
       tipo: 'restaurantes',
-      tokenPaginacion: '',
+      tokenPaginacion: usePagination ? restaurantsResponse.tokenPaginacion : '',
     };
+    setShowActivityIndicator(true);
     getRestaurantsFromService(request);
+    setIsPaginationUsed(usePagination);
   };
 
   return (
@@ -136,7 +167,7 @@ const Restaurants = () => {
           </Block>
           <Block flex={5}>
             <Slider thumbTintColor={colors.primary!} style={{ height: 30 }} maximumValue={maxDistanceKm} minimumValue={minDistanceKm} step={stepDistanceKm}
-              value={selectedRadio} onValueChange={sliderValue => setSelectedRadio(sliderValue)} onTouchEnd={requestRestaurantsToService} />
+              value={selectedRadio} onValueChange={sliderValue => setSelectedRadio(sliderValue)} onTouchEnd={() => requestRestaurantsToService(false)} />
           </Block>
           <Block row justify="center" flex={1} >
             <Text h5 bold size={13} transform="uppercase" primary>
@@ -171,21 +202,31 @@ const Restaurants = () => {
 
         {!notFound && (
           <Block flex={0} paddingLeft={sizes.sm} >
-            <RentalHeader />
+            <RestaurantsHeader />
           </Block>)}
         <Block>
           <FlatList
+            refreshing={true}
             data={restaurantsData}
-            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             keyExtractor={(item) => `${item?.restaurant.idGoogle}`}
             style={{ paddingHorizontal: sizes.s, marginBottom: sizes.s }}
             contentContainerStyle={{ paddingHorizontal: sizes.s }}
             renderItem={({ item }) => (
-              <Restaurant restaurant={item} onPress={(value) => onRestaurantChange(value)} />
+              <Restaurant restaurant={item} onPress={(value) => onRestaurantChange(value)} pagination={showPagination} />
             )}
+            ListFooterComponent={() =>
+            (<Block>
+              {showActivityIndicator &&
+                (<Block paddingLeft={sizes.s} marginTop={sizes.s}>
+                  <ActivityIndicator size="large" color={colors.primary} />
+                </Block>)
+              }
+              <RestaurantsFooter show={showPagination} onPress={() => requestRestaurantsToService(true)} />
+            </Block>)
+            }
           />
         </Block>
-
       </Block>
 
     </ >

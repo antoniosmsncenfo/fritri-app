@@ -11,9 +11,9 @@ export interface IProps {
   restaurant: IRestaurantData;
   onPress: (event: IRestaurantAction) => void;
 }
-
+type ActionT = 'select' | 'view';
 export interface IRestaurantAction {
-  action: 'select' | 'view';
+  action: ActionT;
   restaurant: ILugarGoogle;
   select?: boolean;
 }
@@ -23,8 +23,8 @@ export interface IRestaurantData {
   restaurant: ILugarGoogle;
 }
 
-const Restaurant = ({ restaurant, onPress }: IProps) => {
-  const { restaurant: restaurante} = restaurant;
+const Restaurant = ({ restaurant, onPress}: IProps) => {
+  const { restaurant: restaurante } = restaurant;
   const { t } = useTranslation();
   const { colors, gradients, icons, sizes } = useTheme();
 
