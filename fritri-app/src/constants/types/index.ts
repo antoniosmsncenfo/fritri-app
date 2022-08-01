@@ -104,6 +104,8 @@ export interface IUseData {
   handleNotifications: (data?: INotification[]) => void;
   newTripTemp: IPaseo;
   setNewTripTemp: (trip: IPaseo) => void;
+  selectedTrip: IPaseo;
+  setSelectedTrip: (trip: IPaseo) => void;  
 }
 
 export interface ITranslate {

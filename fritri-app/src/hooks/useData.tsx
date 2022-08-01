@@ -51,6 +51,9 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   //hook para el paseo que se está creando
   const [newTripTemp, setNewTripTemp] = useState<IPaseo | null>(null);
 
+  //hook para el paseo que se está consultando
+  const [selectedTrip, setSelectedTrip] = useState<IPaseo | null>(null);
+
   // get isDark mode from storage
   const getIsDark = useCallback(async () => {
     // get preferance gtom storage
@@ -171,6 +174,8 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     handleNotifications,
     newTripTemp,
     setNewTripTemp,
+    selectedTrip,
+    setSelectedTrip,    
   };
 
   return (

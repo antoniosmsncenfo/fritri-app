@@ -25,3 +25,25 @@ export const obtenerPaseosUsuarioPorEstado = async (
         throw e;
     }
 };
+
+export const obtenerPaseoPorID = async (idPaseo:string) => {
+
+    let request = {
+        method: 'get',
+        url: `${process.env.PASEOS_BASE_URL}/obtener-paseo/${idPaseo}`,
+        headers: {},
+    };
+    try {
+        const resultado = await axios(request);
+
+        if (resultado.status === 200) {
+            return resultado.data;
+        }
+        else {
+            return null;
+        }
+    }
+    catch (e) {
+        throw e;
+    }
+};

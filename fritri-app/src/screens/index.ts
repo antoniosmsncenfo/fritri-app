@@ -22,4 +22,4 @@ export { default as LoginFacebook } from './LoginFacebook';
 export { default as ViewDestination } from './ViewDestination';
 export { default as NewTrip } from './NewTrip';
 export { default as Restaurants } from './Restaurants';
-
+export { default as TripDetails } from './TripDetails';

@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { useData, useTheme, useTranslation } from '../hooks/';
-import { Block, Button, Image, Product, Text, DashboardCard } from '../components/';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { Block, Button, Image, Product, Text, DashboardCard, Input } from '../components/';
+import { useNavigation } from '@react-navigation/native';
 import { usePaseo } from '../hooks/usePaseos';
 import { EstadoPaseo } from '../interfaces/paseo';
 import { CantidadPaseos } from '../interfaces/paseo';
@@ -61,10 +61,6 @@ const Home = () => {
 
   return (
     <Block>
-      {/* search input */}
-      {/* <Block color={colors.card} flex={0} padding={sizes.padding}>
-        <Input search placeholder={t('common.search')} />
-      </Block> */}
 
       {/* toggle products list */}
       <Block
@@ -154,13 +150,12 @@ const Home = () => {
           </Block>
         </Button>        
       </Block>
-      {/* <Block paddingTop={sizes.padding} paddingHorizontal={sizes.padding} flex={0}>
-        <Button gradient={gradients.primary} onPress={() => navigation.navigate('NewTrip')}>
-          <Text white semibold transform="uppercase">
-            {t('home.new')}
-          </Text>
-        </Button>
+
+      {/* search input */}
+      {/* <Block color={colors.card} flex={0} padding={sizes.padding}>
+        <Input search placeholder={t('common.search')} />
       </Block> */}
+      
       {paseosUsuario?.length===0 &&
         <Block paddingTop={sizes.padding} paddingHorizontal={sizes.padding} flex={0}>
           <Text align='center' color={colors.primary} h4>{t('home.noTrips')}</Text>          
