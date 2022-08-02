@@ -9,9 +9,9 @@ const TripDetails = (props) => {
     const {assets, sizes, colors} = useTheme();
     const {t} = useTranslation();
     const IMAGE_SIZE = (sizes.width - (sizes.padding + sizes.sm) * 2) / 5;
-    const IMAGE_MARGIN = (sizes.width - IMAGE_SIZE * 3 - sizes.padding * 2) / 5;
 
     const {obtenerPaseo, paseoSeleccionado} = usePaseo();
+
 
     useEffect(() => {
       let idPaseo:string = props.route.params.id;
@@ -120,14 +120,28 @@ const TripDetails = (props) => {
                     flex={0} width={64} height={64}
                     align="center" justify="center" 
                     marginRight={sizes.s}>
-                    <Image
-                      radius={sizes.s} width={64} height={64}
-                      source={{uri: restaurante.urlFotos![0]}}
-                      style={{
-                        height: IMAGE_SIZE,
-                        width: IMAGE_SIZE,
-                      }}
-                    />
+                    <TouchableOpacity>
+                      {restaurante.urlFotos.length>0 && (
+                      <Image
+                        radius={sizes.s} width={64} height={64}
+                        source={{uri: restaurante.urlFotos![0]}}
+                        style={{
+                          height: IMAGE_SIZE,
+                          width: IMAGE_SIZE,
+                        }}
+                      />
+                      )}
+                      {restaurante.urlFotos.length===0 && (
+                      <Image
+                        radius={sizes.s} width={64} height={64}
+                        source={assets.restaurant}
+                        style={{
+                          height: IMAGE_SIZE,
+                          width: IMAGE_SIZE,
+                        }}
+                      />
+                      )}
+                    </TouchableOpacity>                    
                   </Block>
 
                   <Block>
@@ -166,6 +180,17 @@ const TripDetails = (props) => {
 
                 </Block>
             ))}
+
+            {
+              paseoSeleccionado?.seccionRestaurantes?.restaurantes.length===0 && (
+                <Block row marginBottom={sizes.sm}>
+                  <Text h5 color={colors.primary}>
+                  {t('tripDetails.noRestaurants')}
+                  </Text>
+                </Block>                
+              )
+            }
+
           </Block>
 
          {/* Atracciones */}
@@ -185,14 +210,28 @@ const TripDetails = (props) => {
                     flex={0} width={64} height={64}
                     align="center" justify="center" 
                     marginRight={sizes.s}>
-                    <Image
-                      radius={sizes.s} width={64} height={64}
-                      source={{uri: attraccion.urlFotos![0]}}
-                      style={{
-                        height: IMAGE_SIZE,
-                        width: IMAGE_SIZE,
-                      }}
-                    />
+                    <TouchableOpacity>
+                      {attraccion.urlFotos.length>0 && (
+                      <Image
+                        radius={sizes.s} width={64} height={64}
+                        source={{uri: attraccion.urlFotos![0]}}
+                        style={{
+                          height: IMAGE_SIZE,
+                          width: IMAGE_SIZE,
+                        }}
+                      />
+                      )}
+                      {attraccion.urlFotos.length===0 && (
+                      <Image
+                        radius={sizes.s} width={64} height={64}
+                        source={assets.attraction}
+                        style={{
+                          height: IMAGE_SIZE,
+                          width: IMAGE_SIZE,
+                        }}
+                      />
+                      )}
+                    </TouchableOpacity> 
                   </Block>
 
                   <Block>
@@ -232,6 +271,15 @@ const TripDetails = (props) => {
                 </Block>
             ))}
 
+            {
+              paseoSeleccionado?.seccionAtraccionesTuristicas?.atraccionesturisticas.length===0 && (
+                <Block row marginBottom={sizes.sm}>
+                  <Text h5 color={colors.primary}>
+                  {t('tripDetails.noTouristAttractions')}
+                  </Text>
+                </Block>                
+              )
+            }
           </Block>
 
           </Block>
