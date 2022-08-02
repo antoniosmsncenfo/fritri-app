@@ -3,5 +3,7 @@ export interface ISolicitudLugaresGoogle {
     longitud: number;
     radio: number;
     tokenPaginacion: string;
-    tipo: 'restaurantes' | 'atracciones';
+    tipo: TipoLugaresGoogle;
 }
+
+export type TipoLugaresGoogle = 'restaurantes' | 'atracciones'

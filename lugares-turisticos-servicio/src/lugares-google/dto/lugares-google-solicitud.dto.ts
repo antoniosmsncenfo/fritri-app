@@ -6,8 +6,9 @@ import {
   IsOptional,
   Min,
 } from 'class-validator';
+import { TipoLugar } from 'src/google-api/google-api.service';
 
-export class AtraccionesTuristicasSolicitudDto {
+export class LugaresGoogleSolicitudDto {
   @IsNumber()
   @ApiProperty()
   latitud: number;
@@ -24,6 +25,11 @@ export class AtraccionesTuristicasSolicitudDto {
   @ApiProperty()
   @IsDefined()
   tokenPaginacion: string;
+
+  @ApiProperty({ enum: TipoLugar })
+  @IsNotEmpty()
+  @IsDefined()
+  tipo: TipoLugar;
 
   @ApiPropertyOptional()
   @IsOptional()

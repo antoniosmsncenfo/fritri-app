@@ -1,4 +1,4 @@
-export class Restaurante {
+export class LugarGoogle {
   nombre: string;
   urlFotos: string[];
   rangoPrecios?: number;

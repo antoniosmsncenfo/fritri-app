@@ -4,21 +4,21 @@ import { ActivityIndicator, FlatList } from 'react-native';
 import { useData, useTheme, useTranslation } from '../hooks';
 import { Block, Button, Text } from '../components';
 import { useNavigation } from '@react-navigation/native';
-import Restaurant, { IRestaurantAction } from '../components/Restaurant';
-import { IRestaurantData } from '../components/Restaurant';
+import LugarGoogle, { ILugarGoogleAction } from '../components/LugarGoogle';
+import { ILugarGoogleData } from '../components/LugarGoogle';
 import { useGooglePlace } from '../hooks/useGooglePlace';
 import { ISolicitudLugaresGoogle } from '../interfaces/solicitud-lugares-google';
 import Slider from '@react-native-community/slider';
-import { IRestaurante, ISeccionRestaurantes } from '../interfaces/paseo';
+import { IAtraccionesturistica, IRestaurante, ISeccionRestaurantes } from '../interfaces/paseo';
 
-const RestaurantsHeader = () => {
+const LugaresGoogleHeader = () => {
   const { t } = useTranslation();
   const { sizes } = useTheme();
   return (
     <>
       <Block row flex={0} align="center" justify="space-between" marginVertical={sizes.m} >
         <Text h5 semibold>
-          {t('restaurants.recommendations')}
+          {t('lugaresGoogle.recommendations')}
         </Text>
       </Block>
     </>
@@ -30,26 +30,27 @@ interface IRestaurantFooterProps {
   onPress?: (event?: any) => void
 }
 
-const RestaurantsFooter = ({ show, onPress }: IRestaurantFooterProps) => {
+const LugaresGoogleFooter = ({ show, onPress }: IRestaurantFooterProps) => {
   const { t } = useTranslation();
   const { sizes } = useTheme();
   return (
     <Block row justify="center" onTouchEnd={onPress} padding={sizes.padding}>
       {show &&
         (<Text primary semibold transform="uppercase">
-          {t('restaurants.seeMore')}
+          {t('lugaresGoogle.seeMore')}
         </Text>)}
     </Block>
   );
 };
 
-const Restaurants = () => {
+const LugaresGoogle = () => {
   const { t } = useTranslation();
   const { sizes, gradients, colors } = useTheme();
   const { newTripTemp, setNewTripTemp } = useData();
-  const { restaurantsResponse, getRestaurants: getRestaurantsFromService } = useGooglePlace();
+  const { lugaresGoogleResponse, getLugaresGoogle } = useGooglePlace();
   const [selectedRestaurants, setSelectedRestaurants] = useState<IRestaurante[]>([]);
-  const [restaurantsData, setRestaurantsData] = useState<IRestaurantData[]>([]);
+  const [selectedSights, setSelectedSights] = useState<IAtraccionesturistica[]>([]);
+  const [lugaresGoogleData, setLugaresGoogleData] = useState<ILugarGoogleData[]>([]);
   const [selectedRadio, setSelectedRadio] = useState(1);
   const [notFound, setNotFound] = useState(false);
   const [showPagination, setShowPagination] = useState(false);
@@ -61,33 +62,33 @@ const Restaurants = () => {
   const stepDistanceKm = 5;
 
   useEffect(() => {
-    requestRestaurantsToService(false);
+    requestLugaresGoogleToService(false);
   }, []);
 
   // se ejecuta cuando se obtienen los restaurantes del servicio
   useEffect(() => {
-    let result: IRestaurantData[] = [];
+    let result: ILugarGoogleData[] = [];
 
-    if (restaurantsResponse && restaurantsResponse.restaurantes.length > 0) {
+    if (lugaresGoogleResponse && lugaresGoogleResponse.lugaresGoogle.length > 0) {
       //Convierte el restaurante en RestaurantData, para agregar la bandera de seleccionado en falso
-      result = restaurantsResponse.restaurantes.map((r) => { return { selected: false, restaurant: r }; });
+      result = lugaresGoogleResponse.lugaresGoogle.map((r) => { return { selected: false, lugarGoogle: r }; });
       setNotFound(false);
     } else {
       setNotFound(true);
     }
-    const resultFiltered = result.filter(r => r.restaurant.urlFotos.length > 0); // quita los restaurantes sin foto
+    const resultFiltered = result.filter(r => r.lugarGoogle.urlFotos.length > 0); // quita los restaurantes sin foto
 
     if (isPaginationUsed) {
-      const paginatedRestaurants = restaurantsData.concat(resultFiltered);
-      setRestaurantsData(paginatedRestaurants);
+      const paginatedLugarGoogle = lugaresGoogleData.concat(resultFiltered);
+      setLugaresGoogleData(paginatedLugarGoogle);
       setIsPaginationUsed(false);
     } else {
-      setRestaurantsData(resultFiltered);
+      setLugaresGoogleData(resultFiltered);
     }
     setSelectedRestaurants([]);
-    setShowPagination(restaurantsResponse.tokenPaginacion !== '' ? true : false);
+    setShowPagination(lugaresGoogleResponse.tokenPaginacion !== '' ? true : false);
     setShowActivityIndicator(false);
-  }, [restaurantsResponse]);
+  }, [lugaresGoogleResponse]);
 
   //Agrega los restaurantes al paseo temporal, para luego navegar a las atracciones
   const goToSights = () => {
@@ -106,13 +107,13 @@ const Restaurants = () => {
   };
 
   //este es el callback que revisa si se desea ver el destino o seleccionarlo para agregarlo al paseo
-  const onRestaurantChange = (action: IRestaurantAction) => {
+  const onRestaurantChange = (action: ILugarGoogleAction) => {
     switch (action.action) {
       case 'select':
-        updateRestaurantsData(action);
+        updateLugaresGoogleData(action);
         break;
       case 'view':
-        navigation.navigate('ViewDestination', action.restaurant);
+        navigation.navigate('ViewDestination', action.lugarGoogle);
         break;
       default:
         break;
@@ -120,33 +121,33 @@ const Restaurants = () => {
   };
 
   //Aqui agrego los restaurantes seleccionados
-  const updateRestaurantsData = ({ restaurant, select }: IRestaurantAction) => {
+  const updateLugaresGoogleData = ({ lugarGoogle, select }: ILugarGoogleAction) => {
     if (select) {
       const selected = {
-        idLugarGoogle: restaurant.idGoogle,
-        nombre: restaurant.nombre,
-        descripcion: `{"calificacion": ${restaurant.calificacion}, "vecindario":"${restaurant.vecindario}"}`,
-        urlFotos: restaurant.urlFotos,
+        idLugarGoogle: lugarGoogle.idGoogle,
+        nombre: lugarGoogle.nombre,
+        descripcion: `{"calificacion": ${lugarGoogle.calificacion}, "vecindario":"${lugarGoogle.vecindario}"}`,
+        urlFotos: lugarGoogle.urlFotos,
       };
 
       setSelectedRestaurants([...selectedRestaurants, selected]);
     }
     else {
-      const filtered = selectedRestaurants.filter(r => r.idLugarGoogle !== restaurant.idGoogle);
+      const filtered = selectedRestaurants.filter(r => r.idLugarGoogle !== lugarGoogle.idGoogle);
       setSelectedRestaurants(filtered);
     }
   };
 
-  const requestRestaurantsToService = (usePagination: boolean = false) => {
+  const requestLugaresGoogleToService = (usePagination: boolean = false) => {
     const request: ISolicitudLugaresGoogle = {
       latitud: newTripTemp.destino.latitud!,
       longitud: newTripTemp.destino.longitud!,
       radio: selectedRadio,
       tipo: 'restaurantes',
-      tokenPaginacion: usePagination ? restaurantsResponse.tokenPaginacion : '',
+      tokenPaginacion: usePagination ? lugaresGoogleResponse.tokenPaginacion : '',
     };
     setShowActivityIndicator(true);
-    getRestaurantsFromService(request);
+    getLugaresGoogle(request);
     setIsPaginationUsed(usePagination);
   };
 
@@ -155,7 +156,7 @@ const Restaurants = () => {
       <Block flex={1} paddingHorizontal={sizes.sm} white>
         <Block row justify="center" marginLeft={sizes.xs}>
           <Text h5 bold size={13} transform="uppercase" >
-            {t('restaurants.searching')} {selectedRadio} km
+            {t('lugaresGoogle.searching')} {selectedRadio} km
           </Text>
         </Block>
 
@@ -167,7 +168,7 @@ const Restaurants = () => {
           </Block>
           <Block flex={5}>
             <Slider thumbTintColor={colors.primary!} style={{ height: 30 }} maximumValue={maxDistanceKm} minimumValue={minDistanceKm} step={stepDistanceKm}
-              value={selectedRadio} onValueChange={sliderValue => setSelectedRadio(sliderValue)} onTouchEnd={() => requestRestaurantsToService(false)} />
+              value={selectedRadio} onValueChange={sliderValue => setSelectedRadio(sliderValue)} onTouchEnd={() => requestLugaresGoogleToService(false)} />
           </Block>
           <Block row justify="center" flex={1} >
             <Text h5 bold size={13} transform="uppercase" primary>
@@ -175,45 +176,45 @@ const Restaurants = () => {
             </Text>
           </Block>
         </Block>
-        {(selectedRestaurants.length > 0)
+        {(selectedRestaurants.length > 0 || selectedSights.length > 0)
           && (
             <Button gradient={gradients.primary} marginVertical={sizes.s}
               onPress={() => goToSights()}>
               <Text white semibold transform="uppercase">
-                {t('restaurants.sights')}
+                {t('lugaresGoogle.sights')}
               </Text>
             </Button>
           )}
       </Block>
 
       <Block flex={4}>
-        {/* restaurants list */}
+        {/* lugaresGoogle list */}
         {/* not found */}
         {notFound && (
           <Block flex={0} paddingHorizontal={sizes.padding} paddingTop={sizes.padding}>
             <Text p>
-              {t('restaurants.notFound1')}
+              {t('lugaresGoogle.notFound1')}
             </Text>
             <Text p marginTop={sizes.s}>
-              {t('restaurants.moreOptions')}
+              {t('lugaresGoogle.moreOptions')}
             </Text>
           </Block>
         )}
 
         {!notFound && (
           <Block flex={0} paddingLeft={sizes.sm} >
-            <RestaurantsHeader />
+            <LugaresGoogleHeader />
           </Block>)}
         <Block>
           <FlatList
             refreshing={true}
-            data={restaurantsData}
+            data={lugaresGoogleData}
             showsVerticalScrollIndicator={false}
-            keyExtractor={(item) => `${item?.restaurant.idGoogle}`}
+            keyExtractor={(item) => `${item?.lugarGoogle.idGoogle}`}
             style={{ paddingHorizontal: sizes.s, marginBottom: sizes.s }}
             contentContainerStyle={{ paddingHorizontal: sizes.s }}
             renderItem={({ item }) => (
-              <Restaurant restaurant={item} onPress={(value) => onRestaurantChange(value)} pagination={showPagination} />
+              <LugarGoogle lugarGoogleProp={item} onPress={(value) => onRestaurantChange(value)} />
             )}
             ListFooterComponent={() =>
             (<Block>
@@ -222,7 +223,7 @@ const Restaurants = () => {
                   <ActivityIndicator size="large" color={colors.primary} />
                 </Block>)
               }
-              <RestaurantsFooter show={showPagination} onPress={() => requestRestaurantsToService(true)} />
+              <LugaresGoogleFooter show={showPagination} onPress={() => requestLugaresGoogleToService(true)} />
             </Block>)
             }
           />
@@ -233,4 +234,4 @@ const Restaurants = () => {
   );
 };
 
-export default Restaurants;
+export default LugaresGoogle;
