@@ -1,6 +1,6 @@
 import { ILugarGoogle } from './lugar-google';
 
-export interface LugarGoogleRespuesta {
-    restaurantes: ILugarGoogle[];
+export interface ILugarGoogleRespuesta {
+    lugaresGoogle: ILugarGoogle[];
     tokenPaginacion: string;
 }

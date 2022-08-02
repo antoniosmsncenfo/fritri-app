@@ -50,13 +50,13 @@ export class RestaurantesService {
 
       return {
         tokenPaginacion,
-        restaurantes: await restaurantesObtenidos,
+        lugaresGoogle: await restaurantesObtenidos,
       };
     } else {
       return {
         //Respuesta en caso de no encontrar restaurantes
         tokenPaginacion: '',
-        restaurantes: [],
+        lugaresGoogle: [],
       };
     }
   }

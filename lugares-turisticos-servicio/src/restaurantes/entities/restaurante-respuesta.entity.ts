@@ -1,6 +1,6 @@
 import { Restaurante } from './restaurante.entity';
 
 export class RestauranteRespuesta {
-  restaurantes: Restaurante[];
+  lugaresGoogle: Restaurante[];
   tokenPaginacion: string;
 }
