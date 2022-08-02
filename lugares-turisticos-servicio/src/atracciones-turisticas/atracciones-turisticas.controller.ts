@@ -1,21 +1,21 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
-import { AtraccionesTuristicasService } from './atracciones-turisticas.service';
-import { AtraccionesTuristicasSolicitudDto } from './dto/atracciones-turisticas-solicitud.dto';
-import { AtraccionesTuristicasRespuesta } from './entities/atracciones-turisticas-respuesta.entity';
-import { AtraccionTuristica } from './entities/atraccion-turistica.entity';
-import { IdGoogleSolicitudDto } from './dto/id-google-solicitud.dto';
+import { IdGoogleSolicitudDto } from 'src/lugares-google/dto/id-google-solicitud.dto';
+import { LugaresGoogleSolicitudDto } from 'src/lugares-google/dto/lugares-google-solicitud.dto';
+import { LugarGoogle } from 'src/lugares-google/entities/lugar-google.entity';
+import { LugaresGoogleService } from 'src/lugares-google/lugares-google.service';
+import { LugarGoogleRespuesta } from '../lugares-google/entities/lugar-google-respuesta.entity';
 
 @Controller('atracciones-turisticas')
 export class AtraccionesTuristicasController {
   constructor(
-    private readonly atraccionesTuristicasService: AtraccionesTuristicasService,
+    private readonly atraccionesTuristicasService: LugaresGoogleService,
   ) {}
 
   @Post('buscar-atracciones-turisticas')
   async buscarAtraccionesTuristicas(
-    @Body() atraccionesTuristicasSolicitud: AtraccionesTuristicasSolicitudDto,
-  ): Promise<AtraccionesTuristicasRespuesta> {
-    return await this.atraccionesTuristicasService.obtenerAtraccionesTuristicasDelDestino(
+    @Body() atraccionesTuristicasSolicitud: LugaresGoogleSolicitudDto,
+  ): Promise<LugarGoogleRespuesta> {
+    return await this.atraccionesTuristicasService.obtenerLugaresGoogleDelDestino(
       atraccionesTuristicasSolicitud,
     );
   }
@@ -23,9 +23,7 @@ export class AtraccionesTuristicasController {
   @Get('obtener-atraccion-turistica')
   async obtenerAtraccionTuristica(
     @Query() idGoogle: IdGoogleSolicitudDto,
-  ): Promise<AtraccionTuristica> {
-    return await this.atraccionesTuristicasService.obtenerAtraccionTuristica(
-      idGoogle,
-    );
+  ): Promise<LugarGoogle> {
+    return await this.atraccionesTuristicasService.obtenerLugarGoogle(idGoogle);
   }
 }
