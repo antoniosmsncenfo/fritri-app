@@ -244,6 +244,9 @@ export interface ThemeIcons {
   warning: ImageSourcePropType;
   phone: ImageSourcePropType;
   locationNew: ImageSourcePropType;
+  share: ImageSourcePropType;
+  checked: ImageSourcePropType;
+  unchecked: ImageSourcePropType;
 }
 
 export interface ThemeAssets {

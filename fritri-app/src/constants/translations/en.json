@@ -274,11 +274,15 @@
     "notFound1": "We didn’t find ",
     "notFound2": " as destination.",
     "moreOptions": "Please try to be more specific.",
-    "random": "Random"
+    "random": "Random",
+    "touristAttractions": "Tourist Attractions"
   },
   "destination": {
     "select": "Select",
     "view": "View"
+  },
+  "tripDetails": {
+    "otherVotes": "See the votes..."
   },
   "restaurants": {
     "sights": "Sights",

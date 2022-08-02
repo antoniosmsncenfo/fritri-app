@@ -152,7 +152,6 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: sizes.l }}>
         <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
-          {console.log("Home->Paseos Cargados:" + paseosUsuario?.length)}
           {paseosUsuario?.map((paseo) => (
             <DashboardCard {...paseo} key={`card-${paseo?._id}`} />
           ))}

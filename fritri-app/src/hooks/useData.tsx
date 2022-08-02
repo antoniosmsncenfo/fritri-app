@@ -137,7 +137,6 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
 
   // get initial data for: isDark & language
   useEffect(() => {
-    console.log("useData->IsDark:" + isDark);
     getIsDark();
   }, [getIsDark]);
 
