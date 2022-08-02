@@ -4,8 +4,8 @@ import { ActivityIndicator, FlatList } from 'react-native';
 import { useData, useTheme, useTranslation } from '../hooks';
 import { Block, Button, Text } from '../components';
 import { useNavigation } from '@react-navigation/native';
-import Restaurant, { IRestaurantAction } from '../components/Restaurant';
-import { IRestaurantData } from '../components/Restaurant';
+import LugarGoogle, {ILugarGoogleAction } from '../components/LugarGoogle';
+import { ILugarGoogleData } from '../components/LugarGoogle';
 import { useGooglePlace } from '../hooks/useGooglePlace';
 import { ISolicitudLugaresGoogle } from '../interfaces/solicitud-lugares-google';
 import Slider from '@react-native-community/slider';
@@ -49,7 +49,7 @@ const Restaurants = () => {
   const { newTripTemp, setNewTripTemp } = useData();
   const { restaurantsResponse, getRestaurants: getRestaurantsFromService } = useGooglePlace();
   const [selectedRestaurants, setSelectedRestaurants] = useState<IRestaurante[]>([]);
-  const [restaurantsData, setRestaurantsData] = useState<IRestaurantData[]>([]);
+  const [restaurantsData, setRestaurantsData] = useState<ILugarGoogleData[]>([]);
   const [selectedRadio, setSelectedRadio] = useState(1);
   const [notFound, setNotFound] = useState(false);
   const [showPagination, setShowPagination] = useState(false);
@@ -66,16 +66,16 @@ const Restaurants = () => {
 
   // se ejecuta cuando se obtienen los restaurantes del servicio
   useEffect(() => {
-    let result: IRestaurantData[] = [];
+    let result: ILugarGoogleData[] = [];
 
     if (restaurantsResponse && restaurantsResponse.restaurantes.length > 0) {
       //Convierte el restaurante en RestaurantData, para agregar la bandera de seleccionado en falso
-      result = restaurantsResponse.restaurantes.map((r) => { return { selected: false, restaurant: r }; });
+      result = restaurantsResponse.restaurantes.map((r) => { return { selected: false, lugarGoogle: r }; });
       setNotFound(false);
     } else {
       setNotFound(true);
     }
-    const resultFiltered = result.filter(r => r.restaurant.urlFotos.length > 0); // quita los restaurantes sin foto
+    const resultFiltered = result.filter(r => r.lugarGoogle.urlFotos.length > 0); // quita los restaurantes sin foto
 
     if (isPaginationUsed) {
       const paginatedRestaurants = restaurantsData.concat(resultFiltered);
@@ -106,13 +106,13 @@ const Restaurants = () => {
   };
 
   //este es el callback que revisa si se desea ver el destino o seleccionarlo para agregarlo al paseo
-  const onRestaurantChange = (action: IRestaurantAction) => {
+  const onRestaurantChange = (action: ILugarGoogleAction) => {
     switch (action.action) {
       case 'select':
         updateRestaurantsData(action);
         break;
       case 'view':
-        navigation.navigate('ViewDestination', action.restaurant);
+        navigation.navigate('ViewDestination', action.lugarGoogle);
         break;
       default:
         break;
@@ -120,19 +120,19 @@ const Restaurants = () => {
   };
 
   //Aqui agrego los restaurantes seleccionados
-  const updateRestaurantsData = ({ restaurant, select }: IRestaurantAction) => {
+  const updateRestaurantsData = ({ lugarGoogle, select }: ILugarGoogleAction) => {
     if (select) {
       const selected = {
-        idLugarGoogle: restaurant.idGoogle,
-        nombre: restaurant.nombre,
-        descripcion: `{"calificacion": ${restaurant.calificacion}, "vecindario":"${restaurant.vecindario}"}`,
-        urlFotos: restaurant.urlFotos,
+        idLugarGoogle: lugarGoogle.idGoogle,
+        nombre: lugarGoogle.nombre,
+        descripcion: `{"calificacion": ${lugarGoogle.calificacion}, "vecindario":"${lugarGoogle.vecindario}"}`,
+        urlFotos: lugarGoogle.urlFotos,
       };
 
       setSelectedRestaurants([...selectedRestaurants, selected]);
     }
     else {
-      const filtered = selectedRestaurants.filter(r => r.idLugarGoogle !== restaurant.idGoogle);
+      const filtered = selectedRestaurants.filter(r => r.idLugarGoogle !== lugarGoogle.idGoogle);
       setSelectedRestaurants(filtered);
     }
   };
@@ -209,11 +209,11 @@ const Restaurants = () => {
             refreshing={true}
             data={restaurantsData}
             showsVerticalScrollIndicator={false}
-            keyExtractor={(item) => `${item?.restaurant.idGoogle}`}
+            keyExtractor={(item) => `${item?.lugarGoogle.idGoogle}`}
             style={{ paddingHorizontal: sizes.s, marginBottom: sizes.s }}
             contentContainerStyle={{ paddingHorizontal: sizes.s }}
             renderItem={({ item }) => (
-              <Restaurant restaurant={item} onPress={(value) => onRestaurantChange(value)} pagination={showPagination} />
+              <LugarGoogle lugarGoogleProp={item} onPress={(value) => onRestaurantChange(value)}/>
             )}
             ListFooterComponent={() =>
             (<Block>
