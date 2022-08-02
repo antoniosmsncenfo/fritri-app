@@ -13,4 +13,11 @@ export class VotacionesController {
     return await this.votacionesService.votarSeccion(votarSeccionDto);
   }
 
+  @Post('quitar-voto-seccion')
+  @UsePipes(new ValidationPipe())
+  @HttpCode(200)
+  async quitarVotarSeccion(@Body() votarSeccionDto: VotarSeccionDto) {
+    return await this.votacionesService.quitarVotoSeccion(votarSeccionDto);
+  }
+
 }
