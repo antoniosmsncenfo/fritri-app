@@ -26,6 +26,7 @@ import {
   ViewDestination,
   Restaurants,
   NewTrip,
+  Sights,
 } from '../screens';
 
 import { useScreenOptions, useTranslation } from '../hooks';
@@ -157,6 +158,11 @@ export default () => {
         name="Restaurants"
         component={Restaurants}
         options={{ title: t('navigation.restaurants'), ...screenOptions.back }}
+      />
+      <Stack.Screen
+        name="Sights"
+        component={Sights}
+        options={{ title: t('navigation.sights'), ...screenOptions.back }}
       />
     </Stack.Navigator>
   );
