@@ -69,6 +69,11 @@ export const ICONS: ThemeIcons = {
   warning: require('../assets/icons/warning.png'),
   phone: require('../assets/icons/phone.png'),
   locationNew: require('../assets/icons/location-new.png'),
+  share: require('../assets/icons/share.png'),
+  checked: require('../assets/icons/checked.png'),
+  unchecked: require('../assets/icons/unchecked.png'),
+  restaurant: require('../assets/icons/restaurant.png'),
+  attraction: require('../assets/icons/attraction.png'),  
 };
 
 export const ASSETS: ThemeAssets = {
