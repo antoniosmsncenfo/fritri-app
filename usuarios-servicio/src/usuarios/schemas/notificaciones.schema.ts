@@ -17,6 +17,11 @@ export class Notificacion {
 	@Prop({
 		required: true,
 	})
+	titulo: string;
+
+	@Prop({
+		required: true,
+	})
 	detalle: string;
 
     @Prop({
