@@ -25,10 +25,10 @@ export class UsuariosController {
     return this.usuariosService.findAll();
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Usuario> {
-    return this.usuariosService.findOne(id);
-  }
+  // @Get(':id')
+  // async findOne(@Param('id') id: string): Promise<Usuario> {
+  //   return this.usuariosService.findOne(id);
+  // }
 
   @Get('obtener-usuario-paseo/:id')
   async obtenerUsuarioPaseo(@Param('id') idUsuario: string): Promise<Usuario | NoUsuario> {
