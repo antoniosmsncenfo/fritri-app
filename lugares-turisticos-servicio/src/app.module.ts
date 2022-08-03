@@ -1,17 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AtraccionesTuristicasModule } from './atracciones-turisticas/atracciones-turisticas.module';
 import { DestinosModule } from './destinos/destinos.module';
 import { GoogleApiService } from './google-api/google-api.service';
-import { RestaurantesModule } from './restaurantes/restaurantes.module';
+import { LugaresGoogleModule } from './lugares-google/lugares-google.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    DestinosModule,
-    RestaurantesModule,
-    AtraccionesTuristicasModule,
-  ],
+  imports: [ConfigModule.forRoot(), DestinosModule, LugaresGoogleModule],
   controllers: [],
   providers: [GoogleApiService],
 })

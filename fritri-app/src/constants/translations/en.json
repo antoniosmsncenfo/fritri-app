@@ -288,7 +288,7 @@
     "noTouristAttractions": "The owner hasn't included any tourist attractions",
     "otherVotes": "See the votes..."
   },
-  "restaurants": {
+  "lugaresGoogle": {
     "sights": "Sights",
     "recommendations": "Recommendations",
     "searching": "Searching in a range of",
@@ -296,7 +296,7 @@
     "moreOptions": "Please try increasing the amount of km.",
     "seeMore": "See more"
   },
-  "restaurant": {
+  "lugarGoogle": {
     "select": "Select",
     "view": "View",
     "price": "Price"

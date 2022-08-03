@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import Text from './Text';
 import Block from './Block';
@@ -8,67 +8,67 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { ILugarGoogle } from '../interfaces/lugar-google';
 
 export interface IProps {
-  restaurant: IRestaurantData;
-  onPress: (event: IRestaurantAction) => void;
+  lugarGoogleProp: ILugarGoogleData;
+  onPress: (event: ILugarGoogleAction) => void;
 }
 type ActionT = 'select' | 'view';
-export interface IRestaurantAction {
+export interface ILugarGoogleAction {
   action: ActionT;
-  restaurant: ILugarGoogle;
+  lugarGoogle: ILugarGoogle;
   select?: boolean;
 }
 
-export interface IRestaurantData {
+export interface ILugarGoogleData {
   selected: boolean;
-  restaurant: ILugarGoogle;
+  lugarGoogle: ILugarGoogle;
 }
 
-const Restaurant = ({ restaurant, onPress}: IProps) => {
-  const { restaurant: restaurante } = restaurant;
+const LugarGoogle = ({ lugarGoogleProp, onPress}: IProps) => {
+  const { lugarGoogle } = lugarGoogleProp;
   const { t } = useTranslation();
   const { colors, gradients, icons, sizes } = useTheme();
 
   const onCheckChange = (value: boolean) => {
-    onPress({ action: 'select', restaurant: restaurante, select: value });
+    onPress({ action: 'select', lugarGoogle: lugarGoogle , select: value });
   };
 
   const onViewPress = () => {
-    onPress({ action: 'view', restaurant: restaurante });
+    onPress({ action: 'view', lugarGoogle: lugarGoogle });
   };
 
   return (
     <Block card padding={sizes.sm} marginBottom={sizes.s}>
       <Block onTouchEnd={() => onViewPress()} >
-        <Image height={250} resizeMode="cover" source={{ uri: restaurante.urlFotos![0] }} />
+        <Image height={250} resizeMode="cover" source={{ uri: lugarGoogle.urlFotos![0] }} />
       </Block>
 
       {/* nombre */}
       <Text h5 bold size={13} marginTop={sizes.s} transform="uppercase" marginLeft={sizes.xs} gradient={gradients.primary}>
-        {restaurante.nombre}
+        {lugarGoogle.nombre}
       </Text>
 
-      {restaurante.vecindario !== undefined && (
+      {lugarGoogle.vecindario !== undefined && (
         <Block row align="center" marginTop={sizes.s} marginLeft={sizes.xs}>
           <Image source={icons.star} marginRight={sizes.s} />
           <Text p size={12} semibold>
-            {restaurante.calificacion} / 5
+            {lugarGoogle.calificacion} / 5
           </Text>
           <Text p bold marginHorizontal={sizes.s}>
             •
           </Text>
           <Image source={icons.location} marginRight={sizes.s} />
           <Text size={12} semibold transform="uppercase" paddingRight={'30%'}>
-            {restaurante.vecindario.substring(0, 100) || '-'}
+            {lugarGoogle.vecindario.substring(0, 100) || '-'}
           </Text>
         </Block>
       )}
 
 
       {/* location*/}
-      {restaurante.rangoPrecios && (
+      {lugarGoogle.rangoPrecios && (
         <Block row align="center" marginTop={sizes.s} marginLeft={sizes.xs}>
           {<Text p size={15} semibold primary >
-            {t('restaurant.price')}: {'$'.repeat(restaurante.rangoPrecios)}
+            {t('lugarGoogle.price')}: {'$'.repeat(lugarGoogle.rangoPrecios)}
           </Text>}
         </Block>)}
 
@@ -77,12 +77,12 @@ const Restaurant = ({ restaurant, onPress}: IProps) => {
           <BouncyCheckbox fillColor={colors.primary.toString()} iconStyle={{ borderColor: colors.primary }}
             unfillColor="#FFFFFF"
             onPress={(isChecked: boolean) => { onCheckChange(isChecked); }} />
-          <Text bold paddingRight={sizes.s}>{t('restaurant.select')}</Text>
+          <Text bold paddingRight={sizes.s}>{t('lugarGoogle.select')}</Text>
         </Block>
-        <Text bold primary paddingRight={sizes.s} onPress={() => onViewPress()}>{t('restaurant.view')}</Text>
+        <Text bold primary paddingRight={sizes.s} onPress={() => onViewPress()}>{t('lugarGoogle.view')}</Text>
       </Block>
     </Block>
   );
 };
 
-export default Restaurant;
+export default LugarGoogle;

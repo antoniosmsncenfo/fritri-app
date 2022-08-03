@@ -8,62 +8,61 @@ import {
   PlaceData,
 } from '@googlemaps/google-maps-services-js';
 
-import { RestaurantesSolicitudDto } from './dto/restaurantes-solicitud.dto';
-import { RestauranteRespuesta } from './entities/restaurante-respuesta.entity';
-import { Restaurante } from './entities/restaurante.entity';
+import { LugaresGoogleSolicitudDto } from './dto/lugares-google-solicitud.dto';
+import { LugarGoogleRespuesta } from './entities/lugar-google-respuesta.entity';
+import { LugarGoogle } from './entities/lugar-google.entity';
 import { IdGoogleSolicitudDto } from './dto/id-google-solicitud.dto';
 
 @Injectable()
-export class RestaurantesService {
+export class LugaresGoogleService {
   constructor(private googleApiService: GoogleApiService) {}
 
-  async obtenerRestaurantesDelDestino(
-    restauranteSolicitud: RestaurantesSolicitudDto,
-  ): Promise<RestauranteRespuesta> {
+  async obtenerLugaresGoogleDelDestino(
+    lugarGoogleSolicitud: LugaresGoogleSolicitudDto,
+  ): Promise<LugarGoogleRespuesta> {
     const coordenadas: LatLng = {
-      lat: restauranteSolicitud.latitud,
-      lng: restauranteSolicitud.longitud,
+      lat: lugarGoogleSolicitud.latitud,
+      lng: lugarGoogleSolicitud.longitud,
     };
-    const tipoLugar = 'restaurante';
-    const idiomaParametro = restauranteSolicitud.idioma || 'es';
+    const tipoLugar = lugarGoogleSolicitud.tipo;
+    const idiomaParametro = lugarGoogleSolicitud.idioma || 'es';
     const idioma: Language = Language[idiomaParametro];
-    const radioMetros = restauranteSolicitud.radio * 1000;
+    const radioMetros = lugarGoogleSolicitud.radio * 1000;
 
-    const respuestaRestaurantesGoogle: PlacesNearbyResponseData =
+    const respuestaLugaresGoogle: PlacesNearbyResponseData =
       await this.googleApiService.obtenerLugaresARedondaDelDestino(
         coordenadas,
         radioMetros,
         tipoLugar,
-        restauranteSolicitud.tokenPaginacion,
+        lugarGoogleSolicitud.tokenPaginacion,
         idioma,
       );
 
-    if (respuestaRestaurantesGoogle) {
-      const tokenPaginacion =
-        respuestaRestaurantesGoogle?.next_page_token ?? '';
+    if (respuestaLugaresGoogle) {
+      const tokenPaginacion = respuestaLugaresGoogle?.next_page_token ?? '';
 
-      const restaurantesObtenidos = Promise.all(
-        respuestaRestaurantesGoogle?.results.map((destinoGoogle) =>
-          this.mapearPlaceDataARestaurante(destinoGoogle),
+      const lugaresGoogleObtenidos = Promise.all(
+        respuestaLugaresGoogle?.results.map((destinoGoogle) =>
+          this.mapearPlaceDataALugarGoogle(destinoGoogle, tipoLugar),
         ),
       );
 
       return {
         tokenPaginacion,
-        restaurantes: await restaurantesObtenidos,
+        lugaresGoogle: await lugaresGoogleObtenidos,
       };
     } else {
       return {
-        //Respuesta en caso de no encontrar restaurantes
+        //Respuesta en caso de no encontrar lugares
         tokenPaginacion: '',
-        restaurantes: [],
+        lugaresGoogle: [],
       };
     }
   }
 
-  async obtenerRestaurante(
+  async obtenerLugarGoogle(
     idGoogle: IdGoogleSolicitudDto,
-  ): Promise<Restaurante> {
+  ): Promise<LugarGoogle> {
     const categorias: Categorias[] = [
       Categorias.place_id,
       Categorias.geometry,
@@ -78,15 +77,15 @@ export class RestaurantesService {
 
     const idioma: Language = Language[idGoogle.idioma] || 'es';
 
-    const respuestaRestaurantesGoogle: Partial<PlaceData> =
+    const respuestaLugaresGoogle: Partial<PlaceData> =
       await this.googleApiService.obtenerDetalleLugar(
         idGoogle.idGoogle,
         categorias,
         idioma,
       );
 
-    if (respuestaRestaurantesGoogle) {
-      return this.mapearPlaceDataARestaurante(respuestaRestaurantesGoogle);
+    if (respuestaLugaresGoogle) {
+      return this.mapearPlaceDataALugarGoogle(respuestaLugaresGoogle);
     } else {
       return null;
     }
@@ -96,7 +95,10 @@ export class RestaurantesService {
     return await this.googleApiService.obtenerFoto(referenciaFoto);
   }
 
-  async mapearPlaceDataARestaurante(destinoGoogle: Partial<PlaceData>) {
+  async mapearPlaceDataALugarGoogle(
+    destinoGoogle: Partial<PlaceData>,
+    tipo = 'lugarGoogle',
+  ) {
     const {
       place_id,
       geometry,
@@ -138,7 +140,7 @@ export class RestaurantesService {
       calificacion: rating || 2,
       telefono: formatted_phone_number,
       direccion: formatted_address,
-      tipoLugar: 'restaurante',
+      tipoLugar: tipo,
     };
   }
 }
