@@ -25,12 +25,12 @@ const LugaresGoogleHeader = () => {
   );
 };
 
-interface IRestaurantFooterProps {
+interface IFooterProps {
   show: boolean;
   onPress?: (event?: any) => void
 }
 
-const LugaresGoogleFooter = ({ show, onPress }: IRestaurantFooterProps) => {
+const LugaresGoogleFooter = ({ show, onPress }: IFooterProps) => {
   const { t } = useTranslation();
   const { sizes } = useTheme();
   return (
@@ -43,13 +43,13 @@ const LugaresGoogleFooter = ({ show, onPress }: IRestaurantFooterProps) => {
   );
 };
 
-const LugaresGoogle = () => {
+const Restaurants = () => {
   const { t } = useTranslation();
   const { sizes, gradients, colors } = useTheme();
   const { newTripTemp, setNewTripTemp } = useData();
   const { lugaresGoogleResponse, getLugaresGoogle } = useGooglePlace();
   const [selectedRestaurants, setSelectedRestaurants] = useState<IRestaurante[]>([]);
-  const [selectedSights, setSelectedSights] = useState<IAtraccionesturistica[]>([]);
+  //const [selectedSights, setSelectedSights] = useState<IAtraccionesturistica[]>([]);
   const [lugaresGoogleData, setLugaresGoogleData] = useState<ILugarGoogleData[]>([]);
   const [selectedRadio, setSelectedRadio] = useState(1);
   const [notFound, setNotFound] = useState(false);
@@ -107,7 +107,7 @@ const LugaresGoogle = () => {
   };
 
   //este es el callback que revisa si se desea ver el destino o seleccionarlo para agregarlo al paseo
-  const onRestaurantChange = (action: ILugarGoogleAction) => {
+  const onLugarGoogleChange = (action: ILugarGoogleAction) => {
     switch (action.action) {
       case 'select':
         updateLugaresGoogleData(action);
@@ -176,7 +176,7 @@ const LugaresGoogle = () => {
             </Text>
           </Block>
         </Block>
-        {(selectedRestaurants.length > 0 || selectedSights.length > 0)
+        {(selectedRestaurants.length > 0)
           && (
             <Button gradient={gradients.primary} marginVertical={sizes.s}
               onPress={() => goToSights()}>
@@ -214,7 +214,7 @@ const LugaresGoogle = () => {
             style={{ paddingHorizontal: sizes.s, marginBottom: sizes.s }}
             contentContainerStyle={{ paddingHorizontal: sizes.s }}
             renderItem={({ item }) => (
-              <LugarGoogle lugarGoogleProp={item} onPress={(value) => onRestaurantChange(value)} />
+              <LugarGoogle lugarGoogleProp={item} onPress={(value) => onLugarGoogleChange(value)} />
             )}
             ListFooterComponent={() =>
             (<Block>
@@ -234,4 +234,4 @@ const LugaresGoogle = () => {
   );
 };
 
-export default LugaresGoogle;
+export default Restaurants;

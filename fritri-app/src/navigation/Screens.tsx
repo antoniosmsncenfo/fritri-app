@@ -24,7 +24,7 @@ import {
   NotificationsSettings,
   LoginFacebook,
   ViewDestination,
-  LugaresGoogle,
+  Restaurants,
   NewTrip,
 } from '../screens';
 
@@ -154,8 +154,8 @@ export default () => {
         options={{ title: t('navigation.newTrip'), headerRight: () => null }}
       />
       <Stack.Screen
-        name="LugaresGoogle"
-        component={LugaresGoogle}
+        name="Restaurants"
+        component={Restaurants}
         options={{ title: t('navigation.restaurants'), ...screenOptions.back }}
       />
     </Stack.Navigator>
