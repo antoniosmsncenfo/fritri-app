@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { usePaseo } from '../hooks/usePaseos';
 import dayjs from 'dayjs';
 import { TouchableOpacity } from 'react-native';
+import { useUsuario } from '../hooks/useUsuario';
 
 const TripDetails = (props) => {
     const {assets, sizes, colors} = useTheme();
@@ -12,11 +13,17 @@ const TripDetails = (props) => {
 
     const {obtenerPaseo, paseoSeleccionado} = usePaseo();
 
+    const {usuarioPaseo, obtenerUsuarioPaseo} = useUsuario();
+
 
     useEffect(() => {
       let idPaseo:string = props.route.params.id;
       obtenerPaseo(idPaseo);
     }, []);
+
+    useEffect(() => {
+      obtenerUsuarioPaseo(paseoSeleccionado?.idCreador!);
+    }, [paseoSeleccionado]);
 
     return (
       <Block safe>
@@ -44,13 +51,12 @@ const TripDetails = (props) => {
 
         {/* Block para la foto y los detalles */}
         <Block marginBottom={sizes.m}>
-          {console.log(paseoSeleccionado?.destino.urlFotos![0])}
           {/* Foto */}
           <Image
             resizeMode="cover"
-            //source={{uri: paseoSeleccionado?.destino.urlFotos![0]}}
-            source={assets.carousel1}
-            style={{width: '100%'}}
+            source={{uri: paseoSeleccionado?.destino.urlFotos![0]}}
+            //source={assets.carousel1}
+            style={{height: 250}}
           />
           {/* Destino */}
           <Block row 
@@ -88,15 +94,15 @@ const TripDetails = (props) => {
           <Block row 
             marginTop={sizes.s}>
             <Image
-              source={assets.avatar2}
+              source={{uri: usuarioPaseo?.urlFoto}}
               style={{width: sizes.xl, height: sizes.xl, borderRadius: sizes.s}}
             />
             <Block marginLeft={sizes.s}>
               <Text p semibold>
-                Andres Hidalgo
+                {usuarioPaseo?.nombreCompleto}
               </Text>
               <Text p gray>
-                Posted on 28 February
+              { dayjs(paseoSeleccionado?.fechaCreacion).format(t('common.dateFormat'))}
               </Text>
             </Block>
           </Block>
@@ -274,7 +280,7 @@ const TripDetails = (props) => {
             {
               paseoSeleccionado?.seccionAtraccionesTuristicas?.atraccionesturisticas.length===0 && (
                 <Block row marginBottom={sizes.sm}>
-                  <Text h5 color={colors.primary}>
+                  <Text h7 color={colors.primary}>
                   {t('tripDetails.noTouristAttractions')}
                   </Text>
                 </Block>                

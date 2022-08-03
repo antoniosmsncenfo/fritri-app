@@ -138,3 +138,25 @@ export const cambiarPassword = async (usuarioContrasena:IUsuarioContrasena) => {
     }
 
 };
+
+export const obtenerUsuarioPorID = async (idUsuario:string) => {
+
+    let request = {
+        method: 'get',
+        url: `${process.env.USUARIOS_BASE_URL}/obtener-usuario-paseo/${idUsuario}`,
+        headers: {},
+    };
+    try {
+        const resultado = await axios(request);
+
+        if (resultado.status === 200) {
+            return resultado.data;
+        }
+        else {
+            return null;
+        }
+    }
+    catch (e) {
+        throw e;
+    }
+};
