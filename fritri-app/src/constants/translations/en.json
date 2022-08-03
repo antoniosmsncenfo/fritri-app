@@ -91,7 +91,8 @@
     "extra": "Extra - Automotive",
     "loginFacebook": "Login Facebook",
     "newTrip": "New trip",
-    "verDestino": "Ver Destino"
+    "verDestino": "See Destination",
+    "tripDetails": "Trip Details"
   },
   "navigation": {
     "home": "FriTri",
@@ -114,7 +115,8 @@
     "newTrip": "New Trip",
     "resetPassword": "Change password",
     "returnToTrip": "Return to trip",
-    "restaurants": "Restaurants"
+    "restaurants": "Restaurants",
+    "tripDetails": "Trip Details"
   },
   "menu": {
     "started": "Getting Started",
@@ -272,11 +274,19 @@
     "notFound1": "We didn’t find ",
     "notFound2": " as destination.",
     "moreOptions": "Please try to be more specific.",
-    "random": "Random"
+    "random": "Random",
+    "touristAttractions": "Tourist Attractions"
   },
   "destination": {
     "select": "Select",
     "view": "View"
+  },
+  "tripDetails": {
+    "restaurants": "Restaurants",
+    "noRestaurants": "The owner hasn't included any restaurants",
+    "touristAttractions": "Tourist Attractions",
+    "noTouristAttractions": "The owner hasn't included any tourist attractions",
+    "otherVotes": "See the votes..."
   },
   "lugaresGoogle": {
     "sights": "Sights",

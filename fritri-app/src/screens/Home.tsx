@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { useData, useTheme, useTranslation } from '../hooks/';
-import { Block, Button, Image, Product, Text, DashboardCard } from '../components/';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { Block, Button, Image, Product, Text, DashboardCard, Input } from '../components/';
+import { useNavigation } from '@react-navigation/native';
 import { usePaseo } from '../hooks/usePaseos';
 import { EstadoPaseo } from '../interfaces/paseo';
 import { CantidadPaseos } from '../interfaces/paseo';
@@ -14,27 +14,7 @@ const Home = () => {
   const [tab, setTab] = useState<number>(0);
   const { user } = useData();
 
-  ////Manejo de los productos de la plantilla
-  //Extraen los arreglos de tipos de productos del contexto
-  const { following, trending } = useData();
-  //Definen un estado para la lista de productos y por defecto
-  //le cargan la lista de following del contexto
-  const [products, setProducts] = useState(following);
-  //Maneja el cambio de tab y cambia la lista de productos
-  const handleProducts = useCallback(
-    (tab: number) => {
-      setTab(tab);
-      setProducts(tab === 0 ? following : trending);
-      if (tab===2) {
-        navigation.navigate('NewTrip');
-      }
-    },
-    [following, trending, setTab, setProducts],
-  );
-  ////Manejo de los productos de la plantilla
-
-
-  //Extraemos el arreglo de paseos del contexto
+  //Extraemos del hook el arreglo de paseos y el método para obtener paseos
   const { paseosUsuario, setPaseosUsuario, obtenerPaseosUsuario} = usePaseo();
   
   useEffect(() => {
@@ -54,17 +34,16 @@ const Home = () => {
         : obtenerPaseosUsuario(user._id!,EstadoPaseo.Completado,CantidadPaseos.Diez)
       }
     },
-    [following, trending, setTab, setProducts],
+    [],
   );
   
+  //Maneja el cambio de tab y cambia la lista de productos
+  const handleNew = useCallback(() => {
+    navigation.navigate('NewTrip');
+  }, []);
   
-
   return (
     <Block>
-      {/* search input */}
-      {/* <Block color={colors.card} flex={0} padding={sizes.padding}>
-        <Input search placeholder={t('common.search')} />
-      </Block> */}
 
       {/* toggle products list */}
       <Block
@@ -131,7 +110,7 @@ const Home = () => {
           height={sizes.socialIconSize}
         />
         {/* Botón de nuevo paseo */}
-        <Button onPress={() => handlePaseos(2)}>
+        <Button onPress={() => handleNew()}>
           <Block row align="center">
             <Block
               flex={0}
@@ -141,44 +120,30 @@ const Home = () => {
               marginRight={sizes.s}
               width={sizes.socialIconSize}
               height={sizes.socialIconSize}
-              gradient={gradients?.[tab === 2 ? 'primary' : 'secondary']}>
+              //gradient={gradients?.[tab === 2 ? 'primary' : 'secondary']}
+              gradient={gradients.success}
+              >
               <Image
                 radius={0}
                 color={colors.white}
                 source={assets.calendar}
               />
             </Block>
-            <Text p font={fonts?.[tab === 2 ? 'medium' : 'normal']}>
+            <Text p 
+            //font={fonts?.[tab === 2 ? 'medium' : 'normal']}
+            font={fonts.medium}
+              >
               {t('home.new')}
             </Text>
           </Block>
         </Button>        
       </Block>
-      {/* <Block paddingTop={sizes.padding} paddingHorizontal={sizes.padding} flex={0}>
-        <Button gradient={gradients.primary} onPress={() => navigation.navigate('NewTrip')}>
-          <Text white semibold transform="uppercase">
-            {t('home.new')}
-          </Text>
-        </Button>
-      </Block> */}
+      
       {paseosUsuario?.length===0 &&
         <Block paddingTop={sizes.padding} paddingHorizontal={sizes.padding} flex={0}>
           <Text align='center' color={colors.primary} h4>{t('home.noTrips')}</Text>          
         </Block>
       }
-
-      {/* products list
-      <Block
-        scroll
-        paddingHorizontal={sizes.padding}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: sizes.l }}>
-        <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
-          {products?.map((product) => (
-            <Product {...product} key={`card-${product?.id}`} />
-          ))}
-        </Block>
-      </Block> */}
 
       {/* lista de paseos*/}
       <Block
@@ -187,7 +152,6 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: sizes.l }}>
         <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
-          {console.log("Home->Paseos Cargados:" + paseosUsuario?.length)}
           {paseosUsuario?.map((paseo) => (
             <DashboardCard {...paseo} key={`card-${paseo?._id}`} />
           ))}

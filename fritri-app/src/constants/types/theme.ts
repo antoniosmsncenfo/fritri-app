@@ -244,6 +244,11 @@ export interface ThemeIcons {
   warning: ImageSourcePropType;
   phone: ImageSourcePropType;
   locationNew: ImageSourcePropType;
+  share: ImageSourcePropType;
+  checked: ImageSourcePropType;
+  unchecked: ImageSourcePropType;
+  restaurant: ImageSourcePropType;
+  attraction: ImageSourcePropType;  
 }
 
 export interface ThemeAssets {

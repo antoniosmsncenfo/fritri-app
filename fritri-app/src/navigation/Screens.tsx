@@ -26,6 +26,7 @@ import {
   ViewDestination,
   LugaresGoogle,
   NewTrip,
+  TripDetails
 } from '../screens';
 
 import { useScreenOptions, useTranslation } from '../hooks';
@@ -158,6 +159,11 @@ export default () => {
         component={LugaresGoogle}
         options={{ title: t('navigation.restaurants'), ...screenOptions.back }}
       />
+      <Stack.Screen
+        name="TripDetails"
+        component={TripDetails}
+        options={{ title: t('navigation.tripDetails'), ...screenOptions.back }}
+      />      
     </Stack.Navigator>
   );
 };

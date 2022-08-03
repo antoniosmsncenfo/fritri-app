@@ -76,6 +76,23 @@ export class UsuariosService {
     return this.usuarioModel.findOne({ _id: id }).exec();
   }
 
+  async obtenerUsuarioPaseo(idUsuario: string): Promise<Usuario | NoUsuario> {
+    const resultadoNoExiste = {
+      message: 'No existe usuario con ese ID',
+      statusCode: 404,
+    };
+
+    let resultado;
+    
+    resultado = await this.usuarioModel.findOne({ _id: idUsuario }).exec();
+
+    if (!resultado) {
+      return resultadoNoExiste;
+    }
+
+    return this.dejarPropiedadesMinimas(resultado.toObject());
+  }
+
   async findEmail(email: string): Promise<Usuario> {
     return this.usuarioModel.findOne({ correoElectronico: email }).exec();
   }
@@ -119,6 +136,26 @@ export class UsuariosService {
 
   private eliminarPropiedades(usuario: UsuarioDocument): UsuarioDocument {
     const propiedadesEliminar = ['contrasena', 'contrasenaTemporal'];
+
+    for (const propiedadEliminar of propiedadesEliminar) {
+      if (propiedadEliminar in usuario) {
+        delete usuario[propiedadEliminar];
+      }
+    }
+    return usuario;
+  }
+
+  private dejarPropiedadesMinimas(usuario: UsuarioDocument): UsuarioDocument {
+    const propiedadesEliminar = [
+      'contrasena', 
+      'contrasenaTemporal', 
+      'fechaContrasenaTemporal',
+      'tipoLogin',
+      'genero',
+      'pais',
+      'fechaCreacion',
+      '__v'
+    ];
 
     for (const propiedadEliminar of propiedadesEliminar) {
       if (propiedadEliminar in usuario) {
