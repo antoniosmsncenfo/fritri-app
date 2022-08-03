@@ -18,7 +18,7 @@ const LugaresGoogleHeader = () => {
     <>
       <Block row flex={0} align="center" justify="space-between" marginVertical={sizes.m} >
         <Text h5 semibold>
-          {t('lugaresGoogle.recommendations')}
+          {t('restaurants.recommendations')}
         </Text>
       </Block>
     </>
@@ -37,7 +37,7 @@ const LugaresGoogleFooter = ({ show, onPress }: IFooterProps) => {
     <Block row justify="center" onTouchEnd={onPress} padding={sizes.padding}>
       {show &&
         (<Text primary semibold transform="uppercase">
-          {t('lugaresGoogle.seeMore')}
+          {t('restaurants.seeMore')}
         </Text>)}
     </Block>
   );
@@ -51,7 +51,7 @@ const Restaurants = () => {
   const [selectedRestaurants, setSelectedRestaurants] = useState<IRestaurante[]>([]);
   //const [selectedSights, setSelectedSights] = useState<IAtraccionesturistica[]>([]);
   const [lugaresGoogleData, setLugaresGoogleData] = useState<ILugarGoogleData[]>([]);
-  const [selectedRadio, setSelectedRadio] = useState(1);
+  const [selectedRadio, setSelectedRadio] = useState(5);
   const [notFound, setNotFound] = useState(false);
   const [showPagination, setShowPagination] = useState(false);
   const [showActivityIndicator, setShowActivityIndicator] = useState(true);
@@ -103,7 +103,7 @@ const Restaurants = () => {
       ...newTripTemp,
       seccionRestaurantes: seccionRestaurantes,
     });
-    //navigation.navigate('Sights');
+    navigation.navigate('Sights');
   };
 
   //este es el callback que revisa si se desea ver el destino o seleccionarlo para agregarlo al paseo
@@ -156,7 +156,7 @@ const Restaurants = () => {
       <Block flex={1} paddingHorizontal={sizes.sm} white>
         <Block row justify="center" marginLeft={sizes.xs}>
           <Text h5 bold size={13} transform="uppercase" >
-            {t('lugaresGoogle.searching')} {selectedRadio} km
+            {t('restaurants.searching')} {selectedRadio} km
           </Text>
         </Block>
 
@@ -181,7 +181,7 @@ const Restaurants = () => {
             <Button gradient={gradients.primary} marginVertical={sizes.s}
               onPress={() => goToSights()}>
               <Text white semibold transform="uppercase">
-                {t('lugaresGoogle.sights')}
+                {t('restaurants.sights')}
               </Text>
             </Button>
           )}
@@ -193,10 +193,10 @@ const Restaurants = () => {
         {notFound && (
           <Block flex={0} paddingHorizontal={sizes.padding} paddingTop={sizes.padding}>
             <Text p>
-              {t('lugaresGoogle.notFound1')}
+              {t('restaurants.notFound1')}
             </Text>
             <Text p marginTop={sizes.s}>
-              {t('lugaresGoogle.moreOptions')}
+              {t('restaurants.moreOptions')}
             </Text>
           </Block>
         )}
