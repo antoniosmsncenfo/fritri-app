@@ -1,7 +1,7 @@
 {
   "common": {
     "selectImg": "Select image",
-    "dateFormat" : "MM/DD/YYYY",
+    "dateFormat": "MM/DD/YYYY",
     "appDetails": "App Details",
     "appName": "App name",
     "appVersion": "App version",
@@ -116,6 +116,7 @@
     "resetPassword": "Change password",
     "returnToTrip": "Return to trip",
     "restaurants": "Restaurants",
+    "sights": "Sights",
     "tripDetails": "Trip Details"
   },
   "menu": {
@@ -288,8 +289,16 @@
     "noTouristAttractions": "The owner hasn't included any tourist attractions",
     "otherVotes": "See the votes..."
   },
-  "lugaresGoogle": {
+  "restaurants": {
     "sights": "Sights",
+    "recommendations": "Recommendations",
+    "searching": "Searching in a range of",
+    "notFound1": "We didn't find restaurants in the range",
+    "moreOptions": "Please try increasing the amount of km.",
+    "seeMore": "See more"
+  },
+  "sights": {
+    "finish": "Finish trip",
     "recommendations": "Recommendations",
     "searching": "Searching in a range of",
     "notFound1": "We didn't find restaurants in the range",

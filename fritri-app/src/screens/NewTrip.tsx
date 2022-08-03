@@ -90,7 +90,7 @@ const NewTrip = () => {
       nombre: tripName,
     });
 
-    navigation.navigate('LugaresGoogle');
+    navigation.navigate('Restaurants');
   };
 
   const onDateChange = (event: Event, selectedDate?: Date): void => {
