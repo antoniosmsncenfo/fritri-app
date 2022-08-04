@@ -1,19 +1,26 @@
 import { useTheme, useTranslation } from '../hooks';
 import {Block, Button, Input, Image, Text} from '../components/';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { usePaseo } from '../hooks/usePaseos';
 import dayjs from 'dayjs';
 import { TouchableOpacity } from 'react-native';
 import { useUsuario } from '../hooks/useUsuario';
+import { useVotacion } from '../hooks/useVotacion';
+import { PlaceDetail } from '../components/PlaceDetail';
 
 const TripDetails = (props) => {
-    const {assets, sizes, colors} = useTheme();
+    const {assets, sizes, colors, gradients} = useTheme();
     const {t} = useTranslation();
     const IMAGE_SIZE = (sizes.width - (sizes.padding + sizes.sm) * 2) / 5;
 
     const {obtenerPaseo, paseoSeleccionado} = usePaseo();
 
     const {usuarioPaseo, obtenerUsuarioPaseo} = useUsuario();
+    const { votarSeccion, votacionFinalizada } = useVotacion();
+
+    const [ restaurantesVotar, setRestaurantesVotar] = useState<number[]>([]);
+    const [ atraccionesVotar, setAtraccionesVotar] = useState<number[]>([]);
+    const [ isLoadingVotacion, setIsLoadingVotacion] = useState(false);
 
 
     useEffect(() => {
@@ -22,8 +29,55 @@ const TripDetails = (props) => {
     }, []);
 
     useEffect(() => {
-      obtenerUsuarioPaseo(paseoSeleccionado?.idCreador!);
+      if(!votacionFinalizada) {
+        obtenerUsuarioPaseo(paseoSeleccionado?.idCreador!);
+      }
     }, [paseoSeleccionado]);
+
+    const manejarVotos = (posicion: number, tipo: string) => {
+      switch(tipo) {
+        case 'rest':
+          const existIndexRest = restaurantesVotar.findIndex(x => x === posicion);
+          if(existIndexRest !== -1) {
+            restaurantesVotar.splice(existIndexRest, 1);
+            setRestaurantesVotar([...restaurantesVotar]);
+          } else {
+            setRestaurantesVotar((state) => [posicion, ...state]);
+          }
+        break;
+        case 'attr':
+          const existIndexAttr = atraccionesVotar.findIndex(x => x === posicion);
+          if(existIndexAttr !== -1) {
+            atraccionesVotar.splice(existIndexAttr, 1);
+            setAtraccionesVotar([...atraccionesVotar]);
+          } else {
+            setAtraccionesVotar((state) => [posicion, ...state]);
+          }
+        break;
+      }
+    }
+
+    const enviarVotos = (tipo: string) => {
+      switch(tipo) {
+        case 'rest':
+          const restaurantes = paseoSeleccionado?.seccionRestaurantes?.restaurantes;
+          let idSecciones: any[] = restaurantesVotar.map(x => {
+            return restaurantes && restaurantes[x].idLugarGoogle
+          })
+          console.log('idSecciones');
+          console.log(idSecciones);
+          votarSeccion(paseoSeleccionado?.idCreador!, props.route.params.id, idSecciones, 'RESTAURANTE');
+        break;
+        case 'attr':
+          
+        break;
+      }
+    }
+
+    useEffect(() => {
+      let idPaseo:string = props.route.params.id;
+      obtenerPaseo(idPaseo);
+    }, [votacionFinalizada])
 
     return (
       <Block safe>
@@ -119,71 +173,10 @@ const TripDetails = (props) => {
             </Block>
 
             {paseoSeleccionado?.seccionRestaurantes?.restaurantes.map(
-              (restaurante) => (
+              (restaurante, index) => (
                 <Block row align="center" marginBottom={sizes.m}
-                  key={`rest-${restaurante.idLugarGoogle}`}>
-                  <Block
-                    flex={0} width={64} height={64}
-                    align="center" justify="center" 
-                    marginRight={sizes.s}>
-                    <TouchableOpacity>
-                      {restaurante.urlFotos.length>0 && (
-                      <Image
-                        radius={sizes.s} width={64} height={64}
-                        source={{uri: restaurante.urlFotos![0]}}
-                        style={{
-                          height: IMAGE_SIZE,
-                          width: IMAGE_SIZE,
-                        }}
-                      />
-                      )}
-                      {restaurante.urlFotos.length===0 && (
-                      <Image
-                        radius={sizes.s} width={64} height={64}
-                        source={assets.restaurant}
-                        style={{
-                          height: IMAGE_SIZE,
-                          width: IMAGE_SIZE,
-                        }}
-                      />
-                      )}
-                    </TouchableOpacity>                    
-                  </Block>
-
-                  <Block>
-                    <Block row justify="space-between">
-                      <Text semibold>{restaurante.nombre}</Text>
-                      <TouchableOpacity
-                        //onPress={() => handleVote()}
-                        >
-                        <Block row flex={0} align="flex-start">
-                        <Image
-                          radius={0}
-                          source={assets.unchecked}
-                          style={{tintColor: colors.secondary}}
-                          width={sizes.m}
-                          height={sizes.m}
-                        />
-                        </Block>
-                      </TouchableOpacity>
-                    </Block>
-                    <TouchableOpacity
-                      //onPress={() => handleViewDetails(_id!)}
-                      >
-                      <Block row flex={0} align="center">
-                        <Text
-                          p
-                          color={colors.primary}
-                          semibold
-                          size={sizes.linkSize}
-                          marginRight={sizes.s}>
-                          {t('tripDetails.otherVotes')}
-                        </Text>
-                        <Image source={assets.arrow} color={colors.primary} />
-                      </Block>
-                    </TouchableOpacity>                    
-                  </Block>                  
-
+                  key={`rest-${restaurante.idLugarGoogle}-${index}`}>
+                  <PlaceDetail place={restaurante} posicion={index} tipo="rest" manejarVotos={manejarVotos} usuarioVotado={false}/>
                 </Block>
             ))}
 
@@ -196,7 +189,18 @@ const TripDetails = (props) => {
                 </Block>                
               )
             }
-
+            { restaurantesVotar.length > 0 && 
+              <Button
+                onPress={() => { enviarVotos('rest') }}
+                gradient={gradients.primary}
+                outlined
+                marginVertical={sizes.s}
+              >
+                <Text bold white transform="uppercase">
+                {t('newTrip.vote')}
+                </Text>
+              </Button>
+            }
           </Block>
 
          {/* Atracciones */}
@@ -209,71 +213,10 @@ const TripDetails = (props) => {
             </Block>
 
             {paseoSeleccionado?.seccionAtraccionesTuristicas?.atraccionesturisticas.map(
-              (attraccion) => (
+              (attraccion, index) => (
                 <Block row align="center" marginBottom={sizes.m}
-                  key={`rest-${attraccion.idLugarGoogle}`}>
-                  <Block
-                    flex={0} width={64} height={64}
-                    align="center" justify="center" 
-                    marginRight={sizes.s}>
-                    <TouchableOpacity>
-                      {attraccion.urlFotos.length>0 && (
-                      <Image
-                        radius={sizes.s} width={64} height={64}
-                        source={{uri: attraccion.urlFotos![0]}}
-                        style={{
-                          height: IMAGE_SIZE,
-                          width: IMAGE_SIZE,
-                        }}
-                      />
-                      )}
-                      {attraccion.urlFotos.length===0 && (
-                      <Image
-                        radius={sizes.s} width={64} height={64}
-                        source={assets.attraction}
-                        style={{
-                          height: IMAGE_SIZE,
-                          width: IMAGE_SIZE,
-                        }}
-                      />
-                      )}
-                    </TouchableOpacity> 
-                  </Block>
-
-                  <Block>
-                    <Block row justify="space-between">
-                      <Text semibold>{attraccion.nombre}</Text>
-                      <TouchableOpacity
-                        //onPress={() => handleVote()}
-                        >
-                        <Block row flex={0} align="flex-start">
-                        <Image
-                          radius={0}
-                          source={assets.unchecked}
-                          style={{tintColor: colors.secondary}}
-                          width={sizes.m}
-                          height={sizes.m}
-                        />
-                        </Block>
-                      </TouchableOpacity>
-                    </Block>
-                    <TouchableOpacity
-                      //onPress={() => handleViewDetails(_id!)}
-                      >
-                      <Block row flex={0} align="center">
-                        <Text
-                          p
-                          color={colors.primary}
-                          semibold
-                          size={sizes.linkSize}
-                          marginRight={sizes.s}>
-                          {t('tripDetails.otherVotes')}
-                        </Text>
-                        <Image source={assets.arrow} color={colors.primary} />
-                      </Block>
-                    </TouchableOpacity>                    
-                  </Block>                   
-
+                  key={`attr-${attraccion.idLugarGoogle}-${index}`}>
+                    <PlaceDetail place={attraccion} posicion={index} tipo="attr" manejarVotos={manejarVotos} usuarioVotado={false}/>
                 </Block>
             ))}
 
@@ -286,6 +229,20 @@ const TripDetails = (props) => {
                 </Block>                
               )
             }
+
+            { atraccionesVotar.length > 0 && 
+              <Button
+                onPress={() => { enviarVotos('attr') }}
+                gradient={gradients.primary}
+                outlined
+                marginVertical={sizes.s}
+              >
+                <Text bold white transform="uppercase">
+                {t('newTrip.vote')}
+                </Text>
+              </Button>
+            }
+
           </Block>
 
           </Block>
