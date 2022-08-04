@@ -1,10 +1,8 @@
 import axios from 'axios';
 import { LUGARES_TURISTICOS_BASE_URL } from '@env';
-import { IBuscarLugarGoogle } from '../interfaces/buscar-lugar-google';
 import { IDestino } from '../interfaces/paseo';
 import { ISolicitudLugaresGoogle } from '../interfaces/solicitud-lugares-google';
-import { ILugarGoogle } from '../interfaces/lugar-google';
-import { LugarGoogleRespuesta } from '../interfaces/restaurante-respuesta';
+import { ILugarGoogleRespuesta } from '../interfaces/restaurante-respuesta';
 
 export const getDestinations = async (destination: string, language: string = 'es'): Promise<IDestino[]> => {
     if (destination) {
@@ -38,18 +36,18 @@ export const getDestinations = async (destination: string, language: string = 'e
     }
 };
 
-export const getGooglePlaceByType = async (buscarLugar: IBuscarLugarGoogle) => {
-    const type = getTypePlace(buscarLugar?.tipoLugar);
+export const getGooglePlaceByType = async (idGoogle: string) => {
     let request = {
         method: 'get',
-        url: `${LUGARES_TURISTICOS_BASE_URL}${type?.url}/${type?.endpoint}`,
+        url: `${LUGARES_TURISTICOS_BASE_URL}lugares-google/obtener-lugar`,
         headers: {
             'Content-Type': 'application/json',
         },
         params: {
-            idGoogle: buscarLugar.idGoogle,
+            idGoogle: idGoogle,
         },
     };
+
     try {
         const resultado = await axios(request);
 
@@ -65,11 +63,11 @@ export const getGooglePlaceByType = async (buscarLugar: IBuscarLugarGoogle) => {
     }
 };
 
-export const getGooglePlacesByType = async (solicitudLugaresGoogle: ISolicitudLugaresGoogle, language: string = 'es'): Promise<LugarGoogleRespuesta> => {
-    const type = getTypePlace(solicitudLugaresGoogle.tipo);
+export const getGooglePlacesByType = async (solicitudLugaresGoogle: ISolicitudLugaresGoogle, language: string = 'es'): Promise<ILugarGoogleRespuesta> => {
+
     let request = {
         method: 'post',
-        url: `${LUGARES_TURISTICOS_BASE_URL}${type?.url}/${type?.endpoint}`,
+        url: `${LUGARES_TURISTICOS_BASE_URL}lugares-google/buscar-lugares`,
         headers: {
             'Content-Type': 'application/json',
         },
@@ -83,41 +81,16 @@ export const getGooglePlacesByType = async (solicitudLugaresGoogle: ISolicitudLu
         }
         else {
             return {
-                restaurantes: [],
+                lugaresGoogle: [],
                 tokenPaginacion: '',
             };
         }
     }
     catch (e) {
         return {
-            restaurantes: [],
+            lugaresGoogle: [],
             tokenPaginacion: '',
         };
-    }
-};
-
-const getTypePlace = (typeOfPlace) => {
-    switch (typeOfPlace) {
-        case 'restaurante':
-            return {
-                url: 'restaurantes',
-                endpoint: 'obtener-restaurante',
-            };
-        case 'atraccion':
-            return {
-                url: 'atracciones-turisticas',
-                endpoint: 'obtener-atraccion-turistica',
-            };
-        case 'restaurantes':
-            return {
-                url: 'restaurantes',
-                endpoint: 'buscar-restaurantes',
-            };
-        case 'atracciones':
-            return {
-                url: 'atracciones-turisticas',
-                endpoint: 'buscar-atracciones-turisticas',
-            };
     }
 };
 

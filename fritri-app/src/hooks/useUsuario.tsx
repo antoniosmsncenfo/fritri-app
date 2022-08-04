@@ -2,8 +2,8 @@ import axios from 'axios';
 import { useState } from 'react';
 import { IUsuario, ILogin } from '../constants/types/index';
 import { USUARIOS_BASE_URL } from '@env';
-import { IUsuarioContrasena, IUsuarioFritri, LoginStatus } from '../interfaces/usuario-fritri';
-import { guardarUsuarioFriTri, resetearPassword, cambiarPassword, updateUsuarioFriTri,updateFoto } from '../api/usuarioDB';
+import { IUsuarioContrasena, IUsuarioFritri, IUsuarioPaseo, LoginStatus } from '../interfaces/usuario-fritri';
+import { guardarUsuarioFriTri, resetearPassword, cambiarPassword, updateUsuarioFriTri,updateFoto, obtenerUsuarioPorID } from '../api/usuarioDB';
 import { RegistrationStatus, ResetPasswordStatus } from '../interfaces/registro-usuario';
 
 export const useLogin = () => {
@@ -74,7 +74,7 @@ export const useUsuario = () => {
         pais: '',
     });
 
-		const [fritriUser, setFritriUser] = useState<IUsuarioFritri | null>(null);
+	const [fritriUser, setFritriUser] = useState<IUsuarioFritri | null>(null);
 
     const [registrarStatus, setRegistrarStatus] = useState<RegistrationStatus>(
         RegistrationStatus.New
@@ -128,6 +128,25 @@ export const useUsuario = () => {
         
     }
 
+    const [usuarioPaseo, setUsuarioPaseo] = useState<IUsuarioPaseo | null>(null);
+
+    const obtenerUsuarioPaseo = (idUsuario: string) => {
+
+        obtenerUsuarioPorID(idUsuario)
+            .then((resultado) => {
+                if (resultado !== null) {
+                    setUsuarioPaseo(resultado);
+                }
+                else{
+                    setUsuarioPaseo(null);
+                }
+            })
+            .catch((e) => {
+                console.log("UseUsuario->obtenerUsuarioPaseo::ERROR "+ e.Message);
+                setUsuarioPaseo(null);
+            });
+    };
+
 
     return {
         resetRegistrarEstatus,
@@ -137,6 +156,8 @@ export const useUsuario = () => {
         fritriUser,
         updateUsuarioFoto,
         registrarStatus,
+        usuarioPaseo,
+        obtenerUsuarioPaseo
     };
 
 

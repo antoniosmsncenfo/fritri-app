@@ -6,6 +6,10 @@ import {
 } from '@googlemaps/google-maps-services-js';
 import { Injectable, Logger } from '@nestjs/common';
 
+export enum TipoLugar {
+  restaurantes = 'restaurantes',
+  atracciones = 'atracciones',
+}
 export enum Categorias {
   address_components = 'address_components',
   adr_address = 'adr_address',
