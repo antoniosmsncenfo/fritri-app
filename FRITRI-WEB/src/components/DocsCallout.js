@@ -9,24 +9,24 @@ const DocsCallout = (props) => {
 
   const _href = `https://coreui.io/react/docs/${href}`
 
-  return (
-    <CCallout color="info" className="bg-white">
-      {content
-        ? content
-        : `A React ${name} component ${
-            plural ? 'have' : 'has'
-          } been created as a native React.js version
-      of Bootstrap ${name}. ${name} ${plural ? 'are' : 'is'} delivered with some new features,
-      variants, and unique design that matches CoreUI Design System requirements.`}
-      <br />
-      <br />
-      For more information please visit our official{' '}
-      <CLink href={_href} target="_blank">
-        documentation of CoreUI Components Library for React.js
-      </CLink>
-      .
-    </CCallout>
-  )
+  // return (
+  //   <CCallout color="info" className="bg-white">
+  //     {content
+  //       ? content
+  //       : `A React ${name} component ${
+  //           plural ? 'have' : 'has'
+  //         } been created as a native React.js version
+  //     of Bootstrap ${name}. ${name} ${plural ? 'are' : 'is'} delivered with some new features,
+  //     variants, and unique design that matches CoreUI Design System requirements.`}
+  //     <br />
+  //     <br />
+  //     For more information please visit our official{' '}
+  //     <CLink href={_href} target="_blank">
+  //       documentation of CoreUI Components Library for React.js
+  //     </CLink>
+  //     .
+  //   </CCallout>
+  // )
 }
 
 DocsCallout.propTypes = {

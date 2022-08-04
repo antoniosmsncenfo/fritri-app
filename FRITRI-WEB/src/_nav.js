@@ -1,5 +1,7 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
+import { useAuth0 } from '@auth0/auth0-react'
+
 import {
   cilBell,
   cilCalculator,
@@ -8,7 +10,7 @@ import {
   cilDescription,
   cilDrop,
   cilNotes,
-  cilPencil,
+  cilAccountLogout,
   cilPuzzle,
   cilSpeedometer,
   cilStar,
@@ -18,22 +20,10 @@ import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 const _nav = [
   {
     component: CNavItem,
-    name: 'Login',
-    to: '/login',
-    icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
-  },
-  {
-    component: CNavItem,
-    name: 'Dashboard',
-    to: '/dashboard',
-    icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
-  },
-
-  {
-    component: CNavItem,
     name: 'Charts',
     to: '/charts',
     icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
   },
 ]
+
 export default _nav
