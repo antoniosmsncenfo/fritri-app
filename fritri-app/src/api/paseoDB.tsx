@@ -21,7 +21,6 @@ export const crearPaseoNuevo = async (paseo: IPaseo) => {
         }
     }
     catch (e) {
-        console.log('error paseo', e);
         return null;
     }
 };

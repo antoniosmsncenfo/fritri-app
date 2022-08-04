@@ -116,7 +116,7 @@
     "resetPassword": "Change password",
     "returnToTrip": "Return to trip",
     "restaurants": "Restaurants",
-    "sights": "Sights",
+    "sights": "Tourist attractions",
     "tripDetails": "Trip Details"
   },
   "menu": {
@@ -290,7 +290,7 @@
     "otherVotes": "See the votes..."
   },
   "restaurants": {
-    "sights": "Sights",
+    "sights": "Tourist attractions",
     "recommendations": "Recommendations",
     "searching": "Searching in a range of",
     "notFound1": "We didn't find restaurants in the range",
@@ -303,7 +303,9 @@
     "searching": "Searching in a range of",
     "notFound1": "We didn't find restaurants in the range",
     "moreOptions": "Please try increasing the amount of km.",
-    "seeMore": "See more"
+    "seeMore": "See more",
+    "createdTrip": "New trip",
+    "createdTripText": "Your new trip was created"
   },
   "lugarGoogle": {
     "select": "Select",
