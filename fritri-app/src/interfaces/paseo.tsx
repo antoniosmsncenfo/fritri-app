@@ -28,11 +28,24 @@ export interface IDestino {
     tipoLugar?: string;
 }
 
+export interface IVotacion {
+    idVotante: string,
+    fecha: Date,
+    resultado: boolean
+}
+
 export interface IRestaurante {
     nombre: string;
     urlFotos: string[];
-    descripcion: string;
+    descripcion?: string;
     idLugarGoogle: string;
+    latitud: number,
+    longitud: number,
+    vecindario: string,
+    rangoPrecios: number
+    calificacion: number,
+    tipoLugar: string,
+    votaciones?: IVotacion[]
 }
 
 export interface ISeccionRestaurantes {
@@ -45,8 +58,15 @@ export interface ISeccionRestaurantes {
 export interface IAtraccionesturistica {
     nombre: string;
     urlFotos: string[];
-    descripcion: string;
+    descripcion?: string;
     idLugarGoogle: string;
+    latitud: number,
+    longitud: number,
+    vecindario: string,
+    rangoPrecios?: number
+    calificacion: number,
+    tipoLugar: string,
+    votaciones?: IVotacion[]
 }
 
 export interface ISeccionAtraccionesTuristicas {

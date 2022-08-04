@@ -15,7 +15,7 @@ export class VotarSeccionDto {
   readonly idPaseo: string;
   
   @IsNotEmpty()
-  readonly idSeccion: string;
+  readonly idSecciones: string[];
 
   @IsNotEmpty()
   readonly tipoSeccion: TipoSeccion;
