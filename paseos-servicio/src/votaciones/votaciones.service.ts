@@ -28,11 +28,14 @@ export class VotacionesService {
       if(!respuesta) {
         return this.resultadoNoExiste;
       }
-      const { lugarAVotar, prop, propPaseo, indexLugar } : IResultadoExiste  = respuesta;
-      if(lugarAVotar[0]) {
-        let resultadoActividadVotar: Lugar = this.votarEnActividad(idIntegrante, lugarAVotar[0]);
-        this.paseoActual[propPaseo][prop][indexLugar] = resultadoActividadVotar;
-        await this.paseoActual.save();
+      const { lugaresAVotar, prop, propPaseo } : IResultadoExiste  = respuesta;
+      if(lugaresAVotar.length > 0) {
+        for (const lugarAVotar of lugaresAVotar) {
+          const indexLugar = this.paseoActual[propPaseo][prop].findIndex(x => x['idLugarGoogle'] === lugarAVotar.idLugarGoogle);
+          let resultadoActividadVotar: Lugar = this.votarEnActividad(idIntegrante, lugarAVotar);
+          this.paseoActual[propPaseo][prop][indexLugar] = resultadoActividadVotar;
+          await this.paseoActual.save();
+        }
       }
       resultado = this.paseoActual;
     } catch(error) {
@@ -49,11 +52,14 @@ export class VotacionesService {
       if(!respuesta) {
         return this.resultadoNoExiste;
       }
-      const { lugarAVotar, prop, propPaseo, indexLugar } : IResultadoExiste  = respuesta;
-      if(lugarAVotar[0]) {
-        let resultadoActividadVotar: Lugar = this.quitarVotarActividad(idIntegrante, lugarAVotar[0]);
-        this.paseoActual[propPaseo][prop][indexLugar] = resultadoActividadVotar;
-        await this.paseoActual.save();
+      const { lugaresAVotar, prop, propPaseo } : IResultadoExiste  = respuesta;
+      if(lugaresAVotar.length > 0) {
+        for (const lugarAVotar of lugaresAVotar) {
+          const indexLugar = this.paseoActual[propPaseo][prop].findIndex(x => x['idLugarGoogle'] === lugarAVotar.idLugarGoogle);
+          let resultadoActividadVotar: Lugar = this.quitarVotarActividad(idIntegrante, lugarAVotar);
+          this.paseoActual[propPaseo][prop][indexLugar] = resultadoActividadVotar;
+          await this.paseoActual.save();
+        }
       }
       resultado = this.paseoActual;
     } catch(error) {
@@ -64,20 +70,18 @@ export class VotacionesService {
 
   async procesoObtenerInformacion(votarSeccionDto: VotarSeccionDto): Promise<null | IResultadoExiste> {
     try {
-      const { tipoSeccion, idPaseo, idSeccion } = votarSeccionDto;
+      const { tipoSeccion, idPaseo, idSecciones } = votarSeccionDto;
       const resultadoPaseo = await this.paseoModel.findOne({ _id: idPaseo });
       if(!resultadoPaseo) {
         return null;
       }
       this.paseoActual = resultadoPaseo;
       const { seccion, prop, propPaseo } = this.obtenerSeccionPaseo(tipoSeccion);
-      let lugarAVotar: Lugar = seccion[prop].filter(x => x['idGoogle'] === idSeccion);
-      let indexLugar = seccion[prop].findIndex(x => x['idGoogle'] === idSeccion);
+      let lugaresAVotar: Lugar[] = seccion[prop].filter(x => idSecciones.includes(x['idLugarGoogle']));
       return {
-        lugarAVotar,
+        lugaresAVotar,
         prop,
         propPaseo,
-        indexLugar
       }
     } catch(error) {
       throw new BadRequestException(`Error en proceso obtener informacion::${error.message}`);
