@@ -103,9 +103,9 @@ export interface IUseData {
   notifications: INotification[];
   handleNotifications: (data?: INotification[]) => void;
   newTripTemp: IPaseo;
-  setNewTripTemp: (trip: IPaseo) => void;
+  setNewTripTemp: (trip: IPaseo | null) => void;
   selectedTrip: IPaseo;
-  setSelectedTrip: (trip: IPaseo) => void;  
+  setSelectedTrip: (trip: IPaseo) => void;
 }
 
 export interface ITranslate {

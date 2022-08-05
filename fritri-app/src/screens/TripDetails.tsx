@@ -29,7 +29,9 @@ const TripDetails = (props) => {
     }, []);
 
     useEffect(() => {
+      if (paseoSeleccionado?.idCreador!) {
         obtenerUsuarioPaseo(paseoSeleccionado?.idCreador!);
+      }
     }, [paseoSeleccionado]);
 
     useEffect(() => {
@@ -123,7 +125,7 @@ const TripDetails = (props) => {
           const votacion = lugar?.votaciones?.find(x => x.idVotante === user._id);
           if(indice !== -1) {
             indicesVotosUsuario.push({
-              tipoVoto: votacion?.resultado!, // TODO: Agregar el nullVall
+              tipoVoto: votacion?.resultado!,
               posicion: i
             });
           }
