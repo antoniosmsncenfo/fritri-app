@@ -11,21 +11,54 @@ export const PlaceDetail = (props) => {
   const attraccion = props.place;
   const assetNoImg = props.type === 'rest' ? assets.restaurant : assets.attraction;
 
-  const [isCheck, setCheck] = useState(props.usuarioVotado);
-  const [checkAsset, setCheckAsset] = useState(props.usuarioVotado ? assets.checked : assets.checked);
+  const { like, noLike } = props.usuarioVotado;
 
-  const manejarVotoLugar = () => {
-    props.manejarVotos(props.posicion, props.tipo);
-    setCheck(!isCheck);
+  const [likeCheckAsset, setLikeCheckAsset] = useState(like ? assets.likeFill : assets.like);
+  const [likeCheck, setLikeCheck] = useState(like);
+
+  const [dislikecheckAsset, setDislikeCheckAsset] = useState(noLike ? assets.disLike : assets.disLikeFill);
+  const [dislikeCheck, setDislikeCheck] = useState(noLike);
+
+  const manejarVotoLugar = (tipo: string) => {
+    if(tipo === 'like') {
+      if(dislikeCheck) {
+        setDislikeCheck(false);
+      }
+      setLikeCheck(!likeCheck);
+    }
+    if(tipo === 'dislike') {
+      if(likeCheck) {
+        setLikeCheck(false);
+      }
+      setDislikeCheck(!dislikeCheck);
+    }
+    props.manejarVotos(props.posicion, props.tipo, tipo);
   }
 
   useEffect(() => {
-    if(isCheck) {
-      setCheckAsset(assets.checked)
-    } else {
-      setCheckAsset(assets.unchecked)
+    if(!likeCheck && !dislikeCheck) {
+      props.manejarVotos(props.posicion, props.tipo, 'nullVal');
     }
-  }, [isCheck])
+  }, [likeCheck, dislikeCheck])
+
+
+  useEffect(() => {
+    if(likeCheck) {
+      setLikeCheckAsset(assets.likeFill)
+      setDislikeCheckAsset(assets.disLike)
+    } else {
+      setLikeCheckAsset(assets.like)
+    }
+  }, [likeCheck])
+
+  useEffect(() => {
+    if(dislikeCheck) {
+      setDislikeCheckAsset(assets.disLikeFill)
+      setLikeCheckAsset(assets.like)
+    } else {
+      setDislikeCheckAsset(assets.disLike)
+    }
+  }, [dislikeCheck])
 
   return (
     <>
@@ -67,7 +100,7 @@ export const PlaceDetail = (props) => {
       <Block>
         <Block row justify="space-between">
           <Text semibold>{attraccion.nombre}</Text>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => { manejarVotoLugar() }}
           >
             <Block row flex={0} align="flex-start">
@@ -79,7 +112,7 @@ export const PlaceDetail = (props) => {
                 height={sizes.m}
               />
             </Block>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </Block>
         <TouchableOpacity
         //onPress={() => handleViewDetails(_id!)}
@@ -96,6 +129,30 @@ export const PlaceDetail = (props) => {
             <Image source={assets.arrow} color={colors.primary} />
           </Block>
         </TouchableOpacity>
+        <Block row justify="flex-end">
+          <Block row flex={0} align="flex-start" style={{ marginRight: 10 }}>
+            <TouchableOpacity onPress={() => { manejarVotoLugar('like') }} >
+              <Image
+                radius={0}
+                source={likeCheckAsset}
+                style={{tintColor: colors.secondary}}
+                width={sizes.m}
+                height={sizes.m}
+              />
+            </TouchableOpacity>
+          </Block>
+          <Block row flex={0} align="center">
+            <TouchableOpacity onPress={() => { manejarVotoLugar('dislike') }} >
+              <Image
+                radius={0}
+                source={dislikecheckAsset}
+                style={{tintColor: colors.secondary}}
+                width={sizes.m}
+                height={sizes.m}
+              />
+            </TouchableOpacity>
+          </Block>
+        </Block>
       </Block>
     </>
   );
