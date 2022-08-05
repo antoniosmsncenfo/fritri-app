@@ -38,5 +38,9 @@ export class Lugar {
   @ApiPropertyOptional()
   // Votaciones no puede estar requerido ya que cuando se crea no tiene las votaciones
   votaciones: Votacion[];
+
+  @ApiPropertyOptional()
+  // Votaciones no puede estar requerido ya que cuando se crea no tiene las votaciones
+  tipoVoto: string;
 }
 export const LugarSchema = SchemaFactory.createForClass(Lugar);

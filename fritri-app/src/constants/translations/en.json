@@ -276,7 +276,9 @@
     "notFound2": " as destination.",
     "moreOptions": "Please try to be more specific.",
     "random": "Random",
-    "touristAttractions": "Tourist Attractions"
+    "touristAttractions": "Tourist Attractions",
+    "vote": "Vote",
+    "sendingVotes": "Sending votes"
   },
   "destination": {
     "select": "Select",

@@ -22,6 +22,6 @@ export class Votacion {
   @Prop({
     required: true,
   })
-  resultado: boolean;
+  resultado: boolean | string;
 }
 export const VotacionSchema = SchemaFactory.createForClass(Votacion);
