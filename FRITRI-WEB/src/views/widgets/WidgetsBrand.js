@@ -36,7 +36,7 @@ const WidgetsBrand = ({ withCharts }) => {
 
   return (
     <CRow>
-      <CCol sm={6} lg={3}>
+      {/* <CCol sm={6} lg={3}>
         <CWidgetStatsD
           className="mb-4"
           {...(withCharts && {
@@ -176,7 +176,7 @@ const WidgetsBrand = ({ withCharts }) => {
             { title: 'meetings', value: '4' },
           ]}
         />
-      </CCol>
+      </CCol> */}
     </CRow>
   )
 }

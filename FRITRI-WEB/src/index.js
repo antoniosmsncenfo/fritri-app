@@ -6,10 +6,16 @@ import App from './App'
 import reportWebVitals from './reportWebVitals'
 import { Provider } from 'react-redux'
 import store from './store'
-
+import { Auth0Provider } from '@auth0/auth0-react'
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <Auth0Provider
+      domain="dev-wljvufpb.us.auth0.com"
+      clientId="VaNYcclvlSDv8eIdubV6LMEBqXp9CulP"
+      redirectUri={window.location.origin}
+    >
+      <App />
+    </Auth0Provider>
   </Provider>,
   document.getElementById('root'),
 )
