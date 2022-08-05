@@ -34,7 +34,7 @@ export interface IVotacion {
     resultado: boolean
 }
 
-export interface IRestaurante {
+export interface ILugar {
     nombre: string;
     urlFotos: string[];
     descripcion?: string;
@@ -52,7 +52,7 @@ export interface ISeccionRestaurantes {
     _id?: string;
     esFinalizadasVotaciones: boolean;
     fechaFinalizacionVotaciones: Date;
-    restaurantes: IRestaurante[];
+    restaurantes: ILugar[];
 }
 
 export interface IAtraccionesturistica {
@@ -73,7 +73,7 @@ export interface ISeccionAtraccionesTuristicas {
     _id?: string;
     esFinalizadasVotaciones: boolean;
     fechaFinalizacionVotaciones: Date;
-    atraccionesturisticas: IAtraccionesturistica[];
+    atraccionesturisticas: ILugar[];
 }
 
 export interface Integrante {
