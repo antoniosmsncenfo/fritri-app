@@ -9,6 +9,8 @@ export const usePaseo = () => {
 
     const [paseoSeleccionado, setPaseoSeleccionado] = useState<IPaseo | null>(null);
 
+    const [paseoSeleccionadoCargado, setPaseoSeleccionadoCargado] = useState(false);
+
     const obtenerPaseosUsuario = (idUsuario: string, estadoPaseos: EstadoPaseo, cantidad:CantidadPaseos) => {
 
         obtenerPaseosUsuarioPorEstado(idUsuario,estadoPaseos,cantidad)
@@ -32,6 +34,7 @@ export const usePaseo = () => {
             .then((resultado) => {
                 if (resultado !== null) {
                     setPaseoSeleccionado(resultado);
+                    setPaseoSeleccionadoCargado(true)
                 }
                 else{
                     setPaseoSeleccionado(null);
@@ -48,6 +51,7 @@ export const usePaseo = () => {
         setPaseosUsuario,
         obtenerPaseosUsuario,
         obtenerPaseo,
-        paseoSeleccionado
+        paseoSeleccionado,
+        paseoSeleccionadoCargado
     }
 }
