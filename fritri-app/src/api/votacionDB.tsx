@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { ITipoVotoEnviar } from '../interfaces/tipo-voto';
 
-export const votarSeccionDb = async (idIntegrante:string, idPaseo: string, idSecciones:(string|undefined)[], tipoSeccion: string) => {
+export const votarSeccionDb = async (idIntegrante:string, idPaseo: string, idSecciones:ITipoVotoEnviar[], tipoSeccion: string) => {
 
     const data = {
         idIntegrante,

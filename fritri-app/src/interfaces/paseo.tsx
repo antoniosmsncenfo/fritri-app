@@ -31,7 +31,7 @@ export interface IDestino {
 export interface IVotacion {
     idVotante: string,
     fecha: Date,
-    resultado: boolean
+    resultado: string;
 }
 
 export interface ILugar {
