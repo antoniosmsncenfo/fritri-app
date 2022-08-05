@@ -102,7 +102,6 @@ export interface IUseData {
   article: IArticle;
   handleArticle: (data?: IArticle) => void;
   notifications: INotification[];
-  notificaciones: INotificacion[];
   handleNotifications: (data?: INotification[]) => void;
   newTripTemp: IPaseo;
   setNewTripTemp: (trip: IPaseo) => void;

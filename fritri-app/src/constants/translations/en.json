@@ -283,6 +283,7 @@
     "view": "View"
   },
   "tripDetails": {
+    "tripCreated": "Created this trip on ",
     "restaurants": "Restaurants",
     "noRestaurants": "The owner hasn't included any restaurants",
     "touristAttractions": "Tourist Attractions",

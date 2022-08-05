@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import dayjs from 'dayjs';
 import PagerView from 'react-native-pager-view';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -31,52 +31,6 @@ dayjs.updateLocale('en', {
     yy: '%dy',
   },
 });
-
-// const Notification = ({
-//   subject,
-//   message,
-//   type,
-//   read,
-//   createdAt,
-// }: INotification) => {
-//   const {colors, icons, gradients, sizes} = useTheme();
-
-//   return (
-//     <Block row align="center" marginBottom={sizes.m}>
-//       <Block
-//         flex={0}
-//         width={32}
-//         height={32}
-//         align="center"
-//         justify="center"
-//         radius={sizes.s}
-//         marginRight={sizes.s}
-//         gradient={gradients[!read ? 'primary' : 'secondary']}>
-//         <Image
-//           radius={0}
-//           width={14}
-//           height={14}
-//           color={colors.white}
-//           source={icons?.[type]}
-//         />
-//       </Block>
-//       <Block>
-//         <Block row justify="space-between">
-//           <Text semibold>{subject}</Text>
-//           <Block row flex={0} align="center">
-//             <Image source={icons.clock} />
-//             <Text secondary size={12} marginLeft={sizes.xs}>
-//               {dayjs().to(dayjs(createdAt))}
-//             </Text>
-//           </Block>
-//         </Block>
-//         <Text secondary size={12} lineHeight={sizes.sm}>
-//           {message}
-//         </Text>
-//       </Block>
-//     </Block>
-//   );
-// };
 
 const Notificacion = ({
   titulo,
@@ -167,79 +121,29 @@ const Notificacion = ({
   );
 };
 
-// const Personal = ({subject, message, type, read, createdAt}: INotification) => {
-//   const {colors, icons, gradients, sizes} = useTheme();
-
-//   return (
-//     <Block card padding={sizes.sm} marginBottom={sizes.sm}>
-//       <Block row align="center" justify="space-between">
-//         <Block
-//           flex={0}
-//           width={32}
-//           height={32}
-//           align="center"
-//           justify="center"
-//           radius={sizes.s}
-//           gradient={gradients[!read ? 'primary' : 'secondary']}>
-//           <Image
-//             radius={0}
-//             width={12}
-//             height={12}
-//             color={colors.white}
-//             source={icons[type]}
-//           />
-//         </Block>
-//         <Block row flex={0} align="center">
-//           <Image source={icons.clock} radius={0} />
-//           <Text secondary size={12} marginLeft={sizes.xs}>
-//             {dayjs().to(dayjs(createdAt))}
-//           </Text>
-//         </Block>
-//       </Block>
-//       <Block marginTop={sizes.s}>
-//         <Text p semibold marginBottom={sizes.s}>
-//           {subject}
-//         </Text>
-//         <Text secondary lineHeight={22}>
-//           {message}
-//         </Text>
-//       </Block>
-//     </Block>
-//   );
-// };
-
 const Notifications = () => {
   const {t} = useTranslation();
-  const {notifications, notificaciones} = useData();
-  const [tab, setTab] = useState('business');
-  const pagerRef = React.createRef<PagerView>();
+  const {user} = useData();
   const {icons, colors, sizes} = useTheme();
 
-  const {notificacionesUsuario} = useNotificacion();
+  const { obtenerNotificaciones, notificacionesUsuario} = useNotificacion();
 
-  const unread = notifications?.filter(
-    (notification) => !notification?.read,
-  );
-  const read = notifications?.filter(
-    (notification) => notification?.read,
-  );
-
-  const pendientes = notificaciones?.filter(
+  useEffect(() => {
+    if (user) {
+      console.log("User:" + user._id!)
+      obtenerNotificaciones(user._id!)
+    }
+  }, []);
+  
+  const pendientes = notificacionesUsuario?.filter(
     (notificacion) => !notificacion?.esLeida,
   );
-  const leidas = notificaciones?.filter(
+  const leidas = notificacionesUsuario?.filter(
     (notificacion) => notificacion?.esLeida,
   );
-
-  console.log(JSON.stringify("Notificaciones en el screen:" + JSON.stringify(notificaciones)));
   
   return (
     <Block>
-      {/* <PagerView
-        ref={pagerRef}
-        style={{flex: 1}}
-        scrollEnabled={false}
-        initialPage={1}> */}
 
         <Block
           scroll
@@ -248,7 +152,7 @@ const Notifications = () => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{paddingBottom: sizes.xxl}}>
           {/* Pendientes */}
-          {pendientes?.length>0 && (
+          {pendientes?.length!>0 && (
             <Block card padding={sizes.sm} marginBottom={sizes.sm}>
               <Text p semibold marginBottom={sizes.sm}>
                 {t('notifications.unread')}
@@ -262,7 +166,7 @@ const Notifications = () => {
             </Block>
           )}
           {/* Leidas */}
-          {leidas?.length>0 && (
+          {leidas?.length!>0 && (
             <Block card padding={sizes.sm}>
               <Text p semibold marginBottom={sizes.sm}>
                 {t('notifications.read')}
@@ -283,7 +187,6 @@ const Notifications = () => {
           )}
         </Block>
 
-      {/* </PagerView> */}
     </Block>
   );
 };
