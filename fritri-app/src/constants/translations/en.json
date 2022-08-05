@@ -277,7 +277,8 @@
     "moreOptions": "Please try to be more specific.",
     "random": "Random",
     "touristAttractions": "Tourist Attractions",
-    "vote": "Vote"
+    "vote": "Vote",
+    "sendingVotes": "Sending votes"
   },
   "destination": {
     "select": "Select",
