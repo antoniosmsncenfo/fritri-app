@@ -1,21 +1,32 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {TouchableOpacity} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import Block from './Block';
 import Image from './Image';
 import Text from './Text';
 import dayjs from 'dayjs';
-import {useTheme, useTranslation} from '../hooks/';
+import {useData, useTheme, useTranslation} from '../hooks/';
 
 import { IPaseo } from '../interfaces/paseo';
 
-const DashboardCard = ({nombre, fechaPaseo, destino}: IPaseo) => {
+const DashboardCard = ({nombre, fechaPaseo, destino, _id}: IPaseo) => {
   const {t} = useTranslation();
   const {assets, colors, sizes} = useTheme();
+  const navigation = useNavigation();
+  const { setSelectedTrip} = useData();
 
   //const isHorizontal = type !== 'vertical';
   const isHorizontal = true;
   const CARD_WIDTH = (sizes.width - sizes.padding * 2 - sizes.sm) / 2;
+
+  const handleViewDetails = useCallback(
+    (idPaseo: string) => {
+      navigation.navigate('TripDetails', {
+        id:idPaseo
+      });
+    },[],
+  );
 
   return (
     <Block
@@ -54,7 +65,8 @@ const DashboardCard = ({nombre, fechaPaseo, destino}: IPaseo) => {
             { dayjs(fechaPaseo).format(t('common.dateFormat'))}
           </Text>
         </Block>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => handleViewDetails(_id!)}>
           <Block row flex={0} align="center">
             <Text
               p

@@ -9,7 +9,7 @@ import { ILugarGoogleData } from '../components/LugarGoogle';
 import { useGooglePlace } from '../hooks/useGooglePlace';
 import { ISolicitudLugaresGoogle } from '../interfaces/solicitud-lugares-google';
 import Slider from '@react-native-community/slider';
-import { IAtraccionesturistica, IRestaurante, ISeccionRestaurantes } from '../interfaces/paseo';
+import { IAtraccionesturistica, ILugar, ISeccionRestaurantes } from '../interfaces/paseo';
 
 const LugaresGoogleHeader = () => {
   const { t } = useTranslation();
@@ -18,40 +18,40 @@ const LugaresGoogleHeader = () => {
     <>
       <Block row flex={0} align="center" justify="space-between" marginVertical={sizes.m} >
         <Text h5 semibold>
-          {t('lugaresGoogle.recommendations')}
+          {t('restaurants.recommendations')}
         </Text>
       </Block>
     </>
   );
 };
 
-interface IRestaurantFooterProps {
+interface IFooterProps {
   show: boolean;
   onPress?: (event?: any) => void
 }
 
-const LugaresGoogleFooter = ({ show, onPress }: IRestaurantFooterProps) => {
+const LugaresGoogleFooter = ({ show, onPress }: IFooterProps) => {
   const { t } = useTranslation();
   const { sizes } = useTheme();
   return (
     <Block row justify="center" onTouchEnd={onPress} padding={sizes.padding}>
       {show &&
         (<Text primary semibold transform="uppercase">
-          {t('lugaresGoogle.seeMore')}
+          {t('restaurants.seeMore')}
         </Text>)}
     </Block>
   );
 };
 
-const LugaresGoogle = () => {
+const Restaurants = () => {
   const { t } = useTranslation();
   const { sizes, gradients, colors } = useTheme();
   const { newTripTemp, setNewTripTemp } = useData();
   const { lugaresGoogleResponse, getLugaresGoogle } = useGooglePlace();
-  const [selectedRestaurants, setSelectedRestaurants] = useState<IRestaurante[]>([]);
-  const [selectedSights, setSelectedSights] = useState<IAtraccionesturistica[]>([]);
+  const [selectedRestaurants, setSelectedRestaurants] = useState<ILugar[]>([]);
+  //const [selectedSights, setSelectedSights] = useState<IAtraccionesturistica[]>([]);
   const [lugaresGoogleData, setLugaresGoogleData] = useState<ILugarGoogleData[]>([]);
-  const [selectedRadio, setSelectedRadio] = useState(1);
+  const [selectedRadio, setSelectedRadio] = useState(5);
   const [notFound, setNotFound] = useState(false);
   const [showPagination, setShowPagination] = useState(false);
   const [showActivityIndicator, setShowActivityIndicator] = useState(true);
@@ -103,11 +103,11 @@ const LugaresGoogle = () => {
       ...newTripTemp,
       seccionRestaurantes: seccionRestaurantes,
     });
-    //navigation.navigate('Sights');
+    navigation.navigate('Sights');
   };
 
   //este es el callback que revisa si se desea ver el destino o seleccionarlo para agregarlo al paseo
-  const onRestaurantChange = (action: ILugarGoogleAction) => {
+  const onLugarGoogleChange = (action: ILugarGoogleAction) => {
     switch (action.action) {
       case 'select':
         updateLugaresGoogleData(action);
@@ -156,7 +156,7 @@ const LugaresGoogle = () => {
       <Block flex={1} paddingHorizontal={sizes.sm} white>
         <Block row justify="center" marginLeft={sizes.xs}>
           <Text h5 bold size={13} transform="uppercase" >
-            {t('lugaresGoogle.searching')} {selectedRadio} km
+            {t('restaurants.searching')} {selectedRadio} km
           </Text>
         </Block>
 
@@ -176,12 +176,12 @@ const LugaresGoogle = () => {
             </Text>
           </Block>
         </Block>
-        {(selectedRestaurants.length > 0 || selectedSights.length > 0)
+        {(selectedRestaurants.length > 0)
           && (
             <Button gradient={gradients.primary} marginVertical={sizes.s}
               onPress={() => goToSights()}>
               <Text white semibold transform="uppercase">
-                {t('lugaresGoogle.sights')}
+                {t('restaurants.sights')}
               </Text>
             </Button>
           )}
@@ -193,10 +193,10 @@ const LugaresGoogle = () => {
         {notFound && (
           <Block flex={0} paddingHorizontal={sizes.padding} paddingTop={sizes.padding}>
             <Text p>
-              {t('lugaresGoogle.notFound1')}
+              {t('restaurants.notFound1')}
             </Text>
             <Text p marginTop={sizes.s}>
-              {t('lugaresGoogle.moreOptions')}
+              {t('restaurants.moreOptions')}
             </Text>
           </Block>
         )}
@@ -214,7 +214,7 @@ const LugaresGoogle = () => {
             style={{ paddingHorizontal: sizes.s, marginBottom: sizes.s }}
             contentContainerStyle={{ paddingHorizontal: sizes.s }}
             renderItem={({ item }) => (
-              <LugarGoogle lugarGoogleProp={item} onPress={(value) => onRestaurantChange(value)} />
+              <LugarGoogle lugarGoogleProp={item} onPress={(value) => onLugarGoogleChange(value)} />
             )}
             ListFooterComponent={() =>
             (<Block>
@@ -234,4 +234,4 @@ const LugaresGoogle = () => {
   );
 };
 
-export default LugaresGoogle;
+export default Restaurants;

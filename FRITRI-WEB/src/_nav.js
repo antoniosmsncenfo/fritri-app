@@ -25,5 +25,4 @@ const _nav = [
     icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
   },
 ]
-
 export default _nav

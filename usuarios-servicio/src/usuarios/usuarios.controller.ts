@@ -30,6 +30,11 @@ export class UsuariosController {
   //   return this.usuariosService.findOne(id);
   // }
 
+  @Get('obtener-usuario-paseo/:id')
+  async obtenerUsuarioPaseo(@Param('id') idUsuario: string): Promise<Usuario | NoUsuario> {
+    return this.usuariosService.obtenerUsuarioPaseo(idUsuario);
+  }  
+
   @Get('findEmail')
   async findEmail(@Query('email') email: string): Promise<Usuario> {
     return this.usuariosService.findEmail(email);

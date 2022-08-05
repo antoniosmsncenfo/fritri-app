@@ -28,32 +28,52 @@ export interface IDestino {
     tipoLugar?: string;
 }
 
-export interface IRestaurante {
+export interface IVotacion {
+    idVotante: string,
+    fecha: Date,
+    resultado: string;
+}
+
+export interface ILugar {
     nombre: string;
     urlFotos: string[];
-    descripcion: string;
+    descripcion?: string;
     idLugarGoogle: string;
+    latitud?: number,
+    longitud?: number,
+    vecindario?: string,
+    rangoPrecios?: number
+    calificacion?: number,
+    tipoLugar?: string,
+    votaciones?: IVotacion[]
 }
 
 export interface ISeccionRestaurantes {
     _id?: string;
     esFinalizadasVotaciones: boolean;
     fechaFinalizacionVotaciones: Date;
-    restaurantes: IRestaurante[];
+    restaurantes: ILugar[];
 }
 
 export interface IAtraccionesturistica {
     nombre: string;
     urlFotos: string[];
-    descripcion: string;
+    descripcion?: string;
     idLugarGoogle: string;
+    latitud: number,
+    longitud: number,
+    vecindario: string,
+    rangoPrecios?: number
+    calificacion: number,
+    tipoLugar: string,
+    votaciones?: IVotacion[]
 }
 
 export interface ISeccionAtraccionesTuristicas {
     _id?: string;
     esFinalizadasVotaciones: boolean;
     fechaFinalizacionVotaciones: Date;
-    atraccionesturisticas: IAtraccionesturistica[];
+    atraccionesturisticas: ILugar[];
 }
 
 export interface Integrante {

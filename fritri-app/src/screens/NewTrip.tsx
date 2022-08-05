@@ -9,7 +9,7 @@ import { ITheme } from '../constants/types/theme';
 import Destination, { IDestinationAction, IDestinationData } from '../components/Destination';
 import { useNavigation } from '@react-navigation/native';
 import { useGooglePlace } from '../hooks/useGooglePlace';
-import { IDestino} from '../interfaces/paseo';
+import { IDestino } from '../interfaces/paseo';
 
 interface ITouchableInput {
   icon: keyof ITheme['assets'];
@@ -73,6 +73,10 @@ const NewTrip = () => {
   }, [destinations]);
 
   useEffect(() => {
+    setNewTripTemp(null);
+  }, []);
+
+  useEffect(() => {
     setIsvalid({ name: tripName !== '', destination: selectedDestino !== null });
   }, [tripName, selectedDestino]);
 
@@ -82,15 +86,17 @@ const NewTrip = () => {
 
   //Agrega el destino al paseo temporal, para luego navegar a restaurantesw
   const goToRestaurants = () => {
+    const selectedDestinoFinal: IDestino =
+      { ...selectedDestino!, idLugarGoogle: selectedDestino?.idGoogle }; // esto se requiere ya que hay dos propiedades que usan el mismo valor
     setNewTripTemp({
       ...newTripTemp,
-      destino: selectedDestino!,
+      destino: selectedDestinoFinal!,
       fechaPaseo: tripDate,
       idCreador: user._id!,
       nombre: tripName,
     });
 
-    navigation.navigate('LugaresGoogle');
+    navigation.navigate('Restaurants');
   };
 
   const onDateChange = (event: Event, selectedDate?: Date): void => {

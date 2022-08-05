@@ -1,7 +1,7 @@
 {
   "common": {
     "selectImg": "Select image",
-    "dateFormat" : "MM/DD/YYYY",
+    "dateFormat": "MM/DD/YYYY",
     "appDetails": "App Details",
     "appName": "App name",
     "appVersion": "App version",
@@ -91,7 +91,8 @@
     "extra": "Extra - Automotive",
     "loginFacebook": "Login Facebook",
     "newTrip": "New trip",
-    "verDestino": "Ver Destino"
+    "verDestino": "See Destination",
+    "tripDetails": "Trip Details"
   },
   "navigation": {
     "home": "FriTri",
@@ -114,7 +115,9 @@
     "newTrip": "New Trip",
     "resetPassword": "Change password",
     "returnToTrip": "Return to trip",
-    "restaurants": "Restaurants"
+    "restaurants": "Restaurants",
+    "sights": "Tourist attractions",
+    "tripDetails": "Trip Details"
   },
   "menu": {
     "started": "Getting Started",
@@ -272,19 +275,39 @@
     "notFound1": "We didn’t find ",
     "notFound2": " as destination.",
     "moreOptions": "Please try to be more specific.",
-    "random": "Random"
+    "random": "Random",
+    "touristAttractions": "Tourist Attractions",
+    "vote": "Vote",
+    "sendingVotes": "Sending votes"
   },
   "destination": {
     "select": "Select",
     "view": "View"
   },
-  "lugaresGoogle": {
-    "sights": "Sights",
+  "tripDetails": {
+    "restaurants": "Restaurants",
+    "noRestaurants": "The owner hasn't included any restaurants",
+    "touristAttractions": "Tourist Attractions",
+    "noTouristAttractions": "The owner hasn't included any tourist attractions",
+    "otherVotes": "See the votes..."
+  },
+  "restaurants": {
+    "sights": "Tourist attractions",
     "recommendations": "Recommendations",
     "searching": "Searching in a range of",
     "notFound1": "We didn't find restaurants in the range",
     "moreOptions": "Please try increasing the amount of km.",
     "seeMore": "See more"
+  },
+  "sights": {
+    "finish": "Finish trip",
+    "recommendations": "Recommendations",
+    "searching": "Searching in a range of",
+    "notFound1": "We didn't find restaurants in the range",
+    "moreOptions": "Please try increasing the amount of km.",
+    "seeMore": "See more",
+    "createdTrip": "New trip",
+    "createdTripText": "Your new trip was created"
   },
   "lugarGoogle": {
     "select": "Select",
