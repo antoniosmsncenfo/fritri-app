@@ -8,6 +8,7 @@ import { useUsuario } from '../hooks/useUsuario';
 import { useVotacion } from '../hooks/useVotacion';
 import { PlaceDetail } from '../components/PlaceDetail';
 import { ILugar } from '../interfaces/paseo';
+import { ITipoVoto, ITipoVotoEnviar } from '../interfaces/tipo-voto';
 
 const TripDetails = (props) => {
     const {assets, sizes, colors, gradients} = useTheme();
@@ -16,12 +17,14 @@ const TripDetails = (props) => {
     const {obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado} = usePaseo();
 
     const {usuarioPaseo, obtenerUsuarioPaseo} = useUsuario();
-    const { votarSeccion, votacionFinalizada } = useVotacion();
+    const { votarSeccion, votacionFinalizadaRest, votacionFinalizadaAtr, respRest, respAtr } = useVotacion();
     const { user } = useData();
 
-    const [ restaurantesVotar, setRestaurantesVotar] = useState<number[]>([]);
-    const [ atraccionesVotar, setAtraccionesVotar] = useState<number[]>([]);
-    const [ isLoadingVotacion, setIsLoadingVotacion] = useState(false);
+    const [ restaurantesVotar, setRestaurantesVotar] = useState<ITipoVoto[]>([]);
+    const [ atraccionesVotar, setAtraccionesVotar] = useState<ITipoVoto[]>([]);
+    const [ enviandoVotacionRest, setEnviandoVotacionRest] = useState(false);
+    const [ enviandoVotacionAtra, setEnviandoVotacionAtra] = useState(false);
+
 
 
     useEffect(() => {
@@ -30,7 +33,7 @@ const TripDetails = (props) => {
     }, []);
 
     useEffect(() => {
-      if(!votacionFinalizada) {
+      if(!votacionFinalizadaRest && !votacionFinalizadaAtr) {
         obtenerUsuarioPaseo(paseoSeleccionado?.idCreador!);
       }
     }, [paseoSeleccionado]);
@@ -41,24 +44,30 @@ const TripDetails = (props) => {
       }
     }, [paseoSeleccionadoCargado]);
 
-    const manejarVotos = (posicion: number, tipo: string) => {
+    const manejarVotos = (posicion: number, tipo: string, tipoVoto: string) => {
       switch(tipo) {
         case 'rest':
-          const existIndexRest = restaurantesVotar.findIndex(x => x === posicion);
+          const existIndexRest = restaurantesVotar.findIndex(x => x.posicion === posicion);
           if(existIndexRest !== -1) {
-            restaurantesVotar.splice(existIndexRest, 1);
+            restaurantesVotar[existIndexRest] = {
+              tipoVoto,
+              posicion
+            }
             setRestaurantesVotar([...restaurantesVotar]);
           } else {
-            setRestaurantesVotar((state) => [posicion, ...state]);
+            setRestaurantesVotar((state) => [{posicion, tipoVoto}, ...state]);
           }
         break;
         case 'attr':
-          const existIndexAttr = atraccionesVotar.findIndex(x => x === posicion);
+          const existIndexAttr = atraccionesVotar.findIndex(x => x.posicion === posicion);
           if(existIndexAttr !== -1) {
-            atraccionesVotar.splice(existIndexAttr, 1);
+            atraccionesVotar[existIndexAttr] = {
+              tipoVoto,
+              posicion
+            }
             setAtraccionesVotar([...atraccionesVotar]);
           } else {
-            setAtraccionesVotar((state) => [posicion, ...state]);
+            setAtraccionesVotar((state) => [{posicion, tipoVoto}, ...state]);
           }
         break;
       }
@@ -68,15 +77,21 @@ const TripDetails = (props) => {
       switch(tipo) {
         case 'rest':
           const restaurantes = paseoSeleccionado?.seccionRestaurantes?.restaurantes;
-          let idSecciones: any[] = restaurantesVotar.map(x => {
-            return restaurantes && restaurantes[x].idLugarGoogle
-          })
+          let idSecciones: ITipoVotoEnviar[] = restaurantesVotar.map(x => {
+            return {
+              idLugar: restaurantes![x.posicion].idLugarGoogle,
+              tipoVoto: x.tipoVoto
+            };
+          });
           votarSeccion(paseoSeleccionado?.idCreador!, props.route.params.id, idSecciones, 'RESTAURANTE');
         break;
         case 'attr':
           const atracciones = paseoSeleccionado?.seccionAtraccionesTuristicas?.atraccionesturisticas;
-          let idSeccionesAtracciones: any[] = atraccionesVotar.map(x => {
-            return atracciones && atracciones[x].idLugarGoogle
+          let idSeccionesAtracciones: ITipoVotoEnviar[] = atraccionesVotar.map(x => {
+            return {
+              idLugar: atracciones![x.posicion].idLugarGoogle,
+              tipoVoto: x.tipoVoto
+            };
           })
           votarSeccion(paseoSeleccionado?.idCreador!, props.route.params.id, idSeccionesAtracciones, 'ATRACCION_TURISTICA');
         break;
@@ -84,18 +99,37 @@ const TripDetails = (props) => {
     }
 
     const revisarVotosUsuario = (lugar: ILugar) => {
-      const usuarioVoto = lugar?.votaciones?.filter(x => x.idVotante === user._id);
-      return usuarioVoto && usuarioVoto?.length > 0 ? true : false;
+      const usuarioVoto = lugar?.votaciones?.find(x => x.idVotante === user._id);
+      if(usuarioVoto === undefined || usuarioVoto.resultado === 'nullVal') {
+        return {
+          like: false,
+          noLike: false
+        };
+      } else {
+        return usuarioVoto.resultado === 'like' ? 
+          {
+            like: true,
+            noLike: false
+          } : 
+          {
+            like: false,
+            noLike: true
+          };
+      }
     }
 
     const revisarVotos = (lugares: ILugar[]) => {
-      const indicesVotosUsuario: number[] = [];
+      const indicesVotosUsuario: ITipoVoto[] = [];
       for (let i = 0; i < lugares.length; i++) {
         const lugar = lugares[i];
         if(lugar.votaciones && lugar.votaciones.length > 0) {
           const indice = lugar?.votaciones?.findIndex(x => x.idVotante === user._id);
+          const votacion = lugar?.votaciones?.find(x => x.idVotante === user._id);
           if(indice !== -1) {
-            indicesVotosUsuario.push(i);
+            indicesVotosUsuario.push({
+              tipoVoto: votacion?.resultado!, // TODO: Agregar el nullVall
+              posicion: i
+            });
           }
         }
       }
@@ -103,16 +137,16 @@ const TripDetails = (props) => {
     }
 
     const procesoVotosUsuario = () => {
-      const restaurantesVotarTemp = revisarVotos(paseoSeleccionado?.seccionRestaurantes?.restaurantes!);
-      setRestaurantesVotar([...restaurantesVotarTemp]);
       const atraccionesVotarTemp = revisarVotos(paseoSeleccionado?.seccionAtraccionesTuristicas?.atraccionesturisticas!);
       setAtraccionesVotar([...atraccionesVotarTemp]);
+      const restaurantesVotarTemp = revisarVotos(paseoSeleccionado?.seccionRestaurantes?.restaurantes!);
+      setRestaurantesVotar([...restaurantesVotarTemp]);
     }
 
     useEffect(() => {
       let idPaseo:string = props.route.params.id;
       obtenerPaseo(idPaseo);
-    }, [votacionFinalizada])
+    }, [votacionFinalizadaAtr, votacionFinalizadaRest])
 
     return (
       <Block safe>
@@ -224,18 +258,16 @@ const TripDetails = (props) => {
                 </Block>                
               )
             }
-            { restaurantesVotar.length > 0 && 
-              <Button
-                onPress={() => { enviarVotos('rest') }}
-                gradient={gradients.primary}
-                outlined
-                marginVertical={sizes.s}
-              >
-                <Text bold white transform="uppercase">
-                {t('newTrip.vote')}
-                </Text>
-              </Button>
-            }
+            <Button
+              onPress={() => { enviarVotos('rest') }}
+              gradient={gradients.primary}
+              outlined
+              marginVertical={sizes.s}
+            >
+              <Text bold white transform="uppercase">
+              {t('newTrip.vote')}
+              </Text>
+            </Button>
           </Block>
 
          {/* Atracciones */}
@@ -265,18 +297,16 @@ const TripDetails = (props) => {
               )
             }
 
-            { atraccionesVotar.length > 0 && 
-              <Button
-                onPress={() => { enviarVotos('attr') }}
-                gradient={gradients.primary}
-                outlined
-                marginVertical={sizes.s}
-              >
-                <Text bold white transform="uppercase">
-                {t('newTrip.vote')}
-                </Text>
-              </Button>
-            }
+            <Button
+              onPress={() => { enviarVotos('attr') }}
+              gradient={gradients.primary}
+              outlined
+              marginVertical={sizes.s}
+            >
+              <Text bold white transform="uppercase">
+              {t('newTrip.vote')}
+              </Text>
+            </Button>
 
           </Block>
 
