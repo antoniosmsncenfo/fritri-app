@@ -12,6 +12,7 @@ export const useNotificacion = () => {
             .then((resultado) => {
                 if (resultado !== null) {
                     setNotificacionesUsuario(resultado);
+                    console.log(JSON.stringify(resultado));
                 }
                 else{
                     setNotificacionesUsuario(null);

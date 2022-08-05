@@ -4,6 +4,7 @@ import { CalendarProps } from 'react-native-calendars';
 import { ITheme } from './theme';
 import { IUsuarioFritri } from '../../interfaces/usuario-fritri';
 import { IPaseo } from '../../interfaces/paseo';
+import { INotificacion } from '../../interfaces/notificacion';
 
 export * from './components';
 export * from './theme';
@@ -101,6 +102,7 @@ export interface IUseData {
   article: IArticle;
   handleArticle: (data?: IArticle) => void;
   notifications: INotification[];
+  notificaciones: INotificacion[];
   handleNotifications: (data?: INotification[]) => void;
   newTripTemp: IPaseo;
   setNewTripTemp: (trip: IPaseo) => void;

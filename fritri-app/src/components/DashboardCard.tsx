@@ -22,9 +22,7 @@ const DashboardCard = ({nombre, fechaPaseo, destino, _id}: IPaseo) => {
 
   const handleViewDetails = useCallback(
     (idPaseo: string) => {
-      navigation.navigate('TripDetails', {
-        id:idPaseo
-      });
+      navigation.navigate('TripDetails', {id:idPaseo});
     },[],
   );
 

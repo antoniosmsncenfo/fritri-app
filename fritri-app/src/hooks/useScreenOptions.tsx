@@ -48,7 +48,7 @@ export default () => {
             })
           }>
           <Image source={icons.bell} radius={0} color={colors.icon} />
-          <Block
+          {/* <Block
             flex={0}
             right={0}
             width={sizes.s}
@@ -56,7 +56,7 @@ export default () => {
             radius={sizes.xs}
             position="absolute"
             gradient={gradients?.primary}
-          />
+          /> */}
         </TouchableOpacity>
         {/* <TouchableOpacity
           onPress={() =>
@@ -151,7 +151,7 @@ export default () => {
               })
             }>
             <Image source={icons.bell} radius={0} color={colors.icon} />
-            <Block
+            {/* <Block
               flex={0}
               right={0}
               width={sizes.s}
@@ -159,7 +159,7 @@ export default () => {
               radius={sizes.xs}
               position="absolute"
               gradient={gradients?.primary}
-            />
+            /> */}
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() =>

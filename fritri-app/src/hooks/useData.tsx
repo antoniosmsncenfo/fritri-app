@@ -25,6 +25,8 @@ import {
 import {light, dark} from '../constants';
 import { IUsuarioFritri } from '../interfaces/usuario-fritri';
 import { IPaseo } from '../interfaces/paseo';
+import { INotificacion } from '../interfaces/notificacion';
+import { useNotificacion } from './useNotificacion';
 
 export const DataContext = React.createContext({});
 
@@ -47,6 +49,11 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   //Este estado está pendiente de analizar si se reulitiza
   const [notifications, setNotifications] =
     useState<INotification[]>(NOTIFICATIONS);
+
+  //Nuevo estado para manejar las notificaciones
+  const {obtenerNotificaciones, notificacionesUsuario} = useNotificacion();
+
+  const [notificaciones, setNotificaciones] = useState<INotificacion[] | null>(null);
 
   //hook para el paseo que se está creando
   const [newTripTemp, setNewTripTemp] = useState<IPaseo | null>(null);
@@ -107,7 +114,10 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     (payload: IUsuarioFritri) => {
       // set user / compare if has updated
       if (JSON.stringify(payload) !== JSON.stringify(user)) {
+        console.log("Handle User" + payload._id!);
         setUser(payload);
+        obtenerNotificaciones(payload._id!);
+        console.log("Handle User 2");
       }
     },
     [user, setUser],
@@ -145,6 +155,11 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     setTheme(isDark ? dark : light);
   }, [isDark]);
 
+  // Actualizar el arreglo de notificaciones
+  useEffect(() => {
+    setNotificaciones(notificacionesUsuario);
+  }, [notificacionesUsuario]);
+
   const contextValue = {
     isDark,
     handleIsDark,
@@ -171,6 +186,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     handleArticle,
     notifications,
     handleNotifications,
+    notificaciones,
     newTripTemp,
     setNewTripTemp,
     selectedTrip,
