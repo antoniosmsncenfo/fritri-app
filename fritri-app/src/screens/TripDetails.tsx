@@ -1,4 +1,4 @@
-import { useTheme, useTranslation } from '../hooks';
+import { useData, useTheme, useTranslation } from '../hooks';
 import {Block, Button, Input, Image, Text} from '../components/';
 import { useEffect, useState } from 'react';
 import { usePaseo } from '../hooks/usePaseos';
@@ -7,16 +7,17 @@ import { TouchableOpacity } from 'react-native';
 import { useUsuario } from '../hooks/useUsuario';
 import { useVotacion } from '../hooks/useVotacion';
 import { PlaceDetail } from '../components/PlaceDetail';
+import { ILugar } from '../interfaces/paseo';
 
 const TripDetails = (props) => {
     const {assets, sizes, colors, gradients} = useTheme();
     const {t} = useTranslation();
-    const IMAGE_SIZE = (sizes.width - (sizes.padding + sizes.sm) * 2) / 5;
 
-    const {obtenerPaseo, paseoSeleccionado} = usePaseo();
+    const {obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado} = usePaseo();
 
     const {usuarioPaseo, obtenerUsuarioPaseo} = useUsuario();
     const { votarSeccion, votacionFinalizada } = useVotacion();
+    const { user } = useData();
 
     const [ restaurantesVotar, setRestaurantesVotar] = useState<number[]>([]);
     const [ atraccionesVotar, setAtraccionesVotar] = useState<number[]>([]);
@@ -33,6 +34,12 @@ const TripDetails = (props) => {
         obtenerUsuarioPaseo(paseoSeleccionado?.idCreador!);
       }
     }, [paseoSeleccionado]);
+
+    useEffect(() => {
+      if(paseoSeleccionadoCargado) {
+        procesoVotosUsuario();
+      }
+    }, [paseoSeleccionadoCargado]);
 
     const manejarVotos = (posicion: number, tipo: string) => {
       switch(tipo) {
@@ -64,14 +71,42 @@ const TripDetails = (props) => {
           let idSecciones: any[] = restaurantesVotar.map(x => {
             return restaurantes && restaurantes[x].idLugarGoogle
           })
-          console.log('idSecciones');
-          console.log(idSecciones);
           votarSeccion(paseoSeleccionado?.idCreador!, props.route.params.id, idSecciones, 'RESTAURANTE');
         break;
         case 'attr':
-          
+          const atracciones = paseoSeleccionado?.seccionAtraccionesTuristicas?.atraccionesturisticas;
+          let idSeccionesAtracciones: any[] = atraccionesVotar.map(x => {
+            return atracciones && atracciones[x].idLugarGoogle
+          })
+          votarSeccion(paseoSeleccionado?.idCreador!, props.route.params.id, idSeccionesAtracciones, 'ATRACCION_TURISTICA');
         break;
       }
+    }
+
+    const revisarVotosUsuario = (lugar: ILugar) => {
+      const usuarioVoto = lugar?.votaciones?.filter(x => x.idVotante === user._id);
+      return usuarioVoto && usuarioVoto?.length > 0 ? true : false;
+    }
+
+    const revisarVotos = (lugares: ILugar[]) => {
+      const indicesVotosUsuario: number[] = [];
+      for (let i = 0; i < lugares.length; i++) {
+        const lugar = lugares[i];
+        if(lugar.votaciones && lugar.votaciones.length > 0) {
+          const indice = lugar?.votaciones?.findIndex(x => x.idVotante === user._id);
+          if(indice !== -1) {
+            indicesVotosUsuario.push(i);
+          }
+        }
+      }
+      return indicesVotosUsuario;
+    }
+
+    const procesoVotosUsuario = () => {
+      const restaurantesVotarTemp = revisarVotos(paseoSeleccionado?.seccionRestaurantes?.restaurantes!);
+      setRestaurantesVotar([...restaurantesVotarTemp]);
+      const atraccionesVotarTemp = revisarVotos(paseoSeleccionado?.seccionAtraccionesTuristicas?.atraccionesturisticas!);
+      setAtraccionesVotar([...atraccionesVotarTemp]);
     }
 
     useEffect(() => {
@@ -176,7 +211,7 @@ const TripDetails = (props) => {
               (restaurante, index) => (
                 <Block row align="center" marginBottom={sizes.m}
                   key={`rest-${restaurante.idLugarGoogle}-${index}`}>
-                  <PlaceDetail place={restaurante} posicion={index} tipo="rest" manejarVotos={manejarVotos} usuarioVotado={false}/>
+                  <PlaceDetail place={restaurante} posicion={index} tipo="rest" manejarVotos={manejarVotos} usuarioVotado={revisarVotosUsuario(restaurante)}/>
                 </Block>
             ))}
 
@@ -216,7 +251,7 @@ const TripDetails = (props) => {
               (attraccion, index) => (
                 <Block row align="center" marginBottom={sizes.m}
                   key={`attr-${attraccion.idLugarGoogle}-${index}`}>
-                    <PlaceDetail place={attraccion} posicion={index} tipo="attr" manejarVotos={manejarVotos} usuarioVotado={false}/>
+                    <PlaceDetail place={attraccion} posicion={index} tipo="attr" manejarVotos={manejarVotos} usuarioVotado={revisarVotosUsuario(attraccion)}/>
                 </Block>
             ))}
 
