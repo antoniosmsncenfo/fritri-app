@@ -9,7 +9,7 @@ import { ILugarGoogleData } from '../components/LugarGoogle';
 import { useGooglePlace } from '../hooks/useGooglePlace';
 import { ISolicitudLugaresGoogle } from '../interfaces/solicitud-lugares-google';
 import Slider from '@react-native-community/slider';
-import { IAtraccionesturistica, ISeccionAtraccionesTuristicas } from '../interfaces/paseo';
+import { IAtraccionesturistica, ILugar, ISeccionAtraccionesTuristicas } from '../interfaces/paseo';
 import { usePaseo } from '../hooks/usePaseos';
 
 const LugaresGoogleHeader = () => {
@@ -49,7 +49,7 @@ const Sights = () => {
   const { sizes, gradients, colors } = useTheme();
   const { newTripTemp, setNewTripTemp } = useData();
   const { lugaresGoogleResponse, getLugaresGoogle } = useGooglePlace();
-  const [selectedSights, setSelectedSights] = useState<IAtraccionesturistica[]>([]);
+  const [selectedSights, setSelectedSights] = useState<ILugar[]>([]);
   const [lugaresGoogleData, setLugaresGoogleData] = useState<ILugarGoogleData[]>([]);
   const { crearPaseo, paseoCreado } = usePaseo();
   const [selectedRadio, setSelectedRadio] = useState(5);
