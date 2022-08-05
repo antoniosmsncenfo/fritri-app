@@ -39,12 +39,12 @@ export interface ILugar {
     urlFotos: string[];
     descripcion?: string;
     idLugarGoogle: string;
-    latitud: number,
-    longitud: number,
-    vecindario: string,
-    rangoPrecios: number
-    calificacion: number,
-    tipoLugar: string,
+    latitud?: number,
+    longitud?: number,
+    vecindario?: string,
+    rangoPrecios?: number
+    calificacion?: number,
+    tipoLugar?: string,
     votaciones?: IVotacion[]
 }
 
