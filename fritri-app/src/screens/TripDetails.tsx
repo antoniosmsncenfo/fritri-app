@@ -17,15 +17,11 @@ const TripDetails = (props) => {
     const {obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado} = usePaseo();
 
     const {usuarioPaseo, obtenerUsuarioPaseo} = useUsuario();
-    const { votarSeccion, votacionFinalizadaRest, votacionFinalizadaAtr, respRest, respAtr } = useVotacion();
+    const { votarSeccion, enviandoVotacionRest, enviandoVotacionAtr, respRest, respAtr, setEnviandoVotacionRest, setEnviandoVotacionAtr } = useVotacion();
     const { user } = useData();
 
     const [ restaurantesVotar, setRestaurantesVotar] = useState<ITipoVoto[]>([]);
     const [ atraccionesVotar, setAtraccionesVotar] = useState<ITipoVoto[]>([]);
-    const [ enviandoVotacionRest, setEnviandoVotacionRest] = useState(false);
-    const [ enviandoVotacionAtra, setEnviandoVotacionAtra] = useState(false);
-
-
 
     useEffect(() => {
       let idPaseo:string = props.route.params.id;
@@ -33,9 +29,7 @@ const TripDetails = (props) => {
     }, []);
 
     useEffect(() => {
-      if(!votacionFinalizadaRest && !votacionFinalizadaAtr) {
         obtenerUsuarioPaseo(paseoSeleccionado?.idCreador!);
-      }
     }, [paseoSeleccionado]);
 
     useEffect(() => {
@@ -76,6 +70,7 @@ const TripDetails = (props) => {
     const enviarVotos = (tipo: string) => {
       switch(tipo) {
         case 'rest':
+          setEnviandoVotacionRest(true);
           const restaurantes = paseoSeleccionado?.seccionRestaurantes?.restaurantes;
           let idSecciones: ITipoVotoEnviar[] = restaurantesVotar.map(x => {
             return {
@@ -86,6 +81,7 @@ const TripDetails = (props) => {
           votarSeccion(paseoSeleccionado?.idCreador!, props.route.params.id, idSecciones, 'RESTAURANTE');
         break;
         case 'attr':
+          setEnviandoVotacionAtr(true);
           const atracciones = paseoSeleccionado?.seccionAtraccionesTuristicas?.atraccionesturisticas;
           let idSeccionesAtracciones: ITipoVotoEnviar[] = atraccionesVotar.map(x => {
             return {
@@ -144,9 +140,11 @@ const TripDetails = (props) => {
     }
 
     useEffect(() => {
-      let idPaseo:string = props.route.params.id;
-      obtenerPaseo(idPaseo);
-    }, [votacionFinalizadaAtr, votacionFinalizadaRest])
+      if(!enviandoVotacionAtr && !enviandoVotacionRest) {
+        let idPaseo:string = props.route.params.id;
+        obtenerPaseo(idPaseo);
+      }
+    }, [enviandoVotacionAtr, enviandoVotacionRest])
 
     return (
       <Block safe>
@@ -258,16 +256,29 @@ const TripDetails = (props) => {
                 </Block>                
               )
             }
-            <Button
-              onPress={() => { enviarVotos('rest') }}
-              gradient={gradients.primary}
-              outlined
-              marginVertical={sizes.s}
-            >
-              <Text bold white transform="uppercase">
-              {t('newTrip.vote')}
-              </Text>
-            </Button>
+
+            {
+              !enviandoVotacionRest ? 
+                <Button
+                  onPress={() => { enviarVotos('rest') }}
+                  gradient={gradients.primary}
+                  outlined
+                  marginVertical={sizes.s}
+                >
+                  <Text bold white transform="uppercase">
+                  {t('newTrip.vote')}
+                  </Text>
+                </Button> :
+                <Button
+                  gradient={gradients.primary}
+                  outlined
+                  marginVertical={sizes.s}
+                  >
+                  <Text bold white transform="uppercase">
+                  {t('newTrip.sendingVotes')}
+                  </Text>
+                </Button>
+            }
           </Block>
 
          {/* Atracciones */}
@@ -297,16 +308,27 @@ const TripDetails = (props) => {
               )
             }
 
-            <Button
-              onPress={() => { enviarVotos('attr') }}
-              gradient={gradients.primary}
-              outlined
-              marginVertical={sizes.s}
-            >
-              <Text bold white transform="uppercase">
-              {t('newTrip.vote')}
-              </Text>
-            </Button>
+            { !enviandoVotacionAtr ? 
+              <Button
+                onPress={() => { enviarVotos('attr') }}
+                gradient={gradients.primary}
+                outlined
+                marginVertical={sizes.s}
+              >
+                <Text bold white transform="uppercase">
+                {t('newTrip.vote')}
+                </Text>
+              </Button> :
+              <Button
+                gradient={gradients.primary}
+                outlined
+                marginVertical={sizes.s}
+              >
+                <Text bold white transform="uppercase">
+                  {t('newTrip.sendingVotes')}
+                </Text>
+              </Button>
+            }
 
           </Block>
 
