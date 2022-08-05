@@ -100,19 +100,6 @@ export const PlaceDetail = (props) => {
       <Block>
         <Block row justify="space-between">
           <Text semibold>{attraccion.nombre}</Text>
-          {/* <TouchableOpacity
-            onPress={() => { manejarVotoLugar() }}
-          >
-            <Block row flex={0} align="flex-start">
-              <Image
-                radius={0}
-                source={checkAsset}
-                style={{tintColor: colors.secondary}}
-                width={sizes.m}
-                height={sizes.m}
-              />
-            </Block>
-          </TouchableOpacity> */}
         </Block>
         <TouchableOpacity
         //onPress={() => handleViewDetails(_id!)}
