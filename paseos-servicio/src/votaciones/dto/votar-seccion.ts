@@ -1,5 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 import { Schema as SchemaM} from 'mongoose';
+import { ITipoVoto } from '../interface/tipo-voto';
 
 enum TipoSeccion {
   RESTAURANTE = 'RESTAURANTE',
@@ -15,7 +16,7 @@ export class VotarSeccionDto {
   readonly idPaseo: string;
   
   @IsNotEmpty()
-  readonly idSecciones: string[];
+  readonly idSecciones: ITipoVoto[];
 
   @IsNotEmpty()
   readonly tipoSeccion: TipoSeccion;
