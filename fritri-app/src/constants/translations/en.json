@@ -253,7 +253,8 @@
     "read": "Read Notifications",
     "unread": "Unread Notifications",
     "personal": "Personal",
-    "business": "Business"
+    "business": "Business",
+    "empty": "You don't have notifications"
   },
   "shop": {
     "subtotal": {

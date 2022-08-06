@@ -221,6 +221,14 @@ const Notifications = () => {
               ))}             
             </Block>
           )}
+          {/* NO hay notificaciones */}
+          {leidas?.length===0 && pendientes?.length===0 && (
+            <Block card padding={sizes.sm} align='center'>
+              <Text p semibold color={colors.primary}>
+                {t('notifications.empty')}
+              </Text>           
+            </Block>
+          )}          
         </Block>
 
     </Block>
