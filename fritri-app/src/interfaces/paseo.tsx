@@ -89,7 +89,14 @@ export enum CantidadPaseos {
     Veinte = 20
 }
 
-export enum EstadoPaseo{
-    Pendiente=1,
-    Completado=2
-  }
+export enum EstadoPaseo {
+    Pendiente = 1,
+    Completado = 2
+}
+
+export interface ISolicitudPaseoAleatorio {
+    destino: IDestino;
+    fechaPaseo: Date;
+    idCreador: string;
+    nombre: string;
+}
