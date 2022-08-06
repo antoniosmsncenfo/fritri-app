@@ -7,8 +7,8 @@ import {useData, useTheme, useTranslation} from '../hooks/';
 import {Block, Image, Text} from '../components/';
 import { useNotificacion } from '../hooks/useNotificacion';
 import { INotificacion } from '../interfaces/notificacion';
-import { TouchableOpacity } from 'react-native';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { Alert, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
@@ -49,7 +49,7 @@ const Notificacion = ({ notificacion, onPress}: INotificacionProps) => {
     onPress({ action: 'read', notificacion });
   };
 
-  const archiveNotification = () => {
+  const archiveNotification = () => {   
     onPress({ action: 'delete', notificacion });
   };
 
@@ -216,7 +216,16 @@ const Notifications = () => {
               {leidas?.map((leida) => (
                 <Notificacion notificacion={leida}
                 key={`unread-${leida._id}`}
-                onPress={(value) => onNotificacionPress(value)}
+                //onPress={(value) => onNotificacionPress(value)}
+                onPress={ (value) =>
+                Alert.alert(
+                  t('notifications.archiveAlertTitle'),
+                  t('notifications.archiveAlertMessage'),
+                  [
+                    {text: t('common.cancel'), style: 'cancel'},
+                    {text: t('common.ok'), onPress: () => onNotificacionPress(value)},
+                  ]
+                )}              
               />
               ))}             
             </Block>

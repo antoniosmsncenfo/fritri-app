@@ -70,7 +70,9 @@
       "man": "Man",
       "other": "Other"
     },
-    "loading": "Loading information..."
+    "loading": "Loading information...",
+    "ok": "OK",
+    "cancel": "Cancel"
   },
   "app": {
     "name": "FriTri",
@@ -254,7 +256,9 @@
     "unread": "Unread Notifications",
     "personal": "Personal",
     "business": "Business",
-    "empty": "You don't have notifications"
+    "empty": "You don't have notifications",
+    "archiveAlertTitle": "Confirmation",
+    "archiveAlertMessage": "This action will delete the notification"
   },
   "shop": {
     "subtotal": {
