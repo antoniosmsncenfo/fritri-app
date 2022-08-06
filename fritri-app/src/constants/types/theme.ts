@@ -248,7 +248,11 @@ export interface ThemeIcons {
   checked: ImageSourcePropType;
   unchecked: ImageSourcePropType;
   restaurant: ImageSourcePropType;
-  attraction: ImageSourcePropType;  
+  attraction: ImageSourcePropType; 
+  like: ImageSourcePropType;
+  disLike: ImageSourcePropType;
+  likeFill: ImageSourcePropType;
+  disLikeFill: ImageSourcePropType; 
 }
 
 export interface ThemeAssets {

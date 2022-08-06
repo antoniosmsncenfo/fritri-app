@@ -176,7 +176,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     newTripTemp,
     setNewTripTemp,
     selectedTrip,
-    setSelectedTrip,    
+    setSelectedTrip,
   };
 
   return (

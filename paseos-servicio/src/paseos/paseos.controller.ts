@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Put,
+  Query,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { PaseosService, EstadoPaseo } from './paseos.service';
 import { CrearPaseoDto } from './dto/crear-paseo.dto';
 import { ActualizarPaseoDto } from './dto/actualizar-paseo.dto';
@@ -26,7 +38,8 @@ export class PaseosController {
   async obtenerPaseosUsuario(
     @Query('idCreador') idCreador: string,
     @Query('estado') estado: EstadoPaseo,
-    @Query('limite') limite: number): Promise<Paseo[]> {
+    @Query('limite') limite: number,
+  ): Promise<Paseo[]> {
     return this.paseosService.obtenerPaseosUsuario(idCreador, estado, limite);
   }
 
@@ -41,5 +54,4 @@ export class PaseosController {
   async eliminar(@Param('idPaseo') idPaseo: string) {
     return await this.paseosService.eliminar(idPaseo);
   }
-
 }

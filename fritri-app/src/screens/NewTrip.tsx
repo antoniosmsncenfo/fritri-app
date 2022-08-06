@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Platform } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, Platform } from 'react-native';
 
 import { useData, useTheme, useTranslation } from '../hooks';
 import { Block, Button, Input, Text, Image, Checkbox } from '../components';
@@ -7,9 +7,10 @@ import DateTimePicker, { Event } from '@react-native-community/datetimepicker';
 import dayjs from 'dayjs';
 import { ITheme } from '../constants/types/theme';
 import Destination, { IDestinationAction, IDestinationData } from '../components/Destination';
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import { useGooglePlace } from '../hooks/useGooglePlace';
-import { IDestino} from '../interfaces/paseo';
+import { IDestino } from '../interfaces/paseo';
+import { usePaseo } from '../hooks/usePaseos';
 
 interface ITouchableInput {
   icon: keyof ITheme['assets'];
@@ -41,8 +42,9 @@ const NewTrip = () => {
   const initialDate = new Date();
   const { t } = useTranslation();
   const { newTripTemp, setNewTripTemp, user } = useData();
+  const { paseoCreado, crearPaseoAleatorio } = usePaseo();
   const { destinations, destinationsSearch } = useGooglePlace();
-  const { sizes, gradients } = useTheme();
+  const { sizes, gradients, colors } = useTheme();
   const [useGps, setuseGps] = useState(false);
   const [notFound, setNotFound] = useState(false);
   const [search, setSearch] = useState('');
@@ -52,6 +54,8 @@ const NewTrip = () => {
   const [tripDate, setTripDate] = useState(initialDate);
   const [showCalendar, setshowCalendar] = useState(false);
   const [isValid, setIsvalid] = useState<IIsvalid>({ destination: false, name: false });
+  const [showActivityIndicatorRamdom, setShowActivityIndicatorRandom] = useState(false);
+  const [showActivityIndicatorBuscar, setShowActivityIndicatorBuscar] = useState(false);
   const navigation = useNavigation();
 
   // se ejecuta cuando se obtienen los detinos del hook de destinos
@@ -70,21 +74,72 @@ const NewTrip = () => {
     }
     setDestinos(result);
     setSelectedDestino(null);
+    setShowActivityIndicatorBuscar(false);
   }, [destinations]);
+
+  useEffect(() => {
+    setNewTripTemp(null);
+  }, []);
 
   useEffect(() => {
     setIsvalid({ name: tripName !== '', destination: selectedDestino !== null });
   }, [tripName, selectedDestino]);
 
+  useEffect(() => {
+    setShowActivityIndicatorRandom(false);
+    if (paseoCreado !== null) {
+
+      const param = { id: paseoCreado._id, from: 'newTrip' };
+      Alert.alert(
+        t('sights.createdTrip'),
+        t('sights.createdTripText'),
+        [{
+          text: 'OK', onPress: () => {
+            resetNavigationStackAndNavigateToTripDetails(param);
+          },
+        }],
+        { cancelable: false }
+      );
+    }
+  }, [paseoCreado]);
+
+  const resetNavigationStackAndNavigateToTripDetails = (param: any) => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          { name: 'Home' },
+          { name: 'TripDetails', params: param },
+        ],
+      })
+    );
+  };
+
+  const createRandomTrip = () => {
+    const destino: IDestino =
+      { ...selectedDestino!, idLugarGoogle: selectedDestino?.idGoogle }; // esto se requiere ya que hay dos propiedades que usan el mismo valor
+
+    setShowActivityIndicatorRandom(true);
+    crearPaseoAleatorio({
+      destino,
+      fechaPaseo: tripDate,
+      idCreador: user._id!,
+      nombre: tripName,
+    });
+  };
+
   const handleSearch = () => {
+    setShowActivityIndicatorBuscar(true);
     destinationsSearch(search);
   };
 
   //Agrega el destino al paseo temporal, para luego navegar a restaurantesw
   const goToRestaurants = () => {
+    const selectedDestinoFinal: IDestino =
+      { ...selectedDestino!, idLugarGoogle: selectedDestino?.idGoogle }; // esto se requiere ya que hay dos propiedades que usan el mismo valor
     setNewTripTemp({
       ...newTripTemp,
-      destino: selectedDestino!,
+      destino: selectedDestinoFinal!,
       fechaPaseo: tripDate,
       idCreador: user._id!,
       nombre: tripName,
@@ -185,9 +240,13 @@ const NewTrip = () => {
               gradient={gradients.primary}
               onPress={() => handleSearch()}
               marginBottom={sizes.s}>
-              <Text white semibold transform="uppercase">
-                {t('newTrip.searchDestination')}
-              </Text>
+              {!showActivityIndicatorBuscar &&
+                (<Text white semibold transform="uppercase">
+                  {t('newTrip.searchDestination')}
+                </Text>)}
+              {showActivityIndicatorBuscar &&
+                (<ActivityIndicator size="large" color={'white'} />)
+              }
             </Button>
           </Block>)}
 
@@ -198,7 +257,7 @@ const NewTrip = () => {
 
       </Block>
       {/* not found */}
-      {notFound && (
+      {!showActivityIndicatorBuscar && notFound && (
         <Block flex={0} paddingHorizontal={sizes.padding} paddingTop={sizes.padding}>
           <Text p>
             {t('newTrip.notFound1')}"
@@ -233,10 +292,13 @@ const NewTrip = () => {
                 {t('newTrip.restaurants')}
               </Text>
             </Button>
-            <Button flex={1} gradient={gradients.primary} onPress={() => handleSearch()}>
-              <Text white semibold transform="uppercase">
+            <Button flex={1} gradient={gradients.primary} onPress={() => createRandomTrip()}>
+              {!showActivityIndicatorRamdom && (<Text white semibold transform="uppercase">
                 {t('newTrip.random')}
-              </Text>
+              </Text>)}
+              {showActivityIndicatorRamdom &&
+                (<ActivityIndicator size="large" color={'white'} />)
+              }
             </Button>
           </Block>)}
       </Block>

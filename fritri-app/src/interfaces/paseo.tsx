@@ -28,32 +28,52 @@ export interface IDestino {
     tipoLugar?: string;
 }
 
-export interface IRestaurante {
+export interface IVotacion {
+    idVotante: string,
+    fecha: Date,
+    resultado: string;
+}
+
+export interface ILugar {
     nombre: string;
     urlFotos: string[];
-    descripcion: string;
+    descripcion?: string;
     idLugarGoogle: string;
+    latitud?: number,
+    longitud?: number,
+    vecindario?: string,
+    rangoPrecios?: number
+    calificacion?: number,
+    tipoLugar?: string,
+    votaciones?: IVotacion[]
 }
 
 export interface ISeccionRestaurantes {
     _id?: string;
     esFinalizadasVotaciones: boolean;
     fechaFinalizacionVotaciones: Date;
-    restaurantes: IRestaurante[];
+    restaurantes: ILugar[];
 }
 
 export interface IAtraccionesturistica {
     nombre: string;
     urlFotos: string[];
-    descripcion: string;
+    descripcion?: string;
     idLugarGoogle: string;
+    latitud: number,
+    longitud: number,
+    vecindario: string,
+    rangoPrecios?: number
+    calificacion: number,
+    tipoLugar: string,
+    votaciones?: IVotacion[]
 }
 
 export interface ISeccionAtraccionesTuristicas {
     _id?: string;
     esFinalizadasVotaciones: boolean;
     fechaFinalizacionVotaciones: Date;
-    atraccionesturisticas: IAtraccionesturistica[];
+    atraccionesturisticas: ILugar[];
 }
 
 export interface Integrante {
@@ -69,7 +89,14 @@ export enum CantidadPaseos {
     Veinte = 20
 }
 
-export enum EstadoPaseo{
-    Pendiente=1,
-    Completado=2
-  }
+export enum EstadoPaseo {
+    Pendiente = 1,
+    Completado = 2
+}
+
+export interface ISolicitudPaseoAleatorio {
+    destino: IDestino;
+    fechaPaseo: Date;
+    idCreador: string;
+    nombre: string;
+}

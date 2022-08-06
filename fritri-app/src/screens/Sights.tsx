@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList } from 'react-native';
+import { ActivityIndicator, Alert, FlatList } from 'react-native';
 
 import { useData, useTheme, useTranslation } from '../hooks';
 import { Block, Button, Text } from '../components';
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import LugarGoogle, { ILugarGoogleAction } from '../components/LugarGoogle';
 import { ILugarGoogleData } from '../components/LugarGoogle';
 import { useGooglePlace } from '../hooks/useGooglePlace';
 import { ISolicitudLugaresGoogle } from '../interfaces/solicitud-lugares-google';
 import Slider from '@react-native-community/slider';
-import { IAtraccionesturistica, ISeccionAtraccionesTuristicas } from '../interfaces/paseo';
+import { IAtraccionesturistica, ILugar, ISeccionAtraccionesTuristicas } from '../interfaces/paseo';
+import { usePaseo } from '../hooks/usePaseos';
 
 const LugaresGoogleHeader = () => {
   const { t } = useTranslation();
@@ -48,9 +49,10 @@ const Sights = () => {
   const { sizes, gradients, colors } = useTheme();
   const { newTripTemp, setNewTripTemp } = useData();
   const { lugaresGoogleResponse, getLugaresGoogle } = useGooglePlace();
-  const [selectedSights, setSelectedSights] = useState<IAtraccionesturistica[]>([]);
+  const [selectedSights, setSelectedSights] = useState<ILugar[]>([]);
   const [lugaresGoogleData, setLugaresGoogleData] = useState<ILugarGoogleData[]>([]);
-  const [selectedRadio, setSelectedRadio] = useState(1);
+  const { crearPaseo, paseoCreado } = usePaseo();
+  const [selectedRadio, setSelectedRadio] = useState(5);
   const [notFound, setNotFound] = useState(false);
   const [showPagination, setShowPagination] = useState(false);
   const [showActivityIndicator, setShowActivityIndicator] = useState(true);
@@ -63,6 +65,23 @@ const Sights = () => {
   useEffect(() => {
     requestLugaresGoogleToService(false);
   }, []);
+
+  useEffect(() => {
+    if (paseoCreado !== null) {
+
+      const param = { id: paseoCreado._id, from: 'newTrip' };
+      Alert.alert(
+        t('sights.createdTrip'),
+        t('sights.createdTripText'),
+        [{
+          text: 'OK', onPress: () => {
+            resetNavigationStackAndNavigateToTripDetails(param);
+          },
+        }],
+        { cancelable: false }
+      );
+    }
+  }, [paseoCreado]);
 
   // se ejecuta cuando se obtienen los restaurantes del servicio
   useEffect(() => {
@@ -89,6 +108,18 @@ const Sights = () => {
     setShowActivityIndicator(false);
   }, [lugaresGoogleResponse]);
 
+  const resetNavigationStackAndNavigateToTripDetails = (param: any) => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          { name: 'Home' },
+          { name: 'TripDetails', params: param },
+        ],
+      })
+    );
+  };
+
   //Agrega los restaurantes al paseo temporal, para luego navegar a las atracciones
   const goFinish = () => {
     //agregar las atracciones al paseo temporal
@@ -101,10 +132,12 @@ const Sights = () => {
     setNewTripTemp({
       ...newTripTemp,
       seccionAtraccionesTuristicas: seccionAtraccionesTuristicas,
+      esCompartido: false,
+      fechaCreacion: new Date(),
+
     });
 
-    console.log(newTripTemp);
-    //navigation.navigate('Sights');
+    crearPaseo(newTripTemp);
   };
 
   //este es el callback que revisa si se desea ver o seleccionarlo para agregarlo al paseo
