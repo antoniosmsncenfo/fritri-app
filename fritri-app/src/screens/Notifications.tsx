@@ -1,16 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import dayjs from 'dayjs';
-import PagerView from 'react-native-pager-view';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import updateLocale from 'dayjs/plugin/updateLocale';
 
 import {useData, useTheme, useTranslation} from '../hooks/';
-import {INotification} from '../constants/types';
-import {Block, Button, Image, Text} from '../components/';
+import {Block, Image, Text} from '../components/';
 import { useNotificacion } from '../hooks/useNotificacion';
 import { INotificacion } from '../interfaces/notificacion';
 import { TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
@@ -33,6 +31,7 @@ dayjs.updateLocale('en', {
 });
 
 const Notificacion = ({
+  _id,
   titulo,
   detalle,
   idPaseo,
@@ -42,6 +41,16 @@ const Notificacion = ({
 
   const {colors, icons, gradients, sizes} = useTheme();
   const navigation = useNavigation();
+  const {actualizarNotificacion} = useNotificacion();
+
+  const handlePendiente = (idNotificacion:string, idPaseo:string) => {
+    console.log("idNotificacion: " + idNotificacion + ", idPaseo: " + idPaseo);
+    actualizarNotificacion({
+      _id:idNotificacion,
+      esLeida:true,
+    });
+    //navigation.navigate('TripDetails', {id:idPaseo});
+  };
 
   return (
     <Block row align="center" marginBottom={sizes.m}>
@@ -57,8 +66,7 @@ const Notificacion = ({
           gradient={gradients[!esLeida ? 'primary' : 'secondary']}>
           
           <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('TripDetails', {id:idPaseo})} >          
+            onPress={() => handlePendiente(_id!,idPaseo!)} >          
             <Image
               radius={0}
               width={14}
@@ -128,12 +136,21 @@ const Notifications = () => {
 
   const { obtenerNotificaciones, notificacionesUsuario} = useNotificacion();
 
+  const [refrescar, setRefrescar] = useState<boolean>(false);
+
   useEffect(() => {
     if (user) {
       console.log("User:" + user._id!)
       obtenerNotificaciones(user._id!)
     }
   }, []);
+
+  useEffect(() => {
+    if (user && refrescar) {
+      console.log("Refrescar:" + user._id!)
+      obtenerNotificaciones(user._id!)
+    }
+  }, [refrescar])
   
   const pendientes = notificacionesUsuario?.filter(
     (notificacion) => !notificacion?.esLeida,

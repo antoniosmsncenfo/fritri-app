@@ -22,7 +22,9 @@ const TripDetails = (props) => {
     }, []);
 
     useEffect(() => {
-      obtenerUsuarioPaseo(paseoSeleccionado?.idCreador!);
+      if (paseoSeleccionado?.idCreador!) {
+        obtenerUsuarioPaseo(paseoSeleccionado?.idCreador!);
+      }
     }, [paseoSeleccionado]);
 
     return (
