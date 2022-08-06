@@ -30,31 +30,32 @@ dayjs.updateLocale('en', {
   },
 });
 
-const Notificacion = ({
-  _id,
-  titulo,
-  detalle,
-  idPaseo,
-  esLeida,
-  fechaCreacion,
-}: INotificacion) => {
+interface INotificacionProps {
+  notificacion: INotificacion;
+  onPress: (event: INotificacionAction) => void;
+}
+
+interface INotificacionAction {
+  action: 'read' | 'delete' | 'trip';
+  notificacion: INotificacion;
+}
+
+const Notificacion = ({ notificacion, onPress}: INotificacionProps) => {
 
   const {colors, icons, gradients, sizes} = useTheme();
   const navigation = useNavigation();
-  const {actualizarNotificacion} = useNotificacion();
 
-  const handlePendiente = (idNotificacion:string, idPaseo:string) => {
-    console.log("idNotificacion: " + idNotificacion + ", idPaseo: " + idPaseo);
-    actualizarNotificacion({
-      _id:idNotificacion,
-      esLeida:true,
-    });
-    //navigation.navigate('TripDetails', {id:idPaseo});
+  const markAsRead = () => {
+    onPress({ action: 'read', notificacion });
+  };
+
+  const archiveNotification = () => {
+    onPress({ action: 'delete', notificacion });
   };
 
   return (
     <Block row align="center" marginBottom={sizes.m}>
-      {!esLeida && 
+      {!notificacion.esLeida && 
         <Block
           flex={0}
           width={32}
@@ -63,10 +64,10 @@ const Notificacion = ({
           justify="center"
           radius={sizes.s}
           marginRight={sizes.s}
-          gradient={gradients[!esLeida ? 'primary' : 'secondary']}>
+          gradient={gradients[!notificacion.esLeida ? 'primary' : 'secondary']}>
           
           <TouchableOpacity
-            onPress={() => handlePendiente(_id!,idPaseo!)} >          
+            onPress={() => markAsRead()} >          
             <Image
               radius={0}
               width={14}
@@ -77,7 +78,7 @@ const Notificacion = ({
           </TouchableOpacity>
         </Block>
       }
-      {esLeida && 
+      {notificacion.esLeida && 
         <Block
           flex={0}
           width={32}
@@ -86,11 +87,10 @@ const Notificacion = ({
           justify="center"
           radius={sizes.s}
           marginRight={sizes.s}
-          gradient={gradients[!esLeida ? 'primary' : 'secondary']}>
+          gradient={gradients[!notificacion.esLeida ? 'primary' : 'secondary']}>
           
           <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('TripDetails', {id:idPaseo})} >             
+            onPress={() => archiveNotification()} >             
             <Image
               radius={0}
               width={14}
@@ -101,25 +101,24 @@ const Notificacion = ({
           </TouchableOpacity>
 
         </Block>
-
       }
 
       <Block>
         <TouchableOpacity
             onPress={() =>
-              navigation.navigate('TripDetails', {id:idPaseo})} >
+              navigation.navigate('TripDetails', {id:notificacion.idPaseo})} >
 
           <Block row justify="space-between">
-            <Text semibold>{titulo}</Text>
+            <Text semibold>{notificacion.titulo}</Text>
             <Block row flex={0} align="center">
               <Image source={icons.clock} />
               <Text secondary size={12} marginLeft={sizes.xs}>
-                {dayjs().to(dayjs(fechaCreacion))}
+                {dayjs().to(dayjs(notificacion.fechaCreacion))}
               </Text>
             </Block>
           </Block>
           <Text secondary size={12} lineHeight={sizes.sm}>
-            {detalle}
+            {notificacion.detalle}
           </Text>
 
         </TouchableOpacity>
@@ -134,7 +133,7 @@ const Notifications = () => {
   const {user} = useData();
   const {icons, colors, sizes} = useTheme();
 
-  const { obtenerNotificaciones, notificacionesUsuario} = useNotificacion();
+  const {obtenerNotificaciones, notificacionesUsuario, actualizarNotificacion} = useNotificacion();
 
   const [refrescar, setRefrescar] = useState<boolean>(false);
 
@@ -149,6 +148,7 @@ const Notifications = () => {
     if (user && refrescar) {
       console.log("Refrescar:" + user._id!)
       obtenerNotificaciones(user._id!)
+      setRefrescar(false);
     }
   }, [refrescar])
   
@@ -158,7 +158,32 @@ const Notifications = () => {
   const leidas = notificacionesUsuario?.filter(
     (notificacion) => notificacion?.esLeida,
   );
-  
+
+  const onNotificacionPress = (tipo: INotificacionAction) => {
+    console.log(JSON.stringify(tipo));
+    switch (tipo.action) {
+      case 'read':
+        actualizarNotificacion({
+          _id:tipo.notificacion._id,
+          esLeida:true,
+        });
+        setRefrescar(true);
+        break;
+      case 'delete':
+        actualizarNotificacion({
+          _id:tipo.notificacion._id,
+          esArchivada:true,
+        });
+        setRefrescar(true);
+        break;
+      case 'trip':
+        // navigation.navigate('ViewDestination', action.destination);
+        break;        
+      default:
+        break;
+    }
+  };
+
   return (
     <Block>
 
@@ -174,10 +199,10 @@ const Notifications = () => {
               <Text p semibold marginBottom={sizes.sm}>
                 {t('notifications.unread')}
               </Text>
-              {pendientes?.map((notificacion) => (
-                <Notificacion
-                  key={`unread-${notificacion._id}`}
-                  {...notificacion}
+              {pendientes?.map((pendiente) => (
+                <Notificacion notificacion={pendiente}
+                  key={`unread-${pendiente._id}`}
+                  onPress={(value) => onNotificacionPress(value)}
                 />
               ))}
             </Block>
@@ -188,18 +213,12 @@ const Notifications = () => {
               <Text p semibold marginBottom={sizes.sm}>
                 {t('notifications.read')}
               </Text>
-              {leidas?.map((notificacion) => (
-                <Notificacion
-                  key={`read-${notificacion._id}`}
-                  {...notificacion}
-                />
-              ))}
-              {leidas?.map((notificacion) => (
-                <Notificacion
-                  key={`read-${notificacion._id}`}
-                  {...notificacion}
-                />
-              ))}              
+              {leidas?.map((leida) => (
+                <Notificacion notificacion={leida}
+                key={`unread-${leida._id}`}
+                onPress={(value) => onNotificacionPress(value)}
+              />
+              ))}             
             </Block>
           )}
         </Block>
