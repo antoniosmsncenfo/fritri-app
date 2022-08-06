@@ -166,6 +166,9 @@ const TripDetails = (props) => {
             </Text>
             <Block row flex={0} align="center">
               <TouchableOpacity>
+                <Image source={assets.unprotected} />
+              </TouchableOpacity>              
+              <TouchableOpacity>
                 <Image source={assets.share} />
               </TouchableOpacity>
             </Block>
