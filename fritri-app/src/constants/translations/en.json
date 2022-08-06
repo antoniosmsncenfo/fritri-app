@@ -70,7 +70,9 @@
       "man": "Man",
       "other": "Other"
     },
-    "loading": "Loading information..."
+    "loading": "Loading information...",
+    "ok": "OK",
+    "cancel": "Cancel"
   },
   "app": {
     "name": "FriTri",
@@ -253,7 +255,10 @@
     "read": "Read Notifications",
     "unread": "Unread Notifications",
     "personal": "Personal",
-    "business": "Business"
+    "business": "Business",
+    "empty": "You don't have notifications",
+    "archiveAlertTitle": "Confirmation",
+    "archiveAlertMessage": "This action will delete the notification"
   },
   "shop": {
     "subtotal": {
@@ -285,6 +290,7 @@
     "view": "View"
   },
   "tripDetails": {
+    "tripCreated": "Created this trip on ",
     "restaurants": "Restaurants",
     "noRestaurants": "The owner hasn't included any restaurants",
     "touristAttractions": "Tourist Attractions",

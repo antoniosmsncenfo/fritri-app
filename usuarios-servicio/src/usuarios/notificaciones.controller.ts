@@ -10,8 +10,8 @@ export class NotificacionesController {
 
   @Post('crear-notificacion')
   @HttpCode(200)
-  async create(@Body() crearNotificacionesDto: CrearNotificacionDto) {
-    return await this.notificacionesService.create(crearNotificacionesDto);
+  async create(@Body() crearNotificacionDto: CrearNotificacionDto) {
+    return await this.notificacionesService.create(crearNotificacionDto);
   }
 
   @Get('findAll')
@@ -19,7 +19,7 @@ export class NotificacionesController {
     return this.notificacionesService.findAll();
   }
 
-  @Get('obtenerNotificacionesUsuario')
+  @Get('obtener-notificaciones-usuario')
   async obtenerNotificacionesUsuario(@Query('idUsuario') idUSuario: string): Promise<Notificacion[]> {
     return this.notificacionesService.obtenerNotificacionesUsuario(idUSuario);
   }
