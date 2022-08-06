@@ -25,6 +25,8 @@ import {
 import {light, dark} from '../constants';
 import { IUsuarioFritri } from '../interfaces/usuario-fritri';
 import { IPaseo } from '../interfaces/paseo';
+import { INotificacion } from '../interfaces/notificacion';
+import { useNotificacion } from './useNotificacion';
 
 export const DataContext = React.createContext({});
 
