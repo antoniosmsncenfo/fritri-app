@@ -139,14 +139,12 @@ const Notifications = () => {
 
   useEffect(() => {
     if (user) {
-      console.log("User:" + user._id!)
       obtenerNotificaciones(user._id!)
     }
   }, []);
 
   useEffect(() => {
     if (user && refrescar) {
-      console.log("Refrescar:" + user._id!)
       obtenerNotificaciones(user._id!)
       setRefrescar(false);
     }
@@ -160,7 +158,6 @@ const Notifications = () => {
   );
 
   const onNotificacionPress = (tipo: INotificacionAction) => {
-    console.log(JSON.stringify(tipo));
     switch (tipo.action) {
       case 'read':
         actualizarNotificacion({
