@@ -6,6 +6,10 @@ import {
 } from '@googlemaps/google-maps-services-js';
 import { Injectable, Logger } from '@nestjs/common';
 
+export enum TipoLugar {
+  restaurantes = 'restaurantes',
+  atracciones = 'atracciones',
+}
 export enum Categorias {
   address_components = 'address_components',
   adr_address = 'adr_address',
@@ -38,6 +42,36 @@ export enum Categorias {
 export class GoogleApiService {
   key: string = process.env.GOOGLE_API_KEY;
   private timeout = 5000;
+
+  /**Obtiene lista de lugares que coinciden con coordenadas */
+  async buscarDestinosPorCoordenadas(
+    coordendas: LatLng,
+    idioma: Language = Language.es,
+  ) {
+    const client = new Client({});
+    try {
+      const response = await client.reverseGeocode({
+        params: {
+          latlng: coordendas,
+          key: this.key,
+          language: idioma,
+        },
+        timeout: this.timeout, // milliseconds
+      });
+
+      if (response.statusText === 'OK') {
+        return response.data.results;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      Logger.error(
+        `Error obtenerDestinos: ${error.response?.data?.error_message}`,
+        'GoogleApiService',
+      );
+      return [];
+    }
+  }
 
   /**Obtiene lista de lugares que coinciden con texto ingresado */
   async obtenerDestinos(destino: string, idioma = 'es') {

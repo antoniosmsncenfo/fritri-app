@@ -4,6 +4,7 @@ import {
   GeocodeResult,
   PlaceData,
   LatLng,
+  Language,
 } from '@googlemaps/google-maps-services-js';
 import {
   AddressComponent,
@@ -11,11 +12,36 @@ import {
 } from '@googlemaps/google-maps-services-js';
 import { DestinoSolicitudDto } from './dto/destino-solicitud.dto';
 import { IdGoogleSolicitudDto } from './dto/id-google-solicitud.dto';
+import { DestinoPorCoordenadasSolicitudDto } from './dto/destino-por-ubicacion-solicitud.dto';
 
 @Injectable()
 export class DestinosService {
   constructor(private googleApiService: GoogleApiService) {}
 
+  async buscarDestinosPorCoordenadas(
+    destinoPorUbicacionSolicitud: DestinoPorCoordenadasSolicitudDto,
+  ) {
+    const coordenadas: LatLng = {
+      lat: destinoPorUbicacionSolicitud.latitud,
+      lng: destinoPorUbicacionSolicitud.longitud,
+    };
+    const idiomaParametro = destinoPorUbicacionSolicitud.idioma || 'es';
+    const idioma: Language = Language[idiomaParametro];
+
+    const destinosGoogle =
+      await this.googleApiService.buscarDestinosPorCoordenadas(
+        coordenadas,
+        idioma,
+      );
+
+    const destinos = Promise.all(
+      destinosGoogle.map((destinoGoogle) =>
+        this.mapearGoogleADestino(destinoGoogle),
+      ),
+    );
+
+    return destinos;
+  }
   async buscarDestinos(destinoDto: DestinoSolicitudDto) {
     const destinosGoogle = await this.googleApiService.obtenerDestinos(
       destinoDto.nombre,
@@ -55,9 +81,13 @@ export class DestinosService {
       infoLugar,
     );
 
-    const referenciasFotos = fotos.photos.map((foto) => {
-      return foto.photo_reference;
-    });
+    let referenciasFotos: string[] = [];
+
+    if (fotos && fotos.photos?.length > 0) {
+      referenciasFotos = fotos.photos?.map((foto) => {
+        return foto.photo_reference;
+      });
+    }
 
     return referenciasFotos;
   }
@@ -79,12 +109,23 @@ export class DestinosService {
       c.types.includes(AddressType.administrative_area_level_1),
     );
 
-    const urlsFotos = await this.obtenerReferenciasFotosDestino(place_id);
-    let urlFoto = '';
+    const urlsFotosReferences = await this.obtenerReferenciasFotosDestino(
+      place_id,
+    );
+    const urlFotos: string[] = [];
 
-    if (urlsFotos.length > 0) {
-      const indexFoto = Math.floor(Math.random() * urlsFotos.length); //para obtener un index aleatorio de las posibles fotos
-      urlFoto = await this.obtenerFotoDeGoogle(urlsFotos[indexFoto]);
+    if (urlsFotosReferences && urlsFotosReferences.length > 0) {
+      const indexFoto = Math.floor(Math.random() * urlsFotosReferences.length); //para obtener un index aleatorio de las posibles fotos
+      const url = await this.obtenerFotoDeGoogle(
+        urlsFotosReferences[indexFoto],
+      );
+      if (url !== '') {
+        urlFotos.push(url);
+      }
+    } else {
+      urlFotos.push(
+        'https://maps.gstatic.com/tactile/pane/default_geocode-2x.png',
+      );
     }
 
     return {
@@ -95,7 +136,7 @@ export class DestinosService {
       nombre: formatted_address,
       estado: provincias[0]?.long_name || '', //en el caso de que no tenga provincia pone ''
       pais: paises[0]?.long_name || '', //en el caso de que no tenga pais pone ''
-      urlFoto: urlFoto, //toma la primera foto, en caso de no tener pone ''
+      urlFotos: urlFotos, //toma la primera foto, en caso de no tener pone ''
     };
   }
 
@@ -117,15 +158,24 @@ export class DestinosService {
       c.types.includes(AddressType.administrative_area_level_1),
     );
 
-    const urlsFotos = photos?.map((foto) => {
+    const urlsFotosReferences = photos?.map((foto) => {
       return foto.photo_reference;
     });
 
-    let urlFoto = '';
+    const urlFotos: string[] = [];
 
-    if (urlsFotos && urlsFotos.length > 0) {
-      const indexFoto = Math.floor(Math.random() * urlsFotos.length); //para obtener un index aleatorio de las posibles fotos
-      urlFoto = await this.obtenerFotoDeGoogle(urlsFotos[indexFoto]);
+    if (urlsFotosReferences && urlsFotosReferences.length > 0) {
+      const indexFoto = Math.floor(Math.random() * urlsFotosReferences.length); //para obtener un index aleatorio de las posibles fotos
+      const url = await this.obtenerFotoDeGoogle(
+        urlsFotosReferences[indexFoto],
+      );
+      if (url !== '') {
+        urlFotos.push(url);
+      }
+    } else {
+      urlFotos.push(
+        'https://maps.gstatic.com/tactile/pane/default_geocode-2x.png',
+      );
     }
 
     return {
@@ -136,7 +186,7 @@ export class DestinosService {
       nombre: formatted_address,
       estado: provincias[0]?.long_name || '', //en el caso de que no tenga provincia pone ''
       pais: paises[0]?.long_name || '', //en el caso de que no tenga provincia pone ''
-      urlFoto: urlFoto, //toma la primera foto, en caso de no tener pone vacio
+      urlFotos: urlFotos, //toma la primera foto, en caso de no tener pone vacio
     };
   }
 }

@@ -132,3 +132,5 @@ fritri-app/yarn.lock
 **/package-lock.json
 **/.env
 **/.expo
+usuarios-servicio/package-lock.json
+paseos-servicio/package-lock.json

@@ -1,5 +1,7 @@
 {
   "common": {
+    "selectImg": "Select image",
+    "dateFormat": "MM/DD/YYYY",
     "appDetails": "App Details",
     "appName": "App name",
     "appVersion": "App version",
@@ -33,8 +35,11 @@
     "country": "Country",
     "avatar": "Picture",
     "password": "Password",
+    "currentPassword": "Current password",
+    "currentPasswordPlaceholder": "Enter your current password",
+    "newPassword": "New password",
     "passwordPlaceholder": "Enter a password",
-    "confirmPassword": "Confirm Password",    
+    "confirmPassword": "Confirm new password",
     "confirmPasswordPlaceholder": "Enter the same password",
     "agree": "I agree with the ",
     "terms": "Terms and Conditions",
@@ -64,7 +69,10 @@
       "woman": "Woman",
       "man": "Man",
       "other": "Other"
-    }    
+    },
+    "loading": "Loading information...",
+    "ok": "OK",
+    "cancel": "Cancel"
   },
   "app": {
     "name": "FriTri",
@@ -79,11 +87,14 @@
     "articles": "Articles",
     "rental": "Rental",
     "profile": "Profile",
+    "textImg": "You've refused to allow this appp to access your photos!",
     "settings": "Settings",
     "register": "Create account",
     "extra": "Extra - Automotive",
     "loginFacebook": "Login Facebook",
-    "verDestino": "Ver Destino"
+    "newTrip": "New trip",
+    "verDestino": "See Destination",
+    "tripDetails": "Trip Details"
   },
   "navigation": {
     "home": "FriTri",
@@ -103,7 +114,12 @@
     "login": "Login",
     "extra": "Automotive",
     "shopping": "Shopping Cart",
-    "resetPassword": "Change password"
+    "newTrip": "New Trip",
+    "resetPassword": "Change password",
+    "returnToTrip": "Return to trip",
+    "restaurants": "Restaurants",
+    "sights": "Tourist attractions",
+    "tripDetails": "Trip Details"
   },
   "menu": {
     "started": "Getting Started",
@@ -112,7 +128,9 @@
   "home": {
     "title": "FriTri",
     "pending": "Pending",
-    "completed": "Completed"
+    "completed": "Completed",
+    "new": "New",
+    "noTrips": "There aren't any trips under this category"
   },
   "extras": {
     "title1": "Want to try before",
@@ -135,9 +153,9 @@
     "validation": "Validation error",
     "emailExists": "Email already exists.",
     "passwordRules": "At least one digit.\nAt least one lower case.\nAt least one upper case.\nAt least 6 from the mentioned characters.",
-    "subtitleUpdate" : "Update your profile",
-    "updateUser" : "Update confirmation",
-    "titleUpdated" : "Your profile was updated successfully.",
+    "subtitleUpdate": "Update your profile",
+    "updateUser": "Update confirmation",
+    "titleUpdated": "Your profile was updated successfully.",
     "registerError": "Register error",
     "errorPassword": "Please check the password!",
     "fieldsError": "Please check the fields!"
@@ -161,8 +179,10 @@
     "passwordSent": "Temporary password sent",
     "checkEmail": "Please check your inbox/spam folder, and use the temporary password to login.",
     "passwordError": "Something went wrong!",
-    "errorMessage": "Please try again. If problem persists, please contact customer support."
-  }, 
+    "errorMessage": "Please try again. If problem persists, please contact customer support.",
+    "timeLimitTitle": "Reset password restriction",
+    "timeLimitMessage": "You have to wait {{time}} minutes to request a new temporary password."
+  },
   "newPassword": {
     "title": "Change password",
     "subtitle": "Please enter your new password",
@@ -171,9 +191,10 @@
     "checkEmail": "Please login with your new password.",
     "passwordError": "Something went wrong!",
     "errorMessage": "Please try again. If problem persists, please contact customer support.",
-    "errorPassword": "Please check the password!",
-    "errorNewPassword": "Change password error"
-  },   
+    "errorPassword": "Please check the passwords!",
+    "errorNewPassword": "Change password error",
+    "errorCurrentMessage": "The current password is incorrect."
+  },
   "settings": {
     "recommended": {
       "title": "Recommended Settings",
@@ -224,17 +245,20 @@
     "followers": "Followers",
     "following": "Following",
     "aboutMe": "About me",
-    "updateError" : "Update error",
-    "fieldsError" : "Please check the fields!",
-    "updateTitle" : "Update confirmation",
-    "updateMessage" : "Your profile was updated successfully."
+    "updateError": "Update error",
+    "fieldsError": "Please check the fields!",
+    "updateTitle": "Update confirmation",
+    "updateMessage": "Your profile was updated successfully."
   },
   "notifications": {
     "title": "Notifications",
     "read": "Read Notifications",
     "unread": "Unread Notifications",
     "personal": "Personal",
-    "business": "Business"
+    "business": "Business",
+    "empty": "You don't have notifications",
+    "archiveAlertTitle": "Confirmation",
+    "archiveAlertMessage": "This action will delete the notification"
   },
   "shop": {
     "subtotal": {
@@ -243,5 +267,57 @@
       "zero": "Cart subtotal (0 items)"
     },
     "alsoShopped": "Customers who shopped for items in your cart also shopped for"
+  },
+  "newTrip": {
+    "tripName": "Trip name",
+    "tripNamePlaceHolder": "Trip name",
+    "tripDate": "Trip date",
+    "destination": "Destination",
+    "destinationPlaceHolder": "Search",
+    "searchDestination": "Search destination",
+    "useGps": "Use GPS to find nearby destinations",
+    "restaurants": "Restaurants",
+    "notFound1": "We didn’t find ",
+    "notFound2": " as destination.",
+    "moreOptions": "Please try to be more specific.",
+    "random": "Random",
+    "touristAttractions": "Tourist Attractions",
+    "vote": "Vote",
+    "sendingVotes": "Sending votes"
+  },
+  "destination": {
+    "select": "Select",
+    "view": "View"
+  },
+  "tripDetails": {
+    "tripCreated": "Created this trip on ",
+    "restaurants": "Restaurants",
+    "noRestaurants": "The owner hasn't included any restaurants",
+    "touristAttractions": "Tourist Attractions",
+    "noTouristAttractions": "The owner hasn't included any tourist attractions",
+    "otherVotes": "See the votes..."
+  },
+  "restaurants": {
+    "sights": "Tourist attractions",
+    "recommendations": "Recommendations",
+    "searching": "Searching in a range of",
+    "notFound1": "We didn't find restaurants in the range",
+    "moreOptions": "Please try increasing the amount of km.",
+    "seeMore": "See more"
+  },
+  "sights": {
+    "finish": "Finish trip",
+    "recommendations": "Recommendations",
+    "searching": "Searching in a range of",
+    "notFound1": "We didn't find restaurants in the range",
+    "moreOptions": "Please try increasing the amount of km.",
+    "seeMore": "See more",
+    "createdTrip": "New trip",
+    "createdTripText": "Your new trip was created"
+  },
+  "lugarGoogle": {
+    "select": "Select",
+    "view": "View",
+    "price": "Price"
   }
 }

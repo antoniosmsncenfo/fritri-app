@@ -76,6 +76,23 @@ export class UsuariosService {
     return this.usuarioModel.findOne({ _id: id }).exec();
   }
 
+  async obtenerUsuarioPaseo(idUsuario: string): Promise<Usuario | NoUsuario> {
+    const resultadoNoExiste = {
+      message: 'No existe usuario con ese ID',
+      statusCode: 404,
+    };
+
+    let resultado;
+    
+    resultado = await this.usuarioModel.findOne({ _id: idUsuario }).exec();
+
+    if (!resultado) {
+      return resultadoNoExiste;
+    }
+
+    return this.dejarPropiedadesMinimas(resultado.toObject());
+  }
+
   async findEmail(email: string): Promise<Usuario> {
     return this.usuarioModel.findOne({ correoElectronico: email }).exec();
   }
@@ -128,6 +145,26 @@ export class UsuariosService {
     return usuario;
   }
 
+  private dejarPropiedadesMinimas(usuario: UsuarioDocument): UsuarioDocument {
+    const propiedadesEliminar = [
+      'contrasena', 
+      'contrasenaTemporal', 
+      'fechaContrasenaTemporal',
+      'tipoLogin',
+      'genero',
+      'pais',
+      'fechaCreacion',
+      '__v'
+    ];
+
+    for (const propiedadEliminar of propiedadesEliminar) {
+      if (propiedadEliminar in usuario) {
+        delete usuario[propiedadEliminar];
+      }
+    }
+    return usuario;
+  }
+
   async loginEmail(loginEmailDto: LoginEmailDto): Promise<Usuario | NoUsuario> {
     let resultado;
     const resultadoNoExiste = {
@@ -140,7 +177,7 @@ export class UsuariosService {
     try {
       //Primero se valida si existe un usuario con el correo recibido
       const resultadoUsuario: UsuarioDocument = await this.usuarioModel
-        .findOne({ correoElectronico: loginEmailDto.correoElectronico })
+        .findOne({ correoElectronico: loginEmailDto.correoElectronico, tipoLogin: 'Email' })
         .exec();
       //Si no se encontró el correo se retorna credenciales no válidas: status 404
       if (!resultadoUsuario) {
@@ -218,15 +255,36 @@ export class UsuariosService {
       message: 'No existe usuario',
       statusCode: 404,
     };
+    let resetLimiteTiempo = {
+      message: 'Solicitud de password temporal no permitida debido a límite de tiempo',
+      limit: process.env.TEMP_PASS_EMAIL_LIMIT,
+      wait: 0,
+      statusCode: 405,
+    };
+
     try {
       //Esperar el resultado de la busqueda de usuario por email
       const resultadoUsuario = await this.usuarioModel
-        .findOne({ correoElectronico: email })
+        .findOne({ correoElectronico: email, tipoLogin: 'Email' })
         .exec();
       if (!resultadoUsuario) {
         //si no lo encontró retorna que no existe un usuario
         return resultadoNoExiste;
       } else {
+        //Como si se encontró un usuario con ese correo, se procede a validar si se generó una
+        //contraseña temporal dentro del límite de tiempo permitido.
+        if(resultadoUsuario.fechaContrasenaTemporal){
+          const limite = parseInt(process.env.TEMP_PASS_EMAIL_LIMIT);
+          const enviado = resultadoUsuario.fechaContrasenaTemporal;
+          const ahora = new Date();    
+          const difMinutos = Math.floor(Math.abs(ahora.getTime() - enviado.getTime()) / (1000 * 60));
+
+          if (difMinutos<limite) {
+            resetLimiteTiempo.wait = limite-difMinutos;
+            return resetLimiteTiempo;
+          }
+        }
+
         //Como si se encontró un usuario con ese correo, se procede a generar un password temporal
         const contrasenaTemporal = await GenerarContrasenaTemporalV2(
           LongitudPassword.Ocho,
@@ -252,6 +310,7 @@ export class UsuariosService {
           _id: resultadoUsuario._id,
           contrasena: resultadoUsuario.contrasena,
           contrasenaTemporal: resultadoUsuario.contrasenaTemporal,
+          fechaContrasenaTemporal: new Date(),
         });
 
         resultado = actualizado;

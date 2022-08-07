@@ -4,17 +4,20 @@ import { useNavigation } from '@react-navigation/core';
 import { useData, useTheme, useTranslation } from '../hooks/';
 import * as regex from '../constants/regex';
 import { Block, Button, Input, Image, Text } from '../components/';
-import { useChangePassword } from '../hooks/useUsuario';
+import { useChangePassword, useLogin } from '../hooks/useUsuario';
 import { ResetPasswordStatus } from '../interfaces/registro-usuario';
+import { LoginStatus } from '../interfaces/usuario-fritri';
 
 const isAndroid = Platform.OS === 'android';
 
 interface INewPasswordValidation {
+  currentValidation: boolean;
   passwordValidation: boolean;
   passwordConfirmationValidation: boolean;
 }
 
 interface INewPassword {
+  currentPassword: string;
   newPassword: string;
   newPasswordConfirmation: string;
   status: ResetPasswordStatus;
@@ -26,12 +29,16 @@ const NewPassword = () => {
   const { t } = useTranslation();
   const navigation = useNavigation();
 
+  const {loginUsuarioEmail, LoginMailStatus, resetLoginEstatus} = useLogin();
+
   const [isValid, setIsValid] = useState<INewPasswordValidation>({
+    currentValidation: false,
     passwordValidation: false,
     passwordConfirmationValidation: false,
   });
 
   const [passwordState, setPasswordState] = useState<INewPassword>({
+    currentPassword: '',
     newPassword: '',
     newPasswordConfirmation: '',
     status: ResetPasswordStatus.Pending,
@@ -39,13 +46,14 @@ const NewPassword = () => {
 
   const { assets, colors, gradients, sizes } = useTheme();
 
-  //Cambiar a usePassword
+  //Constantes que extraemos del hook de cambio de contraseña
   const {
     restartChangePasswordStatus,
     changePassword,
     changePasswordResult,
   } = useChangePassword();
 
+  //Callback para manejar el cambio del valor de los input de contraseñas
   const handleChange = useCallback(
     (value) => {
       setPasswordState((state) => ({
@@ -56,13 +64,25 @@ const NewPassword = () => {
     [setPasswordState],
   );
 
+  //Callback para manejar la solicitud del usuario de cambiar de contraseña
+  //Si es un tipo de login = email, se está mostrando el campo de la contraseña actual
+  //por lo que se debe validar si el correo y contraseña actual retornan un login válido.
   const handleNewPassword = useCallback(() => {
     if (!Object.values(isValid).includes(false)) {
+      if(user.tipoLogin==='Email'){
+        //Llamar el método que valida si se logra login con el correo y la contraseña ingresados
+        loginUsuarioEmail({
+          correoElectronico: user.correoElectronico,
+          contrasena: passwordState.currentPassword
+        })
+      }
+      else{
       //Llamado a la función de cambiar el password
       changePassword({
         _id: user._id!,
         contrasena: passwordState.newPassword,
       });
+    }
     }
     else {
       Alert.alert(
@@ -74,14 +94,51 @@ const NewPassword = () => {
     }
   }, [isValid, changePassword]);
 
+  //Effect para definir la validez de los valores ingresados por el usuario
+  //Si es tipoLogin=Email entonces se valida el campo de current password,
+  //si no entonces se define current como valido, porque el campo está oculto
   useEffect(() => {
-    setIsValid((state) => ({
-      ...state,
-      passwordValidation: regex.password.test(passwordState.newPassword),
-      passwordConfirmationValidation: passwordState.newPassword === passwordState.newPasswordConfirmation,
-    }));
+    if(user.tipoLogin==='Email'){
+      setIsValid((state) => ({
+        ...state,
+        currentValidation: regex.password.test(passwordState.currentPassword),
+        passwordValidation: regex.password.test(passwordState.newPassword),
+        passwordConfirmationValidation: passwordState.newPassword === passwordState.newPasswordConfirmation,
+      }));
+    }
+    else{
+      setIsValid((state) => ({
+        ...state,
+        currentValidation: true,
+        passwordValidation: regex.password.test(passwordState.newPassword),
+        passwordConfirmationValidation: passwordState.newPassword === passwordState.newPasswordConfirmation,
+      }));
+    }
   }, [passwordState, setIsValid]);
 
+  //Effect que se dispara cuando se produjo una validación de login
+  useEffect(() => {
+    if (LoginMailStatus === LoginStatus.InvalidMail) {
+      Alert.alert(
+        t('newPassword.errorNewPassword'),
+        t('newPassword.errorCurrentMessage'),
+        [{text: 'OK'}],
+        {cancelable: false}
+      );
+      resetLoginEstatus();
+    }
+    else if (LoginMailStatus === LoginStatus.Valid) {
+      //Llamado a la función de cambiar el password
+      changePassword({
+        _id: user._id!,
+        contrasena: passwordState.newPassword,
+      });
+    }
+  }, [LoginMailStatus]);
+  
+
+  //Effect que se dispara cuando se produjo un cambio de contraseña
+  //Dependiendo del valor del estado se despliega un mensaje diferente
   useEffect(() => {
     if (changePasswordResult === ResetPasswordStatus.Success) {
       Alert.alert(
@@ -125,7 +182,6 @@ const NewPassword = () => {
             {t('newPassword.title')}
           </Text>
         </Block>
-        {/* register form */}
         <Block
           keyboard
           behavior={!isAndroid ? 'padding' : 'height'}
@@ -148,11 +204,24 @@ const NewPassword = () => {
               <Block
                 paddingHorizontal={sizes.sm}
                 paddingTop={sizes.sm}>
+                {user.tipoLogin==='Email' &&
                 <Input
                   secureTextEntry
                   autoCapitalize="none"
                   marginBottom={sizes.m}
-                  label={t('common.password')}
+                  label={t('common.currentPassword')}
+                  rules={t('register.passwordRules')}
+                  placeholder={t('common.currentPasswordPlaceholder')}
+                  onChangeText={(value) => handleChange({ currentPassword: value })}
+                  success={Boolean(passwordState.currentPassword && isValid.currentValidation)}
+                  danger={Boolean(passwordState.currentPassword && !isValid.currentValidation)}
+                />
+                }                  
+                <Input
+                  secureTextEntry
+                  autoCapitalize="none"
+                  marginBottom={sizes.m}
+                  label={t('common.newPassword')}
                   rules={t('register.passwordRules')}
                   placeholder={t('common.passwordPlaceholder')}
                   onChangeText={(value) => handleChange({ newPassword: value })}

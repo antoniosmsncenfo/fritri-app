@@ -464,7 +464,7 @@
 				},
 				{
 					"id": "758c3bb5-f741-47ad-8880-c232a3d34e89",
-					"name": "urlFotosDestino",
+					"name": "urlFotos",
 					"datatype": "string",
 					"param": "",
 					"pk": false,

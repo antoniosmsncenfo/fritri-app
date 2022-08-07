@@ -1,36 +1,40 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { ApiProperty } from '@nestjs/swagger';
 import { Document } from 'mongoose';
 
 export type DestinoDocument = Destino & Document;
 
 @Schema()
 export class Destino {
-
-	@Prop({
-		required: true
-	})
-	nombre: string;
-
-	@Prop({
-		required: true
-	})
-	urlFotosDestino: string[];
-
-	@Prop({
-    required: true
-  })
-	pais: string;
-
-	@Prop({
+  @ApiProperty()
+  @Prop({
     required: true,
   })
-	idLugarGoogle: string;
+  nombre: string;
 
-	@Prop({
+  @ApiProperty()
+  @Prop({
     required: true,
   })
-	descripcion: string;
+  urlFotos: string[];
 
+  @ApiProperty()
+  @Prop({
+    required: true,
+  })
+  pais: string;
+
+  @ApiProperty()
+  @Prop({
+    required: true,
+  })
+  idLugarGoogle: string;
+
+  @ApiProperty()
+  @Prop({
+    required: true,
+  })
+  descripcion: string;
 }
 
 export const DestinoSchema = SchemaFactory.createForClass(Destino);
