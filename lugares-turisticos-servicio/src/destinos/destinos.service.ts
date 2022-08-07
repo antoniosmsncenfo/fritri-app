@@ -4,6 +4,7 @@ import {
   GeocodeResult,
   PlaceData,
   LatLng,
+  Language,
 } from '@googlemaps/google-maps-services-js';
 import {
   AddressComponent,
@@ -11,11 +12,36 @@ import {
 } from '@googlemaps/google-maps-services-js';
 import { DestinoSolicitudDto } from './dto/destino-solicitud.dto';
 import { IdGoogleSolicitudDto } from './dto/id-google-solicitud.dto';
+import { DestinoPorCoordenadasSolicitudDto } from './dto/destino-por-ubicacion-solicitud.dto';
 
 @Injectable()
 export class DestinosService {
   constructor(private googleApiService: GoogleApiService) {}
 
+  async buscarDestinosPorCoordenadas(
+    destinoPorUbicacionSolicitud: DestinoPorCoordenadasSolicitudDto,
+  ) {
+    const coordenadas: LatLng = {
+      lat: destinoPorUbicacionSolicitud.latitud,
+      lng: destinoPorUbicacionSolicitud.longitud,
+    };
+    const idiomaParametro = destinoPorUbicacionSolicitud.idioma || 'es';
+    const idioma: Language = Language[idiomaParametro];
+
+    const destinosGoogle =
+      await this.googleApiService.buscarDestinosPorCoordenadas(
+        coordenadas,
+        idioma,
+      );
+
+    const destinos = Promise.all(
+      destinosGoogle.map((destinoGoogle) =>
+        this.mapearGoogleADestino(destinoGoogle),
+      ),
+    );
+
+    return destinos;
+  }
   async buscarDestinos(destinoDto: DestinoSolicitudDto) {
     const destinosGoogle = await this.googleApiService.obtenerDestinos(
       destinoDto.nombre,
@@ -57,8 +83,8 @@ export class DestinosService {
 
     let referenciasFotos: string[] = [];
 
-    if (fotos && fotos.photos.length > 0) {
-      referenciasFotos = fotos.photos.map((foto) => {
+    if (fotos && fotos.photos?.length > 0) {
+      referenciasFotos = fotos.photos?.map((foto) => {
         return foto.photo_reference;
       });
     }
@@ -96,6 +122,10 @@ export class DestinosService {
       if (url !== '') {
         urlFotos.push(url);
       }
+    } else {
+      urlFotos.push(
+        'https://maps.gstatic.com/tactile/pane/default_geocode-2x.png',
+      );
     }
 
     return {
@@ -142,6 +172,10 @@ export class DestinosService {
       if (url !== '') {
         urlFotos.push(url);
       }
+    } else {
+      urlFotos.push(
+        'https://maps.gstatic.com/tactile/pane/default_geocode-2x.png',
+      );
     }
 
     return {
