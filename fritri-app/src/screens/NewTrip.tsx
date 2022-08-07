@@ -12,6 +12,7 @@ import { useGooglePlace } from '../hooks/useGooglePlace';
 import { IDestino } from '../interfaces/paseo';
 import { usePaseo } from '../hooks/usePaseos';
 import { useGpsLocation } from '../hooks/useGpsLocation';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 interface ITouchableInput {
   icon: keyof ITheme['assets'];
@@ -57,6 +58,7 @@ const NewTrip = () => {
   const [isValid, setIsvalid] = useState<IIsvalid>({ destination: false, name: false });
   const [showActivityIndicatorRamdom, setShowActivityIndicatorRandom] = useState(false);
   const [showActivityIndicatorBuscar, setShowActivityIndicatorBuscar] = useState(false);
+  const [showActivityIndicatorGps, setShowActivityIndicatorGps] = useState(false);
   const navigation = useNavigation();
   const { getCurrentPosition } = useGpsLocation();
 
@@ -78,6 +80,7 @@ const NewTrip = () => {
     setDestinos(result);
     setSelectedDestino(null);
     setShowActivityIndicatorBuscar(false);
+    setShowActivityIndicatorGps(false);
   }, [destinations]);
 
   useEffect(() => {
@@ -87,22 +90,22 @@ const NewTrip = () => {
   useEffect(() => {
     (async () => {
       if (useGps) {
+        setShowActivityIndicatorGps(true);
         const currentLocation = await getCurrentPosition();
-        console.log(currentLocation);
+
         if (currentLocation) {
           destinationsSearchByCoordinates(
             {
               latitud: currentLocation?.coords.latitude,
               longitud: currentLocation?.coords.longitude,
             });
-          console.log('Buscando con gps');
         }
         else {
           setuseGps(false);
+          setShowActivityIndicatorGps(false);
         }
       }
     })();
-
   }, [useGps]);
 
   useEffect(() => {
@@ -275,8 +278,15 @@ const NewTrip = () => {
           </Block>)}
 
         <Block row flex={0} align="center" >
-          <Checkbox marginRight={sizes.sm} onPress={(check) => (setuseGps(check))} />
+          <BouncyCheckbox fillColor={colors.primary.toString()} iconStyle={{ borderColor: colors.primary }}
+            unfillColor="#FFFFFF" disableBuiltInState isChecked={useGps}
+            onPress={() => { setuseGps(!useGps); }} />
+
           <Text bold paddingRight={sizes.s}>{t('newTrip.useGps')}</Text>
+
+          {showActivityIndicatorGps &&
+            (<ActivityIndicator size="small" color={colors.primary} />)
+          }
         </Block>
 
       </Block>
