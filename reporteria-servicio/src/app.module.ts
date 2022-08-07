@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import {  DestinosModule } from './destinos/destinos.module';
+import { UsuariosModule } from './usuarios/usuarios.module';
 
 @Module({
   imports: [
@@ -11,7 +12,7 @@ import {  DestinosModule } from './destinos/destinos.module';
     MongooseModule.forRoot('mongodb://localhost:27017/Reporteria_Fritri'),
     // PaseosModule,
     DestinosModule,
-    // UsuariosModule
+    UsuariosModule
   ],
   controllers: [AppController],
   providers: [AppService],
