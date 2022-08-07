@@ -11,6 +11,7 @@ import { CommonActions, useNavigation } from '@react-navigation/native';
 import { useGooglePlace } from '../hooks/useGooglePlace';
 import { IDestino } from '../interfaces/paseo';
 import { usePaseo } from '../hooks/usePaseos';
+import { useGpsLocation } from '../hooks/useGpsLocation';
 
 interface ITouchableInput {
   icon: keyof ITheme['assets'];
@@ -43,7 +44,7 @@ const NewTrip = () => {
   const { t } = useTranslation();
   const { newTripTemp, setNewTripTemp, user } = useData();
   const { paseoCreado, crearPaseoAleatorio } = usePaseo();
-  const { destinations, destinationsSearch } = useGooglePlace();
+  const { destinations, destinationsSearch, destinationsSearchByCoordinates } = useGooglePlace();
   const { sizes, gradients, colors } = useTheme();
   const [useGps, setuseGps] = useState(false);
   const [notFound, setNotFound] = useState(false);
@@ -57,6 +58,7 @@ const NewTrip = () => {
   const [showActivityIndicatorRamdom, setShowActivityIndicatorRandom] = useState(false);
   const [showActivityIndicatorBuscar, setShowActivityIndicatorBuscar] = useState(false);
   const navigation = useNavigation();
+  const { getCurrentPosition } = useGpsLocation();
 
   // se ejecuta cuando se obtienen los detinos del hook de destinos
   useEffect(() => {
@@ -65,6 +67,7 @@ const NewTrip = () => {
     if (destinations && destinations.length > 0) {
       //Convierte el destino en DestinationData, para agregar la bandera de seleccionado en falso
       result = destinations.map((d) => { return { selected: false, destination: d }; });
+      result = result.filter(r => r.destination.urlFotos!.length > 0); // quita los restaurantes sin foto
       setNotFound(false);
     }
     else {
@@ -80,6 +83,27 @@ const NewTrip = () => {
   useEffect(() => {
     setNewTripTemp(null);
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      if (useGps) {
+        const currentLocation = await getCurrentPosition();
+        console.log(currentLocation);
+        if (currentLocation) {
+          destinationsSearchByCoordinates(
+            {
+              latitud: currentLocation?.coords.latitude,
+              longitud: currentLocation?.coords.longitude,
+            });
+          console.log('Buscando con gps');
+        }
+        else {
+          setuseGps(false);
+        }
+      }
+    })();
+
+  }, [useGps]);
 
   useEffect(() => {
     setIsvalid({ name: tripName !== '', destination: selectedDestino !== null });

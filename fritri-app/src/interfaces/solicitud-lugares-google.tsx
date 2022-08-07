@@ -7,3 +7,9 @@ export interface ISolicitudLugaresGoogle {
 }
 
 export type TipoLugaresGoogle = 'restaurantes' | 'atracciones'
+
+export interface ISolicitudDestinosPorCoordenadas {
+    latitud: number;
+    longitud: number;
+    idioma?: string;
+  }
