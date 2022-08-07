@@ -127,6 +127,10 @@ export class LugaresGoogleService {
       if (url !== '') {
         urlFotos.push(url);
       }
+    } else {
+      urlFotos.push(
+        'https://maps.gstatic.com/tactile/pane/default_geocode-2x.png',
+      );
     }
 
     return {

@@ -235,7 +235,8 @@ const TripDetails = (props) => {
                 {usuarioPaseo?.nombreCompleto}
               </Text>
               <Text p gray>
-              { dayjs(paseoSeleccionado?.fechaCreacion).format(t('common.dateFormat'))}
+                {t('tripDetails.tripCreated')}
+                { dayjs(paseoSeleccionado?.fechaCreacion).format(t('common.dateFormat'))}
               </Text>
             </Block>
           </Block>
