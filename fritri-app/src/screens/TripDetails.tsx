@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePaseo } from '../hooks/usePaseos';
 import dayjs from 'dayjs';
 import { Share, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { useUsuario } from '../hooks/useUsuario';
 import { useVotacion } from '../hooks/useVotacion';
 import { PlaceDetail } from '../components/PlaceDetail';
@@ -14,6 +15,7 @@ import * as Linking from 'expo-linking';
 const TripDetails = (props) => {
     const {assets, sizes, colors, gradients} = useTheme();
     const {t} = useTranslation();
+    const navigation = useNavigation();
 
     const {obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado} = usePaseo();
 
@@ -23,13 +25,21 @@ const TripDetails = (props) => {
 
     const [ restaurantesVotar, setRestaurantesVotar] = useState<ITipoVoto[]>([]);
     const [ atraccionesVotar, setAtraccionesVotar] = useState<ITipoVoto[]>([]);
+    const [isFromDashboard, setIsFromDashboard] = useState(false);
 
     useEffect(() => {
       let idPaseo:string = props.route.params.id;
       obtenerPaseo(idPaseo);
+      if(props.route.params.fromDashboard || props.route.params.from === 'TripSecurity') setIsFromDashboard(true);
     }, []);
 
     useEffect(() => {
+      if(paseoSeleccionado?.pinPaseo && !isFromDashboard) {
+        navigation.navigate('TripSecurity', {
+          id: props.route.params.id,
+          pin: paseoSeleccionado?.pinPaseo
+        });
+      }
       if (paseoSeleccionado?.idCreador!) {
         obtenerUsuarioPaseo(paseoSeleccionado?.idCreador!);
       }

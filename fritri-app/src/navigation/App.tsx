@@ -1,14 +1,54 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Platform, StatusBar} from 'react-native';
 import {useFonts} from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
+import * as Linking from 'expo-linking';
 
 import Menu from './Menu';
 import {useData, ThemeProvider, TranslationProvider} from '../hooks';
 
+const prefix = Linking.createURL('/');
+
+
 export default () => {
   const {isDark, theme, setTheme} = useData();
+  const [ data, setData ] = useState({});
+
+  const linking = {
+    prefixes: [prefix],
+    config: {
+      screens: {
+          Screens: {
+            screens: {
+              TripDetails: 'tripDetails/:id',
+            }
+        }
+      }
+    }
+  };
+
+  
+
+  useEffect(() => {
+    async function getInitialURL() {
+      const initialURL = await Linking.getInitialURL();
+      if(initialURL) setData(Linking.parse(initialURL));
+    }
+    
+    Linking.addEventListener('url', handleDeepLink);
+    if(!data) {
+      getInitialURL();
+    }
+    return () => {
+      Linking.removeEventListener('url', () => {});
+    }
+  }, [])
+
+  const handleDeepLink = (event) => {
+    let dataTemp = Linking.parse(event.url);
+    setData(dataTemp);
+  }
 
   /* set the status bar based on isDark constant */
   useEffect(() => {
@@ -49,7 +89,7 @@ export default () => {
   return (
     <TranslationProvider>
       <ThemeProvider theme={theme} setTheme={setTheme}>
-        <NavigationContainer theme={navigationTheme}>
+        <NavigationContainer theme={navigationTheme} linking={linking}>
           <Menu />
         </NavigationContainer>
       </ThemeProvider>

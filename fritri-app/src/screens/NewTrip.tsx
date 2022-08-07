@@ -11,6 +11,8 @@ import { CommonActions, useNavigation } from '@react-navigation/native';
 import { useGooglePlace } from '../hooks/useGooglePlace';
 import { IDestino } from '../interfaces/paseo';
 import { usePaseo } from '../hooks/usePaseos';
+import { useGpsLocation } from '../hooks/useGpsLocation';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 interface ITouchableInput {
   icon: keyof ITheme['assets'];
@@ -43,7 +45,7 @@ const NewTrip = () => {
   const { t } = useTranslation();
   const { newTripTemp, setNewTripTemp, user } = useData();
   const { paseoCreado, crearPaseoAleatorio } = usePaseo();
-  const { destinations, destinationsSearch } = useGooglePlace();
+  const { destinations, destinationsSearch, destinationsSearchByCoordinates } = useGooglePlace();
   const { sizes, gradients, colors } = useTheme();
   const [useGps, setuseGps] = useState(false);
   const [notFound, setNotFound] = useState(false);
@@ -56,7 +58,9 @@ const NewTrip = () => {
   const [isValid, setIsvalid] = useState<IIsvalid>({ destination: false, name: false });
   const [showActivityIndicatorRamdom, setShowActivityIndicatorRandom] = useState(false);
   const [showActivityIndicatorBuscar, setShowActivityIndicatorBuscar] = useState(false);
+  const [showActivityIndicatorGps, setShowActivityIndicatorGps] = useState(false);
   const navigation = useNavigation();
+  const { getCurrentPosition } = useGpsLocation();
 
   // se ejecuta cuando se obtienen los detinos del hook de destinos
   useEffect(() => {
@@ -65,6 +69,7 @@ const NewTrip = () => {
     if (destinations && destinations.length > 0) {
       //Convierte el destino en DestinationData, para agregar la bandera de seleccionado en falso
       result = destinations.map((d) => { return { selected: false, destination: d }; });
+      result = result.filter(r => r.destination.urlFotos!.length > 0); // quita los restaurantes sin foto
       setNotFound(false);
     }
     else {
@@ -75,11 +80,33 @@ const NewTrip = () => {
     setDestinos(result);
     setSelectedDestino(null);
     setShowActivityIndicatorBuscar(false);
+    setShowActivityIndicatorGps(false);
   }, [destinations]);
 
   useEffect(() => {
     setNewTripTemp(null);
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      if (useGps) {
+        setShowActivityIndicatorGps(true);
+        const currentLocation = await getCurrentPosition();
+
+        if (currentLocation) {
+          destinationsSearchByCoordinates(
+            {
+              latitud: currentLocation?.coords.latitude,
+              longitud: currentLocation?.coords.longitude,
+            });
+        }
+        else {
+          setuseGps(false);
+          setShowActivityIndicatorGps(false);
+        }
+      }
+    })();
+  }, [useGps]);
 
   useEffect(() => {
     setIsvalid({ name: tripName !== '', destination: selectedDestino !== null });
@@ -251,8 +278,15 @@ const NewTrip = () => {
           </Block>)}
 
         <Block row flex={0} align="center" >
-          <Checkbox marginRight={sizes.sm} onPress={(check) => (setuseGps(check))} />
+          <BouncyCheckbox fillColor={colors.primary.toString()} iconStyle={{ borderColor: colors.primary }}
+            unfillColor="#FFFFFF" disableBuiltInState isChecked={useGps}
+            onPress={() => { setuseGps(!useGps); }} />
+
           <Text bold paddingRight={sizes.s}>{t('newTrip.useGps')}</Text>
+
+          {showActivityIndicatorGps &&
+            (<ActivityIndicator size="small" color={colors.primary} />)
+          }
         </Block>
 
       </Block>
