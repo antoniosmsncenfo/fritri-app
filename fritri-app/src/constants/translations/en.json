@@ -297,6 +297,14 @@
     "noTouristAttractions": "The owner hasn't included any tourist attractions",
     "otherVotes": "See the votes..."
   },
+  "tripSecurity": {
+    "title": "Enter trip's PIN",
+    "access": "Get access to the trip",
+    "code": "PIN",
+    "missingDataTitle": "Trip's PIN error",
+    "missingDataMessage": "Please enter the PIN code",
+    "errorMessage": "Wrong PIN code"
+  },
   "restaurants": {
     "sights": "Tourist attractions",
     "recommendations": "Recommendations",

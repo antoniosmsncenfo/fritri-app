@@ -27,7 +27,8 @@ import {
   Restaurants,
   NewTrip,
   Sights,
-  TripDetails
+  TripDetails,
+  TripSecurity
 } from '../screens';
 
 import { useScreenOptions, useTranslation } from '../hooks';
@@ -169,7 +170,12 @@ export default () => {
         name="TripDetails"
         component={TripDetails}
         options={{ title: t('navigation.tripDetails'), ...screenOptions.back }}
-      />      
+      />    
+      <Stack.Screen
+        name="TripSecurity"
+        component={TripSecurity}
+        options={{ headerShown: false, gestureEnabled: false, headerRight: () => null, headerLeft: () => null }}
+      />  
     </Stack.Navigator>
   );
 };

@@ -11,6 +11,7 @@ export interface IPaseo {
     integrantes?: Integrante[];
     eliminado: boolean;
     fechaCreacion: Date;
+    pinPaseo?: number;
     __v?: number;
 }
 
