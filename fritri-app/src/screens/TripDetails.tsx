@@ -3,12 +3,13 @@ import {Block, Button, Input, Image, Text} from '../components/';
 import { useEffect, useState } from 'react';
 import { usePaseo } from '../hooks/usePaseos';
 import dayjs from 'dayjs';
-import { TouchableOpacity } from 'react-native';
+import { Share, TouchableOpacity } from 'react-native';
 import { useUsuario } from '../hooks/useUsuario';
 import { useVotacion } from '../hooks/useVotacion';
 import { PlaceDetail } from '../components/PlaceDetail';
 import { ILugar } from '../interfaces/paseo';
 import { ITipoVoto, ITipoVotoEnviar } from '../interfaces/tipo-voto';
+import * as Linking from 'expo-linking';
 
 const TripDetails = (props) => {
     const {assets, sizes, colors, gradients} = useTheme();
@@ -141,6 +142,28 @@ const TripDetails = (props) => {
       setRestaurantesVotar([...restaurantesVotarTemp]);
     }
 
+    const onShare = async () => {
+      try {
+        const result = await Share.share({
+          message:
+          Linking.createURL('path/into/app', {
+            queryParams: { hello: 'world' },
+          }),
+        });
+        if (result.action === Share.sharedAction) {
+          if (result.activityType) {
+            // shared with activity type of result.activityType
+          } else {
+            // shared
+          }
+        } else if (result.action === Share.dismissedAction) {
+          // dismissed
+        }
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+
     useEffect(() => {
       if(!enviandoVotacionAtr && !enviandoVotacionRest) {
         let idPaseo:string = props.route.params.id;
@@ -168,7 +191,8 @@ const TripDetails = (props) => {
               <TouchableOpacity>
                 <Image source={assets.unprotected} />
               </TouchableOpacity>              
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={onShare} >
                 <Image source={assets.share} />
               </TouchableOpacity>
             </Block>
