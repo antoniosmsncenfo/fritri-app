@@ -67,6 +67,17 @@ export const ICONS: ThemeIcons = {
   train: require('../assets/icons/train.png'),
   users: require('../assets/icons/users.png'),
   warning: require('../assets/icons/warning.png'),
+  phone: require('../assets/icons/phone.png'),
+  locationNew: require('../assets/icons/location-new.png'),
+  share: require('../assets/icons/share.png'),
+  checked: require('../assets/icons/checked.png'),
+  unchecked: require('../assets/icons/unchecked.png'),
+  restaurant: require('../assets/icons/restaurant.png'),
+  attraction: require('../assets/icons/attraction.png'),
+  like: require('../assets/icons/like.png'),
+  disLike: require('../assets/icons/dislike.png'),
+  likeFill: require('../assets/icons/fill-like.png'),
+  disLikeFill: require('../assets/icons/dislike-fill.png')
 };
 
 export const ASSETS: ThemeAssets = {

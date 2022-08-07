@@ -30,12 +30,18 @@ export class UsuariosController {
   //   return this.usuariosService.findOne(id);
   // }
 
+  @Get('obtener-usuario-paseo/:id')
+  async obtenerUsuarioPaseo(@Param('id') idUsuario: string): Promise<Usuario | NoUsuario> {
+    return this.usuariosService.obtenerUsuarioPaseo(idUsuario);
+  }  
+
   @Get('findEmail')
   async findEmail(@Query('email') email: string): Promise<Usuario> {
     return this.usuariosService.findEmail(email);
   }
 
   @Get('resetPassword')
+  @HttpCode(200)
   async resetPassword(@Query('email') email: string): Promise<Usuario | NoUsuario> {
     return this.usuariosService.resetPassword(email);
   }

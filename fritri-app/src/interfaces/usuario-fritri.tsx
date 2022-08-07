@@ -19,8 +19,15 @@ export interface IUsuarioContrasena {
     contrasenaTemporal?: string;
 }
 
+export interface IUsuarioPaseo {
+    _id: string;
+    correoElectronico: string;
+    nombreCompleto: string;
+    urlFoto: string
+}
+
 export enum LoginStatus {
     New = 'NEW',
     InvalidMail = 'INVALID',
-  
+    Valid = 'VALID'
   }

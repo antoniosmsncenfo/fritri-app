@@ -3,6 +3,7 @@ import { Platform, Linking, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/core';
 import { email, name } from '../constants/regex';
+import * as ImagePicker from 'expo-image-picker';
 
 import { useData, useTheme, useTranslation } from '../hooks/';
 import * as regex from '../constants/regex';
@@ -13,6 +14,7 @@ import { useUsuario } from '../hooks/useUsuario';
 import { IRegistration, RegistrationStatus } from '../interfaces/registro-usuario';
 import { IUsuario } from '../constants/types/index';
 import { COUNTRIES } from '../constants/countries';
+import axios from 'axios';
 
 
 const isAndroid = Platform.OS === 'android';
@@ -33,13 +35,6 @@ interface ITouchableInput {
   onPress?: () => void;
 }
 
-const options = {
-  title: 'Selecciona foto de perfil',
-  cancelButton: 'Cancelar',
-  takePhotoButtonTitle: 'Tomar Foto',
-  chooseFromLibraryButtonTitle: 'Abrir Galeria',
-  noData: true,
-};
 
 const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
   const { assets, colors, sizes } = useTheme();
@@ -69,6 +64,20 @@ const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
         <Text p gray>
           {value}
         </Text>
+        <Block
+          position='absolute'
+          marginLeft="85%"
+          align="center"
+          >
+          <Image
+              radius={0}
+              width={10}
+              height={15}
+              color={colors.icon}
+              source={assets.arrow}
+              transform={[{rotate: '90deg'}]}
+            />
+        </Block>           
       </Block>
     </Button>
   );
@@ -104,15 +113,15 @@ const Profile = () => {
     email: regex.email.test(registration.email || ''),
     password: true,
     confirmPassword: true,
-    gender: registration.gender!==undefined,
-    country: registration.country!==undefined,
+    gender: registration.gender !== undefined,
+    country: registration.country !== undefined,
   });
 
   const [gender, setGender] = useState(GENDER_TYPES['1']);
 
   const [country, setCountry] = useState(COUNTRIES['1']);
 
-  const { resetRegistrarEstatus, updateUsuario, usuarioFriTri, fritriUser, registrarStatus } = useUsuario();
+  const { resetRegistrarEstatus, updateUsuario, usuarioFriTri, fritriUser, registrarStatus, updateUsuarioFoto } = useUsuario();
 
 
   const [modal, setModal] = useState<
@@ -129,6 +138,29 @@ const Profile = () => {
     },
     [setRegistration],
   );
+
+  //ImagePicker
+  const [pickedImagePath, setPickedImagePath] = useState('');
+
+  const showImagePicker = async () => {
+    // Ask the user for the permission to access the media library 
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+     alert(
+        t('profile.textImg')
+      );
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync();
+
+    if (!result.cancelled) {
+      setPickedImagePath(result.uri);
+      await updateUsuarioFoto(result.uri, user?._id!);
+    }
+  }
+
 
   const handleUpdateData = useCallback(() => {
     if (!Object.values(isValid).includes(false)) {
@@ -148,6 +180,7 @@ const Profile = () => {
       }
       try {
         updateUsuario(userToUpdate);
+
       } catch (error) {
 
       }
@@ -231,8 +264,8 @@ const Profile = () => {
       ...state,
       name: regex.name.test(registration.name),
       email: regex.email.test(registration.email),
-      gender: registration.gender!==undefined,
-      country: registration.country!==undefined,   
+      gender: registration.gender !== undefined,
+      country: registration.country !== undefined,
     }));
   }, [registration, setIsValid]);
 
@@ -272,24 +305,52 @@ const Profile = () => {
   return (
     <Block safe>
       <Block paddingHorizontal={sizes.s}>
-        <Block flex={0} gradient={gradients.primary} style={{ zIndex: 0, height: sizes.height * 0.3 }} radius={sizes.sm}>
-            <Block flex={0} align="center" marginTop={sizes.sm}>
-              <Image
-                width={120}
-                height={120}
-                radius={100}
-                source={{ uri: (user.urlFoto ? user.urlFoto : (user.genero === 'Man' ? FotoUsuario.Hombre : FotoUsuario.Mujer)) }}
-              />
-            </Block>
-
+        <Block 
+          flex={0}
+          gradient={gradients.primary}
+          style={{zIndex: 0, height: sizes.height * 0.3}}
+          radius={sizes.sm}>
+          {user.tipoLogin === 'Email' ?
+              <Block
+                flex={0}
+                align="center"
+                marginTop={sizes.sm}
+                onTouchEnd={showImagePicker}>
+                <Image
+                  width={120}
+                  height={120}
+                  radius={100}
+                  source={{
+                    uri: user.urlFoto
+                      ? user.urlFoto
+                      : user.genero === 'Man'
+                      ? FotoUsuario.Hombre
+                      : FotoUsuario.Mujer,
+                  }}
+                />
+              </Block>
+            :
+              <Block flex={0} align="center" marginTop={sizes.sm}>
+                <Image
+                  width={120}
+                  height={120}
+                  radius={100}
+                  source={{
+                    uri: user.urlFoto
+                      ? user.urlFoto
+                      : user.genero === 'Man'
+                      ? FotoUsuario.Hombre
+                      : FotoUsuario.Mujer,
+                  }}
+                />
+              </Block>
+          }
         </Block>
         {/* register form */}
         <Block
-
           keyboard
           behavior={!isAndroid ? 'padding' : 'height'}
           marginTop={-(sizes.height * 0.17 - sizes.l)}>
-
           <Block
             flex={0}
             radius={sizes.sm}
@@ -297,7 +358,6 @@ const Profile = () => {
             shadow={!isAndroid} // disabled shadow on Android due to blur overlay + elevation issue
           >
             <Block
-
               blur
               flex={0}
               intensity={150}
@@ -306,32 +366,29 @@ const Profile = () => {
               justify="space-evenly"
               tint={colors.blurTint}
               paddingVertical={sizes.sm}>
-              {/* <Text p semibold center>
-                {t('register.subtitleUpdate')}
-              </Text> */}
               <Block paddingHorizontal={sizes.sm}>
                 {user.tipoLogin === 'Email' &&
-                <Input
-                  autoCapitalize="none"
-                  marginBottom={sizes.m}
-                  label={t('common.name')}
-                  placeholder={t('common.namePlaceholder')}
-                  value={registration.name}
-                  success={Boolean(registration.name && isValid.name)}
-                  danger={Boolean(registration.name && !isValid.name)}
-                  onChangeText={(value) => handleChange({ name: value })}
-                />
+                  <Input
+                    autoCapitalize="none"
+                    marginBottom={sizes.m}
+                    label={t('common.name')}
+                    placeholder={t('common.namePlaceholder')}
+                    value={registration.name}
+                    success={Boolean(registration.name && isValid.name)}
+                    danger={Boolean(registration.name && !isValid.name)}
+                    onChangeText={(value) => handleChange({ name: value })}
+                  />
                 }
                 {user.tipoLogin !== 'Email' &&
-                <Input
-                  disabled={true}
-                  autoCapitalize="none"
-                  marginBottom={sizes.m}
-                  label={t('common.name')}
-                  placeholder={t('common.namePlaceholder')}
-                  value={registration.name}
-                />
-                }                
+                  <Input
+                    disabled={true}
+                    autoCapitalize="none"
+                    marginBottom={sizes.m}
+                    label={t('common.name')}
+                    placeholder={t('common.namePlaceholder')}
+                    value={registration.name}
+                  />
+                }
                 <Input
                   disabled={true}
                   autoCapitalize="none"
@@ -369,12 +426,12 @@ const Profile = () => {
                     </Text>
                   </Button>
                 }
+
                 <Button
                   onPress={handleUpdateData}
                   marginVertical={sizes.s}
                   gradient={gradients.primary}
-                  //disabled={Object.values(isValid).includes(false)}
-                  >
+                >
                   <Text bold white transform="uppercase">
                     {t('common.changeData')}
                   </Text>
@@ -385,19 +442,16 @@ const Profile = () => {
                   outlined
                   shadow={!isAndroid}
                   marginVertical={sizes.s}
-                  //disabled={Object.values(isValid).includes(false)}
-                  >
+                >
                   <Text bold danger transform="uppercase">
                     {t('common.logOut')}
                   </Text>
                 </Button>
-
               </Block>
             </Block>
           </Block>
         </Block>
       </Block>
-
       <Modal
         visible={Boolean(modal)}
         onRequestClose={() => setModal(undefined)}>
@@ -423,4 +477,3 @@ const Profile = () => {
   );
 };
 export default Profile;
-

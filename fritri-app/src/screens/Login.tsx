@@ -8,7 +8,8 @@ import * as regex from '../constants/regex';
 import { Block, Button, Input, Image, Text } from '../components/';
 import { useGoogleLogin } from '../hooks/useGoogleLogin';
 import { useFacebook } from '../hooks/useFacebook';
-import { useLogin } from '../hooks/useUsuario';
+import { useUsuario, useLogin } from '../hooks/useUsuario';
+import { email } from '../constants/regex';
 import { LoginStatus } from '../interfaces/usuario-fritri';
 import { useFocusEffect } from '@react-navigation/native';
 

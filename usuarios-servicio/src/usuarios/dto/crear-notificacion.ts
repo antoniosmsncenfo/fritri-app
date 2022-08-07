@@ -4,6 +4,8 @@ export class CrearNotificacionDto {
 
     readonly idPaseo: string;
 
+    readonly titulo: string;    
+
     readonly detalle: string;
 
     readonly esArchivada?: boolean;

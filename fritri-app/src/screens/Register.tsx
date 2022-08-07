@@ -52,11 +52,25 @@ const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
           color={colors.icon}
           source={assets?.[icon]}
           marginHorizontal={sizes.inputPadding}
-        />
+        />     
         <Text p gray>
           {value}
         </Text>
-      </Block>
+        <Block
+          position='absolute'
+          marginLeft="85%"
+          align="center"
+          >
+          <Image
+              radius={0}
+              width={10}
+              height={15}
+              color={colors.icon}
+              source={assets.arrow}
+              transform={[{rotate: '90deg'}]}
+            />
+        </Block>     
+      </Block>      
     </Button>
   );
 };

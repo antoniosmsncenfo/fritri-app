@@ -1,25 +1,27 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Schema as SchemaM} from 'mongoose';
+import { ApiProperty } from '@nestjs/swagger';
+import { Document, Schema as SchemaM } from 'mongoose';
 
 export type VotacionDocument = Votacion & Document;
 
 @Schema()
 export class Votacion {
-  
+  @ApiProperty()
   @Prop({
     required: true,
   })
-	idVotante: SchemaM.Types.ObjectId;
+  idVotante: SchemaM.Types.ObjectId;
 
+  @ApiProperty()
   @Prop({
     required: true,
   })
-	fecha: Date;
+  fecha: Date;
 
+  @ApiProperty()
   @Prop({
     required: true,
   })
-	resultado: Boolean;
-
+  resultado: boolean | string;
 }
 export const VotacionSchema = SchemaFactory.createForClass(Votacion);
