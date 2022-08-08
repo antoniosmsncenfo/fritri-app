@@ -3,7 +3,7 @@ import {Block, Button, Input, Image, Text} from '../components/';
 import { useEffect, useState } from 'react';
 import { usePaseo } from '../hooks/usePaseos';
 import dayjs from 'dayjs';
-import { Share, TouchableOpacity } from 'react-native';
+import { Alert, Share, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useUsuario } from '../hooks/useUsuario';
 import { useVotacion } from '../hooks/useVotacion';
@@ -17,7 +17,7 @@ const TripDetails = (props) => {
     const {t} = useTranslation();
     const navigation = useNavigation();
 
-    const {obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado} = usePaseo();
+    const {obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado, protegerPaseo, removerPin} = usePaseo();
 
     const {usuarioPaseo, obtenerUsuarioPaseo} = useUsuario();
     const { votarSeccion, enviandoVotacionRest, enviandoVotacionAtr, respRest, respAtr, setEnviandoVotacionRest, setEnviandoVotacionAtr } = useVotacion();
@@ -29,11 +29,13 @@ const TripDetails = (props) => {
 
     useEffect(() => {
       let idPaseo:string = props.route.params.id;
+      console.log("Bandera1");
       obtenerPaseo(idPaseo);
       if(props.route.params.fromDashboard || props.route.params.from === 'TripSecurity') setIsFromDashboard(true);
     }, []);
 
     useEffect(() => {
+      console.log("Bandera3");
       if(paseoSeleccionado?.pinPaseo && !isFromDashboard) {
         navigation.navigate('TripSecurity', {
           id: props.route.params.id,
@@ -46,6 +48,7 @@ const TripDetails = (props) => {
     }, [paseoSeleccionado]);
 
     useEffect(() => {
+      console.log("Bandera4");
       if(paseoSeleccionadoCargado) {
         procesoVotosUsuario();
       }
@@ -152,12 +155,19 @@ const TripDetails = (props) => {
       setRestaurantesVotar([...restaurantesVotarTemp]);
     }
 
-    const onShare = async () => {
-      try {
+    const protectPress = (idPaseo:string) => {
+      protegerPaseo(idPaseo);
+    }
+
+    const unprotectPress = (idPaseo:string) => {
+      removerPin(idPaseo);
+    }
+
+    const onShare = async (idPaseo:string) => {
         const result = await Share.share({
           message:
-          Linking.createURL('path/into/app', {
-            queryParams: { hello: 'world' },
+          Linking.createURL('tripDetails/', {
+            queryParams: { idPaseo },
           }),
         });
         if (result.action === Share.sharedAction) {
@@ -169,12 +179,11 @@ const TripDetails = (props) => {
         } else if (result.action === Share.dismissedAction) {
           // dismissed
         }
-      } catch (error) {
-        alert(error.message);
-      }
+
     };
 
     useEffect(() => {
+      console.log("Bandera2");
       if(!enviandoVotacionAtr && !enviandoVotacionRest) {
         let idPaseo:string = props.route.params.id;
         obtenerPaseo(idPaseo);
@@ -191,18 +200,53 @@ const TripDetails = (props) => {
 
         {/* Block para el encabezado */}
         <Block>
-          <Block row 
+          <Block row
             justify="space-between" 
             >
             <Text h4 marginVertical={sizes.s}>
                 {paseoSeleccionado?.nombre}
             </Text>
             <Block row flex={0} align="center">
-              <TouchableOpacity>
-                <Image source={assets.unprotected} />
-              </TouchableOpacity>              
+
+                {paseoSeleccionado?.pinPaseo && 
+                 paseoSeleccionado?.idCreador===user._id &&
+
+                <TouchableOpacity
+                  onPress={ (value) =>
+                    Alert.alert(
+                      t('tripDetails.unprotectConfirmationTitle'),
+                      t('tripDetails.unprotectConfirmationMessage'),
+                      [
+                        {text: t('common.no'), style: 'cancel'},
+                        {text: t('common.yes'), onPress: () => unprotectPress(paseoSeleccionado?._id!)},
+                      ]
+                    )}                
+                >
+                  <Image source={assets.protected} />
+                </TouchableOpacity>
+                }
+
+
+                {!paseoSeleccionado?.pinPaseo && 
+                 paseoSeleccionado?.idCreador===user._id &&
+                 <TouchableOpacity
+                 onPress={ (value) =>
+                   Alert.alert(
+                     t('tripDetails.protectConfirmationTitle'),
+                     t('tripDetails.protectConfirmationMessage'),
+                     [
+                       {text: t('common.no'), style: 'cancel'},
+                       {text: t('common.yes'), onPress: () => protectPress(paseoSeleccionado?._id!)},
+                     ]
+                   )}                
+               >
+                  <Image source={assets.unprotected} />
+                </TouchableOpacity>
+                }                
+              
+
               <TouchableOpacity
-                onPress={onShare} >
+                onPress={() => { onShare(paseoSeleccionado?._id!) }} >
                 <Image source={assets.share} />
               </TouchableOpacity>
             </Block>
@@ -255,7 +299,7 @@ const TripDetails = (props) => {
             marginTop={sizes.s}>
             <Image
               source={{uri: usuarioPaseo?.urlFoto}}
-              style={{width: sizes.xl, height: sizes.xl, borderRadius: sizes.s}}
+              style={{width: sizes.xxl, height: sizes.xxl, borderRadius: sizes.s}}
             />
             <Block marginLeft={sizes.s}>
               <Text p semibold>
@@ -265,6 +309,12 @@ const TripDetails = (props) => {
                 {t('tripDetails.tripCreated')}
                 { dayjs(paseoSeleccionado?.fechaCreacion).format(t('common.dateFormat'))}
               </Text>
+              {paseoSeleccionado?.pinPaseo && 
+                paseoSeleccionado?.idCreador===user._id &&              
+              <Text p gray>
+                  PIN: {paseoSeleccionado?.pinPaseo!}
+              </Text>
+              }           
             </Block>
           </Block>
         </Block>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { CantidadPaseos, IDestino, ILugar, IPaseo, ISeccionAtraccionesTuristicas, ISeccionRestaurantes, ISolicitudPaseoAleatorio } from '../interfaces/paseo';
-import { crearPaseoNuevo, obtenerPaseoPorID, obtenerPaseosUsuarioPorEstado } from '../api/paseoDB';
+import { crearPaseoNuevo, obtenerPaseoPorID, obtenerPaseosUsuarioPorEstado, protegerPaseoPorID, removerPinPaseoPorID } from '../api/paseoDB';
 import { EstadoPaseo } from '../interfaces/paseo';
 import { ISolicitudLugaresGoogle, TipoLugaresGoogle } from '../interfaces/solicitud-lugares-google';
 import { getGooglePlacesByType } from '../api/lugaresTuristicosDB';
@@ -57,6 +57,45 @@ export const usePaseo = () => {
                 setPaseoSeleccionado(null);
             });
     };
+
+    const protegerPaseo = (idPaseo: string) => {
+
+        protegerPaseoPorID(idPaseo)
+            .then((resultado) => {
+                console.log("protegerPaseo: " + JSON.stringify(resultado));
+                if (resultado !== null) {
+                    //setPaseoSeleccionado(resultado);
+                    setPaseoSeleccionadoCargado(true);
+                }
+                else {
+                    setPaseoSeleccionado(null);
+                }
+            })
+            .catch((e) => {
+                console.log('UsePaseos->protegerPaseo::ERROR ' + e);
+                setPaseoSeleccionado(null);
+            });
+    };
+
+    const removerPin = (idPaseo: string) => {
+
+        removerPinPaseoPorID(idPaseo)
+            .then((resultado) => {
+                console.log("RemoverPin: " + JSON.stringify(resultado));
+                if (resultado !== null) {
+                    setPaseoSeleccionado(resultado);
+                    setPaseoSeleccionadoCargado(true);
+                }
+                else {
+                    setPaseoSeleccionado(null);
+                }
+            })
+            .catch((e) => {
+                console.log('UsePaseos->removerPin::ERROR ' + e);
+                setPaseoSeleccionado(null);
+            });
+    };
+
 
     const obtenerLugaresAleatorios = async (latitud: number, longitud: number, tipo: TipoLugaresGoogle): Promise<ILugar[]> => {
         const solicitud: ISolicitudLugaresGoogle = { latitud, longitud, radio, tipo, tokenPaginacion: '' };
@@ -128,5 +167,7 @@ export const usePaseo = () => {
         crearPaseo,
         crearPaseoAleatorio,
         paseoCreado,
+        protegerPaseo,
+        removerPin
     };
 };

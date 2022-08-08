@@ -5,6 +5,7 @@ import { BadRequestException } from  '@nestjs/common';
 import { Paseo, PaseoDocument } from './schemas/paseos.schema';
 import { CrearPaseoDto } from './dto/crear-paseo.dto';
 import { ActualizarPaseoDto } from './dto/actualizar-paseo.dto';
+import { GenerarPinProteger } from '../helpers/generador-codigo';
 
 export enum EstadoPaseo{
   Pendiente=1,
@@ -50,6 +51,60 @@ export class PaseosService {
     }
     return resultadoPaseo;
   }
+
+  async proteger(idPaseo: string): Promise<Paseo> {
+    let resultadoPaseo = null;
+    let resultado;
+
+    const pin = await GenerarPinProteger();
+
+    console.log("Pin: "+ pin);
+
+    try {
+      resultadoPaseo = await this.paseoModel.findOneAndUpdate({ _id: idPaseo}, {pinPaseo:pin}, {
+        returnOriginal: false
+      });
+      if(!resultadoPaseo) {
+        throw new Error(`No existe el paseo solicitado con el id::${idPaseo}`);
+      }
+      resultado = {
+        statusCode: 200,
+        message: `Paseo con el id::${idPaseo} fue protegido`,
+        data: resultadoPaseo
+      }
+    } catch(error) {
+      if(error.message.match(/No existe/)) {
+        throw new NotFoundException(`No existe el paseo con el id::${idPaseo} para actualizar`)
+      }
+      throw new BadRequestException(`Error al tratar de proteger el paseo::${error.message}`);
+    }
+    return resultado;
+  }
+
+  async removerPin(idPaseo: string): Promise<Paseo> {
+    let resultadoPaseo = null;
+    let resultado;
+
+    try {
+      resultadoPaseo = await this.paseoModel.findOneAndUpdate({ _id: idPaseo}, {pinPaseo:null}, {
+        returnOriginal: false
+      });
+      if(!resultadoPaseo) {
+        throw new Error(`No existe el paseo con el id::${idPaseo}`);
+      }
+      resultado = {
+        statusCode: 200,
+        message: `El pin de proteccion fue removido del Paseo con el id::${idPaseo}`,
+        data: resultadoPaseo
+      }
+    } catch(error) {
+      if(error.message.match(/No existe/)) {
+        throw new NotFoundException(`No existe el paseo solicitado con el id::${idPaseo}`)
+      }
+      throw new BadRequestException(`Error al tratar de remover el pin del paseo::${error.message}`);
+    }
+    return resultado;
+  }  
 
   async obtenerPaseosUsuario(idCreador: string, estado: EstadoPaseo, limite: number) {
     let resultadoPaseo = null;
