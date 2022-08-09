@@ -58,8 +58,6 @@ export class PaseosService {
 
     const pin = await GenerarPinProteger();
 
-    console.log("Pin: "+ pin);
-
     try {
       resultadoPaseo = await this.paseoModel.findOneAndUpdate({ _id: idPaseo}, {pinPaseo:pin}, {
         returnOriginal: false
@@ -119,7 +117,7 @@ export class PaseosService {
           : {$lt: today},
         eliminado: false},
         null,
-        {limit:limite}
+        {limit:limite, sort:{fechaPaseo:'asc'}}
       ).exec();
 
     } catch(error) {
