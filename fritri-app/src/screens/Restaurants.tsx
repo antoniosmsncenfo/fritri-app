@@ -9,8 +9,10 @@ import { ILugarGoogleData } from '../components/LugarGoogle';
 import { useGooglePlace } from '../hooks/useGooglePlace';
 import { ISolicitudLugaresGoogle } from '../interfaces/solicitud-lugares-google';
 import Slider from '@react-native-community/slider';
-import { ILugar, IPaseo, ISeccionRestaurantes } from '../interfaces/paseo';
+import { ILugar, IPaseo, IPaseoUpdate, ISeccionRestaurantes } from '../interfaces/paseo';
 import { ILugarGoogle } from '../interfaces/lugar-google';
+import { usePaseo } from '../hooks/usePaseos';
+import { SeccionRestaurantes } from '../../../paseos-servicio/src/paseos/schemas/secciones-restaurantes.schema';
 
 const LugaresGoogleHeader = () => {
   const { t } = useTranslation();
@@ -52,6 +54,7 @@ const Restaurants = (props) => {
     getGooglePlace: obtenerDestinoPaseo, googlePlace: destinoDelPaseo,
     getLugaresGoogleList: obtenerLugaresDelPaseo,
     googlePlacesList: lugaresDelPaseo } = useGooglePlace();
+  const { actualizarPaseo, paseoActualizado } = usePaseo();
   const [lugaresSeleccionados, setLugaresSeleccionados] = useState<ILugar[]>([]);
   const [lugaresGoogleDataMostrar, setLugaresGoogleDataMostrar] = useState<ILugarGoogleData[]>([]);
   const [selectedRadio, setSelectedRadio] = useState(5);
@@ -183,7 +186,16 @@ const Restaurants = (props) => {
     navigation.navigate('Sights');
   };
 
-  //const updatePaseo
+  const updatePaseo = () => {
+    const seccionRestaurantes: ISeccionRestaurantes = {
+      esFinalizadasVotaciones: paseoEditar?.seccionRestaurantes?.esFinalizadasVotaciones!,
+      fechaFinalizacionVotaciones: paseoEditar?.seccionRestaurantes?.fechaFinalizacionVotaciones!,
+      restaurantes: lugaresSeleccionados,
+    };
+
+    const paseoParaActualizar: IPaseoUpdate = { ...paseoEditar, seccionRestaurantes: seccionRestaurantes, idPaseo: paseoEditar?._id! };
+    actualizarPaseo(paseoParaActualizar);
+  };
 
   //este es el callback que revisa si se desea ver el destino o seleccionarlo para agregarlo al paseo
   const onLugarGoogleChange = (action: ILugarGoogleAction) => {

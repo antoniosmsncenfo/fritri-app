@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CantidadPaseos, IDestino, ILugar, IPaseo, ISeccionAtraccionesTuristicas, ISeccionRestaurantes, ISolicitudPaseoAleatorio } from '../interfaces/paseo';
+import { CantidadPaseos, IDestino, ILugar, IPaseo, IPaseoUpdate, ISeccionAtraccionesTuristicas, ISeccionRestaurantes, ISolicitudPaseoAleatorio } from '../interfaces/paseo';
 import { crearPaseoNuevo, obtenerPaseoPorID, obtenerPaseosUsuarioPorEstado, actualizarPaseoExistente } from '../api/paseoDB';
 import { EstadoPaseo } from '../interfaces/paseo';
 import { ISolicitudLugaresGoogle, TipoLugaresGoogle } from '../interfaces/solicitud-lugares-google';
@@ -22,7 +22,7 @@ export const usePaseo = () => {
         }
     };
 
-    const actualizarPaseo = async (paseo: IPaseo) => {
+    const actualizarPaseo = async (paseo: IPaseoUpdate) => {
         const result = await actualizarPaseoExistente(paseo);
         if (result) {
             setPaseoActualizado(result);
@@ -136,5 +136,7 @@ export const usePaseo = () => {
         crearPaseo,
         crearPaseoAleatorio,
         paseoCreado,
+        actualizarPaseo,
+        paseoActualizado,
     };
 };
