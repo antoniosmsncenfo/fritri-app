@@ -70,6 +70,8 @@ export const ICONS: ThemeIcons = {
   phone: require('../assets/icons/phone.png'),
   locationNew: require('../assets/icons/location-new.png'),
   share: require('../assets/icons/share.png'),
+  protected: require('../assets/icons/protected.png'),
+  unprotected: require('../assets/icons/unprotected.png'),
   checked: require('../assets/icons/checked.png'),
   unchecked: require('../assets/icons/unchecked.png'),
   restaurant: require('../assets/icons/restaurant.png'),

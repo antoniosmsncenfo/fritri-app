@@ -3,21 +3,20 @@ import { Block, Button, Input, Image, Text } from '../components/';
 import React, { useEffect, useState } from 'react';
 import { usePaseo } from '../hooks/usePaseos';
 import dayjs from 'dayjs';
-import { TouchableOpacity } from 'react-native';
+import { Alert, Share, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useUsuario } from '../hooks/useUsuario';
 import { useVotacion } from '../hooks/useVotacion';
 import { PlaceDetail } from '../components/PlaceDetail';
 import { ILugar } from '../interfaces/paseo';
 import { ITipoVoto, ITipoVotoEnviar } from '../interfaces/tipo-voto';
+import * as Linking from 'expo-linking';
 
 const TripDetails = (props) => {
   const { assets, sizes, colors, gradients } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation();
-
-  const { obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado } = usePaseo();
-
+  const { obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado, protegerPaseo, removerPin } = usePaseo();
   const { usuarioPaseo, obtenerUsuarioPaseo } = useUsuario();
   const { votarSeccion, enviandoVotacionRest, enviandoVotacionAtr, respRest, respAtr, setEnviandoVotacionRest, setEnviandoVotacionAtr } = useVotacion();
   const { user } = useData();
@@ -26,11 +25,11 @@ const TripDetails = (props) => {
   const [atraccionesVotar, setAtraccionesVotar] = useState<ITipoVoto[]>([]);
   const [isFromDashboard, setIsFromDashboard] = useState(false);
 
-  useEffect(() => {
-    let idPaseo: string = props.route.params.id;
-    obtenerPaseo(idPaseo);
-    if (props.route.params.fromDashboard || props.route.params.from === 'TripSecurity') { setIsFromDashboard(true); }
-  }, []);
+    useEffect(() => {
+      let idPaseo:string = props.route.params.id;
+      obtenerPaseo(idPaseo);
+      if (props.route.params.fromDashboard || props.route.params.from === 'TripSecurity' || props.route.params.from === 'Notifications') {setIsFromDashboard(true);}
+    }, []);
 
   useEffect(() => {
     if (paseoSeleccionado?.pinPaseo && !isFromDashboard) {
@@ -161,6 +160,37 @@ const TripDetails = (props) => {
       obtenerPaseo(idPaseo);
     }
   }, [enviandoVotacionAtr, enviandoVotacionRest]);
+    const protectPress = (idPaseo:string) => {
+      protegerPaseo(idPaseo);
+    };
+
+    const unprotectPress = (idPaseo:string) => {
+      removerPin(idPaseo);
+    };
+
+    const onShare = async (idPaseo:string) => {
+        const result = await Share.share({
+          message:
+            t('tripDetails.shareMessage') + Linking.createURL('tripDetails/' + idPaseo),
+        });
+        if (result.action === Share.sharedAction) {
+          if (result.activityType) {
+            // shared with activity type of result.activityType
+          } else {
+            // shared
+          }
+        } else if (result.action === Share.dismissedAction) {
+          // dismissed
+        }
+
+    };
+
+    useEffect(() => {
+      if (!enviandoVotacionAtr && !enviandoVotacionRest) {
+        let idPaseo:string = props.route.params.id;
+        obtenerPaseo(idPaseo);
+      }
+    }, [enviandoVotacionAtr, enviandoVotacionRest]);
 
   return (
     <Block safe>
@@ -179,9 +209,50 @@ const TripDetails = (props) => {
               {paseoSeleccionado?.nombre}
             </Text>
             <Block row flex={0} align="center">
-              <TouchableOpacity>
-                <Image source={assets.share} />
-              </TouchableOpacity>
+
+              {paseoSeleccionado?.pinPaseo &&
+                paseoSeleccionado?.idCreador === user._id &&
+
+                <TouchableOpacity
+                  onPress={(value) =>
+                    Alert.alert(
+                      t('tripDetails.unprotectConfirmationTitle'),
+                      t('tripDetails.unprotectConfirmationMessage'),
+                      [
+                        { text: t('common.no'), style: 'cancel' },
+                        { text: t('common.yes'), onPress: () => unprotectPress(paseoSeleccionado?._id!) },
+                      ]
+                    )}
+                >
+                  <Image source={assets.protected} />
+                </TouchableOpacity>
+              }
+
+
+              {!paseoSeleccionado?.pinPaseo &&
+                paseoSeleccionado?.idCreador === user._id &&
+                <TouchableOpacity
+                  onPress={(value) =>
+                    Alert.alert(
+                      t('tripDetails.protectConfirmationTitle'),
+                      t('tripDetails.protectConfirmationMessage'),
+                      [
+                        { text: t('common.no'), style: 'cancel' },
+                        { text: t('common.yes'), onPress: () => protectPress(paseoSeleccionado?._id!) },
+                      ]
+                    )}
+                >
+                  <Image source={assets.unprotected} />
+                </TouchableOpacity>
+              }
+
+              {paseoSeleccionado?.idCreador === user._id &&
+                <TouchableOpacity
+                  onPress={() => { onShare(paseoSeleccionado?._id!); }} >
+                  <Image source={assets.share} />
+                </TouchableOpacity>
+              }
+
             </Block>
           </Block>
         </Block>
@@ -242,6 +313,12 @@ const TripDetails = (props) => {
                 {t('tripDetails.tripCreated')}
                 {dayjs(paseoSeleccionado?.fechaCreacion).format(t('common.dateFormat'))}
               </Text>
+              {paseoSeleccionado?.pinPaseo &&
+                paseoSeleccionado?.idCreador === user._id &&
+                <Text p gray>
+                  PIN: {paseoSeleccionado?.pinPaseo!}
+                </Text>
+              }
             </Block>
           </Block>
         </Block>

@@ -94,3 +94,47 @@ export const obtenerPaseoPorID = async (idPaseo: string) => {
         throw e;
     }
 };
+
+export const protegerPaseoPorID = async (idPaseo: string) => {
+
+    let request = {
+        method: 'patch',
+        url: `${process.env.PASEOS_BASE_URL}/proteger-paseo/${idPaseo}`,
+        headers: {},
+    };
+    try {
+        const resultado = await axios(request);
+
+        if (resultado.status === 200) {
+            return resultado.data;
+        }
+        else {
+            return null;
+        }
+    }
+    catch (e) {
+        throw e;
+    }
+};
+
+export const removerPinPaseoPorID = async (idPaseo: string) => {
+
+    let request = {
+        method: 'patch',
+        url: `${process.env.PASEOS_BASE_URL}/remover-pin-paseo/${idPaseo}`,
+        headers: {},
+    };
+    try {
+        const resultado = await axios(request);
+
+        if (resultado.status === 200) {
+            return resultado.data;
+        }
+        else {
+            return null;
+        }
+    }
+    catch (e) {
+        throw e;
+    }
+};
