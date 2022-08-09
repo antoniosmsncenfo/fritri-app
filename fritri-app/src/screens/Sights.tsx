@@ -48,7 +48,7 @@ const Sights = () => {
   const { t } = useTranslation();
   const { sizes, gradients, colors } = useTheme();
   const { newTripTemp, setNewTripTemp } = useData();
-  const { lugaresGoogleResponse, getLugaresGoogle } = useGooglePlace();
+  const { lugaresGooglePorTipoResponse: lugaresGoogleResponse, getLugaresGoogle } = useGooglePlace();
   const [selectedSights, setSelectedSights] = useState<ILugar[]>([]);
   const [lugaresGoogleData, setLugaresGoogleData] = useState<ILugarGoogleData[]>([]);
   const { crearPaseo, paseoCreado } = usePaseo();

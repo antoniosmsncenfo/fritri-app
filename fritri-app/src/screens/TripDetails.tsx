@@ -1,6 +1,6 @@
 import { useData, useTheme, useTranslation } from '../hooks';
-import {Block, Button, Input, Image, Text} from '../components/';
-import { useEffect, useState } from 'react';
+import { Block, Button, Input, Image, Text } from '../components/';
+import React, { useEffect, useState } from 'react';
 import { usePaseo } from '../hooks/usePaseos';
 import dayjs from 'dayjs';
 import { Alert, Share, TouchableOpacity } from 'react-native';
@@ -13,157 +13,165 @@ import { ITipoVoto, ITipoVotoEnviar } from '../interfaces/tipo-voto';
 import * as Linking from 'expo-linking';
 
 const TripDetails = (props) => {
-    const {assets, sizes, colors, gradients} = useTheme();
-    const {t} = useTranslation();
-    const navigation = useNavigation();
+  const { assets, sizes, colors, gradients } = useTheme();
+  const { t } = useTranslation();
+  const navigation = useNavigation();
+  const { obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado, protegerPaseo, removerPin } = usePaseo();
+  const { usuarioPaseo, obtenerUsuarioPaseo } = useUsuario();
+  const { votarSeccion, enviandoVotacionRest, enviandoVotacionAtr, respRest, respAtr, setEnviandoVotacionRest, setEnviandoVotacionAtr } = useVotacion();
+  const { user } = useData();
 
-    const {obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado, protegerPaseo, removerPin} = usePaseo();
-
-    const {usuarioPaseo, obtenerUsuarioPaseo} = useUsuario();
-    const { votarSeccion, enviandoVotacionRest, enviandoVotacionAtr, respRest, respAtr, setEnviandoVotacionRest, setEnviandoVotacionAtr } = useVotacion();
-    const { user } = useData();
-
-    const [ restaurantesVotar, setRestaurantesVotar] = useState<ITipoVoto[]>([]);
-    const [ atraccionesVotar, setAtraccionesVotar] = useState<ITipoVoto[]>([]);
-    const [isFromDashboard, setIsFromDashboard] = useState(false);
+  const [restaurantesVotar, setRestaurantesVotar] = useState<ITipoVoto[]>([]);
+  const [atraccionesVotar, setAtraccionesVotar] = useState<ITipoVoto[]>([]);
+  const [isFromDashboard, setIsFromDashboard] = useState(false);
 
     useEffect(() => {
       let idPaseo:string = props.route.params.id;
       obtenerPaseo(idPaseo);
-      if(props.route.params.fromDashboard || props.route.params.from === 'TripSecurity' || props.route.params.from === 'Notifications') setIsFromDashboard(true);
+      if (props.route.params.fromDashboard || props.route.params.from === 'TripSecurity' || props.route.params.from === 'Notifications') {setIsFromDashboard(true);}
     }, []);
 
-    useEffect(() => {
-      if(paseoSeleccionado?.pinPaseo && !isFromDashboard) {
-        navigation.navigate('TripSecurity', {
-          id: props.route.params.id,
-          pin: paseoSeleccionado?.pinPaseo
-        });
-      }
-      if (paseoSeleccionado?.idCreador!) {
-        obtenerUsuarioPaseo(paseoSeleccionado?.idCreador!);
-      }
-    }, [paseoSeleccionado]);
-
-    useEffect(() => {
-      if(paseoSeleccionadoCargado) {
-        procesoVotosUsuario();
-      }
-    }, [paseoSeleccionadoCargado]);
-
-    const manejarVotos = (posicion: number, tipo: string, tipoVoto: string) => {
-      switch(tipo) {
-        case 'rest':
-          const existIndexRest = restaurantesVotar.findIndex(x => x.posicion === posicion);
-          if(existIndexRest !== -1) {
-            restaurantesVotar[existIndexRest] = {
-              tipoVoto,
-              posicion
-            }
-            setRestaurantesVotar([...restaurantesVotar]);
-          } else {
-            setRestaurantesVotar((state) => [{posicion, tipoVoto}, ...state]);
-          }
-        break;
-        case 'attr':
-          const existIndexAttr = atraccionesVotar.findIndex(x => x.posicion === posicion);
-          if(existIndexAttr !== -1) {
-            atraccionesVotar[existIndexAttr] = {
-              tipoVoto,
-              posicion
-            }
-            setAtraccionesVotar([...atraccionesVotar]);
-          } else {
-            setAtraccionesVotar((state) => [{posicion, tipoVoto}, ...state]);
-          }
-        break;
-      }
+  useEffect(() => {
+    if (paseoSeleccionado?.pinPaseo && !isFromDashboard) {
+      navigation.navigate('TripSecurity', {
+        id: props.route.params.id,
+        pin: paseoSeleccionado?.pinPaseo,
+      });
     }
-
-    const enviarVotos = (tipo: string) => {
-      switch(tipo) {
-        case 'rest':
-          setEnviandoVotacionRest(true);
-          const restaurantes = paseoSeleccionado?.seccionRestaurantes?.restaurantes;
-          let idSecciones: ITipoVotoEnviar[] = restaurantesVotar.map(x => {
-            return {
-              idLugar: restaurantes![x.posicion].idLugarGoogle,
-              tipoVoto: x.tipoVoto
-            };
-          });
-          votarSeccion(paseoSeleccionado?.idCreador!, props.route.params.id, idSecciones, 'RESTAURANTE');
-        break;
-        case 'attr':
-          setEnviandoVotacionAtr(true);
-          const atracciones = paseoSeleccionado?.seccionAtraccionesTuristicas?.atraccionesturisticas;
-          let idSeccionesAtracciones: ITipoVotoEnviar[] = atraccionesVotar.map(x => {
-            return {
-              idLugar: atracciones![x.posicion].idLugarGoogle,
-              tipoVoto: x.tipoVoto
-            };
-          })
-          votarSeccion(paseoSeleccionado?.idCreador!, props.route.params.id, idSeccionesAtracciones, 'ATRACCION_TURISTICA');
-        break;
-      }
+    if (paseoSeleccionado?.idCreador!) {
+      obtenerUsuarioPaseo(paseoSeleccionado?.idCreador!);
     }
+  }, [paseoSeleccionado]);
 
-    const revisarVotosUsuario = (lugar: ILugar) => {
-      const usuarioVoto = lugar?.votaciones?.find(x => x.idVotante === user._id);
-      if(usuarioVoto === undefined || usuarioVoto.resultado === 'nullVal') {
-        return {
-          like: false,
-          noLike: false
-        };
-      } else {
-        return usuarioVoto.resultado === 'like' ? 
-          {
-            like: true,
-            noLike: false
-          } : 
-          {
-            like: false,
-            noLike: true
+  useEffect(() => {
+    if (paseoSeleccionadoCargado) {
+      procesoVotosUsuario();
+    }
+  }, [paseoSeleccionadoCargado]);
+
+  const manejarVotos = (posicion: number, tipo: string, tipoVoto: string) => {
+    switch (tipo) {
+      case 'rest':
+        const existIndexRest = restaurantesVotar.findIndex(x => x.posicion === posicion);
+        if (existIndexRest !== -1) {
+          restaurantesVotar[existIndexRest] = {
+            tipoVoto,
+            posicion,
           };
-      }
+          setRestaurantesVotar([...restaurantesVotar]);
+        } else {
+          setRestaurantesVotar((state) => [{ posicion, tipoVoto }, ...state]);
+        }
+        break;
+      case 'attr':
+        const existIndexAttr = atraccionesVotar.findIndex(x => x.posicion === posicion);
+        if (existIndexAttr !== -1) {
+          atraccionesVotar[existIndexAttr] = {
+            tipoVoto,
+            posicion,
+          };
+          setAtraccionesVotar([...atraccionesVotar]);
+        } else {
+          setAtraccionesVotar((state) => [{ posicion, tipoVoto }, ...state]);
+        }
+        break;
     }
+  };
 
-    const revisarVotos = (lugares: ILugar[]) => {
-      const indicesVotosUsuario: ITipoVoto[] = [];
-      for (let i = 0; i < lugares.length; i++) {
-        const lugar = lugares[i];
-        if(lugar.votaciones && lugar.votaciones.length > 0) {
-          const indice = lugar?.votaciones?.findIndex(x => x.idVotante === user._id);
-          const votacion = lugar?.votaciones?.find(x => x.idVotante === user._id);
-          if(indice !== -1) {
-            indicesVotosUsuario.push({
-              tipoVoto: votacion?.resultado!,
-              posicion: i
-            });
-          }
+  const enviarVotos = (tipo: string) => {
+    switch (tipo) {
+      case 'rest':
+        setEnviandoVotacionRest(true);
+        const restaurantes = paseoSeleccionado?.seccionRestaurantes?.restaurantes;
+        let idSecciones: ITipoVotoEnviar[] = restaurantesVotar.map(x => {
+          return {
+            idLugar: restaurantes![x.posicion].idLugarGoogle,
+            tipoVoto: x.tipoVoto,
+          };
+        });
+        votarSeccion(paseoSeleccionado?.idCreador!, props.route.params.id, idSecciones, 'RESTAURANTE');
+        break;
+      case 'attr':
+        setEnviandoVotacionAtr(true);
+        const atracciones = paseoSeleccionado?.seccionAtraccionesTuristicas?.atraccionesturisticas;
+        let idSeccionesAtracciones: ITipoVotoEnviar[] = atraccionesVotar.map(x => {
+          return {
+            idLugar: atracciones![x.posicion].idLugarGoogle,
+            tipoVoto: x.tipoVoto,
+          };
+        });
+        votarSeccion(paseoSeleccionado?.idCreador!, props.route.params.id, idSeccionesAtracciones, 'ATRACCION_TURISTICA');
+        break;
+    }
+  };
+
+  const revisarVotosUsuario = (lugar: ILugar) => {
+    const usuarioVoto = lugar?.votaciones?.find(x => x.idVotante === user._id);
+    if (usuarioVoto === undefined || usuarioVoto.resultado === 'nullVal') {
+      return {
+        like: false,
+        noLike: false,
+      };
+    } else {
+      return usuarioVoto.resultado === 'like' ?
+        {
+          like: true,
+          noLike: false,
+        } :
+        {
+          like: false,
+          noLike: true,
+        };
+    }
+  };
+
+  const revisarVotos = (lugares: ILugar[]) => {
+    const indicesVotosUsuario: ITipoVoto[] = [];
+    for (let i = 0; i < lugares.length; i++) {
+      const lugar = lugares[i];
+      if (lugar.votaciones && lugar.votaciones.length > 0) {
+        const indice = lugar?.votaciones?.findIndex(x => x.idVotante === user._id);
+        const votacion = lugar?.votaciones?.find(x => x.idVotante === user._id);
+        if (indice !== -1) {
+          indicesVotosUsuario.push({
+            tipoVoto: votacion?.resultado!,
+            posicion: i,
+          });
         }
       }
-      return indicesVotosUsuario;
     }
+    return indicesVotosUsuario;
+  };
 
-    const procesoVotosUsuario = () => {
-      const atraccionesVotarTemp = revisarVotos(paseoSeleccionado?.seccionAtraccionesTuristicas?.atraccionesturisticas!);
-      setAtraccionesVotar([...atraccionesVotarTemp]);
-      const restaurantesVotarTemp = revisarVotos(paseoSeleccionado?.seccionRestaurantes?.restaurantes!);
-      setRestaurantesVotar([...restaurantesVotarTemp]);
+  const procesoVotosUsuario = () => {
+    const atraccionesVotarTemp = revisarVotos(paseoSeleccionado?.seccionAtraccionesTuristicas?.atraccionesturisticas!);
+    setAtraccionesVotar([...atraccionesVotarTemp]);
+    const restaurantesVotarTemp = revisarVotos(paseoSeleccionado?.seccionRestaurantes?.restaurantes!);
+    setRestaurantesVotar([...restaurantesVotarTemp]);
+  };
+
+  const navegarRestaurantes = () => {
+    navigation.navigate('Restaurants', { paseo: paseoSeleccionado! });
+  };
+
+  useEffect(() => {
+    if (!enviandoVotacionAtr && !enviandoVotacionRest) {
+      let idPaseo: string = props.route.params.id;
+      obtenerPaseo(idPaseo);
     }
-
+  }, [enviandoVotacionAtr, enviandoVotacionRest]);
     const protectPress = (idPaseo:string) => {
       protegerPaseo(idPaseo);
-    }
+    };
 
     const unprotectPress = (idPaseo:string) => {
       removerPin(idPaseo);
-    }
+    };
 
     const onShare = async (idPaseo:string) => {
         const result = await Share.share({
           message:
-            t('tripDetails.shareMessage') + Linking.createURL('tripDetails/'+ idPaseo),
+            t('tripDetails.shareMessage') + Linking.createURL('tripDetails/' + idPaseo),
         });
         if (result.action === Share.sharedAction) {
           if (result.activityType) {
@@ -178,72 +186,72 @@ const TripDetails = (props) => {
     };
 
     useEffect(() => {
-      if(!enviandoVotacionAtr && !enviandoVotacionRest) {
+      if (!enviandoVotacionAtr && !enviandoVotacionRest) {
         let idPaseo:string = props.route.params.id;
         obtenerPaseo(idPaseo);
       }
-    }, [enviandoVotacionAtr, enviandoVotacionRest])
+    }, [enviandoVotacionAtr, enviandoVotacionRest]);
 
-    return (
-      <Block safe>
+  return (
+    <Block safe>
       <Block
         scroll
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingVertical: sizes.s}}
+        contentContainerStyle={{ paddingVertical: sizes.s }}
         paddingHorizontal={sizes.padding}>
 
         {/* Block para el encabezado */}
         <Block>
           <Block row
-            justify="space-between" 
-            >
+            justify="space-between"
+          >
             <Text h4 marginVertical={sizes.s}>
-                {paseoSeleccionado?.nombre}
+              {paseoSeleccionado?.nombre}
             </Text>
             <Block row flex={0} align="center">
 
-                {paseoSeleccionado?.pinPaseo && 
-                 paseoSeleccionado?.idCreador===user._id &&
+              {paseoSeleccionado?.pinPaseo &&
+                paseoSeleccionado?.idCreador === user._id &&
 
                 <TouchableOpacity
-                  onPress={ (value) =>
+                  onPress={(value) =>
                     Alert.alert(
                       t('tripDetails.unprotectConfirmationTitle'),
                       t('tripDetails.unprotectConfirmationMessage'),
                       [
-                        {text: t('common.no'), style: 'cancel'},
-                        {text: t('common.yes'), onPress: () => unprotectPress(paseoSeleccionado?._id!)},
+                        { text: t('common.no'), style: 'cancel' },
+                        { text: t('common.yes'), onPress: () => unprotectPress(paseoSeleccionado?._id!) },
                       ]
-                    )}                
+                    )}
                 >
                   <Image source={assets.protected} />
                 </TouchableOpacity>
-                }
+              }
 
 
-                {!paseoSeleccionado?.pinPaseo && 
-                 paseoSeleccionado?.idCreador===user._id &&
-                 <TouchableOpacity
-                 onPress={ (value) =>
-                   Alert.alert(
-                     t('tripDetails.protectConfirmationTitle'),
-                     t('tripDetails.protectConfirmationMessage'),
-                     [
-                       {text: t('common.no'), style: 'cancel'},
-                       {text: t('common.yes'), onPress: () => protectPress(paseoSeleccionado?._id!)},
-                     ]
-                   )}                
-               >
+              {!paseoSeleccionado?.pinPaseo &&
+                paseoSeleccionado?.idCreador === user._id &&
+                <TouchableOpacity
+                  onPress={(value) =>
+                    Alert.alert(
+                      t('tripDetails.protectConfirmationTitle'),
+                      t('tripDetails.protectConfirmationMessage'),
+                      [
+                        { text: t('common.no'), style: 'cancel' },
+                        { text: t('common.yes'), onPress: () => protectPress(paseoSeleccionado?._id!) },
+                      ]
+                    )}
+                >
                   <Image source={assets.unprotected} />
                 </TouchableOpacity>
-                }                
+              }
 
-                {paseoSeleccionado?.idCreador===user._id &&
-                  <TouchableOpacity
-                    onPress={() => { onShare(paseoSeleccionado?._id!) }} >
-                    <Image source={assets.share} />
-                  </TouchableOpacity>
-                } 
+              {paseoSeleccionado?.idCreador === user._id &&
+                <TouchableOpacity
+                  onPress={() => { onShare(paseoSeleccionado?._id!); }} >
+                  <Image source={assets.share} />
+                </TouchableOpacity>
+              }
 
             </Block>
           </Block>
@@ -254,20 +262,20 @@ const TripDetails = (props) => {
           {/* Foto */}
           <Image
             resizeMode="cover"
-            source={{uri: paseoSeleccionado?.destino.urlFotos![0]}}
+            source={{ uri: paseoSeleccionado?.destino.urlFotos![0] }}
             //source={assets.carousel1}
-            style={{height: 250}}
+            style={{ height: 250 }}
           />
           {/* Destino */}
-          <Block row 
-            align="flex-start" 
+          <Block row
+            align="flex-start"
             justify="flex-start"
             marginTop={sizes.sm}>
             <Image
-                radius={0}
-                source={assets.location}
-                style={{tintColor: colors.secondary}}
-              />
+              radius={0}
+              source={assets.location}
+              style={{ tintColor: colors.secondary }}
+            />
             <Text p secondary
               marginBottom={sizes.s}
               marginLeft={sizes.s}>
@@ -275,27 +283,27 @@ const TripDetails = (props) => {
             </Text>
           </Block>
           {/* Fecha */}
-          <Block row 
-            align="flex-start" 
+          <Block row
+            align="flex-start"
             justify="flex-start"
             marginTop={sizes.sm}>
             <Image
-                radius={0}
-                source={assets.calendar}
-                style={{tintColor: colors.secondary}}
-              />
+              radius={0}
+              source={assets.calendar}
+              style={{ tintColor: colors.secondary }}
+            />
             <Text p secondary
               marginBottom={sizes.s}
               marginLeft={sizes.s}>
-              { dayjs(paseoSeleccionado?.fechaPaseo).format(t('common.dateFormat'))}
+              {dayjs(paseoSeleccionado?.fechaPaseo).format(t('common.dateFormat'))}
             </Text>
-          </Block> 
+          </Block>
           {/* Usuario */}
-          <Block row 
+          <Block row
             marginTop={sizes.s}>
             <Image
-              source={{uri: usuarioPaseo?.urlFoto}}
-              style={{width: sizes.xxl, height: sizes.xxl, borderRadius: sizes.s}}
+              source={{ uri: usuarioPaseo?.urlFoto }}
+              style={{ width: sizes.xl, height: sizes.xl, borderRadius: sizes.s }}
             />
             <Block marginLeft={sizes.s}>
               <Text p semibold>
@@ -303,14 +311,14 @@ const TripDetails = (props) => {
               </Text>
               <Text p gray>
                 {t('tripDetails.tripCreated')}
-                { dayjs(paseoSeleccionado?.fechaCreacion).format(t('common.dateFormat'))}
+                {dayjs(paseoSeleccionado?.fechaCreacion).format(t('common.dateFormat'))}
               </Text>
-              {paseoSeleccionado?.pinPaseo && 
-                paseoSeleccionado?.idCreador===user._id &&              
-              <Text p gray>
+              {paseoSeleccionado?.pinPaseo &&
+                paseoSeleccionado?.idCreador === user._id &&
+                <Text p gray>
                   PIN: {paseoSeleccionado?.pinPaseo!}
-              </Text>
-              }           
+                </Text>
+              }
             </Block>
           </Block>
         </Block>
@@ -318,61 +326,76 @@ const TripDetails = (props) => {
         <Block>
           {/* Restaurantes */}
           <Block card color={colors.card}
-            marginBottom={sizes.s}>          
-            <Block row marginBottom={sizes.sm}>
+            marginBottom={sizes.s}>
+            <Block row justify="space-between" marginBottom={sizes.sm}>
               <Text h5 semibold>
-              {t('newTrip.restaurants')}
+                {t('newTrip.restaurants')}
               </Text>
+              <Block row flex={0} align="center">
+                <TouchableOpacity onPress={() => navegarRestaurantes()}>
+                  <Block row flex={0} align="center">
+                    <Text
+                      p
+                      color={colors.primary}
+                      semibold
+                      size={sizes.linkSize}
+                      marginRight={sizes.s}>
+                      {t('tripDetails.edit')}
+                    </Text>
+                    <Image source={assets.arrow} color={colors.primary} />
+                  </Block>
+                </TouchableOpacity>
+              </Block>
             </Block>
 
             {paseoSeleccionado?.seccionRestaurantes?.restaurantes.map(
               (restaurante, index) => (
                 <Block row align="center" marginBottom={sizes.m}
                   key={`rest-${restaurante.idLugarGoogle}-${index}`}>
-                  <PlaceDetail place={restaurante} posicion={index} tipo="rest" manejarVotos={manejarVotos} usuarioVotado={revisarVotosUsuario(restaurante)}/>
+                  <PlaceDetail place={restaurante} posicion={index} tipo="rest" manejarVotos={manejarVotos} usuarioVotado={revisarVotosUsuario(restaurante)} />
                 </Block>
-            ))}
+              ))}
 
             {
-              paseoSeleccionado?.seccionRestaurantes?.restaurantes.length===0 && (
+              paseoSeleccionado?.seccionRestaurantes?.restaurantes.length === 0 && (
                 <Block row marginBottom={sizes.sm}>
                   <Text h5 color={colors.primary}>
-                  {t('tripDetails.noRestaurants')}
+                    {t('tripDetails.noRestaurants')}
                   </Text>
-                </Block>                
+                </Block>
               )
             }
 
             {
-              !enviandoVotacionRest ? 
+              !enviandoVotacionRest ?
                 <Button
-                  onPress={() => { enviarVotos('rest') }}
+                  onPress={() => { enviarVotos('rest'); }}
                   gradient={gradients.primary}
                   outlined
                   marginVertical={sizes.s}
                 >
                   <Text bold white transform="uppercase">
-                  {t('newTrip.vote')}
+                    {t('newTrip.vote')}
                   </Text>
                 </Button> :
                 <Button
                   gradient={gradients.primary}
                   outlined
                   marginVertical={sizes.s}
-                  >
+                >
                   <Text bold white transform="uppercase">
-                  {t('newTrip.sendingVotes')}
+                    {t('newTrip.sendingVotes')}
                   </Text>
                 </Button>
             }
           </Block>
 
-         {/* Atracciones */}
-         <Block card color={colors.card}
-            marginBottom={sizes.s}>          
+          {/* Atracciones */}
+          <Block card color={colors.card}
+            marginBottom={sizes.s}>
             <Block row marginBottom={sizes.sm}>
               <Text h5 semibold>
-              {t('newTrip.touristAttractions')}
+                {t('newTrip.touristAttractions')}
               </Text>
             </Block>
 
@@ -380,29 +403,29 @@ const TripDetails = (props) => {
               (attraccion, index) => (
                 <Block row align="center" marginBottom={sizes.m}
                   key={`attr-${attraccion.idLugarGoogle}-${index}`}>
-                    <PlaceDetail place={attraccion} posicion={index} tipo="attr" manejarVotos={manejarVotos} usuarioVotado={revisarVotosUsuario(attraccion)}/>
+                  <PlaceDetail place={attraccion} posicion={index} tipo="attr" manejarVotos={manejarVotos} usuarioVotado={revisarVotosUsuario(attraccion)} />
                 </Block>
-            ))}
+              ))}
 
             {
-              paseoSeleccionado?.seccionAtraccionesTuristicas?.atraccionesturisticas.length===0 && (
+              paseoSeleccionado?.seccionAtraccionesTuristicas?.atraccionesturisticas.length === 0 && (
                 <Block row marginBottom={sizes.sm}>
                   <Text h7 color={colors.primary}>
-                  {t('tripDetails.noTouristAttractions')}
+                    {t('tripDetails.noTouristAttractions')}
                   </Text>
-                </Block>                
+                </Block>
               )
             }
 
-            { !enviandoVotacionAtr ? 
+            {!enviandoVotacionAtr ?
               <Button
-                onPress={() => { enviarVotos('attr') }}
+                onPress={() => { enviarVotos('attr'); }}
                 gradient={gradients.primary}
                 outlined
                 marginVertical={sizes.s}
               >
                 <Text bold white transform="uppercase">
-                {t('newTrip.vote')}
+                  {t('newTrip.vote')}
                 </Text>
               </Button> :
               <Button
@@ -418,10 +441,10 @@ const TripDetails = (props) => {
 
           </Block>
 
-          </Block>
         </Block>
       </Block>
-    );
-  };
+    </Block>
+  );
+};
 
-  export default TripDetails;
+export default TripDetails;

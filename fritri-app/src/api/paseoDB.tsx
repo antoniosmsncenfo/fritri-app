@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { EstadoPaseo } from '../../../paseos-servicio/src/paseos/paseos.service';
-import { IPaseo } from '../interfaces/paseo';
+import { IPaseo, IPaseoUpdate } from '../interfaces/paseo';
 
 export const crearPaseoNuevo = async (paseo: IPaseo) => {
     let request = {
@@ -15,6 +15,29 @@ export const crearPaseoNuevo = async (paseo: IPaseo) => {
         const resultado = await axios(request);
         if (resultado.status === 200) {
             return resultado.data;
+        }
+        else {
+            return null;
+        }
+    }
+    catch (e) {
+        return null;
+    }
+};
+
+export const actualizarPaseoExistente = async (paseo: IPaseoUpdate) => {
+    let request = {
+        method: 'put',
+        url: `${process.env.PASEOS_BASE_URL}/actualizar-paseo`,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        data: paseo,
+    };
+    try {
+        const resultado = await axios(request);
+        if (resultado.status === 200) {
+            return resultado.data.data;
         }
         else {
             return null;
