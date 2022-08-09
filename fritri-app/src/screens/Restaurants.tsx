@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList } from 'react-native';
+import { ActivityIndicator, Alert, FlatList } from 'react-native';
 
 import { useData, useTheme, useTranslation } from '../hooks';
 import { Block, Button, Text } from '../components';
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import LugarGoogle, { ILugarGoogleAction } from '../components/LugarGoogle';
 import { ILugarGoogleData } from '../components/LugarGoogle';
 import { useGooglePlace } from '../hooks/useGooglePlace';
@@ -78,8 +78,9 @@ const Restaurants = (props) => {
       setPaseoEditar(paseo);
       setIsEdit(true);
       if (paseo.seccionRestaurantes?.restaurantes?.length! > 0) {
-        const idsRestaurantesPaseo = paseo.seccionRestaurantes?.restaurantes.map(r => { return r.idLugarGoogle; });
-        obtenerLugaresDelPaseo(idsRestaurantesPaseo!);
+        setLugaresSeleccionados(paseo.seccionRestaurantes?.restaurantes!);
+        //const idsRestaurantesPaseo = paseo.seccionRestaurantes?.restaurantes.map(r => { return r.idLugarGoogle; });
+        //obtenerLugaresDelPaseo(idsRestaurantesPaseo!);
       }
     }
     else {
@@ -132,6 +133,35 @@ const Restaurants = (props) => {
       setLugaresGoogleDataMostrar(resultadoSinduplicado);
     }
   }, [lugaresDelPaseo]);
+
+  useEffect(() => {
+    if (paseoActualizado !== null) {
+
+      const param = { id: paseoActualizado._id, from: 'restautants' };
+      Alert.alert(
+        t('restaurants.update'),
+        t('restaurants.updateSuccessful'),
+        [{
+          text: 'OK', onPress: () => {
+            resetNavigationStackAndNavigateToTripDetails(param);
+          },
+        }],
+        { cancelable: false }
+      );
+    }
+  }, [paseoActualizado]);
+
+  const resetNavigationStackAndNavigateToTripDetails = (param: any) => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          { name: 'Home' },
+          { name: 'TripDetails', params: param },
+        ],
+      })
+    );
+  };
 
   const concatenarConLugaresAMostrar = (lugares: ILugarGoogleData[]) => {
     const resultadoFotosFiltradas = lugares.filter(r => r.lugarGoogle.urlFotos.length > 0); // quita los lugares sin foto
@@ -193,8 +223,28 @@ const Restaurants = (props) => {
       restaurantes: lugaresSeleccionados,
     };
 
-    const paseoParaActualizar: IPaseoUpdate = { ...paseoEditar, seccionRestaurantes: seccionRestaurantes, idPaseo: paseoEditar?._id! };
+    const paseoParaActualizar: IPaseoUpdate = {
+      ...paseoEditar,
+      seccionRestaurantes: seccionRestaurantes,
+      idPaseo: paseoEditar?._id!,
+      idCreador: paseoEditar?.idCreador!,
+      nombre: paseoEditar?.nombre!,
+      fechaPaseo: paseoEditar?.fechaPaseo!,
+      esCompartido: paseoEditar?.esCompartido!,
+      destino: paseoEditar?.destino!,
+      eliminado: paseoEditar?.eliminado!,
+      fechaCreacion: paseoEditar?.fechaCreacion!,
+    };
     actualizarPaseo(paseoParaActualizar);
+  };
+
+  const actualizar = () => {
+    if (isEdit) {
+      updatePaseo();
+    }
+    else {
+      goToSights();
+    }
   };
 
   //este es el callback que revisa si se desea ver el destino o seleccionarlo para agregarlo al paseo
@@ -291,9 +341,9 @@ const Restaurants = (props) => {
         {(lugaresSeleccionados.length > 0)
           && (
             <Button gradient={gradients.primary} marginVertical={sizes.s}
-              onPress={() => goToSights()}>
+              onPress={() => actualizar()}>
               <Text white semibold transform="uppercase">
-                {t('restaurants.sights')}
+                {isEdit ? t('restaurants.update') : t('restaurants.sights')}
               </Text>
             </Button>
           )}

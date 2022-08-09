@@ -307,12 +307,14 @@
     "errorMessage": "Wrong PIN code"
   },
   "restaurants": {
-    "sights": "Tourist attractions",
+    "sights": "Go to tourist attractions",
     "recommendations": "Recommendations",
     "searching": "Searching in a range of",
     "notFound1": "We didn't find restaurants in the range",
     "moreOptions": "Please try increasing the amount of km.",
-    "seeMore": "See more"
+    "seeMore": "See more",
+    "update": "Update restaurants",
+    "updateSuccessful":"Update successful"
   },
   "sights": {
     "finish": "Finish trip",
