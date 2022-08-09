@@ -106,7 +106,7 @@ const Notificacion = ({ notificacion, onPress}: INotificacionProps) => {
       <Block>
         <TouchableOpacity
             onPress={() =>
-              navigation.navigate('TripDetails', {id:notificacion.idPaseo})} >
+              navigation.navigate('TripDetails', {id:notificacion.idPaseo, from: 'Notifications'})} >
 
           <Block row justify="space-between">
             <Text semibold>{notificacion.titulo}</Text>
