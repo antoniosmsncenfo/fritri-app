@@ -29,7 +29,7 @@ const TripDetails = (props) => {
     useEffect(() => {
       let idPaseo:string = props.route.params.id;
       obtenerPaseo(idPaseo);
-      if(props.route.params.fromDashboard || props.route.params.from === 'TripSecurity') setIsFromDashboard(true);
+      if(props.route.params.fromDashboard || props.route.params.from === 'TripSecurity' || props.route.params.from === 'Notifications') setIsFromDashboard(true);
     }, []);
 
     useEffect(() => {
