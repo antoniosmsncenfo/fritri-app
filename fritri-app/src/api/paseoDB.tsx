@@ -37,7 +37,7 @@ export const actualizarPaseoExistente = async (paseo: IPaseoUpdate) => {
     try {
         const resultado = await axios(request);
         if (resultado.status === 200) {
-            return resultado.data;
+            return resultado.data.data;
         }
         else {
             return null;
