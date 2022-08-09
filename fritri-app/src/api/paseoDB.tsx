@@ -25,6 +25,29 @@ export const crearPaseoNuevo = async (paseo: IPaseo) => {
     }
 };
 
+export const actualizarPaseoExistente = async (paseo: IPaseo) => {
+    let request = {
+        method: 'post',
+        url: `${process.env.PASEOS_BASE_URL}/actualizar-paseo`,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        data: paseo,
+    };
+    try {
+        const resultado = await axios(request);
+        if (resultado.status === 200) {
+            return resultado.data;
+        }
+        else {
+            return null;
+        }
+    }
+    catch (e) {
+        return null;
+    }
+};
+
 export const obtenerPaseosUsuarioPorEstado = async (
     idUSuario: string,
     estado: EstadoPaseo,

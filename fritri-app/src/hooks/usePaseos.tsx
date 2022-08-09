@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { CantidadPaseos, IDestino, ILugar, IPaseo, ISeccionAtraccionesTuristicas, ISeccionRestaurantes, ISolicitudPaseoAleatorio } from '../interfaces/paseo';
-import { crearPaseoNuevo, obtenerPaseoPorID, obtenerPaseosUsuarioPorEstado } from '../api/paseoDB';
+import { crearPaseoNuevo, obtenerPaseoPorID, obtenerPaseosUsuarioPorEstado, actualizarPaseoExistente } from '../api/paseoDB';
 import { EstadoPaseo } from '../interfaces/paseo';
 import { ISolicitudLugaresGoogle, TipoLugaresGoogle } from '../interfaces/solicitud-lugares-google';
 import { getGooglePlacesByType } from '../api/lugaresTuristicosDB';
@@ -11,6 +11,7 @@ export const usePaseo = () => {
     const [paseosUsuario, setPaseosUsuario] = useState<IPaseo[] | null>(null);
     const [paseoSeleccionado, setPaseoSeleccionado] = useState<IPaseo | null>(null);
     const [paseoCreado, setPaseoCreado] = useState<IPaseo | null>(null);
+    const [paseoActualizado, setPaseoActualizado] = useState<IPaseo | null>(null);
     const radio = 5;
     const cantidadLugaresAleatorios = 3;
 
@@ -18,6 +19,13 @@ export const usePaseo = () => {
         const result = await crearPaseoNuevo(paseo);
         if (result) {
             setPaseoCreado(result);
+        }
+    };
+
+    const actualizarPaseo = async (paseo: IPaseo) => {
+        const result = await actualizarPaseoExistente(paseo);
+        if (result) {
+            setPaseoActualizado(result);
         }
     };
 
