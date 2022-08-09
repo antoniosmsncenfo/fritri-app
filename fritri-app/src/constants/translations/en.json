@@ -295,7 +295,8 @@
     "noRestaurants": "The owner hasn't included any restaurants",
     "touristAttractions": "Tourist Attractions",
     "noTouristAttractions": "The owner hasn't included any tourist attractions",
-    "otherVotes": "See the votes..."
+    "otherVotes": "See the votes...",
+    "edit": "Edit"
   },
   "tripSecurity": {
     "title": "Enter trip's PIN",
