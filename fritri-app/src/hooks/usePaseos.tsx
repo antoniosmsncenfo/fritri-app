@@ -62,9 +62,8 @@ export const usePaseo = () => {
 
         protegerPaseoPorID(idPaseo)
             .then((resultado) => {
-                console.log("protegerPaseo: " + JSON.stringify(resultado));
                 if (resultado !== null) {
-                    //setPaseoSeleccionado(resultado);
+                    setPaseoSeleccionado(resultado.data);
                     setPaseoSeleccionadoCargado(true);
                 }
                 else {
@@ -81,9 +80,8 @@ export const usePaseo = () => {
 
         removerPinPaseoPorID(idPaseo)
             .then((resultado) => {
-                console.log("RemoverPin: " + JSON.stringify(resultado));
                 if (resultado !== null) {
-                    setPaseoSeleccionado(resultado);
+                    setPaseoSeleccionado(resultado.data);
                     setPaseoSeleccionadoCargado(true);
                 }
                 else {

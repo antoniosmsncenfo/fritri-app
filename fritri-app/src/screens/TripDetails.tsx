@@ -29,13 +29,11 @@ const TripDetails = (props) => {
 
     useEffect(() => {
       let idPaseo:string = props.route.params.id;
-      console.log("Bandera1");
       obtenerPaseo(idPaseo);
       if(props.route.params.fromDashboard || props.route.params.from === 'TripSecurity') setIsFromDashboard(true);
     }, []);
 
     useEffect(() => {
-      console.log("Bandera3");
       if(paseoSeleccionado?.pinPaseo && !isFromDashboard) {
         navigation.navigate('TripSecurity', {
           id: props.route.params.id,
@@ -48,7 +46,6 @@ const TripDetails = (props) => {
     }, [paseoSeleccionado]);
 
     useEffect(() => {
-      console.log("Bandera4");
       if(paseoSeleccionadoCargado) {
         procesoVotosUsuario();
       }
@@ -166,9 +163,7 @@ const TripDetails = (props) => {
     const onShare = async (idPaseo:string) => {
         const result = await Share.share({
           message:
-          Linking.createURL('tripDetails/', {
-            queryParams: { idPaseo },
-          }),
+            t('tripDetails.shareMessage') + Linking.createURL('tripDetails/'+ idPaseo),
         });
         if (result.action === Share.sharedAction) {
           if (result.activityType) {
@@ -183,7 +178,6 @@ const TripDetails = (props) => {
     };
 
     useEffect(() => {
-      console.log("Bandera2");
       if(!enviandoVotacionAtr && !enviandoVotacionRest) {
         let idPaseo:string = props.route.params.id;
         obtenerPaseo(idPaseo);
@@ -243,12 +237,14 @@ const TripDetails = (props) => {
                   <Image source={assets.unprotected} />
                 </TouchableOpacity>
                 }                
-              
 
-              <TouchableOpacity
-                onPress={() => { onShare(paseoSeleccionado?._id!) }} >
-                <Image source={assets.share} />
-              </TouchableOpacity>
+                {paseoSeleccionado?.idCreador===user._id &&
+                  <TouchableOpacity
+                    onPress={() => { onShare(paseoSeleccionado?._id!) }} >
+                    <Image source={assets.share} />
+                  </TouchableOpacity>
+                } 
+
             </Block>
           </Block>
         </Block>
