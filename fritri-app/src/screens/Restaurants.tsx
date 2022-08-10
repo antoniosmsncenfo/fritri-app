@@ -270,7 +270,6 @@ const Restaurants = (props: any) => {
 
   //Aqui agrego los restaurantes seleccionados
   const updateLugaresGoogleData = ({ lugarGoogle, select }: ILugarGoogleAction) => {
-    console.log(select, 'select');
     if (select) {
       const selected = convertirILugarGoogleAILugar(lugarGoogle);
 
