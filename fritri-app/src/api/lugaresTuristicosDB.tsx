@@ -92,6 +92,45 @@ export const getGooglePlaceByType = async (idGoogle: string) => {
     }
 };
 
+export const getGooglePlaceList = async (idsGoogle: string[]) => {
+
+    const requestList = idsGoogle.map((id) => {
+        const request = {
+            method: 'get',
+            url: `${LUGARES_TURISTICOS_BASE_URL}lugares-google/obtener-lugar`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            params: {
+                idGoogle: id,
+            },
+        };
+        return axios(request);
+    });
+
+    try {
+        const resultado = await axios.all(requestList);
+
+        if (resultado.length > 0) {
+            const lugares = resultado.map(r => {
+                if (r.status === 200) {
+                    return r.data;
+                }
+                else {
+                    return null;
+                }
+            });
+            return lugares.filter(lugar => lugar !== null);
+        }
+        else {
+            return [];
+        }
+    }
+    catch (e) {
+        return [];
+    }
+};
+
 export const getGooglePlacesByType = async (solicitudLugaresGoogle: ISolicitudLugaresGoogle, language: string = 'es'): Promise<ILugarGoogleRespuesta> => {
 
     let request = {

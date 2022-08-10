@@ -101,3 +101,7 @@ export interface ISolicitudPaseoAleatorio {
     idCreador: string;
     nombre: string;
 }
+
+export interface IPaseoUpdate extends IPaseo {
+    idPaseo?: string;
+}

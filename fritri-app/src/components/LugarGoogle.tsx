@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Text from './Text';
 import Block from './Block';
@@ -23,13 +23,20 @@ export interface ILugarGoogleData {
   lugarGoogle: ILugarGoogle;
 }
 
-const LugarGoogle = ({ lugarGoogleProp, onPress}: IProps) => {
+const LugarGoogle = ({ lugarGoogleProp, onPress }: IProps) => {
   const { lugarGoogle } = lugarGoogleProp;
   const { t } = useTranslation();
   const { colors, gradients, icons, sizes } = useTheme();
+  const [isSelected, setIsSelected] = useState(lugarGoogleProp.selected);
 
-  const onCheckChange = (value: boolean) => {
-    onPress({ action: 'select', lugarGoogle: lugarGoogle , select: value });
+  useEffect(() => {
+    setIsSelected(lugarGoogleProp.selected);
+  }, []);
+
+
+  const onCheckChange = () => {
+    setIsSelected(!isSelected);
+    onPress({ action: 'select', lugarGoogle: lugarGoogle, select: !isSelected });
   };
 
   const onViewPress = () => {
@@ -75,8 +82,8 @@ const LugarGoogle = ({ lugarGoogleProp, onPress}: IProps) => {
       <Block row align="center" justify="space-around" paddingTop={sizes.s}>
         <Block row>
           <BouncyCheckbox fillColor={colors.primary.toString()} iconStyle={{ borderColor: colors.primary }}
-            unfillColor="#FFFFFF"
-            onPress={(isChecked: boolean) => { onCheckChange(isChecked); }} />
+            unfillColor="#FFFFFF" disableBuiltInState isChecked={isSelected}
+            onPress={() => { onCheckChange(); }} />
           <Text bold paddingRight={sizes.s}>{t('lugarGoogle.select')}</Text>
         </Block>
         <Text bold primary paddingRight={sizes.s} onPress={() => onViewPress()}>{t('lugarGoogle.view')}</Text>

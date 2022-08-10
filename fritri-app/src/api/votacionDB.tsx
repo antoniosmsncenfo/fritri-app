@@ -1,20 +1,21 @@
 import axios from 'axios';
 import { ITipoVotoEnviar } from '../interfaces/tipo-voto';
+import { VOTACIONES_BASE_URL } from '@env';
 
-export const votarSeccionDb = async (idIntegrante:string, idPaseo: string, idSecciones:ITipoVotoEnviar[], tipoSeccion: string) => {
+export const votarSeccionDb = async (idIntegrante: string, idPaseo: string, idSecciones: ITipoVotoEnviar[], tipoSeccion: string) => {
 
     const data = {
         idIntegrante,
         idPaseo,
         idSecciones,
-        tipoSeccion
+        tipoSeccion,
     };
 
     let request = {
         method: 'post',
-        url: `${process.env.VOTACIONES_BASE_URL}/votar-seccion`,
+        url: `${VOTACIONES_BASE_URL}/votar-seccion`,
         headers: {},
-        data
+        data,
     };
     try {
         const resultado = await axios(request);

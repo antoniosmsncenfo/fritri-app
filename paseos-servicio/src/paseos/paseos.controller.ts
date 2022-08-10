@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -32,6 +33,18 @@ export class PaseosController {
   async obtener(@Param('idPaseo') idPaseo: string) {
     return await this.paseosService.obtener(idPaseo);
   }
+
+  @Patch('proteger-paseo/:idPaseo')
+  @HttpCode(200)
+  async proteger(@Param('idPaseo') idPaseo: string) {
+    return await this.paseosService.proteger(idPaseo);
+  }
+
+  @Patch('remover-pin-paseo/:idPaseo')
+  @HttpCode(200)
+  async removerPin(@Param('idPaseo') idPaseo: string) {
+    return await this.paseosService.removerPin(idPaseo);
+  }  
 
   @Get('obtener-paseos-usuario')
   @HttpCode(200)
