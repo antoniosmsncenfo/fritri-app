@@ -388,6 +388,16 @@ const TripDetails = (props) => {
                   </Text>
                 </Button>
             }
+                <Button
+                  gradient={gradients.warning}
+                  outlined
+                  marginVertical={sizes.xs}
+                  paddingHorizontal={sizes.sm}
+                >
+                  <Text bold white transform="uppercase">
+                    {t('tripDetails.closeVotes')}
+                  </Text>
+                </Button>            
           </Block>
 
           {/* Atracciones */}
@@ -438,7 +448,16 @@ const TripDetails = (props) => {
                 </Text>
               </Button>
             }
-
+            <Button
+              gradient={gradients.warning}
+              outlined
+              marginVertical={sizes.xs}
+              paddingHorizontal={sizes.sm}
+            >
+              <Text bold white transform="uppercase">
+                {t('tripDetails.closeVotes')}
+              </Text>
+            </Button> 
           </Block>
 
         </Block>
