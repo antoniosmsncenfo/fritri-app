@@ -1,12 +1,14 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import dayjs from 'dayjs';
-import PagerView from 'react-native-pager-view';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import updateLocale from 'dayjs/plugin/updateLocale';
 
 import {useData, useTheme, useTranslation} from '../hooks/';
-import {INotification} from '../constants/types';
-import {Block, Button, Image, Text} from '../components/';
+import {Block, Image, Text} from '../components/';
+import { useNotificacion } from '../hooks/useNotificacion';
+import { INotificacion } from '../interfaces/notificacion';
+import { Alert, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
@@ -28,58 +30,32 @@ dayjs.updateLocale('en', {
   },
 });
 
-const Notification = ({
-  subject,
-  message,
-  type,
-  read,
-  createdAt,
-}: INotification) => {
+interface INotificacionProps {
+  notificacion: INotificacion;
+  onPress: (event: INotificacionAction) => void;
+}
+
+interface INotificacionAction {
+  action: 'read' | 'delete' | 'trip';
+  notificacion: INotificacion;
+}
+
+const Notificacion = ({ notificacion, onPress}: INotificacionProps) => {
+
   const {colors, icons, gradients, sizes} = useTheme();
+  const navigation = useNavigation();
+
+  const markAsRead = () => {
+    onPress({ action: 'read', notificacion });
+  };
+
+  const archiveNotification = () => {   
+    onPress({ action: 'delete', notificacion });
+  };
 
   return (
     <Block row align="center" marginBottom={sizes.m}>
-      <Block
-        flex={0}
-        width={32}
-        height={32}
-        align="center"
-        justify="center"
-        radius={sizes.s}
-        marginRight={sizes.s}
-        gradient={gradients[!read ? 'primary' : 'secondary']}>
-        <Image
-          radius={0}
-          width={14}
-          height={14}
-          color={colors.white}
-          source={icons?.[type]}
-        />
-      </Block>
-      <Block>
-        <Block row justify="space-between">
-          <Text semibold>{subject}</Text>
-          <Block row flex={0} align="center">
-            <Image source={icons.clock} />
-            <Text secondary size={12} marginLeft={sizes.xs}>
-              {dayjs().to(dayjs(createdAt))}
-            </Text>
-          </Block>
-        </Block>
-        <Text secondary size={12} lineHeight={sizes.sm}>
-          {message}
-        </Text>
-      </Block>
-    </Block>
-  );
-};
-
-const Personal = ({subject, message, type, read, createdAt}: INotification) => {
-  const {colors, icons, gradients, sizes} = useTheme();
-
-  return (
-    <Block card padding={sizes.sm} marginBottom={sizes.sm}>
-      <Block row align="center" justify="space-between">
+      {!notificacion.esLeida && 
         <Block
           flex={0}
           width={32}
@@ -87,108 +63,180 @@ const Personal = ({subject, message, type, read, createdAt}: INotification) => {
           align="center"
           justify="center"
           radius={sizes.s}
-          gradient={gradients[!read ? 'primary' : 'secondary']}>
-          <Image
-            radius={0}
-            width={12}
-            height={12}
-            color={colors.white}
-            source={icons[type]}
-          />
+          marginRight={sizes.s}
+          gradient={gradients[!notificacion.esLeida ? 'primary' : 'secondary']}>
+          
+          <TouchableOpacity
+            onPress={() => markAsRead()} >          
+            <Image
+              radius={0}
+              width={14}
+              height={14}
+              color={colors.white}
+              source={icons.notification}
+            />
+          </TouchableOpacity>
         </Block>
-        <Block row flex={0} align="center">
-          <Image source={icons.clock} radius={0} />
-          <Text secondary size={12} marginLeft={sizes.xs}>
-            {dayjs().to(dayjs(createdAt))}
+      }
+      {notificacion.esLeida && 
+        <Block
+          flex={0}
+          width={32}
+          height={32}
+          align="center"
+          justify="center"
+          radius={sizes.s}
+          marginRight={sizes.s}
+          gradient={gradients[!notificacion.esLeida ? 'primary' : 'secondary']}>
+          
+          <TouchableOpacity
+            onPress={() => archiveNotification()} >             
+            <Image
+              radius={0}
+              width={14}
+              height={14}
+              color={colors.white}
+              source={icons.notification} 
+            />
+          </TouchableOpacity>
+
+        </Block>
+      }
+
+      <Block>
+        <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('TripDetails', {id:notificacion.idPaseo, from: 'Notifications'})} >
+
+          <Block row justify="space-between">
+            <Text semibold>{notificacion.titulo}</Text>
+            <Block row flex={0} align="center">
+              <Image source={icons.clock} />
+              <Text secondary size={12} marginLeft={sizes.xs}>
+                {dayjs().to(dayjs(notificacion.fechaCreacion))}
+              </Text>
+            </Block>
+          </Block>
+          <Text secondary size={12} lineHeight={sizes.sm}>
+            {notificacion.detalle}
           </Text>
-        </Block>
+
+        </TouchableOpacity>
       </Block>
-      <Block marginTop={sizes.s}>
-        <Text p semibold marginBottom={sizes.s}>
-          {subject}
-        </Text>
-        <Text secondary lineHeight={22}>
-          {message}
-        </Text>
-      </Block>
+
     </Block>
   );
 };
 
 const Notifications = () => {
   const {t} = useTranslation();
-  const {notifications} = useData();
-  const [tab, setTab] = useState('business');
-  const pagerRef = React.createRef<PagerView>();
+  const {user} = useData();
   const {icons, colors, sizes} = useTheme();
 
-  const unread = notifications?.filter(
-    (notification) => !notification?.read,
+  const {obtenerNotificaciones, notificacionesUsuario, actualizarNotificacion} = useNotificacion();
+
+  const [refrescar, setRefrescar] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (user) {
+      obtenerNotificaciones(user._id!)
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user && refrescar) {
+      obtenerNotificaciones(user._id!)
+      setRefrescar(false);
+    }
+  }, [refrescar])
+  
+  const pendientes = notificacionesUsuario?.filter(
+    (notificacion) => !notificacion?.esLeida,
   );
-  const read = notifications?.filter(
-    (notification) => notification?.read,
+  const leidas = notificacionesUsuario?.filter(
+    (notificacion) => notificacion?.esLeida,
   );
-  const personal = notifications?.filter(
-    (notification) => !notification.business,
-  );
+
+  const onNotificacionPress = (tipo: INotificacionAction) => {
+    switch (tipo.action) {
+      case 'read':
+        actualizarNotificacion({
+          _id:tipo.notificacion._id,
+          esLeida:true,
+        });
+        setRefrescar(true);
+        break;
+      case 'delete':
+        actualizarNotificacion({
+          _id:tipo.notificacion._id,
+          esArchivada:true,
+        });
+        setRefrescar(true);
+        break;
+      case 'trip':
+        // navigation.navigate('ViewDestination', action.destination);
+        break;        
+      default:
+        break;
+    }
+  };
 
   return (
     <Block>
-      <PagerView
-        ref={pagerRef}
-        style={{flex: 1}}
-        scrollEnabled={false}
-        initialPage={1}>
-        {/* person notifications */}
-        <Block
-          scroll
-          nestedScrollEnabled
-          padding={sizes.padding}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{paddingBottom: sizes.xxl}}>
-          {personal?.map((notification) => (
-            <Personal key={`personal-${notification.id}`} {...notification} />
-          ))}
-        </Block>
 
-        {/* business notifications */}
         <Block
           scroll
           nestedScrollEnabled
           padding={sizes.padding}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{paddingBottom: sizes.xxl}}>
-          {/* render unread notifications */}
-          {unread?.length && (
+          {/* Pendientes */}
+          {pendientes?.length!>0 && (
             <Block card padding={sizes.sm} marginBottom={sizes.sm}>
               <Text p semibold marginBottom={sizes.sm}>
                 {t('notifications.unread')}
               </Text>
-              {unread?.map((notification) => (
-                <Notification
-                  key={`unread-${notification.id}`}
-                  {...notification}
+              {pendientes?.map((pendiente) => (
+                <Notificacion notificacion={pendiente}
+                  key={`unread-${pendiente._id}`}
+                  onPress={(value) => onNotificacionPress(value)}
                 />
               ))}
             </Block>
           )}
-
-          {/* render read notifications */}
-          {read?.length && (
+          {/* Leidas */}
+          {leidas?.length!>0 && (
             <Block card padding={sizes.sm}>
               <Text p semibold marginBottom={sizes.sm}>
                 {t('notifications.read')}
               </Text>
-              {read?.map((notification) => (
-                <Notification
-                  key={`read-${notification.id}`}
-                  {...notification}
-                />
-              ))}
+              {leidas?.map((leida) => (
+                <Notificacion notificacion={leida}
+                key={`unread-${leida._id}`}
+                //onPress={(value) => onNotificacionPress(value)}
+                onPress={ (value) =>
+                Alert.alert(
+                  t('notifications.archiveAlertTitle'),
+                  t('notifications.archiveAlertMessage'),
+                  [
+                    {text: t('common.cancel'), style: 'cancel'},
+                    {text: t('common.ok'), onPress: () => onNotificacionPress(value)},
+                  ]
+                )}              
+              />
+              ))}             
             </Block>
           )}
+          {/* NO hay notificaciones */}
+          {leidas?.length===0 && pendientes?.length===0 && (
+            <Block card padding={sizes.sm} align='center'>
+              <Text p semibold color={colors.primary}>
+                {t('notifications.empty')}
+              </Text>           
+            </Block>
+          )}          
         </Block>
-      </PagerView>
+
     </Block>
   );
 };

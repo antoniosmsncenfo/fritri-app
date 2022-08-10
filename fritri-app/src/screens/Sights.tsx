@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, FlatList } from 'react-native';
+import Slider from '@react-native-community/slider';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 
 import { useData, useTheme, useTranslation } from '../hooks';
 import { Block, Button, Text } from '../components';
-import { CommonActions, useNavigation } from '@react-navigation/native';
 import LugarGoogle, { ILugarGoogleAction } from '../components/LugarGoogle';
 import { ILugarGoogleData } from '../components/LugarGoogle';
 import { useGooglePlace } from '../hooks/useGooglePlace';
 import { ISolicitudLugaresGoogle } from '../interfaces/solicitud-lugares-google';
-import Slider from '@react-native-community/slider';
-import { IAtraccionesturistica, ILugar, ISeccionAtraccionesTuristicas } from '../interfaces/paseo';
+import { ILugar, IPaseo, IPaseoUpdate, ISeccionAtraccionesTuristicas } from '../interfaces/paseo';
+import { ILugarGoogle } from '../interfaces/lugar-google';
 import { usePaseo } from '../hooks/usePaseos';
 
 const LugaresGoogleHeader = () => {
@@ -44,27 +45,74 @@ const LugaresGoogleFooter = ({ show, onPress }: IFooterProps) => {
   );
 };
 
-const Sights = () => {
+const Sights = (props: any) => {
   const { t } = useTranslation();
   const { sizes, gradients, colors } = useTheme();
   const { newTripTemp, setNewTripTemp } = useData();
-  const { lugaresGoogleResponse, getLugaresGoogle } = useGooglePlace();
-  const [selectedSights, setSelectedSights] = useState<ILugar[]>([]);
-  const [lugaresGoogleData, setLugaresGoogleData] = useState<ILugarGoogleData[]>([]);
-  const { crearPaseo, paseoCreado } = usePaseo();
+  const { lugaresGooglePorTipoResponse, getLugaresGoogle,
+    getGooglePlace: obtenerDestinoPaseo, googlePlace: destinoDelPaseo,
+    googlePlacesList: lugaresDelPaseo } = useGooglePlace();
+  const { actualizarPaseo, paseoActualizado, crearPaseo, paseoCreado } = usePaseo();
+  const [lugaresSeleccionados, setLugaresSeleccionados] = useState<ILugar[]>([]);
+  const [lugaresGoogleDataMostrar, setLugaresGoogleDataMostrar] = useState<ILugarGoogleData[]>([]);
   const [selectedRadio, setSelectedRadio] = useState(5);
   const [notFound, setNotFound] = useState(false);
   const [showPagination, setShowPagination] = useState(false);
   const [showActivityIndicator, setShowActivityIndicator] = useState(true);
   const [isPaginationUsed, setIsPaginationUsed] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [paseoEditar, setPaseoEditar] = useState<IPaseo | null>(null);
   const navigation = useNavigation();
   const minDistanceKm = 5;
   const maxDistanceKm = 20;
   const stepDistanceKm = 5;
 
+  //se ejecuta cuando se inicia la ventana
   useEffect(() => {
-    requestLugaresGoogleToService(false);
+    if (props.route.params && props.route.params.paseo) {
+      // se ejecuta cuando es la modificación de un paseo
+      const paseo: IPaseo = props.route.params.paseo;
+      obtenerDestinoPaseo(paseo.destino.idLugarGoogle!);
+      setPaseoEditar(paseo);
+      setIsEdit(true);
+      if (paseo.seccionAtraccionesTuristicas?.atraccionesturisticas?.length! > 0) {
+        setLugaresSeleccionados(paseo.seccionAtraccionesTuristicas?.atraccionesturisticas!);
+      }
+    }
+    else {
+      // se ejecuta cuando es la creación de un paseo
+      setIsEdit(false);
+      requestLugaresGoogleToService(false);
+    }
   }, []);
+
+  //se ejecuta cuando se obtiene el destino del paseo
+  useEffect(() => {
+    if (destinoDelPaseo) {
+      //Solicita los lugares del destino
+      requestLugaresGoogleToService(false);
+    }
+  }, [destinoDelPaseo]);
+
+  // se ejecuta cuando se obtienen los lugares del destino seleccionado por el usuario
+  useEffect(() => {
+    let result: ILugarGoogleData[] = [];
+
+    if (lugaresGooglePorTipoResponse && lugaresGooglePorTipoResponse.lugaresGoogle.length > 0) {
+      //Convierte el lugar en lugarData, para agregar la bandera de seleccionado en falso
+      result = lugaresGooglePorTipoResponse.lugaresGoogle.map((r) => { return { selected: false, lugarGoogle: r }; });
+      setNotFound(false);
+    } else {
+      setNotFound(true);
+    }
+
+    const resultadoSinduplicado = concatenarConLugaresAMostrar(result);
+    isPaginationUsed && setIsPaginationUsed(false);
+    //!isEdit && setLugaresSeleccionados([]);
+    setLugaresGoogleDataMostrar(resultadoSinduplicado);
+    setShowPagination(lugaresGooglePorTipoResponse.tokenPaginacion !== '' ? true : false);
+    setShowActivityIndicator(false);
+  }, [lugaresGooglePorTipoResponse]);
 
   useEffect(() => {
     if (paseoCreado !== null) {
@@ -83,30 +131,37 @@ const Sights = () => {
     }
   }, [paseoCreado]);
 
-  // se ejecuta cuando se obtienen los restaurantes del servicio
+  // se ejecuta cuando se obtienen los lugares que ya estaban seleccionados en el paseo
   useEffect(() => {
     let result: ILugarGoogleData[] = [];
 
-    if (lugaresGoogleResponse && lugaresGoogleResponse.lugaresGoogle.length > 0) {
-      //Convierte el restaurante en RestaurantData, para agregar la bandera de seleccionado en falso
-      result = lugaresGoogleResponse.lugaresGoogle.map((r) => { return { selected: false, lugarGoogle: r }; });
-      setNotFound(false);
-    } else {
-      setNotFound(true);
-    }
-    const resultFiltered = result.filter(r => r.lugarGoogle.urlFotos.length > 0); // quita los restaurantes sin foto
+    if (lugaresDelPaseo && lugaresDelPaseo.length > 0) {
+      const seleccionados = lugaresDelPaseo.map(l => { return convertirILugarGoogleAILugar(l); });
+      setLugaresSeleccionados(seleccionados);
 
-    if (isPaginationUsed) {
-      const paginatedLugarGoogle = lugaresGoogleData.concat(resultFiltered);
-      setLugaresGoogleData(paginatedLugarGoogle);
-      setIsPaginationUsed(false);
-    } else {
-      setLugaresGoogleData(resultFiltered);
+      //Convierte el lugar en lugarData, para agregar la bandera de seleccionado en true
+      result = lugaresDelPaseo.map((r) => { return { selected: true, lugarGoogle: r }; });
+      const resultadoSinduplicado = concatenarConLugaresAMostrar(result);
+      setLugaresGoogleDataMostrar(resultadoSinduplicado);
     }
-    setSelectedSights([]);
-    setShowPagination(lugaresGoogleResponse.tokenPaginacion !== '' ? true : false);
-    setShowActivityIndicator(false);
-  }, [lugaresGoogleResponse]);
+  }, [lugaresDelPaseo]);
+
+  useEffect(() => {
+    if (paseoActualizado !== null) {
+
+      const param = { id: paseoActualizado._id, from: 'touristAttractions' };
+      Alert.alert(
+        t('sights.update'),
+        t('sights.updateSuccessful'),
+        [{
+          text: 'OK', onPress: () => {
+            resetNavigationStackAndNavigateToTripDetails(param);
+          },
+        }],
+        { cancelable: false }
+      );
+    }
+  }, [paseoActualizado]);
 
   const resetNavigationStackAndNavigateToTripDetails = (param: any) => {
     navigation.dispatch(
@@ -120,13 +175,50 @@ const Sights = () => {
     );
   };
 
-  //Agrega los restaurantes al paseo temporal, para luego navegar a las atracciones
+  const concatenarConLugaresAMostrar = (lugares: ILugarGoogleData[]) => {
+    const resultadoFotosFiltradas = lugares.filter(r => r.lugarGoogle.urlFotos.length > 0); // quita los lugares sin foto
+
+    const lugaresConcatenados = resultadoFotosFiltradas.concat(lugaresGoogleDataMostrar); // agrega los lugares seleccionados a los cercanos del destino
+
+    const idsSeleccionados = lugaresSeleccionados.map(lugar => { return lugar.idLugarGoogle; });
+
+    // marca los lugares seleccionados
+    const lugaresMarcadosComoSeleccionados = lugaresConcatenados.map(lugar => {
+      if (idsSeleccionados.length > 0) {
+        const seleccionado = idsSeleccionados.includes(lugar.lugarGoogle.idGoogle);
+        return { ...lugar, selected: seleccionado };
+      }
+      else {
+        return lugar;
+      }
+    });
+
+    const lugaresOrdenados = lugaresMarcadosComoSeleccionados.sort((value) => {
+      return value.selected ? -1 : 1; // ordena primero los seleccionados
+    });
+
+    const idsAgregados: string[] = [];
+
+    // quita los lugares duplicados
+    return lugaresOrdenados.filter(lugar => {
+      const duplicado = idsAgregados.includes(lugar.lugarGoogle.idGoogle);
+      if (duplicado) {
+        return false;
+      }
+      else {
+        idsAgregados.push(lugar.lugarGoogle.idGoogle);
+        return true;
+      }
+    });
+  };
+
+  //Agrega los lugares al paseo temporal, para luego crear el paseo
   const goFinish = () => {
     //agregar las atracciones al paseo temporal
     const seccionAtraccionesTuristicas: ISeccionAtraccionesTuristicas = {
       esFinalizadasVotaciones: false,
       fechaFinalizacionVotaciones: new Date(),
-      atraccionesturisticas: selectedSights,
+      atraccionesturisticas: lugaresSeleccionados,
     };
 
     setNewTripTemp({
@@ -136,11 +228,41 @@ const Sights = () => {
       fechaCreacion: new Date(),
 
     });
-
     crearPaseo(newTripTemp);
   };
 
-  //este es el callback que revisa si se desea ver o seleccionarlo para agregarlo al paseo
+  const updatePaseo = () => {
+    const seccionAtraccionesTuristicas: ISeccionAtraccionesTuristicas = {
+      esFinalizadasVotaciones: paseoEditar?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones!,
+      fechaFinalizacionVotaciones: paseoEditar?.seccionAtraccionesTuristicas?.fechaFinalizacionVotaciones!,
+      atraccionesturisticas: lugaresSeleccionados,
+    };
+
+    const paseoParaActualizar: IPaseoUpdate = {
+      ...paseoEditar,
+      seccionAtraccionesTuristicas: seccionAtraccionesTuristicas,
+      idPaseo: paseoEditar?._id!,
+      idCreador: paseoEditar?.idCreador!,
+      nombre: paseoEditar?.nombre!,
+      fechaPaseo: paseoEditar?.fechaPaseo!,
+      esCompartido: paseoEditar?.esCompartido!,
+      destino: paseoEditar?.destino!,
+      eliminado: paseoEditar?.eliminado!,
+      fechaCreacion: paseoEditar?.fechaCreacion!,
+    };
+    actualizarPaseo(paseoParaActualizar);
+  };
+
+  const actualizar = () => {
+    if (isEdit) {
+      updatePaseo();
+    }
+    else {
+      goFinish();
+    }
+  };
+
+  //este es el callback que revisa si se desea ver el destino o seleccionarlo para agregarlo al paseo
   const onLugarGoogleChange = (action: ILugarGoogleAction) => {
     switch (action.action) {
       case 'select':
@@ -154,35 +276,55 @@ const Sights = () => {
     }
   };
 
-  //Aqui agrego los seleccionados
+  const convertirILugarGoogleAILugar = (lugarGoogle: ILugarGoogle): ILugar => {
+    return {
+      idLugarGoogle: lugarGoogle.idGoogle,
+      nombre: lugarGoogle.nombre,
+      descripcion: `{"calificacion": ${lugarGoogle.calificacion}, "vecindario":"${lugarGoogle.vecindario}"}`,
+      urlFotos: lugarGoogle.urlFotos,
+    };
+
+  };
+
+  //Aqui agrego los restaurantes seleccionados
   const updateLugaresGoogleData = ({ lugarGoogle, select }: ILugarGoogleAction) => {
     if (select) {
-      const selected = {
-        idLugarGoogle: lugarGoogle.idGoogle,
-        nombre: lugarGoogle.nombre,
-        descripcion: `{"calificacion": ${lugarGoogle.calificacion}, "vecindario":"${lugarGoogle.vecindario}"}`,
-        urlFotos: lugarGoogle.urlFotos,
-      };
+      const selected = convertirILugarGoogleAILugar(lugarGoogle);
 
-      setSelectedSights([...selectedSights, selected]);
+      setLugaresSeleccionados([...lugaresSeleccionados, selected]);
     }
     else {
-      const filtered = selectedSights.filter(r => r.idLugarGoogle !== lugarGoogle.idGoogle);
-      setSelectedSights(filtered);
+      const filtered = lugaresSeleccionados.filter(r => r.idLugarGoogle !== lugarGoogle.idGoogle);
+      setLugaresSeleccionados(filtered);
     }
   };
 
   const requestLugaresGoogleToService = (usePagination: boolean = false) => {
+    setShowActivityIndicator(true);
+    let latitud = 0;
+    let longitud = 0;
+    if (destinoDelPaseo) {
+      // Utiliza las coordenadas del destino del paseo (editando paseo)
+      latitud = destinoDelPaseo.latitud;
+      longitud = destinoDelPaseo.longitud;
+    }
+    else {
+      // Utiliza las coordenadas del destino seleccionado por el usuario (creando paseo)
+      latitud = newTripTemp.destino.latitud!;
+      longitud = newTripTemp.destino.longitud!;
+    }
+
     const request: ISolicitudLugaresGoogle = {
-      latitud: newTripTemp.destino.latitud!,
-      longitud: newTripTemp.destino.longitud!,
+      latitud: latitud,
+      longitud: longitud,
       radio: selectedRadio,
       tipo: 'atracciones',
-      tokenPaginacion: usePagination ? lugaresGoogleResponse.tokenPaginacion : '',
+      tokenPaginacion: usePagination ? lugaresGooglePorTipoResponse.tokenPaginacion : '',
     };
-    setShowActivityIndicator(true);
+
     getLugaresGoogle(request);
     setIsPaginationUsed(usePagination);
+
   };
 
   return (
@@ -210,12 +352,12 @@ const Sights = () => {
             </Text>
           </Block>
         </Block>
-        {(selectedSights.length > 0)
+        {(lugaresSeleccionados.length > 0)
           && (
             <Button gradient={gradients.primary} marginVertical={sizes.s}
-              onPress={() => goFinish()}>
+              onPress={() => actualizar()}>
               <Text white semibold transform="uppercase">
-                {t('sights.finish')}
+                {isEdit ? t('sights.update') : t('sights.finish')}
               </Text>
             </Button>
           )}
@@ -242,7 +384,7 @@ const Sights = () => {
         <Block>
           <FlatList
             refreshing={true}
-            data={lugaresGoogleData}
+            data={lugaresGoogleDataMostrar}
             showsVerticalScrollIndicator={false}
             keyExtractor={(item) => `${item?.lugarGoogle.idGoogle}`}
             style={{ paddingHorizontal: sizes.s, marginBottom: sizes.s }}
@@ -263,7 +405,6 @@ const Sights = () => {
           />
         </Block>
       </Block>
-
     </ >
   );
 };

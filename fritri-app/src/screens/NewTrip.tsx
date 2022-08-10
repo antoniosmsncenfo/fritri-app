@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Platform } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, Platform } from 'react-native';
 
 import { useData, useTheme, useTranslation } from '../hooks';
 import { Block, Button, Input, Text, Image, Checkbox } from '../components';
@@ -7,9 +7,12 @@ import DateTimePicker, { Event } from '@react-native-community/datetimepicker';
 import dayjs from 'dayjs';
 import { ITheme } from '../constants/types/theme';
 import Destination, { IDestinationAction, IDestinationData } from '../components/Destination';
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import { useGooglePlace } from '../hooks/useGooglePlace';
 import { IDestino } from '../interfaces/paseo';
+import { usePaseo } from '../hooks/usePaseos';
+import { useGpsLocation } from '../hooks/useGpsLocation';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 interface ITouchableInput {
   icon: keyof ITheme['assets'];
@@ -41,8 +44,9 @@ const NewTrip = () => {
   const initialDate = new Date();
   const { t } = useTranslation();
   const { newTripTemp, setNewTripTemp, user } = useData();
-  const { destinations, destinationsSearch } = useGooglePlace();
-  const { sizes, gradients } = useTheme();
+  const { paseoCreado, crearPaseoAleatorio } = usePaseo();
+  const { destinations, destinationsSearch, destinationsSearchByCoordinates } = useGooglePlace();
+  const { sizes, gradients, colors } = useTheme();
   const [useGps, setuseGps] = useState(false);
   const [notFound, setNotFound] = useState(false);
   const [search, setSearch] = useState('');
@@ -52,7 +56,11 @@ const NewTrip = () => {
   const [tripDate, setTripDate] = useState(initialDate);
   const [showCalendar, setshowCalendar] = useState(false);
   const [isValid, setIsvalid] = useState<IIsvalid>({ destination: false, name: false });
+  const [showActivityIndicatorRamdom, setShowActivityIndicatorRandom] = useState(false);
+  const [showActivityIndicatorBuscar, setShowActivityIndicatorBuscar] = useState(false);
+  const [showActivityIndicatorGps, setShowActivityIndicatorGps] = useState(false);
   const navigation = useNavigation();
+  const { getCurrentPosition } = useGpsLocation();
 
   // se ejecuta cuando se obtienen los detinos del hook de destinos
   useEffect(() => {
@@ -61,6 +69,7 @@ const NewTrip = () => {
     if (destinations && destinations.length > 0) {
       //Convierte el destino en DestinationData, para agregar la bandera de seleccionado en falso
       result = destinations.map((d) => { return { selected: false, destination: d }; });
+      result = result.filter(r => r.destination.urlFotos!.length > 0); // quita los restaurantes sin foto
       setNotFound(false);
     }
     else {
@@ -70,6 +79,8 @@ const NewTrip = () => {
     }
     setDestinos(result);
     setSelectedDestino(null);
+    setShowActivityIndicatorBuscar(false);
+    setShowActivityIndicatorGps(false);
   }, [destinations]);
 
   useEffect(() => {
@@ -77,10 +88,75 @@ const NewTrip = () => {
   }, []);
 
   useEffect(() => {
+    (async () => {
+      if (useGps) {
+        setShowActivityIndicatorGps(true);
+        const currentLocation = await getCurrentPosition();
+
+        if (currentLocation) {
+          destinationsSearchByCoordinates(
+            {
+              latitud: currentLocation?.coords.latitude,
+              longitud: currentLocation?.coords.longitude,
+            });
+        }
+        else {
+          setuseGps(false);
+          setShowActivityIndicatorGps(false);
+        }
+      }
+    })();
+  }, [useGps]);
+
+  useEffect(() => {
     setIsvalid({ name: tripName !== '', destination: selectedDestino !== null });
   }, [tripName, selectedDestino]);
 
+  useEffect(() => {
+    setShowActivityIndicatorRandom(false);
+    if (paseoCreado !== null) {
+
+      const param = { id: paseoCreado._id, from: 'newTrip' };
+      Alert.alert(
+        t('sights.createdTrip'),
+        t('sights.createdTripText'),
+        [{
+          text: 'OK', onPress: () => {
+            resetNavigationStackAndNavigateToTripDetails(param);
+          },
+        }],
+        { cancelable: false }
+      );
+    }
+  }, [paseoCreado]);
+
+  const resetNavigationStackAndNavigateToTripDetails = (param: any) => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          { name: 'Home' },
+          { name: 'TripDetails', params: param },
+        ],
+      })
+    );
+  };
+
+  const createRandomTrip = () => {
+    const destino: IDestino =
+      { ...selectedDestino!, idLugarGoogle: selectedDestino?.idGoogle }; // esto se requiere ya que hay dos propiedades que usan el mismo valor
+
+    setShowActivityIndicatorRandom(true);
+    crearPaseoAleatorio({
+      destino,
+      fechaPaseo: tripDate,
+      idCreador: user._id!,
+      nombre: tripName,
+    });
+  };
+
   const handleSearch = () => {
+    setShowActivityIndicatorBuscar(true);
     destinationsSearch(search);
   };
 
@@ -191,20 +267,31 @@ const NewTrip = () => {
               gradient={gradients.primary}
               onPress={() => handleSearch()}
               marginBottom={sizes.s}>
-              <Text white semibold transform="uppercase">
-                {t('newTrip.searchDestination')}
-              </Text>
+              {!showActivityIndicatorBuscar &&
+                (<Text white semibold transform="uppercase">
+                  {t('newTrip.searchDestination')}
+                </Text>)}
+              {showActivityIndicatorBuscar &&
+                (<ActivityIndicator size="large" color={'white'} />)
+              }
             </Button>
           </Block>)}
 
         <Block row flex={0} align="center" >
-          <Checkbox marginRight={sizes.sm} onPress={(check) => (setuseGps(check))} />
+          <BouncyCheckbox fillColor={colors.primary.toString()} iconStyle={{ borderColor: colors.primary }}
+            unfillColor="#FFFFFF" disableBuiltInState isChecked={useGps}
+            onPress={() => { setuseGps(!useGps); }} />
+
           <Text bold paddingRight={sizes.s}>{t('newTrip.useGps')}</Text>
+
+          {showActivityIndicatorGps &&
+            (<ActivityIndicator size="small" color={colors.primary} />)
+          }
         </Block>
 
       </Block>
       {/* not found */}
-      {notFound && (
+      {!showActivityIndicatorBuscar && notFound && (
         <Block flex={0} paddingHorizontal={sizes.padding} paddingTop={sizes.padding}>
           <Text p>
             {t('newTrip.notFound1')}"
@@ -239,10 +326,13 @@ const NewTrip = () => {
                 {t('newTrip.restaurants')}
               </Text>
             </Button>
-            <Button flex={1} gradient={gradients.primary} onPress={() => handleSearch()}>
-              <Text white semibold transform="uppercase">
+            <Button flex={1} gradient={gradients.primary} onPress={() => createRandomTrip()}>
+              {!showActivityIndicatorRamdom && (<Text white semibold transform="uppercase">
                 {t('newTrip.random')}
-              </Text>
+              </Text>)}
+              {showActivityIndicatorRamdom &&
+                (<ActivityIndicator size="large" color={'white'} />)
+              }
             </Button>
           </Block>)}
       </Block>

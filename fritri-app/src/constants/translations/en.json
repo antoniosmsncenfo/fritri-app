@@ -70,7 +70,11 @@
       "man": "Man",
       "other": "Other"
     },
-    "loading": "Loading information..."
+    "loading": "Loading information...",
+    "ok": "OK",
+    "cancel": "Cancel",
+    "yes": "Yes",
+    "no": "No"    
   },
   "app": {
     "name": "FriTri",
@@ -253,7 +257,10 @@
     "read": "Read Notifications",
     "unread": "Unread Notifications",
     "personal": "Personal",
-    "business": "Business"
+    "business": "Business",
+    "empty": "You don't have notifications",
+    "archiveAlertTitle": "Confirmation",
+    "archiveAlertMessage": "This action will delete the notification"
   },
   "shop": {
     "subtotal": {
@@ -285,29 +292,48 @@
     "view": "View"
   },
   "tripDetails": {
+    "tripCreated": "Created this trip on ",
     "restaurants": "Restaurants",
     "noRestaurants": "The owner hasn't included any restaurants",
     "touristAttractions": "Tourist Attractions",
     "noTouristAttractions": "The owner hasn't included any tourist attractions",
-    "otherVotes": "See the votes..."
+    "otherVotes": "See the votes...",
+    "edit": "Edit",
+    "protectConfirmationTitle": "Protection",
+    "protectConfirmationMessage": "Do you want to protect this trip with a pin?",
+    "unprotectConfirmationTitle": "Protection",
+    "unprotectConfirmationMessage": "Do you want to remove this trip's protection pin?",
+    "shareMessage": "You've been invited to my trip!\nPlease follow this link to participate in the voting process: "
+  },
+  "tripSecurity": {
+    "title": "Enter trip's PIN",
+    "access": "Get access to the trip",
+    "code": "PIN",
+    "missingDataTitle": "Trip's PIN error",
+    "missingDataMessage": "Please enter the PIN code",
+    "errorMessage": "Wrong PIN code"
   },
   "restaurants": {
-    "sights": "Tourist attractions",
-    "recommendations": "Recommendations",
-    "searching": "Searching in a range of",
-    "notFound1": "We didn't find restaurants in the range",
-    "moreOptions": "Please try increasing the amount of km.",
-    "seeMore": "See more"
-  },
-  "sights": {
-    "finish": "Finish trip",
+    "sights": "Go to tourist attractions",
     "recommendations": "Recommendations",
     "searching": "Searching in a range of",
     "notFound1": "We didn't find restaurants in the range",
     "moreOptions": "Please try increasing the amount of km.",
     "seeMore": "See more",
+    "update": "Update restaurants",
+    "updateSuccessful":"Update successful"
+  },
+  "sights": {
+    "finish": "Finish trip",
+    "recommendations": "Recommendations",
+    "searching": "Searching in a range of",
+    "notFound1": "We didn't find tourist attractions in the range",
+    "moreOptions": "Please try increasing the amount of km.",
+    "seeMore": "See more",
     "createdTrip": "New trip",
-    "createdTripText": "Your new trip was created"
+    "createdTripText": "Your new trip was created",
+    "update": "Update tourist attractions",
+    "updateSuccessful":"Update successful"
   },
   "lugarGoogle": {
     "select": "Select",

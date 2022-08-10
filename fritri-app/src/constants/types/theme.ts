@@ -245,6 +245,8 @@ export interface ThemeIcons {
   phone: ImageSourcePropType;
   locationNew: ImageSourcePropType;
   share: ImageSourcePropType;
+  protected: ImageSourcePropType;
+  unprotected: ImageSourcePropType;
   checked: ImageSourcePropType;
   unchecked: ImageSourcePropType;
   restaurant: ImageSourcePropType;
