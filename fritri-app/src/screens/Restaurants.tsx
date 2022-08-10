@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, FlatList } from 'react-native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
+import Slider from '@react-native-community/slider';
 
 import { useData, useTheme, useTranslation } from '../hooks';
 import { Block, Button, Text } from '../components';
-import { CommonActions, useNavigation } from '@react-navigation/native';
 import LugarGoogle, { ILugarGoogleAction } from '../components/LugarGoogle';
 import { ILugarGoogleData } from '../components/LugarGoogle';
 import { useGooglePlace } from '../hooks/useGooglePlace';
 import { ISolicitudLugaresGoogle } from '../interfaces/solicitud-lugares-google';
-import Slider from '@react-native-community/slider';
 import { ILugar, IPaseo, IPaseoUpdate, ISeccionRestaurantes } from '../interfaces/paseo';
 import { ILugarGoogle } from '../interfaces/lugar-google';
 import { usePaseo } from '../hooks/usePaseos';
-import { SeccionRestaurantes } from '../../../paseos-servicio/src/paseos/schemas/secciones-restaurantes.schema';
 
 const LugaresGoogleHeader = () => {
   const { t } = useTranslation();
@@ -46,13 +45,12 @@ const LugaresGoogleFooter = ({ show, onPress }: IFooterProps) => {
   );
 };
 
-const Restaurants = (props) => {
+const Restaurants = (props: any) => {
   const { t } = useTranslation();
   const { sizes, gradients, colors } = useTheme();
   const { newTripTemp, setNewTripTemp } = useData();
   const { lugaresGooglePorTipoResponse, getLugaresGoogle,
     getGooglePlace: obtenerDestinoPaseo, googlePlace: destinoDelPaseo,
-    getLugaresGoogleList: obtenerLugaresDelPaseo,
     googlePlacesList: lugaresDelPaseo } = useGooglePlace();
   const { actualizarPaseo, paseoActualizado } = usePaseo();
   const [lugaresSeleccionados, setLugaresSeleccionados] = useState<ILugar[]>([]);
@@ -116,7 +114,6 @@ const Restaurants = (props) => {
     setLugaresGoogleDataMostrar(resultadoSinduplicado);
     setShowPagination(lugaresGooglePorTipoResponse.tokenPaginacion !== '' ? true : false);
     setShowActivityIndicator(false);
-
   }, [lugaresGooglePorTipoResponse]);
 
   // se ejecuta cuando se obtienen los lugares que ya estaban seleccionados en el paseo
@@ -273,7 +270,6 @@ const Restaurants = (props) => {
 
   //Aqui agrego los restaurantes seleccionados
   const updateLugaresGoogleData = ({ lugarGoogle, select }: ILugarGoogleAction) => {
-    console.log(select, 'select');
     if (select) {
       const selected = convertirILugarGoogleAILugar(lugarGoogle);
 
