@@ -25,11 +25,11 @@ const TripDetails = (props) => {
   const [atraccionesVotar, setAtraccionesVotar] = useState<ITipoVoto[]>([]);
   const [isFromDashboard, setIsFromDashboard] = useState(false);
 
-    useEffect(() => {
-      let idPaseo:string = props.route.params.id;
-      obtenerPaseo(idPaseo);
-      if(props.route.params.fromDashboard || props.route.params.from === 'TripSecurity' || props.route.params.from === 'Notifications') setIsFromDashboard(true);
-    }, []);
+  useEffect(() => {
+    let idPaseo: string = props.route.params.id;
+    obtenerPaseo(idPaseo);
+    if (props.route.params.fromDashboard || props.route.params.from === 'TripSecurity' || props.route.params.from === 'Notifications') { setIsFromDashboard(true); }
+  }, []);
 
   useEffect(() => {
     if (paseoSeleccionado?.pinPaseo && !isFromDashboard) {
@@ -154,43 +154,47 @@ const TripDetails = (props) => {
     navigation.navigate('Restaurants', { paseo: paseoSeleccionado! });
   };
 
+  const navegarAtracciones = () => {
+    navigation.navigate('Sights', { paseo: paseoSeleccionado! });
+  };
+
   useEffect(() => {
     if (!enviandoVotacionAtr && !enviandoVotacionRest) {
       let idPaseo: string = props.route.params.id;
       obtenerPaseo(idPaseo);
     }
   }, [enviandoVotacionAtr, enviandoVotacionRest]);
-    const protectPress = (idPaseo:string) => {
-      protegerPaseo(idPaseo);
-    };
+  const protectPress = (idPaseo: string) => {
+    protegerPaseo(idPaseo);
+  };
 
-    const unprotectPress = (idPaseo:string) => {
-      removerPin(idPaseo);
-    };
+  const unprotectPress = (idPaseo: string) => {
+    removerPin(idPaseo);
+  };
 
-    const onShare = async (idPaseo:string) => {
-        const result = await Share.share({
-          message:
-            t('tripDetails.shareMessage') + Linking.createURL('tripDetails/' + idPaseo),
-        });
-        if (result.action === Share.sharedAction) {
-          if (result.activityType) {
-            // shared with activity type of result.activityType
-          } else {
-            // shared
-          }
-        } else if (result.action === Share.dismissedAction) {
-          // dismissed
-        }
-
-    };
-
-    useEffect(() => {
-      if (!enviandoVotacionAtr && !enviandoVotacionRest) {
-        let idPaseo:string = props.route.params.id;
-        obtenerPaseo(idPaseo);
+  const onShare = async (idPaseo: string) => {
+    const result = await Share.share({
+      message:
+        t('tripDetails.shareMessage') + Linking.createURL('tripDetails/' + idPaseo),
+    });
+    if (result.action === Share.sharedAction) {
+      if (result.activityType) {
+        // shared with activity type of result.activityType
+      } else {
+        // shared
       }
-    }, [enviandoVotacionAtr, enviandoVotacionRest]);
+    } else if (result.action === Share.dismissedAction) {
+      // dismissed
+    }
+
+  };
+
+  useEffect(() => {
+    if (!enviandoVotacionAtr && !enviandoVotacionRest) {
+      let idPaseo: string = props.route.params.id;
+      obtenerPaseo(idPaseo);
+    }
+  }, [enviandoVotacionAtr, enviandoVotacionRest]);
 
   return (
     <Block safe>
@@ -393,10 +397,25 @@ const TripDetails = (props) => {
           {/* Atracciones */}
           <Block card color={colors.card}
             marginBottom={sizes.s}>
-            <Block row marginBottom={sizes.sm}>
+            <Block row justify="space-between" marginBottom={sizes.sm}>
               <Text h5 semibold>
                 {t('newTrip.touristAttractions')}
               </Text>
+              <Block row flex={0} align="center">
+                <TouchableOpacity onPress={() => navegarAtracciones()}>
+                  <Block row flex={0} align="center">
+                    <Text
+                      p
+                      color={colors.primary}
+                      semibold
+                      size={sizes.linkSize}
+                      marginRight={sizes.s}>
+                      {t('tripDetails.edit')}
+                    </Text>
+                    <Image source={assets.arrow} color={colors.primary} />
+                  </Block>
+                </TouchableOpacity>
+              </Block>
             </Block>
 
             {paseoSeleccionado?.seccionAtraccionesTuristicas?.atraccionesturisticas.map(
