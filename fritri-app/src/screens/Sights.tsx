@@ -149,7 +149,7 @@ const Sights = (props: any) => {
   useEffect(() => {
     if (paseoActualizado !== null) {
 
-      const param = { id: paseoActualizado._id, from: 'touristAttractions' };
+      const param = { id: paseoActualizado._id, from: 'EditTrip' };
       Alert.alert(
         t('sights.update'),
         t('sights.updateSuccessful'),
