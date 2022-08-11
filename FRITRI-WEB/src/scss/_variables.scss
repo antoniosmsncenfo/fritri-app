@@ -1201,7 +1201,8 @@
 // $card-cap-color:                    unset !default;
 // $card-height:                       null !default;
 // $card-color:                        unset !default;
-// $card-bg:                           $white !default;
+$card-bg:                           #282c34 !default;
+$card-header:  #fff !default;
 // $card-img-overlay-padding:          $spacer !default;
 // $card-group-margin:                 $grid-gutter-width / 2 !default;
 // scss-docs-end card-variables

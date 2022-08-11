@@ -8,6 +8,7 @@ import { Provider } from 'react-redux'
 import store from './store'
 import { Auth0Provider } from '@auth0/auth0-react'
 ReactDOM.render(
+  
   <Provider store={store}>
     <Auth0Provider
       domain="dev-wljvufpb.us.auth0.com"
