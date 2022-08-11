@@ -28,8 +28,13 @@ const TripDetails = (props) => {
   useEffect(() => {
     let idPaseo: string = props.route.params.id;
     obtenerPaseo(idPaseo);
-    if (props.route.params.fromDashboard || props.route.params.from === 'TripSecurity' || props.route.params.from === 'Notifications') { setIsFromDashboard(true); }
+    checkRouteFrom();
   }, []);
+
+  const checkRouteFrom = () => {
+    const checkFrom = ['TripSecurity', 'Notifications', 'EditTrip'];
+    if (props.route.params.fromDashboard || checkFrom.includes(props.route.params.from)) { setIsFromDashboard(true); }
+  }
 
   useEffect(() => {
     if (paseoSeleccionado?.pinPaseo && !isFromDashboard) {

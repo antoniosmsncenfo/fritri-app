@@ -134,7 +134,7 @@ const Restaurants = (props: any) => {
   useEffect(() => {
     if (paseoActualizado !== null) {
 
-      const param = { id: paseoActualizado._id, from: 'restautants' };
+      const param = { id: paseoActualizado._id, from: 'EditTrip' };
       Alert.alert(
         t('restaurants.update'),
         t('restaurants.updateSuccessful'),
