@@ -52,7 +52,6 @@
   transform: translateY(4px);
 }
   .App-header1 {
-    
     background-color: #282c34;
     min-height: 100vh;
     display: flex;
@@ -62,10 +61,28 @@
     font-size: calc(10px + 2vmin);
     color: white;
   }
-  
+  .card {
+    color: #61dafb;
+
+  }
+
+
   .App-link {
     color: #61dafb;
   }
+  .App-logo {
+    margin-left: 255px;
+  }
+  .Info {
+    margin-left: 255px;
+    margin-bottom: 19px;
+  }
+  .logF1 {
+    margin-right: 240px;
+
+  }
+
+  
   
   @keyframes App-logo-spin {
     from {

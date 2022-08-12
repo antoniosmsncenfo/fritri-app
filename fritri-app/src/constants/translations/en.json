@@ -328,11 +328,13 @@
     "finish": "Finish trip",
     "recommendations": "Recommendations",
     "searching": "Searching in a range of",
-    "notFound1": "We didn't find restaurants in the range",
+    "notFound1": "We didn't find tourist attractions in the range",
     "moreOptions": "Please try increasing the amount of km.",
     "seeMore": "See more",
     "createdTrip": "New trip",
-    "createdTripText": "Your new trip was created"
+    "createdTripText": "Your new trip was created",
+    "update": "Update tourist attractions",
+    "updateSuccessful":"Update successful"
   },
   "lugarGoogle": {
     "select": "Select",
