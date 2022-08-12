@@ -397,16 +397,18 @@ const TripDetails = (props) => {
                   </Text>
                 </Button>
             }
-                <Button
-                  gradient={gradients.warning}
-                  outlined
-                  marginVertical={sizes.xs}
-                  paddingHorizontal={sizes.sm}
-                >
-                  <Text bold white transform="uppercase">
-                    {t('tripDetails.closeVotes')}
-                  </Text>
-                </Button>            
+            {paseoSeleccionado?.idCreador === user._id &&
+            <Button
+              gradient={gradients.warning}
+              outlined
+              marginVertical={sizes.xs}
+              paddingHorizontal={sizes.sm}
+              >
+              <Text bold white transform="uppercase">
+                {t('tripDetails.closeVotes')}
+              </Text>
+            </Button>
+            }            
           </Block>
 
           {/* Atracciones */}
@@ -472,6 +474,8 @@ const TripDetails = (props) => {
                 </Text>
               </Button>
             }
+
+            {paseoSeleccionado?.idCreador === user._id &&
             <Button
               gradient={gradients.warning}
               outlined
@@ -481,7 +485,9 @@ const TripDetails = (props) => {
               <Text bold white transform="uppercase">
                 {t('tripDetails.closeVotes')}
               </Text>
-            </Button> 
+            </Button>
+            }
+
           </Block>
 
         </Block>

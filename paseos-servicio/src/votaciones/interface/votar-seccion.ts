@@ -5,3 +5,8 @@ export interface IResultadoExiste {
   prop: string,
   propPaseo: string,
 }
+
+export enum TipoSeccion {
+  RESTAURANTE = 'RESTAURANTE',
+  ATRACCION_TURISTICA = 'ATRACCION_TURISTICA' 
+}
