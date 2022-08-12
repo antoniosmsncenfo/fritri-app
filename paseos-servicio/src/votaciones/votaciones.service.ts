@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BadRequestException } from  '@nestjs/common';
+import axios from 'axios';
 import { Paseo, PaseoDocument } from '../paseos/schemas/paseos.schema';
 import { VotarSeccionDto } from './dto/votar-seccion';
 import { Lugar } from 'src/paseos/schemas/lugares.schema';
@@ -32,7 +33,7 @@ export class VotacionesService {
       if(lugaresAVotar.length > 0) {
         for (const lugarAVotar of lugaresAVotar) {
           const indexLugar = this.paseoActual[propPaseo][prop].findIndex(x => x['idLugarGoogle'] === lugarAVotar.idLugarGoogle);
-          let resultadoActividadVotar: Lugar = this.votarEnActividad(idIntegrante, lugarAVotar, lugarAVotar.tipoVoto);
+          let resultadoActividadVotar: Lugar = await this.votarEnActividad(idIntegrante, lugarAVotar, lugarAVotar.tipoVoto);
           this.paseoActual[propPaseo][prop][indexLugar] = resultadoActividadVotar;
           await this.paseoActual.save();
         }
@@ -104,22 +105,45 @@ export class VotacionesService {
     };
   }
 
-  votarEnActividad(idIntegrante, lugarAVotar: Lugar, tipoVoto: string): Lugar {
+  async obtenerInfoIntegrante(idIntegrante: string) {
+    const request = {
+      method: 'get',
+      url: `${process.env.USUARIOS_BASE_URL}/obtener-usuario-paseo/${idIntegrante}`,
+      headers: {}
+    };
+    try {
+      const resultado = await axios(request);
+      if (resultado.status === 200) {
+        return resultado.data;
+      } else {
+        return {};
+      }
+    } catch(error) {
+      throw new BadRequestException(`Error en proceso obtener informacion de integrande::${error.message}`);
+    }
+  }
+
+  async votarEnActividad(idIntegrante, lugarAVotar: Lugar, tipoVoto: string): Promise<Lugar> {
     if(!lugarAVotar.votaciones) {
       lugarAVotar.votaciones = [];
     }
     const existeVotoUsuario = lugarAVotar.votaciones.findIndex(x => x.idVotante === idIntegrante);
+    const dataUsuario = await this.obtenerInfoIntegrante(idIntegrante);
+    delete dataUsuario._id;
+    delete dataUsuario.correoElectronico;
     if(existeVotoUsuario === -1) {
       lugarAVotar.votaciones.push({
         idVotante: idIntegrante,
         fecha: new Date(),
-        resultado: tipoVoto
+        resultado: tipoVoto,
+        ...dataUsuario
       });
     } else {
       lugarAVotar.votaciones[existeVotoUsuario] = {
         idVotante: idIntegrante,
         fecha: new Date(),
-        resultado: tipoVoto
+        resultado: tipoVoto,
+        ...dataUsuario
       };
     }
     delete lugarAVotar.tipoVoto;

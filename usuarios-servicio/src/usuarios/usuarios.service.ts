@@ -151,7 +151,6 @@ export class UsuariosService {
       'contrasenaTemporal', 
       'fechaContrasenaTemporal',
       'tipoLogin',
-      'genero',
       'pais',
       'fechaCreacion',
       '__v'

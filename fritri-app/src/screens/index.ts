@@ -25,3 +25,4 @@ export { default as Restaurants } from './Restaurants';
 export { default as Sights } from './Sights';
 export { default as TripDetails } from './TripDetails';
 export { default as TripSecurity } from './TripSecurity';
+export { default as TripVotes } from './TripVotes';
