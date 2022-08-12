@@ -24,5 +24,7 @@ const _nav = [
     to: '/charts',
     icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
   },
+
+
 ]
 export default _nav
