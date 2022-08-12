@@ -27,7 +27,7 @@ const Cards = () => {
   return (
     <CRow>
       <CCol xs={12}>
-        <CCard className="mb-4">
+        <CCard className="mb-">
           <CCardHeader>
             <strong>Card</strong> <small>Example</small>
           </CCardHeader>

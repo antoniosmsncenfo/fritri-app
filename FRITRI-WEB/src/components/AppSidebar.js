@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import { LogoutButton } from "src/Auth0-Login/Logout";
 
 import { AppSidebarNav } from './AppSidebarNav'
 
@@ -14,6 +15,7 @@ import 'simplebar/dist/simplebar.min.css'
 
 // sidebar nav config
 import navigation from '../_nav'
+import { Profile } from 'src/Auth0-Login/Profile'
 
 const AppSidebar = () => {
   const dispatch = useDispatch()
@@ -38,10 +40,11 @@ const AppSidebar = () => {
           <AppSidebarNav items={navigation} />
         </SimpleBar>
       </CSidebarNav>
-      {/* <CSidebarToggler
-        className="d-none d-lg-flex"
-        onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
-      /> */}
+
+            <Profile/>
+            <LogoutButton/>
+
+    
     </CSidebar>
   )
 }
