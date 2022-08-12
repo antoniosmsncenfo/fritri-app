@@ -9,8 +9,9 @@ import { useUsuario } from '../hooks/useUsuario';
 import { useVotacion } from '../hooks/useVotacion';
 import { PlaceDetail } from '../components/PlaceDetail';
 import { ILugar } from '../interfaces/paseo';
-import { ITipoVoto, ITipoVotoEnviar } from '../interfaces/tipo-voto';
+import { ITipoVoto, ITipoVotoEnviar, TipoSeccion } from '../interfaces/tipo-voto';
 import * as Linking from 'expo-linking';
+import { SeccionRestaurantes } from '../../../paseos-servicio/src/paseos/schemas/secciones-restaurantes.schema';
 
 const TripDetails = (props) => {
   const { assets, sizes, colors, gradients } = useTheme();
@@ -18,7 +19,10 @@ const TripDetails = (props) => {
   const navigation = useNavigation();
   const { obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado, protegerPaseo, removerPin } = usePaseo();
   const { usuarioPaseo, obtenerUsuarioPaseo } = useUsuario();
-  const { votarSeccion, enviandoVotacionRest, enviandoVotacionAtr, respRest, respAtr, setEnviandoVotacionRest, setEnviandoVotacionAtr } = useVotacion();
+  const { 
+    votarSeccion, enviandoVotacionRest, enviandoVotacionAtr, 
+    respRest, respAtr, setEnviandoVotacionRest, setEnviandoVotacionAtr,
+    cerrarSeccion, seCerroSeccion, setSeCerroSeccion } = useVotacion();
   const { user } = useData();
 
   const [restaurantesVotar, setRestaurantesVotar] = useState<ITipoVoto[]>([]);
@@ -110,6 +114,10 @@ const TripDetails = (props) => {
     }
   };
 
+  const handleCerrarVotacion = (idPaseo:string, tipo:TipoSeccion) => {
+    cerrarSeccion(idPaseo,tipo);
+  };
+
   const revisarVotosUsuario = (lugar: ILugar) => {
     const usuarioVoto = lugar?.votaciones?.find(x => x.idVotante === user._id);
     if (usuarioVoto === undefined || usuarioVoto.resultado === 'nullVal') {
@@ -169,6 +177,7 @@ const TripDetails = (props) => {
       obtenerPaseo(idPaseo);
     }
   }, [enviandoVotacionAtr, enviandoVotacionRest]);
+
   const protectPress = (idPaseo: string) => {
     protegerPaseo(idPaseo);
   };
@@ -200,6 +209,15 @@ const TripDetails = (props) => {
       obtenerPaseo(idPaseo);
     }
   }, [enviandoVotacionAtr, enviandoVotacionRest]);
+
+  useEffect(() => {
+    console.log("Se cerró una sección:" + seCerroSeccion);
+    if (seCerroSeccion) {
+      let idPaseo: string = props.route.params.id;
+      obtenerPaseo(idPaseo);    
+      setSeCerroSeccion(false);
+    }
+  }, [seCerroSeccion]);
 
   return (
     <Block safe>
@@ -398,11 +416,21 @@ const TripDetails = (props) => {
                 </Button>
             }
             {paseoSeleccionado?.idCreador === user._id &&
+             !paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones &&
             <Button
               gradient={gradients.warning}
               outlined
               marginVertical={sizes.xs}
               paddingHorizontal={sizes.sm}
+              onPress={(value) =>
+                Alert.alert(
+                  t('tripDetails.closeVotingConfirmationTitle'),
+                  t('tripDetails.closeVotingConfirmationMessage'),
+                  [
+                    { text: t('common.no'), style: 'cancel' },
+                    { text: t('common.yes'), onPress: () => handleCerrarVotacion(paseoSeleccionado?._id!, TipoSeccion.RESTAURANTE) },
+                  ]
+                )}
               >
               <Text bold white transform="uppercase">
                 {t('tripDetails.closeVotes')}
@@ -476,11 +504,21 @@ const TripDetails = (props) => {
             }
 
             {paseoSeleccionado?.idCreador === user._id &&
+             !paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones &&
             <Button
               gradient={gradients.warning}
               outlined
               marginVertical={sizes.xs}
               paddingHorizontal={sizes.sm}
+              onPress={(value) =>
+                Alert.alert(
+                  t('tripDetails.closeVotingConfirmationTitle'),
+                  t('tripDetails.closeVotingConfirmationMessage'),
+                  [
+                    { text: t('common.no'), style: 'cancel' },
+                    { text: t('common.yes'), onPress: () => handleCerrarVotacion(paseoSeleccionado?._id!, TipoSeccion.ATRACCION_TURISTICA) },
+                  ]
+                )}
             >
               <Text bold white transform="uppercase">
                 {t('tripDetails.closeVotes')}

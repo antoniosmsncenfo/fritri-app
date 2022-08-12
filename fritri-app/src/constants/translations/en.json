@@ -304,7 +304,9 @@
     "protectConfirmationMessage": "Do you want to protect this trip with a pin?",
     "unprotectConfirmationTitle": "Protection",
     "unprotectConfirmationMessage": "Do you want to remove this trip's protection pin?",
-    "shareMessage": "You've been invited to my trip!\nPlease follow this link to participate in the voting process: "
+    "shareMessage": "You've been invited to my trip!\nPlease follow this link to participate in the voting process: ",
+    "closeVotingConfirmationTitle": "Close voting",
+    "closeVotingConfirmationMessage": "Do you want to close the votes on this section?"    
   },
   "tripSecurity": {
     "title": "Enter trip's PIN",

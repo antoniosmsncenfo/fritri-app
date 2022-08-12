@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { votarSeccionDb } from '../api/votacionDB';
-import { ITipoVotoEnviar } from '../interfaces/tipo-voto';
+import { cerrarSeccionDb, votarSeccionDb } from '../api/votacionDB';
+import { ITipoVotoEnviar, TipoSeccion } from '../interfaces/tipo-voto';
 
 export const useVotacion = () => {
 
@@ -29,7 +29,25 @@ export const useVotacion = () => {
       }
       return resultado;
     };
+  
+  const [seCerroSeccion, setSeCerroSeccion] = useState(false);
 
+  async function cerrarSeccion(idPaseo:string, tipo:TipoSeccion): Promise<any> {
+    let resultado;
+    try {
+      const resultado = await cerrarSeccionDb(idPaseo, tipo);
+      
+      if(resultado) {
+        setSeCerroSeccion(true)
+      }
+
+    } catch(error) {
+      console.log("useVotacion->cerrarSeccion::ERROR "+ JSON.stringify(error));
+      resultado = false;
+    }
+
+    return resultado;
+  };
 
     return {
       votarSeccion,
@@ -38,7 +56,10 @@ export const useVotacion = () => {
       setEnviandoVotacionRest,
       setEnviandoVotacionAtr,
       respRest,
-      respAtr
+      respAtr,
+      cerrarSeccion,
+      seCerroSeccion,
+      setSeCerroSeccion
     };
 
 
