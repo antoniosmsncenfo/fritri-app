@@ -2,10 +2,13 @@ import {useTheme, useTranslation} from '../hooks';
 import {Block, Button, Image, Text} from '.';
 import {TouchableOpacity} from 'react-native';
 import { useState, useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { ILugar } from '../interfaces/paseo';
 
 export const PlaceDetail = (props) => {
   const {assets, sizes, colors} = useTheme();
   const {t} = useTranslation();
+  const navigation = useNavigation();
   const IMAGE_SIZE = (sizes.width - (sizes.padding + sizes.sm) * 2) / 5;
 
   const attraccion = props.place;
@@ -60,8 +63,14 @@ export const PlaceDetail = (props) => {
     }
   }, [dislikeCheck])
 
+  const verVotos = (place: ILugar) => {
+    navigation.navigate('TripVotes', {
+      destino: place
+    });
+  }
+
   return (
-    <>
+    <Block row align="center" marginBottom={sizes.m}>
       <Block
         flex={0}
         width={64}
@@ -102,7 +111,7 @@ export const PlaceDetail = (props) => {
           <Text semibold>{attraccion.nombre}</Text>
         </Block>
         <TouchableOpacity
-        //onPress={() => handleViewDetails(_id!)}
+          onPress={() => verVotos(props.place)}
         >
           <Block row flex={0} align="center">
             <Text
@@ -141,6 +150,6 @@ export const PlaceDetail = (props) => {
           </Block>
         </Block>
       </Block>
-    </>
+    </Block>
   );
 };

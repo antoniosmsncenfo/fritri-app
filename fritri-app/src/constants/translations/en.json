@@ -316,6 +316,10 @@
     "missingDataMessage": "Please enter the PIN code",
     "errorMessage": "Wrong PIN code"
   },
+  "seeVotes": {
+    "noVotesFor": "No votes for",
+    "statistics": "Statistics"
+  },
   "restaurants": {
     "sights": "Go to tourist attractions",
     "recommendations": "Recommendations",

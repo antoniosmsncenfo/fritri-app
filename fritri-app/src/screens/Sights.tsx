@@ -249,6 +249,7 @@ const Sights = (props: any) => {
       destino: paseoEditar?.destino!,
       eliminado: paseoEditar?.eliminado!,
       fechaCreacion: paseoEditar?.fechaCreacion!,
+      modificacionesRealizadas: ['Se modificaron las atracciones del paseo'],
     };
     actualizarPaseo(paseoParaActualizar);
   };
