@@ -231,6 +231,7 @@ const Restaurants = (props: any) => {
       destino: paseoEditar?.destino!,
       eliminado: paseoEditar?.eliminado!,
       fechaCreacion: paseoEditar?.fechaCreacion!,
+      modificacionesRealizadas: ['Se modificaron los restaurantes del paseo'],
     };
     actualizarPaseo(paseoParaActualizar);
   };
