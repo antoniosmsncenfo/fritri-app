@@ -49,6 +49,9 @@ export const cerrarSeccionDb = async (idPaseo:string, tipo:TipoSeccion) => {
     try {
         const resultado = await axios(request);
         if (resultado.status === 200) {
+            console.log(JSON.stringify(resultado.data));
+            //Al tener un resultado exitoso, debemos notificar a todos los integrantes
+            //sobre el cierre de las votaciones.
             return resultado.data;
         }
         else {

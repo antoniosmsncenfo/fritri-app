@@ -11,7 +11,6 @@ import { PlaceDetail } from '../components/PlaceDetail';
 import { ILugar } from '../interfaces/paseo';
 import { ITipoVoto, ITipoVotoEnviar, TipoSeccion } from '../interfaces/tipo-voto';
 import * as Linking from 'expo-linking';
-import { SeccionRestaurantes } from '../../../paseos-servicio/src/paseos/schemas/secciones-restaurantes.schema';
 
 const TripDetails = (props) => {
   const { assets, sizes, colors, gradients } = useTheme();
@@ -393,7 +392,7 @@ const TripDetails = (props) => {
               )
             }
 
-            {
+            {/* {
               !enviandoVotacionRest ?
                 <Button
                   onPress={() => { enviarVotos('rest'); }}
@@ -414,7 +413,32 @@ const TripDetails = (props) => {
                     {t('newTrip.sendingVotes')}
                   </Text>
                 </Button>
-            }
+            } */}
+
+            {!paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones && (
+              !enviandoVotacionRest ?
+                <Button
+                  onPress={() => { enviarVotos('rest'); }}
+                  gradient={gradients.primary}
+                  outlined
+                  marginVertical={sizes.s}
+                >
+                  <Text bold white transform="uppercase">
+                    {t('newTrip.vote')}
+                  </Text>
+                </Button> :
+                <Button
+                  gradient={gradients.primary}
+                  outlined
+                  marginVertical={sizes.s}
+                >
+                  <Text bold white transform="uppercase">
+                    {t('newTrip.sendingVotes')}
+                  </Text>
+                </Button>
+            )}
+
+
             {paseoSeleccionado?.idCreador === user._id &&
              !paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones &&
             <Button
@@ -481,7 +505,8 @@ const TripDetails = (props) => {
               )
             }
 
-            {!enviandoVotacionAtr ?
+            {!paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones && (
+             !enviandoVotacionAtr ?
               <Button
                 onPress={() => { enviarVotos('attr'); }}
                 gradient={gradients.primary}
@@ -501,7 +526,7 @@ const TripDetails = (props) => {
                   {t('newTrip.sendingVotes')}
                 </Text>
               </Button>
-            }
+            )}
 
             {paseoSeleccionado?.idCreador === user._id &&
              !paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones &&
