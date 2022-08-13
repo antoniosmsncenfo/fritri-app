@@ -2,9 +2,11 @@ import { IsNotEmpty } from 'class-validator';
 import { Destino } from '../schemas/destinos.schema';
 import { SeccionRestaurantes } from '../schemas/secciones-restaurantes.schema';
 import { SeccionAtraccionesTuristicas } from '../schemas/secciones-atracciones-turisticas.schema';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CrearPaseoDto {
+  @ApiPropertyOptional()
+  @IsNotEmpty()
   readonly idPaseo?: string;
 
   @ApiProperty()
