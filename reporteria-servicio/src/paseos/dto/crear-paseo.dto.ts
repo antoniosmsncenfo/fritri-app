@@ -1,21 +1,30 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { IsDateString, IsNumber } from 'class-validator';
+
 export class CrearPaseoDto {
-  readonly idPaseo?: string;
-
+  @ApiProperty()
+  readonly idPaseo: string;
+  @ApiProperty()
   readonly idCreador: string;
-
+  @ApiProperty()
+  @IsDateString()
   readonly fechaCreacion: Date;
-
+  @ApiProperty()
+  @IsDateString()
   readonly fechaPaseo: Date;
-
+  @ApiProperty()
   readonly nombrePaseo: string;
-
+  @ApiProperty()
   readonly paisPaseo: string;
-
+  @ApiProperty()
   readonly paisCreador: string;
-
-  readonly cantidadIntegrantes: string;
-
-  readonly cantidadRestaurantes: string;
-
-  readonly cantidadAtracciones: string;
+  @ApiProperty()
+  @IsNumber()
+  readonly cantidadIntegrantes: number;
+  @ApiProperty()
+  @IsNumber()
+  readonly cantidadRestaurantes: number;
+  @ApiProperty()
+  @IsNumber()
+  readonly cantidadAtracciones: number;
 }
