@@ -26,4 +26,7 @@ export class ActualizarPaseoDto {
 
   @ApiProperty()
   readonly seccionAtraccionesTuristicas: SeccionAtraccionesTuristicas;
+
+  @ApiProperty()
+  readonly modificacionesRealizadas: string[];
 }
