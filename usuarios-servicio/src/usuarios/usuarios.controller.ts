@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Put,
+  Query,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as multer from 'multer';
 import { UsuariosService } from './usuarios.service';
@@ -31,9 +43,11 @@ export class UsuariosController {
   // }
 
   @Get('obtener-usuario-paseo/:id')
-  async obtenerUsuarioPaseo(@Param('id') idUsuario: string): Promise<Usuario | NoUsuario> {
+  async obtenerUsuarioPaseo(
+    @Param('id') idUsuario: string,
+  ): Promise<Usuario | NoUsuario> {
     return this.usuariosService.obtenerUsuarioPaseo(idUsuario);
-  }  
+  }
 
   @Get('findEmail')
   async findEmail(@Query('email') email: string): Promise<Usuario> {
@@ -42,7 +56,9 @@ export class UsuariosController {
 
   @Get('resetPassword')
   @HttpCode(200)
-  async resetPassword(@Query('email') email: string): Promise<Usuario | NoUsuario> {
+  async resetPassword(
+    @Query('email') email: string,
+  ): Promise<Usuario | NoUsuario> {
     return this.usuariosService.resetPassword(email);
   }
 
@@ -65,30 +81,40 @@ export class UsuariosController {
 
   @Put('actualizar-usuario')
   @HttpCode(200)
-  async actualizarUsuario(@Body() actualizarUsuariosDto: ActualizarUsuariosDto) {
+  async actualizarUsuario(
+    @Body() actualizarUsuariosDto: ActualizarUsuariosDto,
+  ) {
     return await this.usuariosService.actualizarUsuario(actualizarUsuariosDto);
   }
 
   @Put('actualizar-contrasenas')
   @HttpCode(200)
-  async actualizarContrasenas(@Body() actualizarContrasenaDto: ActualizarContrasenaDto) {
-    return await this.usuariosService.actualizarContrasenas(actualizarContrasenaDto);
+  async actualizarContrasenas(
+    @Body() actualizarContrasenaDto: ActualizarContrasenaDto,
+  ) {
+    return await this.usuariosService.actualizarContrasenas(
+      actualizarContrasenaDto,
+    );
   }
 
   @Post('actualizar-imagen-perfil')
-  @UseInterceptors(FileInterceptor('imagen', {
-    storage: multer.diskStorage({
-      destination: function (req, file, cb) {
-        cb(null, './uploads/')
-      },
-      filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname)
-      }
-    })
-  }))
+  @UseInterceptors(
+    FileInterceptor('imagen', {
+      storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+          cb(null, './uploads/');
+        },
+        filename: function (req, file, cb) {
+          cb(null, Date.now() + '-' + file.originalname);
+        },
+      }),
+    }),
+  )
   @HttpCode(200)
-  async actualizarImagen(@UploadedFile() image, @Body('idUsuario') idUsuario: string): Promise<any> {
+  async actualizarImagen(
+    @UploadedFile() image,
+    @Body('idUsuario') idUsuario: string,
+  ): Promise<any> {
     return await this.usuariosService.actualizarFotoPerfil(image, idUsuario);
   }
-
 }

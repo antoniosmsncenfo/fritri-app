@@ -13,10 +13,16 @@ import {
 import { DestinoSolicitudDto } from './dto/destino-solicitud.dto';
 import { IdGoogleSolicitudDto } from './dto/id-google-solicitud.dto';
 import { DestinoPorCoordenadasSolicitudDto } from './dto/destino-por-ubicacion-solicitud.dto';
+import { EstadisticasService } from '../estadisticas/estadisticas.service';
+import { Destino } from './entities/destino.entity';
+import { Estadistica } from 'src/estadisticas/dto/estadistica-destino';
 
 @Injectable()
 export class DestinosService {
-  constructor(private googleApiService: GoogleApiService) {}
+  constructor(
+    private googleApiService: GoogleApiService,
+    private estadisticasService: EstadisticasService,
+  ) {}
 
   async buscarDestinosPorCoordenadas(
     destinoPorUbicacionSolicitud: DestinoPorCoordenadasSolicitudDto,
@@ -52,6 +58,10 @@ export class DestinosService {
       destinosGoogle.map((destinoGoogle) =>
         this.mapearGoogleADestino(destinoGoogle),
       ),
+    );
+    this.estadisticasService.crearEstadisticaDestino(
+      await destinos,
+      destinoDto.idUsuario,
     );
 
     return destinos;

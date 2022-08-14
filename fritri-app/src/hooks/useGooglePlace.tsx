@@ -5,12 +5,14 @@ import { useTranslation } from './useTranslation';
 import { IDestino } from '../interfaces/paseo';
 import { ISolicitudDestinosPorCoordenadas, ISolicitudLugaresGoogle } from '../interfaces/solicitud-lugares-google';
 import { ILugarGoogleRespuesta } from '../interfaces/restaurante-respuesta';
+import { useData } from './useData';
 
 export const useGooglePlace = () => {
   const [googlePlace, setGooglePlace] = useState<ILugarGoogle | null>(null);
   const [googlePlacesList, setGooglePlacesList] = useState<ILugarGoogle[]>([]);
   const [destinations, setDestinations] = useState<IDestino[]>([]);
   const [lugaresGooglePorTipoResponse, setLugaresGooglePorTipoResponse] = useState<ILugarGoogleRespuesta>({ lugaresGoogle: [], tokenPaginacion: '' });
+  const { user } = useData();
   const { locale } = useTranslation();
 
   const destinationsSearchByCoordinates = async (solicitudDestinosPorCoordenadas: ISolicitudDestinosPorCoordenadas) => {
@@ -21,7 +23,7 @@ export const useGooglePlace = () => {
     }
   };
   const destinationsSearch = async (destination: string) => {
-    const result = await getDestinations(destination/*, locale*/); // descomentar para usar el idioma que seleccionó el usuario
+    const result = await getDestinations(destination, user._id!/*, locale*/); // descomentar para usar el idioma que seleccionó el usuario
     if (result) {
       setDestinations(result);
     }
@@ -35,7 +37,7 @@ export const useGooglePlace = () => {
   };
 
   const getLugaresGoogle = async (solicitudLugaresGoogle: ISolicitudLugaresGoogle) => {
-    const result = await getGooglePlacesByType(solicitudLugaresGoogle/*, locale*/); // descomentar para usar el idioma que seleccionó el usuario
+    const result = await getGooglePlacesByType(solicitudLugaresGoogle, user._id!/*, locale*/); // descomentar para usar el idioma que seleccionó el usuario
     if (result) {
       setLugaresGooglePorTipoResponse(result);
     }

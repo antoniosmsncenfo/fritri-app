@@ -35,4 +35,8 @@ export class LugaresGoogleSolicitudDto {
   @IsOptional()
   @IsNotEmpty()
   idioma?: string;
+
+  @ApiProperty()
+  @IsDefined()
+  idUsuario: string;
 }

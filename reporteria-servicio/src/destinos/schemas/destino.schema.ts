@@ -19,14 +19,31 @@ export class Destino {
     required: true,
   })
   tipo: string;
+
   @Prop({
     required: true,
   })
   paisDestino: string;
+
+  @Prop({
+    required: true,
+  })
+  estadoDestino: string;
+
+  @Prop({
+    required: true,
+  })
+  paisUsuario: string;
+
   @Prop({
     required: true,
   })
   idLugarGoogle: string;
+
+  @Prop({
+    required: true,
+  })
+  genero: string;
 
   @Prop({
     required: true,
