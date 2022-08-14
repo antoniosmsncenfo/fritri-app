@@ -30,24 +30,6 @@ export const useVotacion = () => {
       return resultado;
     };
   
-  // const [seCerroSeccion, setSeCerroSeccion] = useState(false);
-
-  // async function cerrarSeccion(idPaseo:string, tipo:TipoSeccion): Promise<any> {
-  //   let resultado;
-  //   try {
-  //     const resultado = await cerrarSeccionDb(idPaseo, tipo);
-      
-  //     if(resultado) {
-  //       setSeCerroSeccion(true)
-  //     }
-
-  //   } catch(error) {
-  //     console.log("useVotacion->cerrarSeccion::ERROR "+ JSON.stringify(error));
-  //     resultado = false;
-  //   }
-
-  //   return resultado;
-  // };
 
     return {
       votarSeccion,
@@ -57,9 +39,6 @@ export const useVotacion = () => {
       setEnviandoVotacionAtr,
       respRest,
       respAtr,
-      // cerrarSeccion,
-      // seCerroSeccion,
-      // setSeCerroSeccion
     };
 
 

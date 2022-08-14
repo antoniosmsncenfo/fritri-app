@@ -30,35 +30,3 @@ export const votarSeccionDb = async (idIntegrante: string, idPaseo: string, idSe
         throw e;
     }
 };
-
-// export const cerrarSeccionDb = async (idPaseo:string, tipo:TipoSeccion) => {
-
-//     const data = {
-//         idPaseo:idPaseo,
-//         tipoSeccion:tipo,
-//         cerrarVotaciones:true,
-//         fechaModificacion:new Date()
-//     };
-
-//     let request = {
-//         method: 'patch',
-//         url: `${VOTACIONES_BASE_URL}/cerrar-seccion`,
-//         headers: {},
-//         data,
-//     };
-//     try {
-//         const resultado = await axios(request);
-//         if (resultado.status === 200) {
-//             console.log(JSON.stringify(resultado.data));
-//             //Al tener un resultado exitoso, debemos notificar a todos los integrantes
-//             //sobre el cierre de las votaciones.
-//             return resultado.data;
-//         }
-//         else {
-//             return null;
-//         }
-//     }
-//     catch (e) {
-//         throw e;
-//     }
-// };

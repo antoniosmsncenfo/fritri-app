@@ -211,7 +211,6 @@ const TripDetails = (props) => {
   }, [enviandoVotacionAtr, enviandoVotacionRest]);
 
   useEffect(() => {
-    console.log("Se cerró una sección:" + seCerroSeccion);
     if (seCerroSeccion) {
       let idPaseo: string = props.route.params.id;
       obtenerPaseo(idPaseo);    

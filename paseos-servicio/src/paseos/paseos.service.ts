@@ -190,7 +190,6 @@ export class PaseosService {
         message: `Paseo con el id::${idPaseo} fue actualizado`,
         data: resultadoPaseo,
       };
-      console.log(JSON.stringify(resultadoPaseo));
 
       const notificacionPaseoActualizado: NotificacionPaseoActualizado = {
         idPaseo: idPaseo,
@@ -216,7 +215,7 @@ export class PaseosService {
   }
 
   async cerrarSeccion(cerrarSeccionDto: CerrarSeccionDto) {
-    let resultadoPaseo;
+    let resultadoPaseo:PaseoDocument;
     try {
       const { idPaseo, tipoSeccion, cerrarVotaciones, fechaModificacion } = cerrarSeccionDto;
       resultadoPaseo = await this.paseoModel.findOne({ _id: idPaseo });
@@ -231,7 +230,8 @@ export class PaseosService {
         seccion = "Restaurantes";
         filter = { _id: idPaseo };
         update = { 'seccionRestaurantes.esFinalizadasVotaciones':cerrarVotaciones, 
-                    'seccionRestaurantes.fechaFinalizacionVotaciones': fechaModificacion}; 
+                    'seccionRestaurantes.fechaFinalizacionVotaciones': fechaModificacion};
+
       } else {
         seccion = "Atracciones Turísticas";
         filter = { _id: idPaseo };
@@ -241,7 +241,56 @@ export class PaseosService {
       
       resultadoPaseo = await this.paseoModel.findOneAndUpdate(filter,update, {
         returnOriginal: false
-      });  
+      });
+
+      if (resultadoPaseo) {
+        let topLikes=0;
+        let likes = 0;
+        let lugares = resultadoPaseo.seccionRestaurantes.restaurantes;
+
+        if (tipoSeccion===TipoSeccion.RESTAURANTE) {
+          resultadoPaseo.seccionRestaurantes.restaurantes.forEach(async (rest) => {
+            if (rest.votaciones && rest.votaciones.length>0){
+              rest.ganador = true;
+              likes = 0;
+              rest.votaciones.forEach(async (voto) => {
+                if (voto.resultado === 'like') {
+                  likes++;
+                }
+                if (likes<=topLikes){
+                  rest.ganador = false;
+                }
+                else{
+                  topLikes=likes;
+                }
+              });
+            }
+          });
+        }
+        else {
+          resultadoPaseo.seccionAtraccionesTuristicas.atraccionesturisticas.forEach(async (atrac) => {
+            if (atrac.votaciones && atrac.votaciones.length>0){
+              atrac.ganador = true;
+              likes = 0;
+              atrac.votaciones.forEach(async (voto) => {
+                if (voto.resultado === 'like') {
+                  likes++;
+                }
+                if (likes<=topLikes){
+                  atrac.ganador = false;
+                }
+                else{
+                  topLikes=likes;
+                }
+              });
+            }
+          });
+        }
+
+        resultadoPaseo = await this.paseoModel.findOneAndUpdate(filter,resultadoPaseo.toObject(), {
+          returnOriginal: false
+        });
+      }
 
       const notificacionPaseoActualizado: NotificacionPaseoActualizado = {
         idPaseo: idPaseo,
@@ -249,8 +298,6 @@ export class PaseosService {
         integrantes: resultadoPaseo.integrantes,
         modificacionesRealizadas: [ `Se cerraron las votaciones en la sección de ${seccion}.` ]
       };
-
-      console.log("Notificacion Paseo: " + JSON.stringify(notificacionPaseoActualizado));
 
       await this.notificarPaseoActualizado(notificacionPaseoActualizado);
 
