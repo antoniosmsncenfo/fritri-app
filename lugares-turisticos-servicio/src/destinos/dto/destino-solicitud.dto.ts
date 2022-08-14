@@ -6,6 +6,10 @@ export class DestinoSolicitudDto {
   @IsDefined()
   nombre: string;
 
+  @ApiProperty()
+  @IsDefined()
+  idUsuario: string;
+
   @ApiPropertyOptional()
   @IsOptional()
   @IsNotEmpty()

@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Notificacion } from './dto/notificacion.dto';
 import { HttpService } from '@nestjs/axios';
+import { NotificacionPaseoActualizado } from './dto/notificacion-paseo-actualizado.dto';
 
 @Injectable()
 export class NotificacionesService {
@@ -22,4 +23,27 @@ export class NotificacionesService {
       );
     }
   };
+
+  async notificarPaseoActualizado(
+    notificacionPaseoActualizado: NotificacionPaseoActualizado,
+  ) {
+    notificacionPaseoActualizado.integrantes.forEach(async (integrante) => {
+      notificacionPaseoActualizado.modificacionesRealizadas.forEach(
+        async (modificacionRealizada) => {
+          const notificacion: Notificacion = {
+            titulo: `Paseo ${notificacionPaseoActualizado.nombrePaseo} actualizado`,
+            detalle: modificacionRealizada,
+            idPaseo: notificacionPaseoActualizado.idPaseo,
+            idUsuario: integrante,
+            fechaCreacion: new Date(),
+            fechaModificacion: new Date(),
+            esArchivada: false,
+            esLeida: false,
+          };
+
+          await this.CrearNotificacion(notificacion);
+        },
+      );
+    });
+  }
 }

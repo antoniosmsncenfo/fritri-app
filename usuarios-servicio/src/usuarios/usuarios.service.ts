@@ -83,7 +83,7 @@ export class UsuariosService {
     };
 
     let resultado;
-    
+
     resultado = await this.usuarioModel.findOne({ _id: idUsuario }).exec();
 
     if (!resultado) {
@@ -147,13 +147,12 @@ export class UsuariosService {
 
   private dejarPropiedadesMinimas(usuario: UsuarioDocument): UsuarioDocument {
     const propiedadesEliminar = [
-      'contrasena', 
-      'contrasenaTemporal', 
+      'contrasena',
+      'contrasenaTemporal',
       'fechaContrasenaTemporal',
       'tipoLogin',
-      'pais',
       'fechaCreacion',
-      '__v'
+      '__v',
     ];
 
     for (const propiedadEliminar of propiedadesEliminar) {
@@ -176,7 +175,10 @@ export class UsuariosService {
     try {
       //Primero se valida si existe un usuario con el correo recibido
       const resultadoUsuario: UsuarioDocument = await this.usuarioModel
-        .findOne({ correoElectronico: loginEmailDto.correoElectronico, tipoLogin: 'Email' })
+        .findOne({
+          correoElectronico: loginEmailDto.correoElectronico,
+          tipoLogin: 'Email',
+        })
         .exec();
       //Si no se encontró el correo se retorna credenciales no válidas: status 404
       if (!resultadoUsuario) {
@@ -254,8 +256,9 @@ export class UsuariosService {
       message: 'No existe usuario',
       statusCode: 404,
     };
-    let resetLimiteTiempo = {
-      message: 'Solicitud de password temporal no permitida debido a límite de tiempo',
+    const resetLimiteTiempo = {
+      message:
+        'Solicitud de password temporal no permitida debido a límite de tiempo',
       limit: process.env.TEMP_PASS_EMAIL_LIMIT,
       wait: 0,
       statusCode: 405,
@@ -272,14 +275,16 @@ export class UsuariosService {
       } else {
         //Como si se encontró un usuario con ese correo, se procede a validar si se generó una
         //contraseña temporal dentro del límite de tiempo permitido.
-        if(resultadoUsuario.fechaContrasenaTemporal){
+        if (resultadoUsuario.fechaContrasenaTemporal) {
           const limite = parseInt(process.env.TEMP_PASS_EMAIL_LIMIT);
           const enviado = resultadoUsuario.fechaContrasenaTemporal;
-          const ahora = new Date();    
-          const difMinutos = Math.floor(Math.abs(ahora.getTime() - enviado.getTime()) / (1000 * 60));
+          const ahora = new Date();
+          const difMinutos = Math.floor(
+            Math.abs(ahora.getTime() - enviado.getTime()) / (1000 * 60),
+          );
 
-          if (difMinutos<limite) {
-            resetLimiteTiempo.wait = limite-difMinutos;
+          if (difMinutos < limite) {
+            resetLimiteTiempo.wait = limite - difMinutos;
             return resetLimiteTiempo;
           }
         }
@@ -403,11 +408,12 @@ export class UsuariosService {
       statusCode: 404,
     };
     try {
-      resultadoUsuario = await this.usuarioModel.findOne({_id: idUsuario});
-      if(!resultadoUsuario) {
+      resultadoUsuario = await this.usuarioModel.findOne({ _id: idUsuario });
+      if (!resultadoUsuario) {
         resultadoNoExiste;
       }
-      let resultadoImagen:ICloudinary = await this.cloudinaryService.subirImagen(imagen);
+      const resultadoImagen: ICloudinary =
+        await this.cloudinaryService.subirImagen(imagen);
       resultadoUsuario.urlFoto = resultadoImagen.secure_url;
       await resultadoUsuario.save();
     } catch (error) {
@@ -417,5 +423,4 @@ export class UsuariosService {
     }
     return this.eliminarPropiedades(resultadoUsuario.toObject());
   }
-
 }

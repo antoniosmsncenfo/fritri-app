@@ -9,6 +9,7 @@ import { GenerarPinProteger } from '../helpers/generador-codigo';
 import { NotificacionesService } from 'src/notificaciones/notificaciones.service';
 import { NotificacionPaseoActualizado } from 'src/notificaciones/dto/notificacion-paseo-actualizado.dto';
 import { Notificacion } from 'src/notificaciones/dto/notificacion.dto';
+import { EstadisticasService } from '../estadisticas/estadisticas.service';
 import { CerrarSeccionDto } from './dto/cerrar-seccion';
 
 export enum EstadoPaseo {
@@ -21,6 +22,7 @@ export class PaseosService {
   constructor(
     @InjectModel(Paseo.name) private readonly paseoModel: Model<PaseoDocument>,
     private notificacionesService: NotificacionesService,
+    private estadisticasService: EstadisticasService,
   ) {}
 
   async crear(crearPaseo: CrearPaseoDto) {
@@ -42,6 +44,7 @@ export class PaseosService {
         `Error al tratar de crear el paseo::${error.message}`,
       );
     }
+    this.estadisticasService.crearEstadisticaPaseo(resultado);
     return resultado;
   }
 
@@ -196,7 +199,9 @@ export class PaseosService {
         modificacionesRealizadas: actualizarPaseoDto.modificacionesRealizadas,
       };
 
-      await this.notificarPaseoActualizado(notificacionPaseoActualizado);
+      await this.notificacionesService.notificarPaseoActualizado(
+        notificacionPaseoActualizado,
+      );
     } catch (error) {
       if (error.message.match(/No existe/)) {
         throw new NotFoundException(

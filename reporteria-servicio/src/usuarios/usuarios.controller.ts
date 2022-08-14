@@ -1,12 +1,9 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import * as multer from 'multer';
+import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { UsuariosService } from './usuarios.service';
 import { CrearUsuariosDto } from './dto/crear-usuarios.dto';
 import { Usuario } from './schemas/usuarios.schema';
 
-
-@Controller('usuarios')
+@Controller('estadisticas')
 export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
@@ -16,9 +13,8 @@ export class UsuariosController {
     return await this.usuariosService.create(crearUsuariosDto);
   }
 
-  @Get('findAll')
+  @Get('obtener-todos-usuarios')
   async findAll(): Promise<Usuario[]> {
     return this.usuariosService.findAll();
   }
-
 }

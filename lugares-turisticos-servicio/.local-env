@@ -1,4 +1,0 @@
-#Para llamarlo en el código usuar: process.env.GOOGLE_API_KEY;
-
-GOOGLE_API_KEY=KEY
-PORT=6000
