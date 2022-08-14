@@ -41,5 +41,10 @@ export class DestinoSolicitudDto {
   @IsDefined()
   @ApiProperty()
   @IsNotEmpty()
+  readonly genero: string;
+
+  @IsDefined()
+  @ApiProperty()
+  @IsNotEmpty()
   readonly idUsuario: string;
 }

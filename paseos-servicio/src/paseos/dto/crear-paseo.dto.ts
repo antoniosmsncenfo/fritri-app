@@ -6,7 +6,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CrearPaseoDto {
   @ApiPropertyOptional()
-  @IsNotEmpty()
   readonly idPaseo?: string;
 
   @ApiProperty()

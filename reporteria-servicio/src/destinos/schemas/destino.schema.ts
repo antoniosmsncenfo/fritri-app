@@ -43,6 +43,11 @@ export class Destino {
   @Prop({
     required: true,
   })
+  genero: string;
+
+  @Prop({
+    required: true,
+  })
   idUsuario: string;
 }
 

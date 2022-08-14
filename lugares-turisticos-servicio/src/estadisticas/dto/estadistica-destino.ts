@@ -7,4 +7,5 @@ export class Estadistica {
   paisUsuario: string;
   idLugarGoogle: string;
   idUsuario: string;
+  genero: string;
 }

@@ -5,6 +5,7 @@ import { EstadoPaseo } from '../interfaces/paseo';
 import { ISolicitudLugaresGoogle, TipoLugaresGoogle } from '../interfaces/solicitud-lugares-google';
 import { getGooglePlacesByType } from '../api/lugaresTuristicosDB';
 import { ILugarGoogle } from '../interfaces/lugar-google';
+import { useData } from './useData';
 
 export const usePaseo = () => {
 
@@ -12,6 +13,7 @@ export const usePaseo = () => {
     const [paseoSeleccionado, setPaseoSeleccionado] = useState<IPaseo | null>(null);
     const [paseoCreado, setPaseoCreado] = useState<IPaseo | null>(null);
     const [paseoActualizado, setPaseoActualizado] = useState<IPaseo | null>(null);
+    const { user } = useData();
     const radio = 5;
     const cantidadLugaresAleatorios = 3;
 
@@ -106,7 +108,7 @@ export const usePaseo = () => {
     const obtenerLugaresAleatorios = async (latitud: number, longitud: number, tipo: TipoLugaresGoogle): Promise<ILugar[]> => {
         const solicitud: ISolicitudLugaresGoogle = { latitud, longitud, radio, tipo, tokenPaginacion: '' };
 
-        const lugares = await getGooglePlacesByType(solicitud/*, locale*/); // descomentar para usar el idioma que seleccionó el usuario
+        const lugares = await getGooglePlacesByType(solicitud, user._id!/*, locale*/); // descomentar para usar el idioma que seleccionó el usuario
         const lugaresOrdenados = lugares.lugaresGoogle.sort((a, b) => {
             if (a.calificacion > b.calificacion) { return 1; }
             if (a.calificacion < b.calificacion) { return -1; }

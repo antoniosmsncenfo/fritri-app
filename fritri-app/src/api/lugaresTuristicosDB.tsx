@@ -33,7 +33,7 @@ export const getDestinationsByCoordinates = async (solicitudDestinosPorCoordenad
     }
 };
 
-export const getDestinations = async (destination: string, language: string = 'es'): Promise<IDestino[]> => {
+export const getDestinations = async (destination: string, idUsuario: string, language: string = 'es'): Promise<IDestino[]> => {
     if (destination) {
         let request = {
             method: 'get',
@@ -44,6 +44,7 @@ export const getDestinations = async (destination: string, language: string = 'e
             params: {
                 nombre: destination,
                 idioma: language,
+                idUsuario,
             },
         };
 
@@ -131,7 +132,7 @@ export const getGooglePlaceList = async (idsGoogle: string[]) => {
     }
 };
 
-export const getGooglePlacesByType = async (solicitudLugaresGoogle: ISolicitudLugaresGoogle, language: string = 'es'): Promise<ILugarGoogleRespuesta> => {
+export const getGooglePlacesByType = async (solicitudLugaresGoogle: ISolicitudLugaresGoogle, idUsuario: string, language: string = 'es'): Promise<ILugarGoogleRespuesta> => {
 
     let request = {
         method: 'post',
@@ -139,7 +140,7 @@ export const getGooglePlacesByType = async (solicitudLugaresGoogle: ISolicitudLu
         headers: {
             'Content-Type': 'application/json',
         },
-        data: { ...solicitudLugaresGoogle, idioma: language },
+        data: { ...solicitudLugaresGoogle, idioma: language, idUsuario },
     };
 
     try {

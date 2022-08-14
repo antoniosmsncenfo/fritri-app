@@ -12,10 +12,15 @@ import { LugaresGoogleSolicitudDto } from './dto/lugares-google-solicitud.dto';
 import { LugarGoogleRespuesta } from './entities/lugar-google-respuesta.entity';
 import { LugarGoogle } from './entities/lugar-google.entity';
 import { IdGoogleSolicitudDto } from './dto/id-google-solicitud.dto';
+import { Estadistica } from 'src/estadisticas/dto/estadistica-destino';
+import { EstadisticasService } from '../estadisticas/estadisticas.service';
 
 @Injectable()
 export class LugaresGoogleService {
-  constructor(private googleApiService: GoogleApiService) {}
+  constructor(
+    private googleApiService: GoogleApiService,
+    private estadisticasService: EstadisticasService,
+  ) {}
 
   async obtenerLugaresGoogleDelDestino(
     lugarGoogleSolicitud: LugaresGoogleSolicitudDto,
@@ -45,6 +50,12 @@ export class LugaresGoogleService {
         respuestaLugaresGoogle?.results.map((destinoGoogle) =>
           this.mapearPlaceDataALugarGoogle(destinoGoogle, tipoLugar),
         ),
+      );
+
+      this.estadisticasService.crearEstadisticaLugar(
+        await lugaresGoogleObtenidos,
+        lugarGoogleSolicitud.idUsuario,
+        lugarGoogleSolicitud.tipo,
       );
 
       return {
