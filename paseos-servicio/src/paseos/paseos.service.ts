@@ -187,6 +187,7 @@ export class PaseosService {
         message: `Paseo con el id::${idPaseo} fue actualizado`,
         data: resultadoPaseo,
       };
+      console.log(JSON.stringify(resultadoPaseo));
 
       const notificacionPaseoActualizado: NotificacionPaseoActualizado = {
         idPaseo: idPaseo,
@@ -295,7 +296,7 @@ export class PaseosService {
             titulo: `Paseo ${notificacionPaseoActualizado.nombrePaseo} actualizado`,
             detalle: modificacionRealizada,
             idPaseo: notificacionPaseoActualizado.idPaseo,
-            idUsuario: integrante,
+            idUsuario: integrante.idIntegrante.toString(),
             fechaCreacion: new Date(),
             fechaModificacion: new Date(),
             esArchivada: false,
