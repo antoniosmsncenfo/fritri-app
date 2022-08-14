@@ -4,6 +4,7 @@ import {useFonts} from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import * as Linking from 'expo-linking';
+import Storage from '@react-native-async-storage/async-storage';
 
 import Menu from './Menu';
 import {useData, ThemeProvider, TranslationProvider} from '../hooks';
@@ -12,7 +13,7 @@ const prefix = Linking.createURL('/');
 
 
 export default () => {
-  const {isDark, theme, setTheme} = useData();
+  const {isDark, theme, setTheme, handleUser} = useData();
   const [ data, setData ] = useState({});
 
   const linking = {
@@ -58,6 +59,16 @@ export default () => {
       StatusBar.setBarStyle('default');
     };
   }, [isDark]);
+
+  useEffect(() => {
+    const getGUser = async() => {
+      let userG = await Storage.getItem('userG');
+      if(userG) {
+        handleUser(JSON.parse(userG));
+      }
+    }
+    getGUser();
+  }, [])
 
   // load custom fonts
   const [fontsLoaded] = useFonts({
