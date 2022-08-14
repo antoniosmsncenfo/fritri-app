@@ -5,56 +5,60 @@ export type PaseoDocument = Paseo & Document;
 
 @Schema()
 export class Paseo {
-	@Prop({
-		required: true,
-	  })
-	  idCreador: string;
-	
-	@Prop({
-		required: true,
-	  })
-	  fechaCreacion: Date;
+  @Prop({
+    required: true,
+  })
+  idPaseo: string;
 
-	  	
-	@Prop({
-		required: true,
-	  })
-	  fechaPaseo: Date;
-	
+  @Prop({
+    required: true,
+  })
+  idCreador: string;
 
-	  @Prop({
-		required: true,
-	  })
-	  nombrePaseo: string;
-	
+  @Prop({
+    required: true,
+  })
+  destino: string;
 
-	  @Prop({
-		required: true,
-	  })
-	  paisPaseo: string;
+  @Prop({
+    required: true,
+  })
+  fechaCreacion: Date;
 
+  @Prop({
+    required: true,
+  })
+  fechaPaseo: Date;
 
-	  @Prop({
-		required: true,
-	  })
-	  paisCreador: string;
+  @Prop({
+    required: true,
+  })
+  nombrePaseo: string;
 
+  @Prop({
+    required: true,
+  })
+  paisPaseo: string;
 
-	  @Prop({
-		required: true,
-	  })
-	  cantidadIntegrantes: string;
-	
-	  @Prop({
-		required: true,
-	  })
-	  cantidadRestaurantes: string;
+  @Prop({
+    required: true,
+  })
+  paisCreador: string;
 
-	  @Prop({
-		required: true,
-	  })
-	  cantidadAtracciones: string;
+  @Prop({
+    required: true,
+  })
+  cantidadIntegrantes: number;
 
+  @Prop({
+    required: true,
+  })
+  cantidadRestaurantes: number;
+
+  @Prop({
+    required: true,
+  })
+  cantidadAtracciones: number;
 }
 
 export const PaseoSchema = SchemaFactory.createForClass(Paseo);

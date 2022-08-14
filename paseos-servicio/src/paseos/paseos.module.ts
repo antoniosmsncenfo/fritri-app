@@ -4,7 +4,9 @@ import { Paseo, PaseoSchema } from './schemas/paseos.schema';
 import { PaseosController } from './paseos.controller';
 import { PaseosService } from './paseos.service';
 import { NotificacionesService } from 'src/notificaciones/notificaciones.service';
-import { HttpService, HttpModule } from '@nestjs/axios';
+import { HttpModule } from '@nestjs/axios';
+import { UsuariosService } from 'src/usuarios/usuarios.service';
+import { EstadisticasService } from '../estadisticas/estadisticas.service';
 
 @Module({
   imports: [
@@ -12,6 +14,11 @@ import { HttpService, HttpModule } from '@nestjs/axios';
     HttpModule,
   ],
   controllers: [PaseosController],
-  providers: [PaseosService, NotificacionesService],
+  providers: [
+    PaseosService,
+    NotificacionesService,
+    UsuariosService,
+    EstadisticasService,
+  ],
 })
 export class PaseosModule {}

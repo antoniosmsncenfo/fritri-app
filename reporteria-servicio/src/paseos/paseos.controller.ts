@@ -1,9 +1,9 @@
-import { Body, Controller, Get, HttpCode, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { PaseosService } from './paseos.service';
 import { CrearPaseoDto } from './dto/crear-paseo.dto';
 import { Paseo } from './schemas/paseos.schema';
 
-@Controller('paseos')
+@Controller('estadisticas')
 export class PaseosController {
   constructor(private readonly paseosService: PaseosService) {}
 
@@ -13,8 +13,7 @@ export class PaseosController {
     return await this.paseosService.crear(crearPaseoDto);
   }
 
- 
-  @Get('findAll')
+  @Get('obtener-todos-paseos')
   async findAll(): Promise<Paseo[]> {
     return this.paseosService.findAll();
   }
