@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
-
 import { useData, useTheme, useTranslation } from '../hooks/';
 import { Block, Button, Image, Product, Text, DashboardCard, Input } from '../components/';
 import { useNavigation } from '@react-navigation/native';
 import { usePaseo } from '../hooks/usePaseos';
 import { EstadoPaseo } from '../interfaces/paseo';
 import { CantidadPaseos } from '../interfaces/paseo';
+import { CommonActions } from '@react-navigation/native';
 
 const Home = () => {
   const { t } = useTranslation();
@@ -17,8 +17,22 @@ const Home = () => {
   //Extraemos del hook el arreglo de paseos y el método para obtener paseos
   const { paseosUsuario, setPaseosUsuario, obtenerPaseosUsuario} = usePaseo();
   
+  const checkGUser = async () => {
+    if(!user) {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            { name: 'Login'},
+          ],
+        })
+      );
+    }
+  }
+
   useEffect(() => {
-    obtenerPaseosUsuario(user._id!,EstadoPaseo.Pendiente,CantidadPaseos.Diez);
+    checkGUser();
+    obtenerPaseosUsuario(user?._id!,EstadoPaseo.Pendiente,CantidadPaseos.Diez);
   }, [])
 
   //Maneja el cambio de tab y cambia la lista de productos
