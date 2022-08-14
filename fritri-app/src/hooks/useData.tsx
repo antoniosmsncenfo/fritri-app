@@ -34,7 +34,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   //Estados que se mantienen
   const [isDark, setIsDark] = useState(false);
   const [theme, setTheme] = useState<ITheme>(light);
-  const [user, setUser] = useState<IUser>(USERS[0]);
+  const [user, setUser] = useState<IUsuarioFritri>();
 
   const [basket, setBasket] = useState<IBasket>(BASKET);
   const [users, setUsers] = useState<IUsuarioFritri[]>(USERS);
@@ -110,6 +110,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
       // set user / compare if has updated
       if (JSON.stringify(payload) !== JSON.stringify(user)) {
         setUser(payload);
+        Storage.setItem('userG', JSON.stringify(payload));
       }
     },
     [user, setUser],
