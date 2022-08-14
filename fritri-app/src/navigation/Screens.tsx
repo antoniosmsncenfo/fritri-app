@@ -45,7 +45,7 @@ export default () => {
       <Stack.Screen
         name="Login"
         component={Login}
-        options={{ headerShown: false }}
+        options={{ headerShown: false , gestureEnabled: false }}
       />
       <Stack.Screen
         name="ResetPassword"
@@ -60,7 +60,7 @@ export default () => {
       <Stack.Screen
         name="Home"
         component={Home}
-        options={{ title: t('navigation.home') }}
+        options={{ title: t('navigation.home'), gestureEnabled: false }}
       />
       <Stack.Screen
         name="Register"
