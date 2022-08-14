@@ -34,7 +34,7 @@ export class NotificacionesService {
             titulo: `Paseo ${notificacionPaseoActualizado.nombrePaseo} actualizado`,
             detalle: modificacionRealizada,
             idPaseo: notificacionPaseoActualizado.idPaseo,
-            idUsuario: integrante,
+            idUsuario: integrante.idIntegrante.toString(),
             fechaCreacion: new Date(),
             fechaModificacion: new Date(),
             esArchivada: false,
