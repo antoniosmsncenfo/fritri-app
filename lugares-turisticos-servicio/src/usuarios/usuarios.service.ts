@@ -13,7 +13,7 @@ export class UsuariosService {
       );
 
       if (result.status === 200) {
-        return null;
+        return result.data as Usuario;
       } else {
         return null;
       }
