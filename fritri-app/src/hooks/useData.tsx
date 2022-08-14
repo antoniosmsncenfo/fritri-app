@@ -115,6 +115,11 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     [user, setUser],
   );
 
+  // Clear user
+  const clearUser = () => {
+    Storage.removeItem('userG');
+  };
+
   // handle Article
   const handleArticle = useCallback(
     (payload: IArticle) => {
@@ -157,6 +162,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
     users,
     handleUsers,
     handleUser,
+    clearUser,
     basket,
     handleBasket,
     following,

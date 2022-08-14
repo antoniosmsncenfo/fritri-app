@@ -87,6 +87,7 @@ export interface IUseData {
   users: IUsuarioFritri[];
   handleUser: (data?: IUsuarioFritri) => void;
   handleUsers: (data?: IUsuarioFritri[]) => void;
+  clearUser: () => void;
   basket: IBasket;
   handleBasket: (data?: IBasket) => void;
   following: IProduct[];
