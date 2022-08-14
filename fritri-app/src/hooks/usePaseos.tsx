@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { CantidadPaseos, IDestino, ILugar, IPaseo, ISeccionAtraccionesTuristicas, ISeccionRestaurantes, ISolicitudPaseoAleatorio, IPaseoUpdate } from '../interfaces/paseo';
-import { crearPaseoNuevo, obtenerPaseoPorID, obtenerPaseosUsuarioPorEstado, actualizarPaseoExistente, protegerPaseoPorID, removerPinPaseoPorID } from '../api/paseoDB';
+import { CantidadPaseos, IDestino, ILugar, IPaseo, ISeccionAtraccionesTuristicas, ISeccionRestaurantes, ISolicitudPaseoAleatorio, IPaseoUpdate, TipoSeccion } from '../interfaces/paseo';
+import { crearPaseoNuevo, obtenerPaseoPorID, obtenerPaseosUsuarioPorEstado, actualizarPaseoExistente, protegerPaseoPorID, removerPinPaseoPorID, cerrarSeccionDb } from '../api/paseoDB';
 import { EstadoPaseo } from '../interfaces/paseo';
 import { ISolicitudLugaresGoogle, TipoLugaresGoogle } from '../interfaces/solicitud-lugares-google';
 import { getGooglePlacesByType } from '../api/lugaresTuristicosDB';
@@ -102,6 +102,24 @@ export const usePaseo = () => {
             });
     };
 
+    const [seCerroSeccion, setSeCerroSeccion] = useState(false);
+
+    async function cerrarSeccion(idPaseo:string, tipo:TipoSeccion): Promise<any> {
+      let resultado;
+      try {
+        const resultado = await cerrarSeccionDb(idPaseo, tipo);
+        
+        if(resultado) {
+          setSeCerroSeccion(true)
+        }
+  
+      } catch(error) {
+        console.log("useVotacion->cerrarSeccion::ERROR "+ JSON.stringify(error));
+        resultado = false;
+      }
+  
+      return resultado;
+    };    
 
     const obtenerLugaresAleatorios = async (latitud: number, longitud: number, tipo: TipoLugaresGoogle): Promise<ILugar[]> => {
         const solicitud: ISolicitudLugaresGoogle = { latitud, longitud, radio, tipo, tokenPaginacion: '' };
@@ -177,5 +195,8 @@ export const usePaseo = () => {
         paseoActualizado,
         protegerPaseo,
         removerPin,
+        cerrarSeccion,
+        seCerroSeccion,
+        setSeCerroSeccion        
     };
 };

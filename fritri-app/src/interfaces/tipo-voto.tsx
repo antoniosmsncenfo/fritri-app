@@ -8,7 +8,3 @@ export interface ITipoVotoEnviar {
   idLugar: string;
 }
 
-export enum TipoSeccion {
-  RESTAURANTE = 'RESTAURANTE',
-  ATRACCION_TURISTICA = 'ATRACCION_TURISTICA' 
-}

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ITipoVotoEnviar, TipoSeccion } from '../interfaces/tipo-voto';
+import { ITipoVotoEnviar} from '../interfaces/tipo-voto';
 import { VOTACIONES_BASE_URL } from '@env';
 
 export const votarSeccionDb = async (idIntegrante: string, idPaseo: string, idSecciones: ITipoVotoEnviar[], tipoSeccion: string) => {
@@ -31,34 +31,34 @@ export const votarSeccionDb = async (idIntegrante: string, idPaseo: string, idSe
     }
 };
 
-export const cerrarSeccionDb = async (idPaseo:string, tipo:TipoSeccion) => {
+// export const cerrarSeccionDb = async (idPaseo:string, tipo:TipoSeccion) => {
 
-    const data = {
-        idPaseo:idPaseo,
-        tipoSeccion:tipo,
-        cerrarVotaciones:true,
-        fechaModificacion:new Date()
-    };
+//     const data = {
+//         idPaseo:idPaseo,
+//         tipoSeccion:tipo,
+//         cerrarVotaciones:true,
+//         fechaModificacion:new Date()
+//     };
 
-    let request = {
-        method: 'patch',
-        url: `${VOTACIONES_BASE_URL}/cerrar-seccion`,
-        headers: {},
-        data,
-    };
-    try {
-        const resultado = await axios(request);
-        if (resultado.status === 200) {
-            console.log(JSON.stringify(resultado.data));
-            //Al tener un resultado exitoso, debemos notificar a todos los integrantes
-            //sobre el cierre de las votaciones.
-            return resultado.data;
-        }
-        else {
-            return null;
-        }
-    }
-    catch (e) {
-        throw e;
-    }
-};
+//     let request = {
+//         method: 'patch',
+//         url: `${VOTACIONES_BASE_URL}/cerrar-seccion`,
+//         headers: {},
+//         data,
+//     };
+//     try {
+//         const resultado = await axios(request);
+//         if (resultado.status === 200) {
+//             console.log(JSON.stringify(resultado.data));
+//             //Al tener un resultado exitoso, debemos notificar a todos los integrantes
+//             //sobre el cierre de las votaciones.
+//             return resultado.data;
+//         }
+//         else {
+//             return null;
+//         }
+//     }
+//     catch (e) {
+//         throw e;
+//     }
+// };

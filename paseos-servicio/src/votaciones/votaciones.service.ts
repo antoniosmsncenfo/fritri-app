@@ -7,8 +7,8 @@ import { Paseo, PaseoDocument } from '../paseos/schemas/paseos.schema';
 import { VotarSeccionDto } from './dto/votar-seccion';
 import { Lugar } from 'src/paseos/schemas/lugares.schema';
 import { IResultadoExiste } from './interface/votar-seccion';
-import { CerrarSeccionDto } from './dto/cerrar-seccion';
-import { TipoSeccion } from './interface/votar-seccion';
+// import { CerrarSeccionDto } from './dto/cerrar-seccion';
+// import { TipoSeccion } from './interface/votar-seccion';
 
 @Injectable()
 export class VotacionesService {
@@ -47,36 +47,36 @@ export class VotacionesService {
     return resultado;
   }
 
-  async cerrarSeccion(cerrarSeccionDto: CerrarSeccionDto) {
-    let resultadoPaseo;
-    try {
-      const { idPaseo, tipoSeccion, cerrarVotaciones, fechaModificacion } = cerrarSeccionDto;
-      resultadoPaseo = await this.paseoModel.findOne({ _id: idPaseo });
-      if(!resultadoPaseo) {
-        return this.resultadoNoExiste;
-      }
+  // async cerrarSeccion(cerrarSeccionDto: CerrarSeccionDto) {
+  //   let resultadoPaseo;
+  //   try {
+  //     const { idPaseo, tipoSeccion, cerrarVotaciones, fechaModificacion } = cerrarSeccionDto;
+  //     resultadoPaseo = await this.paseoModel.findOne({ _id: idPaseo });
+  //     if(!resultadoPaseo) {
+  //       return this.resultadoNoExiste;
+  //     }
 
-      let filter;
-      let update
-      if (tipoSeccion===TipoSeccion.RESTAURANTE) {
-        filter = { _id: idPaseo };
-        update = { 'seccionRestaurantes.esFinalizadasVotaciones':cerrarVotaciones, 
-                    'seccionRestaurantes.fechaFinalizacionVotaciones': fechaModificacion};    
-      } else {
-        filter = { _id: idPaseo };
-        update = { 'seccionAtraccionesTuristicas.esFinalizadasVotaciones':cerrarVotaciones, 
-                    'seccionAtraccionesTuristicas.fechaFinalizacionVotaciones': fechaModificacion};
-      }
+  //     let filter;
+  //     let update
+  //     if (tipoSeccion===TipoSeccion.RESTAURANTE) {
+  //       filter = { _id: idPaseo };
+  //       update = { 'seccionRestaurantes.esFinalizadasVotaciones':cerrarVotaciones, 
+  //                   'seccionRestaurantes.fechaFinalizacionVotaciones': fechaModificacion};    
+  //     } else {
+  //       filter = { _id: idPaseo };
+  //       update = { 'seccionAtraccionesTuristicas.esFinalizadasVotaciones':cerrarVotaciones, 
+  //                   'seccionAtraccionesTuristicas.fechaFinalizacionVotaciones': fechaModificacion};
+  //     }
       
-      resultadoPaseo = await this.paseoModel.findOneAndUpdate(filter,update, {
-        returnOriginal: false
-      });  
+  //     resultadoPaseo = await this.paseoModel.findOneAndUpdate(filter,update, {
+  //       returnOriginal: false
+  //     });  
 
-    } catch(error) {
-      throw new BadRequestException(`Error al tratar de votarSeccion::${error.message}`);
-    }
-    return resultadoPaseo;
-  }
+  //   } catch(error) {
+  //     throw new BadRequestException(`Error al tratar de votarSeccion::${error.message}`);
+  //   }
+  //   return resultadoPaseo;
+  // }
 
   async quitarVotoSeccion(votarSeccionDto: VotarSeccionDto) {
     let resultado;

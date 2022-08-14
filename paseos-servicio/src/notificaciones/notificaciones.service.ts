@@ -8,6 +8,7 @@ export class NotificacionesService {
 
   CrearNotificacion = async (notificacion: Notificacion) => {
     try {
+      console.log("Notificacion: " + JSON.stringify(notificacion));
       return (
         await this.httpService.axiosRef.post(
           `${process.env.NOTIFICACIONES_BASE_URL}/crear-notificacion`,

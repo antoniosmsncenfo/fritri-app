@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { cerrarSeccionDb, votarSeccionDb } from '../api/votacionDB';
-import { ITipoVotoEnviar, TipoSeccion } from '../interfaces/tipo-voto';
+import { votarSeccionDb } from '../api/votacionDB';
+import { ITipoVotoEnviar } from '../interfaces/tipo-voto';
 
 export const useVotacion = () => {
 
@@ -30,24 +30,24 @@ export const useVotacion = () => {
       return resultado;
     };
   
-  const [seCerroSeccion, setSeCerroSeccion] = useState(false);
+  // const [seCerroSeccion, setSeCerroSeccion] = useState(false);
 
-  async function cerrarSeccion(idPaseo:string, tipo:TipoSeccion): Promise<any> {
-    let resultado;
-    try {
-      const resultado = await cerrarSeccionDb(idPaseo, tipo);
+  // async function cerrarSeccion(idPaseo:string, tipo:TipoSeccion): Promise<any> {
+  //   let resultado;
+  //   try {
+  //     const resultado = await cerrarSeccionDb(idPaseo, tipo);
       
-      if(resultado) {
-        setSeCerroSeccion(true)
-      }
+  //     if(resultado) {
+  //       setSeCerroSeccion(true)
+  //     }
 
-    } catch(error) {
-      console.log("useVotacion->cerrarSeccion::ERROR "+ JSON.stringify(error));
-      resultado = false;
-    }
+  //   } catch(error) {
+  //     console.log("useVotacion->cerrarSeccion::ERROR "+ JSON.stringify(error));
+  //     resultado = false;
+  //   }
 
-    return resultado;
-  };
+  //   return resultado;
+  // };
 
     return {
       votarSeccion,
@@ -57,9 +57,9 @@ export const useVotacion = () => {
       setEnviandoVotacionAtr,
       respRest,
       respAtr,
-      cerrarSeccion,
-      seCerroSeccion,
-      setSeCerroSeccion
+      // cerrarSeccion,
+      // seCerroSeccion,
+      // setSeCerroSeccion
     };
 
 

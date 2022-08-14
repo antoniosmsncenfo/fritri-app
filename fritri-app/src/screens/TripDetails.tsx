@@ -8,20 +8,21 @@ import { useNavigation } from '@react-navigation/native';
 import { useUsuario } from '../hooks/useUsuario';
 import { useVotacion } from '../hooks/useVotacion';
 import { PlaceDetail } from '../components/PlaceDetail';
-import { ILugar } from '../interfaces/paseo';
-import { ITipoVoto, ITipoVotoEnviar, TipoSeccion } from '../interfaces/tipo-voto';
+import { ILugar, TipoSeccion } from '../interfaces/paseo';
+import { ITipoVoto, ITipoVotoEnviar } from '../interfaces/tipo-voto';
 import * as Linking from 'expo-linking';
 
 const TripDetails = (props) => {
   const { assets, sizes, colors, gradients } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation();
-  const { obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado, protegerPaseo, removerPin } = usePaseo();
+  const { obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado, 
+    protegerPaseo, removerPin,
+    cerrarSeccion, seCerroSeccion, setSeCerroSeccion } = usePaseo();
   const { usuarioPaseo, obtenerUsuarioPaseo } = useUsuario();
   const { 
     votarSeccion, enviandoVotacionRest, enviandoVotacionAtr, 
-    respRest, respAtr, setEnviandoVotacionRest, setEnviandoVotacionAtr,
-    cerrarSeccion, seCerroSeccion, setSeCerroSeccion } = useVotacion();
+    respRest, respAtr, setEnviandoVotacionRest, setEnviandoVotacionAtr } = useVotacion();
   const { user } = useData();
 
   const [restaurantesVotar, setRestaurantesVotar] = useState<ITipoVoto[]>([]);
@@ -498,7 +499,7 @@ const TripDetails = (props) => {
             {
               paseoSeleccionado?.seccionAtraccionesTuristicas?.atraccionesturisticas.length === 0 && (
                 <Block row marginBottom={sizes.sm}>
-                  <Text h7 color={colors.primary}>
+                  <Text h5 color={colors.primary}>
                     {t('tripDetails.noTouristAttractions')}
                   </Text>
                 </Block>
