@@ -7,6 +7,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { VotacionesModule } from './votaciones/votaciones.module';
 import { NotificacionesService } from './notificaciones/notificaciones.service';
 import { HttpModule, HttpService } from '@nestjs/axios';
+import { EstadisticasService } from './estadisticas/estadisticas.service';
+import { UsuariosService } from './usuarios/usuarios.service';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -16,6 +18,11 @@ import { HttpModule, HttpService } from '@nestjs/axios';
     HttpModule,
   ],
   controllers: [AppController],
-  providers: [AppService, NotificacionesService],
+  providers: [
+    AppService,
+    NotificacionesService,
+    EstadisticasService,
+    UsuariosService,
+  ],
 })
 export class AppModule {}

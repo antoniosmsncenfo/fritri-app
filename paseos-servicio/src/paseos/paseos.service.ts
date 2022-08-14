@@ -9,6 +9,7 @@ import { GenerarPinProteger } from '../helpers/generador-codigo';
 import { NotificacionesService } from 'src/notificaciones/notificaciones.service';
 import { NotificacionPaseoActualizado } from 'src/notificaciones/dto/notificacion-paseo-actualizado.dto';
 import { Notificacion } from 'src/notificaciones/dto/notificacion.dto';
+import { EstadisticasService } from '../estadisticas/estadisticas.service';
 
 export enum EstadoPaseo {
   Pendiente = 1,
@@ -20,6 +21,7 @@ export class PaseosService {
   constructor(
     @InjectModel(Paseo.name) private readonly paseoModel: Model<PaseoDocument>,
     private notificacionesService: NotificacionesService,
+    private estadisticasService: EstadisticasService,
   ) {}
 
   async crear(crearPaseo: CrearPaseoDto) {
@@ -41,6 +43,7 @@ export class PaseosService {
         `Error al tratar de crear el paseo::${error.message}`,
       );
     }
+    this.estadisticasService.crearEstadisticaPaseo(resultado);
     return resultado;
   }
 
@@ -194,7 +197,9 @@ export class PaseosService {
         modificacionesRealizadas: actualizarPaseoDto.modificacionesRealizadas,
       };
 
-      await this.notificarPaseoActualizado(notificacionPaseoActualizado);
+      await this.notificacionesService.notificarPaseoActualizado(
+        notificacionPaseoActualizado,
+      );
     } catch (error) {
       if (error.message.match(/No existe/)) {
         throw new NotFoundException(
@@ -237,28 +242,5 @@ export class PaseosService {
       );
     }
     return resultado;
-  }
-
-  async notificarPaseoActualizado(
-    notificacionPaseoActualizado: NotificacionPaseoActualizado,
-  ) {
-    notificacionPaseoActualizado.integrantes.forEach(async (integrante) => {
-      notificacionPaseoActualizado.modificacionesRealizadas.forEach(
-        async (modificacionRealizada) => {
-          const notificacion: Notificacion = {
-            titulo: `Paseo ${notificacionPaseoActualizado.nombrePaseo} actualizado`,
-            detalle: modificacionRealizada,
-            idPaseo: notificacionPaseoActualizado.idPaseo,
-            idUsuario: integrante,
-            fechaCreacion: new Date(),
-            fechaModificacion: new Date(),
-            esArchivada: false,
-            esLeida: false,
-          };
-
-          await this.notificacionesService.CrearNotificacion(notificacion);
-        },
-      );
-    });
   }
 }

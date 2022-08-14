@@ -5,6 +5,8 @@ import { SeccionAtraccionesTuristicas } from '../schemas/secciones-atracciones-t
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CrearPaseoDto {
+  readonly _id?: string;
+
   @ApiPropertyOptional()
   readonly idPaseo?: string;
 

@@ -17,7 +17,7 @@ export class PaseosService {
     try {
       if (crearPaseo.idPaseo) {
         resutadoPaseo = await this.paseoModel
-          .findOne({ _id: crearPaseo.idPaseo })
+          .findOne({ idPaseo: crearPaseo.idPaseo })
           .exec();
       }
       if (!resutadoPaseo) {

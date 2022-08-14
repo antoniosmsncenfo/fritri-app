@@ -13,7 +13,7 @@ export class DestinosController {
     return await this.destinosService.create(crearDestinoosDto);
   }
 
-  @Get('findAll')
+  @Get('obtener-todos-destinos')
   async findAll(): Promise<Destino[]> {
     return this.destinosService.findAll();
   }

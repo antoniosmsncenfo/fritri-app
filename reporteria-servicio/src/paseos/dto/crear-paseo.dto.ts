@@ -7,6 +7,8 @@ export class CrearPaseoDto {
   @ApiProperty()
   readonly idCreador: string;
   @ApiProperty()
+  readonly destino: string;
+  @ApiProperty()
   @IsDateString()
   readonly fechaCreacion: Date;
   @ApiProperty()
