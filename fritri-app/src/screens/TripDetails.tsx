@@ -111,7 +111,7 @@ const TripDetails = (props) => {
             tipoVoto: x.tipoVoto,
           };
         });
-        votarSeccion(paseoSeleccionado?.idCreador!, props.route.params.id, idSecciones, 'RESTAURANTE');
+        votarSeccion(user._id!, props.route.params.id, idSecciones, 'RESTAURANTE');
         break;
       case 'attr':
         setEnviandoVotacionAtr(true);
@@ -122,7 +122,7 @@ const TripDetails = (props) => {
             tipoVoto: x.tipoVoto,
           };
         });
-        votarSeccion(paseoSeleccionado?.idCreador!, props.route.params.id, idSeccionesAtracciones, 'ATRACCION_TURISTICA');
+        votarSeccion(user._id!, props.route.params.id, idSeccionesAtracciones, 'ATRACCION_TURISTICA');
         break;
     }
   };
