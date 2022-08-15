@@ -10,12 +10,12 @@ const TripVotes = (props) => {
   const { assets, sizes, colors } = useTheme();
   const [destino, setDestino] = useState<IDestino | null>(null);
   const [votos, setVotos] = useState<IVotoLugar[]>([]);
-  const [likes, setLikes] = useState<String[]>([]);
-  const [dislikes, setDislikes] = useState<String[]>([]);
+  const [likes, setLikes] = useState<IVotoLugar[]>([]);
+  const [dislikes, setDislikes] = useState<IVotoLugar[]>([]);
   
   useEffect(() => {
     setDestino(props.route.params.destino);
-    setVotos(props.route.params.destino.votaciones)
+    setVotos(props.route.params.destino.votaciones || [])
   }, [])
 
   useEffect(() => {
@@ -23,9 +23,9 @@ const TripVotes = (props) => {
     const tempDislikes = [];
     for (const voto of votos) {
       if(voto.resultado === 'dislike') {
-        tempDislikes.push(voto.resultado);
+        tempDislikes.push(voto);
       } else if(voto.resultado === 'like') {
-        tempLikes.push(voto.resultado);
+        tempLikes.push(voto);
       }
     }
     setLikes([...tempLikes]);
@@ -110,7 +110,7 @@ const TripVotes = (props) => {
         >
           {
             (votos.length > 0 && (likes.length > 0 || dislikes.length > 0)) ?
-            votos.map((voto, index) => {
+            [...likes, ...dislikes].map((voto, index) => {
               return <ShowVoteInfo voto={voto} key={index}/>
             })
             :
