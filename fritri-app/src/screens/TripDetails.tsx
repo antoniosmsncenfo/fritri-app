@@ -357,6 +357,7 @@ const TripDetails = (props) => {
               <Text h5 semibold>
                 {t('newTrip.restaurants')}
               </Text>
+              {!paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones &&
               <Block row flex={0} align="center">
                 <TouchableOpacity onPress={() => navegarRestaurantes()}>
                   <Block row flex={0} align="center">
@@ -372,15 +373,24 @@ const TripDetails = (props) => {
                   </Block>
                 </TouchableOpacity>
               </Block>
+              }
             </Block>
 
             {paseoSeleccionado?.seccionRestaurantes?.restaurantes.map(
               (restaurante, index) => (
                 <Block row align="center" marginBottom={sizes.m}
                   key={`rest-${restaurante.idLugarGoogle}-${index}`}>
-                  <PlaceDetail place={restaurante} posicion={index} tipo="rest" manejarVotos={manejarVotos} usuarioVotado={revisarVotosUsuario(restaurante)} />
+                  <PlaceDetail 
+                    place={restaurante} 
+                    posicion={index} 
+                    tipo="rest" 
+                    manejarVotos={manejarVotos} 
+                    usuarioVotado={revisarVotosUsuario(restaurante)}
+                    votosCerrados={paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones} 
+                  />
                 </Block>
-              ))}
+              ))
+            }
 
             {
               paseoSeleccionado?.seccionRestaurantes?.restaurantes.length === 0 && (
@@ -470,6 +480,7 @@ const TripDetails = (props) => {
               <Text h5 semibold>
                 {t('newTrip.touristAttractions')}
               </Text>
+              {!paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones &&
               <Block row flex={0} align="center">
                 <TouchableOpacity onPress={() => navegarAtracciones()}>
                   <Block row flex={0} align="center">
@@ -485,13 +496,21 @@ const TripDetails = (props) => {
                   </Block>
                 </TouchableOpacity>
               </Block>
+              }
             </Block>
 
             {paseoSeleccionado?.seccionAtraccionesTuristicas?.atraccionesturisticas.map(
               (attraccion, index) => (
                 <Block row align="center" marginBottom={sizes.m}
                   key={`attr-${attraccion.idLugarGoogle}-${index}`}>
-                  <PlaceDetail place={attraccion} posicion={index} tipo="attr" manejarVotos={manejarVotos} usuarioVotado={revisarVotosUsuario(attraccion)} />
+                  <PlaceDetail 
+                    place={attraccion} 
+                    posicion={index} 
+                    tipo="attr" 
+                    manejarVotos={manejarVotos} 
+                    usuarioVotado={revisarVotosUsuario(attraccion)}
+                    votosCerrados={paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones}
+                  />
                 </Block>
               ))}
 
