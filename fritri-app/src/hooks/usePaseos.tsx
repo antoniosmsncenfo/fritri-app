@@ -17,8 +17,8 @@ export const usePaseo = () => {
     const radio = 5;
     const cantidadLugaresAleatorios = 3;
 
-    const crearPaseo = async (paseo: IPaseo) => {
-        const result = await crearPaseoNuevo(paseo);
+    const crearPaseo = async (paseo: IPaseo, aleatorio: boolean = false) => {
+        const result = await crearPaseoNuevo(paseo, aleatorio);
         if (result) {
             setPaseoCreado(result);
         }
@@ -183,7 +183,7 @@ export const usePaseo = () => {
             idCreador,
             nombre,
         };
-        crearPaseo(paseo);
+        crearPaseo(paseo, true);
     };
 
     return {

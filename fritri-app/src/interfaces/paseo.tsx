@@ -12,6 +12,7 @@ export interface IPaseo {
     eliminado: boolean;
     fechaCreacion: Date;
     pinPaseo?: number;
+    esAleatorio?: boolean;
     __v?: number;
 }
 

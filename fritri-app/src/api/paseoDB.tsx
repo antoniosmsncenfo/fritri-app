@@ -2,14 +2,14 @@ import axios from 'axios';
 import { EstadoPaseo } from '../../../paseos-servicio/src/paseos/paseos.service';
 import { IPaseo, IPaseoUpdate, TipoSeccion } from '../interfaces/paseo';
 
-export const crearPaseoNuevo = async (paseo: IPaseo) => {
+export const crearPaseoNuevo = async (paseo: IPaseo, aleatorio: boolean) => {
     let request = {
         method: 'post',
         url: `${process.env.PASEOS_BASE_URL}/crear-paseo`,
         headers: {
             'Content-Type': 'application/json',
         },
-        data: paseo,
+        data: { ...paseo, esAleatorio: aleatorio },
     };
     try {
         const resultado = await axios(request);
