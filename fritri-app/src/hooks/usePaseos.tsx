@@ -68,11 +68,14 @@ export const usePaseo = () => {
             });
     };
 
+    const [seAsignoPin, setSeAsignoPin] = useState(false);
+
     const protegerPaseo = (idPaseo: string) => {
 
         protegerPaseoPorID(idPaseo)
             .then((resultado) => {
                 if (resultado !== null) {
+                    setSeAsignoPin(true);
                     setPaseoSeleccionado(resultado.data);
                     setPaseoSeleccionadoCargado(true);
                 }
@@ -197,6 +200,8 @@ export const usePaseo = () => {
         paseoActualizado,
         protegerPaseo,
         removerPin,
+        seAsignoPin,
+        setSeAsignoPin,
         cerrarSeccion,
         seCerroSeccion,
         setSeCerroSeccion        
