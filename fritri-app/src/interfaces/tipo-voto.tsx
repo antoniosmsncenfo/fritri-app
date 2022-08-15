@@ -7,3 +7,4 @@ export interface ITipoVotoEnviar {
   tipoVoto: string;
   idLugar: string;
 }
+

@@ -79,7 +79,8 @@ export const ICONS: ThemeIcons = {
   like: require('../assets/icons/like.png'),
   disLike: require('../assets/icons/dislike.png'),
   likeFill: require('../assets/icons/fill-like.png'),
-  disLikeFill: require('../assets/icons/dislike-fill.png')
+  disLikeFill: require('../assets/icons/dislike-fill.png'),
+  trophy: require('../assets/icons/trophy.png'),
 };
 
 export const ASSETS: ThemeAssets = {

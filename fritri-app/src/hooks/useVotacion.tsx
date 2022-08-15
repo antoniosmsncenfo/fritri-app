@@ -29,7 +29,7 @@ export const useVotacion = () => {
       }
       return resultado;
     };
-
+  
 
     return {
       votarSeccion,
@@ -38,7 +38,7 @@ export const useVotacion = () => {
       setEnviandoVotacionRest,
       setEnviandoVotacionAtr,
       respRest,
-      respAtr
+      respAtr,
     };
 
 
