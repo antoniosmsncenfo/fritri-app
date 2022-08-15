@@ -10,6 +10,7 @@ import { NotificacionesService } from 'src/notificaciones/notificaciones.service
 import { NotificacionPaseoActualizado } from 'src/notificaciones/dto/notificacion-paseo-actualizado.dto';
 import { Notificacion } from 'src/notificaciones/dto/notificacion.dto';
 import { EstadisticasService } from '../estadisticas/estadisticas.service';
+const mongoose = require('mongoose');
 
 export enum EstadoPaseo {
   Pendiente = 1,
@@ -150,12 +151,15 @@ export class PaseosService {
       resultadoPaseo = await this.paseoModel
         .find(
           {
-            idCreador: idCreador,
             fechaPaseo:
-              estado === EstadoPaseo.Pendiente
-                ? { $gte: today }
-                : { $lt: today },
+                estado === EstadoPaseo.Pendiente
+                  ? { $gte: today }
+                  : { $lt: today },
             eliminado: false,
+            $or: [ 
+              { idCreador: mongoose.mongo.ObjectId(idCreador) }, 
+              { "integrantes.idIntegrante": mongoose.mongo.ObjectId(idCreador) }
+            ],
           },
           null,
           { limit: limite, sort: { fechaPaseo: 'asc' } },
