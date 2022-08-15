@@ -7,6 +7,11 @@ import { Integrante } from './integrantes.schema';
 
 export type PaseoDocument = Paseo & Document;
 
+export enum TipoSeccion {
+	RESTAURANTE = 'RESTAURANTE',
+	ATRACCION_TURISTICA = 'ATRACCION_TURISTICA' 
+  }
+
 @Schema()
 export class Paseo {
   @Prop({

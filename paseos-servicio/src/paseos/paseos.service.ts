@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BadRequestException } from '@nestjs/common';
-import { Paseo, PaseoDocument } from './schemas/paseos.schema';
+import { Paseo, PaseoDocument, TipoSeccion } from './schemas/paseos.schema';
 import { CrearPaseoDto } from './dto/crear-paseo.dto';
 import { ActualizarPaseoDto } from './dto/actualizar-paseo.dto';
 import { GenerarPinProteger } from '../helpers/generador-codigo';
@@ -10,6 +10,7 @@ import { NotificacionesService } from 'src/notificaciones/notificaciones.service
 import { NotificacionPaseoActualizado } from 'src/notificaciones/dto/notificacion-paseo-actualizado.dto';
 import { Notificacion } from 'src/notificaciones/dto/notificacion.dto';
 import { EstadisticasService } from '../estadisticas/estadisticas.service';
+import { CerrarSeccionDto } from './dto/cerrar-seccion';
 const mongoose = require('mongoose');
 
 export enum EstadoPaseo {
@@ -217,6 +218,99 @@ export class PaseosService {
     return resultado;
   }
 
+  async cerrarSeccion(cerrarSeccionDto: CerrarSeccionDto) {
+    let resultadoPaseo:PaseoDocument;
+    try {
+      const { idPaseo, tipoSeccion, cerrarVotaciones, fechaModificacion } = cerrarSeccionDto;
+      resultadoPaseo = await this.paseoModel.findOne({ _id: idPaseo });
+      if(!resultadoPaseo) {
+        throw new Error(`No existe el paseo con el id::${idPaseo}`);
+      }
+
+      let filter;
+      let update
+      let seccion;
+      if (tipoSeccion===TipoSeccion.RESTAURANTE) {
+        seccion = "Restaurantes";
+        filter = { _id: idPaseo };
+        update = { 'seccionRestaurantes.esFinalizadasVotaciones':cerrarVotaciones, 
+                    'seccionRestaurantes.fechaFinalizacionVotaciones': fechaModificacion};
+
+      } else {
+        seccion = "Atracciones Turísticas";
+        filter = { _id: idPaseo };
+        update = { 'seccionAtraccionesTuristicas.esFinalizadasVotaciones':cerrarVotaciones, 
+                    'seccionAtraccionesTuristicas.fechaFinalizacionVotaciones': fechaModificacion};
+      }
+      
+      resultadoPaseo = await this.paseoModel.findOneAndUpdate(filter,update, {
+        returnOriginal: false
+      });
+
+      if (resultadoPaseo) {
+        let topLikes=0;
+        let likes = 0;
+        let lugares = resultadoPaseo.seccionRestaurantes.restaurantes;
+
+        if (tipoSeccion===TipoSeccion.RESTAURANTE) {
+          resultadoPaseo.seccionRestaurantes.restaurantes.forEach(async (rest) => {
+            if (rest.votaciones && rest.votaciones.length>0){
+              rest.ganador = true;
+              likes = 0;
+              rest.votaciones.forEach(async (voto) => {
+                if (voto.resultado === 'like') {
+                  likes++;
+                }
+                if (likes<=topLikes){
+                  rest.ganador = false;
+                }
+                else{
+                  topLikes=likes;
+                }
+              });
+            }
+          });
+        }
+        else {
+          resultadoPaseo.seccionAtraccionesTuristicas.atraccionesturisticas.forEach(async (atrac) => {
+            if (atrac.votaciones && atrac.votaciones.length>0){
+              atrac.ganador = true;
+              likes = 0;
+              atrac.votaciones.forEach(async (voto) => {
+                if (voto.resultado === 'like') {
+                  likes++;
+                }
+                if (likes<=topLikes){
+                  atrac.ganador = false;
+                }
+                else{
+                  topLikes=likes;
+                }
+              });
+            }
+          });
+        }
+
+        resultadoPaseo = await this.paseoModel.findOneAndUpdate(filter,resultadoPaseo.toObject(), {
+          returnOriginal: false
+        });
+      }
+
+      const notificacionPaseoActualizado: NotificacionPaseoActualizado = {
+        idPaseo: idPaseo,
+        nombrePaseo: resultadoPaseo.nombre,
+        integrantes: resultadoPaseo.integrantes,
+        modificacionesRealizadas: [ `Se cerraron las votaciones en la sección de ${seccion}.` ]
+      };
+
+      await this.notificarPaseoActualizado(notificacionPaseoActualizado);
+
+    } catch(error) {
+      throw new BadRequestException(`Error al tratar de cerrar sección de votos::${error.message}`);
+    }
+    return resultadoPaseo;
+  }
+
   async eliminar(idPaseo: string) {
     let resultadoPaseo = null;
     let resultado;
@@ -246,5 +340,28 @@ export class PaseosService {
       );
     }
     return resultado;
+  }
+
+  async notificarPaseoActualizado(
+    notificacionPaseoActualizado: NotificacionPaseoActualizado,
+  ) {
+    notificacionPaseoActualizado.integrantes.forEach(async (integrante) => {
+      notificacionPaseoActualizado.modificacionesRealizadas.forEach(
+        async (modificacionRealizada) => {
+          const notificacion: Notificacion = {
+            titulo: `Paseo ${notificacionPaseoActualizado.nombrePaseo} actualizado`,
+            detalle: modificacionRealizada,
+            idPaseo: notificacionPaseoActualizado.idPaseo,
+            idUsuario: integrante.idIntegrante.toString(),
+            fechaCreacion: new Date(),
+            fechaModificacion: new Date(),
+            esArchivada: false,
+            esLeida: false,
+          };
+
+          await this.notificacionesService.CrearNotificacion(notificacion);
+        },
+      );
+    });
   }
 }

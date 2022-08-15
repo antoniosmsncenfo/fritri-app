@@ -107,3 +107,8 @@ export interface IPaseoUpdate extends IPaseo {
     idPaseo?: string;
     modificacionesRealizadas: string[];
 }
+
+export enum TipoSeccion {
+    RESTAURANTE = 'RESTAURANTE',
+    ATRACCION_TURISTICA = 'ATRACCION_TURISTICA' 
+  }

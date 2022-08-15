@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useUsuario } from '../hooks/useUsuario';
 import { useVotacion } from '../hooks/useVotacion';
 import { PlaceDetail } from '../components/PlaceDetail';
-import { ILugar } from '../interfaces/paseo';
+import { ILugar, TipoSeccion } from '../interfaces/paseo';
 import { ITipoVoto, ITipoVotoEnviar } from '../interfaces/tipo-voto';
 import * as Linking from 'expo-linking';
 
@@ -16,9 +16,13 @@ const TripDetails = (props) => {
   const { assets, sizes, colors, gradients } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation();
-  const { obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado, protegerPaseo, removerPin } = usePaseo();
+  const { obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado, 
+    protegerPaseo, removerPin,
+    cerrarSeccion, seCerroSeccion, setSeCerroSeccion } = usePaseo();
   const { usuarioPaseo, obtenerUsuarioPaseo } = useUsuario();
-  const { votarSeccion, enviandoVotacionRest, enviandoVotacionAtr, respRest, respAtr, setEnviandoVotacionRest, setEnviandoVotacionAtr } = useVotacion();
+  const { 
+    votarSeccion, enviandoVotacionRest, enviandoVotacionAtr, 
+    respRest, respAtr, setEnviandoVotacionRest, setEnviandoVotacionAtr } = useVotacion();
   const { user } = useData();
 
   const [restaurantesVotar, setRestaurantesVotar] = useState<ITipoVoto[]>([]);
@@ -110,6 +114,10 @@ const TripDetails = (props) => {
     }
   };
 
+  const handleCerrarVotacion = (idPaseo:string, tipo:TipoSeccion) => {
+    cerrarSeccion(idPaseo,tipo);
+  };
+
   const revisarVotosUsuario = (lugar: ILugar) => {
     const usuarioVoto = lugar?.votaciones?.find(x => x.idVotante === user._id);
     if (usuarioVoto === undefined || usuarioVoto.resultado === 'nullVal') {
@@ -169,6 +177,7 @@ const TripDetails = (props) => {
       obtenerPaseo(idPaseo);
     }
   }, [enviandoVotacionAtr, enviandoVotacionRest]);
+
   const protectPress = (idPaseo: string) => {
     protegerPaseo(idPaseo);
   };
@@ -200,6 +209,14 @@ const TripDetails = (props) => {
       obtenerPaseo(idPaseo);
     }
   }, [enviandoVotacionAtr, enviandoVotacionRest]);
+
+  useEffect(() => {
+    if (seCerroSeccion) {
+      let idPaseo: string = props.route.params.id;
+      obtenerPaseo(idPaseo);    
+      setSeCerroSeccion(false);
+    }
+  }, [seCerroSeccion]);
 
   return (
     <Block safe>
@@ -340,6 +357,7 @@ const TripDetails = (props) => {
               <Text h5 semibold>
                 {t('newTrip.restaurants')}
               </Text>
+              {!paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones &&
               <Block row flex={0} align="center">
                 <TouchableOpacity onPress={() => navegarRestaurantes()}>
                   <Block row flex={0} align="center">
@@ -355,15 +373,24 @@ const TripDetails = (props) => {
                   </Block>
                 </TouchableOpacity>
               </Block>
+              }
             </Block>
 
             {paseoSeleccionado?.seccionRestaurantes?.restaurantes.map(
               (restaurante, index) => (
                 <Block row align="center" marginBottom={sizes.m}
                   key={`rest-${restaurante.idLugarGoogle}-${index}`}>
-                  <PlaceDetail place={restaurante} posicion={index} tipo="rest" manejarVotos={manejarVotos} usuarioVotado={revisarVotosUsuario(restaurante)} />
+                  <PlaceDetail 
+                    place={restaurante} 
+                    posicion={index} 
+                    tipo="rest" 
+                    manejarVotos={manejarVotos} 
+                    usuarioVotado={revisarVotosUsuario(restaurante)}
+                    votosCerrados={paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones} 
+                  />
                 </Block>
-              ))}
+              ))
+            }
 
             {
               paseoSeleccionado?.seccionRestaurantes?.restaurantes.length === 0 && (
@@ -375,7 +402,7 @@ const TripDetails = (props) => {
               )
             }
 
-            {
+            {/* {
               !enviandoVotacionRest ?
                 <Button
                   onPress={() => { enviarVotos('rest'); }}
@@ -396,7 +423,54 @@ const TripDetails = (props) => {
                     {t('newTrip.sendingVotes')}
                   </Text>
                 </Button>
-            }
+            } */}
+
+            {!paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones && (
+              !enviandoVotacionRest ?
+                <Button
+                  onPress={() => { enviarVotos('rest'); }}
+                  gradient={gradients.primary}
+                  outlined
+                  marginVertical={sizes.s}
+                >
+                  <Text bold white transform="uppercase">
+                    {t('newTrip.vote')}
+                  </Text>
+                </Button> :
+                <Button
+                  gradient={gradients.primary}
+                  outlined
+                  marginVertical={sizes.s}
+                >
+                  <Text bold white transform="uppercase">
+                    {t('newTrip.sendingVotes')}
+                  </Text>
+                </Button>
+            )}
+
+
+            {paseoSeleccionado?.idCreador === user._id &&
+             !paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones &&
+            <Button
+              gradient={gradients.warning}
+              outlined
+              marginVertical={sizes.xs}
+              paddingHorizontal={sizes.sm}
+              onPress={(value) =>
+                Alert.alert(
+                  t('tripDetails.closeVotingConfirmationTitle'),
+                  t('tripDetails.closeVotingConfirmationMessage'),
+                  [
+                    { text: t('common.no'), style: 'cancel' },
+                    { text: t('common.yes'), onPress: () => handleCerrarVotacion(paseoSeleccionado?._id!, TipoSeccion.RESTAURANTE) },
+                  ]
+                )}
+              >
+              <Text bold white transform="uppercase">
+                {t('tripDetails.closeVotes')}
+              </Text>
+            </Button>
+            }            
           </Block>
 
           {/* Atracciones */}
@@ -406,6 +480,7 @@ const TripDetails = (props) => {
               <Text h5 semibold>
                 {t('newTrip.touristAttractions')}
               </Text>
+              {!paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones &&
               <Block row flex={0} align="center">
                 <TouchableOpacity onPress={() => navegarAtracciones()}>
                   <Block row flex={0} align="center">
@@ -421,27 +496,36 @@ const TripDetails = (props) => {
                   </Block>
                 </TouchableOpacity>
               </Block>
+              }
             </Block>
 
             {paseoSeleccionado?.seccionAtraccionesTuristicas?.atraccionesturisticas.map(
               (attraccion, index) => (
                 <Block row align="center" marginBottom={sizes.m}
                   key={`attr-${attraccion.idLugarGoogle}-${index}`}>
-                  <PlaceDetail place={attraccion} posicion={index} tipo="attr" manejarVotos={manejarVotos} usuarioVotado={revisarVotosUsuario(attraccion)} />
+                  <PlaceDetail 
+                    place={attraccion} 
+                    posicion={index} 
+                    tipo="attr" 
+                    manejarVotos={manejarVotos} 
+                    usuarioVotado={revisarVotosUsuario(attraccion)}
+                    votosCerrados={paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones}
+                  />
                 </Block>
               ))}
 
             {
               paseoSeleccionado?.seccionAtraccionesTuristicas?.atraccionesturisticas.length === 0 && (
                 <Block row marginBottom={sizes.sm}>
-                  <Text h7 color={colors.primary}>
+                  <Text h5 color={colors.primary}>
                     {t('tripDetails.noTouristAttractions')}
                   </Text>
                 </Block>
               )
             }
 
-            {!enviandoVotacionAtr ?
+            {!paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones && (
+             !enviandoVotacionAtr ?
               <Button
                 onPress={() => { enviarVotos('attr'); }}
                 gradient={gradients.primary}
@@ -461,6 +545,29 @@ const TripDetails = (props) => {
                   {t('newTrip.sendingVotes')}
                 </Text>
               </Button>
+            )}
+
+            {paseoSeleccionado?.idCreador === user._id &&
+             !paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones &&
+            <Button
+              gradient={gradients.warning}
+              outlined
+              marginVertical={sizes.xs}
+              paddingHorizontal={sizes.sm}
+              onPress={(value) =>
+                Alert.alert(
+                  t('tripDetails.closeVotingConfirmationTitle'),
+                  t('tripDetails.closeVotingConfirmationMessage'),
+                  [
+                    { text: t('common.no'), style: 'cancel' },
+                    { text: t('common.yes'), onPress: () => handleCerrarVotacion(paseoSeleccionado?._id!, TipoSeccion.ATRACCION_TURISTICA) },
+                  ]
+                )}
+            >
+              <Text bold white transform="uppercase">
+                {t('tripDetails.closeVotes')}
+              </Text>
+            </Button>
             }
 
           </Block>

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { EstadoPaseo } from '../../../paseos-servicio/src/paseos/paseos.service';
-import { IPaseo, IPaseoUpdate } from '../interfaces/paseo';
+import { IPaseo, IPaseoUpdate, TipoSeccion } from '../interfaces/paseo';
 
 export const crearPaseoNuevo = async (paseo: IPaseo, aleatorio: boolean) => {
     let request = {
@@ -127,6 +127,35 @@ export const removerPinPaseoPorID = async (idPaseo: string) => {
     try {
         const resultado = await axios(request);
 
+        if (resultado.status === 200) {
+            return resultado.data;
+        }
+        else {
+            return null;
+        }
+    }
+    catch (e) {
+        throw e;
+    }
+};
+
+export const cerrarSeccionDb = async (idPaseo:string, tipo:TipoSeccion) => {
+
+    const data = {
+        idPaseo:idPaseo,
+        tipoSeccion:tipo,
+        cerrarVotaciones:true,
+        fechaModificacion:new Date()
+    };
+
+    let request = {
+        method: 'patch',
+        url: `${process.env.PASEOS_BASE_URL}/cerrar-seccion`,
+        headers: {},
+        data,
+    };
+    try {
+        const resultado = await axios(request);
         if (resultado.status === 200) {
             return resultado.data;
         }
