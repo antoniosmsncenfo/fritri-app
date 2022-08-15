@@ -17,7 +17,7 @@ const TripDetails = (props) => {
   const { t } = useTranslation();
   const navigation = useNavigation();
   const { obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado, 
-    protegerPaseo, removerPin,
+    protegerPaseo, removerPin, seAsignoPin, setSeAsignoPin,
     cerrarSeccion, seCerroSeccion, setSeCerroSeccion } = usePaseo();
   const { usuarioPaseo, obtenerUsuarioPaseo } = useUsuario();
   const { 
@@ -50,6 +50,19 @@ const TripDetails = (props) => {
     if (paseoSeleccionado?.idCreador!) {
       obtenerUsuarioPaseo(paseoSeleccionado?.idCreador!);
     }
+    if (paseoSeleccionado?.pinPaseo && seAsignoPin) {
+      Alert.alert(
+        t('tripDetails.protectConfirmationTitle'),
+        t('tripDetails.protectConfirmationPin', {pin: paseoSeleccionado?.pinPaseo!.toString()}),
+        [
+          { text: t('common.ok')}
+        ],
+        {
+          cancelable: false,
+        }        
+      );         
+    }
+    setSeAsignoPin(false);    
   }, [paseoSeleccionado]);
 
   useEffect(() => {

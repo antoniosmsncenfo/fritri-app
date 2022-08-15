@@ -302,6 +302,7 @@
     "edit": "Edit",
     "protectConfirmationTitle": "Protection",
     "protectConfirmationMessage": "Do you want to protect this trip with a pin?",
+    "protectConfirmationPin": "The new PIN to access this trip is: {{pin}}",
     "unprotectConfirmationTitle": "Protection",
     "unprotectConfirmationMessage": "Do you want to remove this trip's protection pin?",
     "shareMessage": "You've been invited to my trip!\nPlease follow this link to participate in the voting process: ",
