@@ -10,14 +10,14 @@ const ShowVoteInfo = (props) => {
   const IMAGE_SIZE = (sizes.width - (sizes.padding + sizes.sm) * 2) / 5;
   const [voto, setVoto] = useState({
     nombreCompleto: '',
-    foto: '',
+    urlFoto: '',
     fecha: new Date(),
     idVotante: '',
     resultado: '',
     genero: ''
   });
 
-  const noFoto = voto.genero === 'Man' ? FotoUsuario.Hombre : voto.genero === 'Woman' ? FotoUsuario.Mujer : FotoUsuario.Hombre; 
+  const noFoto = voto.genero === 'Man' || voto.genero === 'Masculino' ? FotoUsuario.Hombre : voto.genero === 'Woman' ? FotoUsuario.Mujer : FotoUsuario.Hombre; 
 
   useEffect(() => {
     setVoto(props.voto)
@@ -33,12 +33,12 @@ const ShowVoteInfo = (props) => {
         justify="center"
         marginRight={sizes.s}
         >
-          {voto.foto ? 
+          {voto.urlFoto ? 
             <Image
               radius={sizes.s}
               width={40}
               height={40}
-              source={{uri: voto.foto}}
+              source={{uri: voto.urlFoto}}
               style={{
                 height: IMAGE_SIZE,
                 width: IMAGE_SIZE,
