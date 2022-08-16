@@ -16,6 +16,7 @@ import { PaseosService, EstadoPaseo } from './paseos.service';
 import { CrearPaseoDto } from './dto/crear-paseo.dto';
 import { ActualizarPaseoDto } from './dto/actualizar-paseo.dto';
 import { Paseo } from './schemas/paseos.schema';
+import { CerrarSeccionDto } from './dto/cerrar-seccion';
 
 @Controller('paseos')
 export class PaseosController {
@@ -60,6 +61,13 @@ export class PaseosController {
   @HttpCode(200)
   async actualizar(@Body() actualizarPaseoDto: ActualizarPaseoDto) {
     return await this.paseosService.actualizar(actualizarPaseoDto);
+  }
+
+  @Patch('cerrar-seccion')
+  @UsePipes(new ValidationPipe())
+  @HttpCode(200)
+  async cerrarSeccion(@Body() cerrarSeccionDto: CerrarSeccionDto) {
+    return await this.paseosService.cerrarSeccion(cerrarSeccionDto);
   }
 
   @Delete('eliminar-paseo/:idPaseo')

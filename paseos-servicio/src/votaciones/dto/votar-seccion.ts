@@ -1,11 +1,7 @@
 import { IsNotEmpty } from 'class-validator';
 import { Schema as SchemaM} from 'mongoose';
 import { ITipoVoto } from '../interface/tipo-voto';
-
-enum TipoSeccion {
-  RESTAURANTE = 'RESTAURANTE',
-  ATRACCION_TURISTICA = 'ATRACCION_TURISTICA' 
-}
+import { TipoSeccion } from '../interface/votar-seccion';
 
 export class VotarSeccionDto {
 

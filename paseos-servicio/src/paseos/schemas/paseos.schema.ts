@@ -7,59 +7,68 @@ import { Integrante } from './integrantes.schema';
 
 export type PaseoDocument = Paseo & Document;
 
+export enum TipoSeccion {
+	RESTAURANTE = 'RESTAURANTE',
+	ATRACCION_TURISTICA = 'ATRACCION_TURISTICA' 
+  }
+
 @Schema()
 export class Paseo {
-
-	@Prop({
-		required: true
-	})
-	idCreador: SchemaM.Types.ObjectId;
-
-	@Prop({
-		required: true
-	})
-	nombre: string;
-
-	@Prop({
-		default: () => new Date()
-  })
-	fechaCreacion: string;
-
-	@Prop({
+  @Prop({
     required: true,
   })
-	fechaPaseo: Date;
-
-	@Prop()
-	pinPaseo: number;
-
-	@Prop({
-    required: true
-  })
-	esCompartido: boolean;
-
-	@Prop({
-    required: true
-  })
-	destino: Destino;
+  idCreador: SchemaM.Types.ObjectId;
 
   @Prop({
-    required: true
+    required: true,
   })
-	seccionRestaurantes: SeccionRestaurantes;
-  
+  nombre: string;
+
   @Prop({
-    required: true
+    default: () => new Date(),
   })
-	seccionAtraccionesTuristicas: SeccionAtraccionesTuristicas;
+  fechaCreacion: string;
+
+  @Prop({
+    required: true,
+  })
+  fechaPaseo: Date;
+
+  @Prop()
+  pinPaseo: number;
+
+  @Prop({
+    required: true,
+  })
+  esCompartido: boolean;
+
+  @Prop({
+    required: true,
+  })
+  destino: Destino;
+
+  @Prop({
+    required: true,
+  })
+  seccionRestaurantes: SeccionRestaurantes;
+
+  @Prop({
+    required: true,
+  })
+  seccionAtraccionesTuristicas: SeccionAtraccionesTuristicas;
 
   @Prop()
   integrantes: Integrante[];
 
-	@Prop({
-		default: false
-	})
-  eliminado: boolean
+  @Prop({
+    default: false,
+  })
+  eliminado: boolean;
+
+  @Prop({
+    default: false,
+  })
+  esAleatorio: boolean;
 }
 
 export const PaseoSchema = SchemaFactory.createForClass(Paseo);

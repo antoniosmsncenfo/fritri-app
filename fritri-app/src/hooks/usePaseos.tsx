@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { CantidadPaseos, IDestino, ILugar, IPaseo, ISeccionAtraccionesTuristicas, ISeccionRestaurantes, ISolicitudPaseoAleatorio, IPaseoUpdate } from '../interfaces/paseo';
-import { crearPaseoNuevo, obtenerPaseoPorID, obtenerPaseosUsuarioPorEstado, actualizarPaseoExistente, protegerPaseoPorID, removerPinPaseoPorID } from '../api/paseoDB';
+import { CantidadPaseos, IDestino, ILugar, IPaseo, ISeccionAtraccionesTuristicas, ISeccionRestaurantes, ISolicitudPaseoAleatorio, IPaseoUpdate, TipoSeccion } from '../interfaces/paseo';
+import { crearPaseoNuevo, obtenerPaseoPorID, obtenerPaseosUsuarioPorEstado, actualizarPaseoExistente, protegerPaseoPorID, removerPinPaseoPorID, cerrarSeccionDb } from '../api/paseoDB';
 import { EstadoPaseo } from '../interfaces/paseo';
 import { ISolicitudLugaresGoogle, TipoLugaresGoogle } from '../interfaces/solicitud-lugares-google';
 import { getGooglePlacesByType } from '../api/lugaresTuristicosDB';
@@ -17,8 +17,8 @@ export const usePaseo = () => {
     const radio = 5;
     const cantidadLugaresAleatorios = 3;
 
-    const crearPaseo = async (paseo: IPaseo) => {
-        const result = await crearPaseoNuevo(paseo);
+    const crearPaseo = async (paseo: IPaseo, aleatorio: boolean = false) => {
+        const result = await crearPaseoNuevo(paseo, aleatorio);
         if (result) {
             setPaseoCreado(result);
         }
@@ -68,11 +68,14 @@ export const usePaseo = () => {
             });
     };
 
+    const [seAsignoPin, setSeAsignoPin] = useState(false);
+
     const protegerPaseo = (idPaseo: string) => {
 
         protegerPaseoPorID(idPaseo)
             .then((resultado) => {
                 if (resultado !== null) {
+                    setSeAsignoPin(true);
                     setPaseoSeleccionado(resultado.data);
                     setPaseoSeleccionadoCargado(true);
                 }
@@ -104,6 +107,24 @@ export const usePaseo = () => {
             });
     };
 
+    const [seCerroSeccion, setSeCerroSeccion] = useState(false);
+
+    async function cerrarSeccion(idPaseo:string, tipo:TipoSeccion): Promise<any> {
+      let resultado;
+      try {
+        const resultado = await cerrarSeccionDb(idPaseo, tipo);
+        
+        if(resultado) {
+          setSeCerroSeccion(true)
+        }
+  
+      } catch(error) {
+        console.log("useVotacion->cerrarSeccion::ERROR "+ JSON.stringify(error));
+        resultado = false;
+      }
+  
+      return resultado;
+    };    
 
     const obtenerLugaresAleatorios = async (latitud: number, longitud: number, tipo: TipoLugaresGoogle): Promise<ILugar[]> => {
         const solicitud: ISolicitudLugaresGoogle = { latitud, longitud, radio, tipo, tokenPaginacion: '' };
@@ -162,7 +183,7 @@ export const usePaseo = () => {
             idCreador,
             nombre,
         };
-        crearPaseo(paseo);
+        crearPaseo(paseo, true);
     };
 
     return {
@@ -179,5 +200,10 @@ export const usePaseo = () => {
         paseoActualizado,
         protegerPaseo,
         removerPin,
+        seAsignoPin,
+        setSeAsignoPin,
+        cerrarSeccion,
+        seCerroSeccion,
+        setSeCerroSeccion        
     };
 };

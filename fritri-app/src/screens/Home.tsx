@@ -3,7 +3,7 @@ import { useData, useTheme, useTranslation } from '../hooks/';
 import { Block, Button, Image, Product, Text, DashboardCard, Input } from '../components/';
 import { useNavigation } from '@react-navigation/native';
 import { usePaseo } from '../hooks/usePaseos';
-import { EstadoPaseo } from '../interfaces/paseo';
+import { EstadoPaseo, IPaseo } from '../interfaces/paseo';
 import { CantidadPaseos } from '../interfaces/paseo';
 import { CommonActions } from '@react-navigation/native';
 
@@ -16,6 +16,8 @@ const Home = () => {
 
   //Extraemos del hook el arreglo de paseos y el método para obtener paseos
   const { paseosUsuario, setPaseosUsuario, obtenerPaseosUsuario} = usePaseo();
+  const [ paseosFiltrados, setPaseosFiltrados] = useState<IPaseo[] | undefined>([]);
+  const [ searchTerm, setSearchTerm] = useState('');
   
   const checkGUser = async () => {
     if(!user) {
@@ -35,9 +37,21 @@ const Home = () => {
     obtenerPaseosUsuario(user?._id!,EstadoPaseo.Pendiente,CantidadPaseos.Diez);
   }, [])
 
+  useEffect(() => {
+    setPaseosFiltrados(paseosUsuario?.filter(p => 
+      p.nombre.toLowerCase().includes(searchTerm.toString().toLowerCase())));
+  
+  }, [paseosUsuario, searchTerm])
+  
   //Maneja el cambio de tab y cambia la lista de productos
-  const handlePaseos = useCallback(
+  const handleNew = useCallback(() => {  
+    navigation.navigate('NewTrip');
+  }, []);
+
+  //Maneja el cambio de tab y cambia la lista de productos
+  const handlePaseos = useCallback(  
     (tab: number) => {
+      console.log("Consulta a BD");
       setTab(tab);
       if (tab===2) {
         navigation.navigate('NewTrip');
@@ -51,13 +65,21 @@ const Home = () => {
     [],
   );
   
-  //Maneja el cambio de tab y cambia la lista de productos
-  const handleNew = useCallback(() => {
-    navigation.navigate('NewTrip');
+  const handleSearch = useCallback((value) => {
+    setSearchTerm(value);
   }, []);
-  
+
   return (
     <Block>
+      
+      {/* search input */}
+      <Block color={colors.card} flex={0} padding={sizes.padding}>
+        <Input search color={colors.primary}
+        placeholder={t('common.search')} 
+        onChangeText={(value) => handleSearch(value)}
+        value={searchTerm}
+        />
+      </Block>
 
       {/* toggle products list */}
       <Block
@@ -166,7 +188,7 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: sizes.l }}>
         <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
-          {paseosUsuario?.map((paseo) => (
+          {paseosFiltrados?.map((paseo) => (
             <DashboardCard {...paseo} key={`card-${paseo?._id}`} />
           ))}
         </Block>
