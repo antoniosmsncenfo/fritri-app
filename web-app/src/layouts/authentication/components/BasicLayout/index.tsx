@@ -41,17 +41,6 @@ interface Props {
 function BasicLayout({ image, children }: Props): JSX.Element {
   return (
     <PageLayout>
-      <DefaultNavbar
-        routes={pageRoutes}
-        action={{
-          type: "external",
-          route: "https://creative-tim.com/product/material-dashboard-2-pro-react-ts",
-          label: "buy now",
-          color: "info",
-        }}
-        transparent
-        light
-      />
       <MDBox
         position="absolute"
         width="100%"

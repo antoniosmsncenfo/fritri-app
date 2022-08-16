@@ -60,6 +60,7 @@ import ProductPage from "layouts/ecommerce/products/product-page";
 import OrderList from "layouts/ecommerce/orders/order-list";
 import OrderDetails from "layouts/ecommerce/orders/order-details";
 import SignInBasic from "layouts/authentication/sign-in/basic";
+import SignInFritri from "layouts/authentication/sign-in/fritri";
 import SignInCover from "layouts/authentication/sign-in/cover";
 import SignInIllustration from "layouts/authentication/sign-in/illustration";
 import SignUpCover from "layouts/authentication/sign-up/cover";
@@ -72,32 +73,21 @@ import MDAvatar from "components/MDAvatar";
 import Icon from "@mui/material/Icon";
 
 // Images
-import profilePicture from "assets/images/team-3.jpg";
+import profilePicture from "assets/images/admin.jpg";
+import Logout from "layouts/authentication/logout";
 
 const routes = [
   {
     type: "collapse",
-    name: "Brooklyn Alice",
+    name: "FriTri Admin",
     key: "brooklyn-alice",
-    icon: <MDAvatar src={profilePicture} alt="Brooklyn Alice" size="sm" />,
+    icon: <MDAvatar src={profilePicture} alt="FriTri Admin" size="sm" />,
     collapse: [
-      {
-        name: "My Profile",
-        key: "my-profile",
-        route: "/pages/profile/profile-overview",
-        component: <ProfileOverview />,
-      },
-      {
-        name: "Settings",
-        key: "profile-settings",
-        route: "/pages/account/settings",
-        component: <Settings />,
-      },
       {
         name: "Logout",
         key: "logout",
-        route: "/authentication/sign-in/basic",
-        component: <SignInBasic />,
+        route: "/authentication/logout",
+        component: <Logout />,
       },
     ],
   },
@@ -304,6 +294,12 @@ const routes = [
         name: "Sign In",
         key: "sign-in",
         collapse: [
+          {
+            name: "Fritri",
+            key: "fritri",
+            route: "/authentication/sign-in/fritri",
+            component: <SignInFritri />,
+          },
           {
             name: "Basic",
             key: "basic",

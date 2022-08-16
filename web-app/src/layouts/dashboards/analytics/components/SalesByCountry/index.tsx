@@ -66,15 +66,15 @@ function SalesByCountry(): JSX.Element {
           <Grid item xs={12} md={5} lg={6} sx={{ mt: { xs: 5, lg: 0 } }}>
             <VectorMap
               map={worldMerc}
-              zoomOnScroll={false}
-              zoomButtons={false}
+              zoomOnScroll
+              zoomButtons
               markersSelectable
               backgroundColor="transparent"
               selectedMarkers={["1", "3"]}
               markers={[
                 {
                   name: "USA",
-                  latLng: [40.71296415909766, -74.00437720027804],
+                  latLng: [9.0, -84],
                 },
                 {
                   name: "Germany",

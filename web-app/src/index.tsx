@@ -16,15 +16,22 @@ Coded by www.creative-tim.com
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import App from "App";
+import { Auth0Provider } from "@auth0/auth0-react";
 
 // Material Dashboard 2 PRO React TS Context Provider
 import { MaterialUIControllerProvider } from "context";
 
 ReactDOM.render(
-  <BrowserRouter>
-    <MaterialUIControllerProvider>
-      <App />
-    </MaterialUIControllerProvider>
-  </BrowserRouter>,
+  <Auth0Provider
+    domain="fritri.us.auth0.com"
+    clientId="FJlfJ6P91fWYYYJ0iwv6oS8Qzum8lx7a"
+    redirectUri="http://localhost:3000/dashboards/analytics"
+  >
+    <BrowserRouter>
+      <MaterialUIControllerProvider>
+        <App />
+      </MaterialUIControllerProvider>
+    </BrowserRouter>
+  </Auth0Provider>,
   document.getElementById("root")
 );
