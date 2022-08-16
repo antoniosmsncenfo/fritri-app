@@ -175,7 +175,7 @@ export default () => {
       <Stack.Screen
         name="TripSecurity"
         component={TripSecurity}
-        options={{ headerShown: false, gestureEnabled: false, headerRight: () => null, headerLeft: () => null }}
+        options={{ ...screenOptions.goToHome, title: t('navigation.home'), gestureEnabled: false, headerRight: () => null}}
       />  
         <Stack.Screen
         name="TripVotes"
