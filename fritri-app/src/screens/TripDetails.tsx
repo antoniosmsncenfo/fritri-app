@@ -11,6 +11,7 @@ import { PlaceDetail } from '../components/PlaceDetail';
 import { ILugar, TipoSeccion } from '../interfaces/paseo';
 import { ITipoVoto, ITipoVotoEnviar } from '../interfaces/tipo-voto';
 import * as Linking from 'expo-linking';
+import Storage from '@react-native-async-storage/async-storage';
 
 const TripDetails = (props) => {
   const { assets, sizes, colors, gradients } = useTheme();
@@ -30,7 +31,8 @@ const TripDetails = (props) => {
   const [isFromDashboard, setIsFromDashboard] = useState(false);
 
   const checkGUser = async () => {
-    if(!user) {
+    let userG = await Storage.getItem('userG');
+    if(!userG) {
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
@@ -47,14 +49,9 @@ const TripDetails = (props) => {
   }
 
   useEffect(() => {
-    let idPaseo: string = props.route.params.id;
-    checkRouteFrom();
-    obtenerPaseo(idPaseo);
+    checkGUser();
   }, [props.route.params.id]);
 
-  useEffect(() => {
-    checkGUser();
-  }, []);
 
   const checkRouteFrom = () => {
     const checkFrom = ['TripSecurity', 'Notifications', 'EditTrip'];
@@ -62,7 +59,7 @@ const TripDetails = (props) => {
   }
 
   const revisarPaseoCreador = () => {
-    return paseoSeleccionado?.idCreador === user._id;
+    return (user && paseoSeleccionado?.idCreador === user._id);
   }
 
   const enviarAPantallaSeguridad = () => {
@@ -72,15 +69,20 @@ const TripDetails = (props) => {
         pin: paseoSeleccionado?.pinPaseo,
       });
     }
-    if (paseoSeleccionado?.idCreador! && user) {
+    if (user && paseoSeleccionado?.idCreador!) {
       obtenerUsuarioPaseo(paseoSeleccionado?.idCreador!);
     }
   }
 
+  const procesoEnviarAPantallaSeguridad = async () => {
+    let userG = await Storage.getItem('userG');
+    if(userG) {
+      enviarAPantallaSeguridad();
+    }
+  }
+
   useEffect(() => {
-      if(user) {
-        enviarAPantallaSeguridad();
-      }
+    procesoEnviarAPantallaSeguridad();
   }, [paseoSeleccionado]);
 
   useEffect(() => {
@@ -456,7 +458,7 @@ const TripDetails = (props) => {
                 </Button>
             } */}
 
-            {!paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones && (
+            {user && !paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones && (
               !enviandoVotacionRest ?
                 <Button
                   onPress={() => { enviarVotos('rest'); }}
@@ -480,7 +482,7 @@ const TripDetails = (props) => {
             )}
 
 
-            {paseoSeleccionado?.idCreador === user._id &&
+            {user && paseoSeleccionado?.idCreador === user._id &&
              !paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones &&
             <Button
               gradient={gradients.warning}
@@ -578,7 +580,7 @@ const TripDetails = (props) => {
               </Button>
             )}
 
-            {paseoSeleccionado?.idCreador === user._id &&
+            {user && paseoSeleccionado?.idCreador === user._id &&
              !paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones &&
             <Button
               gradient={gradients.warning}
