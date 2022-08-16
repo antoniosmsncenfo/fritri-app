@@ -12,6 +12,7 @@ export interface IPaseo {
     eliminado: boolean;
     fechaCreacion: Date;
     pinPaseo?: number;
+    esAleatorio?: boolean;
     __v?: number;
 }
 
@@ -106,3 +107,8 @@ export interface IPaseoUpdate extends IPaseo {
     idPaseo?: string;
     modificacionesRealizadas: string[];
 }
+
+export enum TipoSeccion {
+    RESTAURANTE = 'RESTAURANTE',
+    ATRACCION_TURISTICA = 'ATRACCION_TURISTICA' 
+  }

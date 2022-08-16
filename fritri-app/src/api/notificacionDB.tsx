@@ -50,3 +50,30 @@ export const actualizarNotificacionEnBD = async (notificacion:INotificacion) => 
         throw e;
     }
 };
+
+export const crearNotificacionBd = async (notificacion:INotificacion) => {
+    try {
+        let request = {
+            method: 'post',
+            url: `${process.env.NOTIFICACIONES_BASE_URL}/crear-notificacion`,
+            headers: {},
+            data: {
+                idUsuario:notificacion.idUsuario,
+                idPaseo:notificacion.idPaseo,
+                titulo:notificacion.titulo,
+                detalle:notificacion.detalle,
+                fechaCreacion: new Date()
+            },
+        };
+        const resultado = await axios(request);
+        if (resultado.status === 200) {
+            return resultado.data;
+        }
+        else {
+            return null;
+        }
+    }
+    catch (e) {
+        throw e;
+    }
+};

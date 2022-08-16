@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ITipoVotoEnviar } from '../interfaces/tipo-voto';
+import { ITipoVotoEnviar} from '../interfaces/tipo-voto';
 import { VOTACIONES_BASE_URL } from '@env';
 
 export const votarSeccionDb = async (idIntegrante: string, idPaseo: string, idSecciones: ITipoVotoEnviar[], tipoSeccion: string) => {
