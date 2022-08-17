@@ -74,12 +74,17 @@ const TripDetails = (props) => {
     if (user && paseoSeleccionado?.idCreador!) {
       obtenerUsuarioPaseo(paseoSeleccionado?.idCreador!);
     }
-  }
-
-  const procesoEnviarAPantallaSeguridad = async () => {
-    let userG = await Storage.getItem('userG');
-    if(userG) {
-      enviarAPantallaSeguridad();
+    if (paseoSeleccionado?.pinPaseo && seAsignoPin) {
+      Alert.alert(
+        t('tripDetails.protectConfirmationTitle'),
+        t('tripDetails.protectConfirmationPin', {pin: paseoSeleccionado?.pinPaseo!.toString()}),
+        [
+          { text: t('common.ok')}
+        ],
+        {
+          cancelable: false,
+        }
+      );
     }
     let today = new Date();
     today.setHours(0,0,0,0);
@@ -90,6 +95,14 @@ const TripDetails = (props) => {
 
     console.log("TripDetails::paseoCompletado: " + paseoCompletado);
 
+    setSeAsignoPin(false); 
+  }
+
+  const procesoEnviarAPantallaSeguridad = async () => {
+    let userG = await Storage.getItem('userG');
+    if(userG) {
+      enviarAPantallaSeguridad();
+    }
   }
 
   useEffect(() => {
