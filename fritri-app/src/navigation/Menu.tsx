@@ -113,12 +113,12 @@ const DrawerContent = (
             radius={0}
             width={33}
             height={33}
-            color={colors.text}
+            color={labelColor}
             source={assets.logo}
             marginRight={sizes.sm}
           />
           <Block>
-            <Text size={12} semibold>
+            <Text size={16} semibold color={labelColor}>
               {t('app.name')}
             </Text>
             {/* <Text size={12} semibold>

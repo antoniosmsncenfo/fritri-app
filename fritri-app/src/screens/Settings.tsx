@@ -53,10 +53,10 @@ const Settings = () => {
           align="center"
           justify="space-between"
           marginBottom={sizes.m}>
-          <Text>{t('settings.recommended.language')} EN/FR</Text>
+          <Text>{t('settings.recommended.language')} EN/ES</Text>
           <Switch
             checked={!isEN}
-            onPress={(checked) => setLocale(checked ? 'fr' : 'en')}
+            onPress={(checked) => setLocale(checked ? 'es' : 'en')}
           />
         </Block>
 
