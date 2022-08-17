@@ -12,6 +12,7 @@ import { useUsuario, useLogin } from '../hooks/useUsuario';
 import { email } from '../constants/regex';
 import { LoginStatus } from '../interfaces/usuario-fritri';
 import { useFocusEffect } from '@react-navigation/native';
+import Storage from '@react-native-async-storage/async-storage';
 
 
 
@@ -179,6 +180,17 @@ const Login = () => {
       }
     }
   }, [fritriUserEmail]);
+
+  const getGUser = async() => {
+    let userG = await Storage.getItem('userG');
+    if(userG) {
+      navigation.navigate('Home');
+    }
+  }
+
+  useEffect(() => {
+    getGUser();
+  }, [])
 
   return (
     <Block safe marginTop={sizes.md}>

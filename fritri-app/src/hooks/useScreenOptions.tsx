@@ -139,6 +139,21 @@ export default () => {
         </Button>
       ),
     },
+    goToHome: {
+      ...menu,
+      headerLeft: () => (
+        <Button onPress={() => navigation.navigate('Home')}>
+          <Image
+            radius={0}
+            width={10}
+            height={18}
+            color={colors.icon}
+            source={icons.arrow}
+            transform={[{rotate: '180deg'}]}
+          />
+        </Button>
+      )
+    },
     profile: {
       ...menu,
       headerRight: () => (

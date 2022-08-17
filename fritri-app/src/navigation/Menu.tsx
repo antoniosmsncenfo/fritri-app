@@ -232,7 +232,9 @@ export default () => {
           borderRightWidth: 0,
           backgroundColor: 'transparent',
         }}>
-        <Drawer.Screen name="Screens" component={ScreensStack} />
+        <Drawer.Screen name="Screens" component={ScreensStack} options={{
+          swipeEnabled: false
+        }} />
       </Drawer.Navigator>
     </Block>
   );
