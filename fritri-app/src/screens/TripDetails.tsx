@@ -30,6 +30,8 @@ const TripDetails = (props) => {
   const [atraccionesVotar, setAtraccionesVotar] = useState<ITipoVoto[]>([]);
   const [isFromDashboard, setIsFromDashboard] = useState(false);
 
+  const [paseoCompletado, setPaseoCompletado] = useState(false);
+
   const checkGUser = async () => {
     let userG = await Storage.getItem('userG');
     if(!userG) {
@@ -79,6 +81,15 @@ const TripDetails = (props) => {
     if(userG) {
       enviarAPantallaSeguridad();
     }
+    let today = new Date();
+    today.setHours(0,0,0,0);
+    let paseo = new Date(paseoSeleccionado?.fechaPaseo!);
+    paseo.setHours(0,0,0,0);
+
+    setPaseoCompletado(paseo < today);
+
+    console.log("TripDetails::paseoCompletado: " + paseoCompletado);
+
   }
 
   useEffect(() => {
@@ -391,6 +402,7 @@ const TripDetails = (props) => {
                 {t('newTrip.restaurants')}
               </Text>
               {!paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones &&
+                paseoSeleccionado?.idCreador === user._id && !paseoCompletado &&
               <Block row flex={0} align="center">
                 <TouchableOpacity onPress={() => navegarRestaurantes()}>
                   <Block row flex={0} align="center">
@@ -419,7 +431,8 @@ const TripDetails = (props) => {
                     tipo="rest" 
                     manejarVotos={manejarVotos} 
                     usuarioVotado={revisarVotosUsuario(restaurante)}
-                    votosCerrados={paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones} 
+                    votosCerrados={paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones}
+                    paseoCompletado={paseoCompletado}
                   />
                 </Block>
               ))
@@ -458,7 +471,8 @@ const TripDetails = (props) => {
                 </Button>
             } */}
 
-            {user && !paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones && (
+            {user && !paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones && 
+             !paseoCompletado && (
               !enviandoVotacionRest ?
                 <Button
                   onPress={() => { enviarVotos('rest'); }}
@@ -482,7 +496,7 @@ const TripDetails = (props) => {
             )}
 
 
-            {user && paseoSeleccionado?.idCreador === user._id &&
+            {user && paseoSeleccionado?.idCreador === user._id && !paseoCompletado &&
              !paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones &&
             <Button
               gradient={gradients.warning}
@@ -514,6 +528,7 @@ const TripDetails = (props) => {
                 {t('newTrip.touristAttractions')}
               </Text>
               {!paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones &&
+                paseoSeleccionado?.idCreador === user._id && !paseoCompletado &&
               <Block row flex={0} align="center">
                 <TouchableOpacity onPress={() => navegarAtracciones()}>
                   <Block row flex={0} align="center">
@@ -543,6 +558,7 @@ const TripDetails = (props) => {
                     manejarVotos={manejarVotos} 
                     usuarioVotado={revisarVotosUsuario(attraccion)}
                     votosCerrados={paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones}
+                    paseoCompletado={paseoCompletado}
                   />
                 </Block>
               ))}
@@ -557,7 +573,8 @@ const TripDetails = (props) => {
               )
             }
 
-            {!paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones && (
+            {!paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones && 
+             !paseoCompletado && (
              !enviandoVotacionAtr ?
               <Button
                 onPress={() => { enviarVotos('attr'); }}
@@ -580,7 +597,7 @@ const TripDetails = (props) => {
               </Button>
             )}
 
-            {user && paseoSeleccionado?.idCreador === user._id &&
+            {user && paseoSeleccionado?.idCreador === user._id && !paseoCompletado &&
              !paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones &&
             <Button
               gradient={gradients.warning}
