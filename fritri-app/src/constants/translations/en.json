@@ -199,7 +199,7 @@
   },
   "settings": {
     "recommended": {
-      "title": "Recommended Settings",
+      "title": "Application Settings",
       "subtitle": "These are the most important settings",
       "faceid": "Use FaceID to sign in",
       "autolock": "Auto-Lock security",
