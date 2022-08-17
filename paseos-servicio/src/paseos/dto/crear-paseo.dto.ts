@@ -37,4 +37,8 @@ export class CrearPaseoDto {
   @ApiProperty()
   @IsNotEmpty()
   readonly seccionAtraccionesTuristicas: SeccionAtraccionesTuristicas;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  readonly esAleatorio: boolean;
 }

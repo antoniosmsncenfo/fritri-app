@@ -117,8 +117,8 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   );
 
   // Clear user
-  const clearUser = () => {
-    Storage.removeItem('userG');
+  const clearUser = async () => {
+    await Storage.removeItem('userG');
   };
 
   // handle Article

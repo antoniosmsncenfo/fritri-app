@@ -4,48 +4,96 @@ import React, { useEffect, useState } from 'react';
 import { usePaseo } from '../hooks/usePaseos';
 import dayjs from 'dayjs';
 import { Alert, Share, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 import { useUsuario } from '../hooks/useUsuario';
 import { useVotacion } from '../hooks/useVotacion';
 import { PlaceDetail } from '../components/PlaceDetail';
-import { ILugar } from '../interfaces/paseo';
+import { ILugar, TipoSeccion } from '../interfaces/paseo';
 import { ITipoVoto, ITipoVotoEnviar } from '../interfaces/tipo-voto';
 import * as Linking from 'expo-linking';
+import Storage from '@react-native-async-storage/async-storage';
 
 const TripDetails = (props) => {
   const { assets, sizes, colors, gradients } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation();
-  const { obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado, protegerPaseo, removerPin } = usePaseo();
+  const { obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado, 
+    protegerPaseo, removerPin, seAsignoPin, setSeAsignoPin,
+    cerrarSeccion, seCerroSeccion, setSeCerroSeccion } = usePaseo();
   const { usuarioPaseo, obtenerUsuarioPaseo } = useUsuario();
-  const { votarSeccion, enviandoVotacionRest, enviandoVotacionAtr, respRest, respAtr, setEnviandoVotacionRest, setEnviandoVotacionAtr } = useVotacion();
+  const { 
+    votarSeccion, enviandoVotacionRest, enviandoVotacionAtr, 
+    respRest, respAtr, setEnviandoVotacionRest, setEnviandoVotacionAtr } = useVotacion();
   const { user } = useData();
 
   const [restaurantesVotar, setRestaurantesVotar] = useState<ITipoVoto[]>([]);
   const [atraccionesVotar, setAtraccionesVotar] = useState<ITipoVoto[]>([]);
   const [isFromDashboard, setIsFromDashboard] = useState(false);
 
+  const [paseoCompletado, setPaseoCompletado] = useState(false);
+
+  const checkGUser = async () => {
+    let userG = await Storage.getItem('userG');
+    if(!userG) {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            { name: 'Login' },
+          ],
+        })
+      );
+    } else {
+      let idPaseo: string = props.route.params.id;
+      checkRouteFrom();
+      obtenerPaseo(idPaseo);
+    }
+  }
+
   useEffect(() => {
-    let idPaseo: string = props.route.params.id;
-    obtenerPaseo(idPaseo);
-    checkRouteFrom();
-  }, []);
+    checkGUser();
+  }, [props.route.params.id]);
+
 
   const checkRouteFrom = () => {
     const checkFrom = ['TripSecurity', 'Notifications', 'EditTrip'];
     if (props.route.params.fromDashboard || checkFrom.includes(props.route.params.from)) { setIsFromDashboard(true); }
   }
 
-  useEffect(() => {
-    if (paseoSeleccionado?.pinPaseo && !isFromDashboard) {
+  const revisarPaseoCreador = () => {
+    return (user && paseoSeleccionado?.idCreador === user._id);
+  }
+
+  const enviarAPantallaSeguridad = () => {
+    if (paseoSeleccionado && paseoSeleccionado?.pinPaseo && !isFromDashboard && !revisarPaseoCreador()) {
       navigation.navigate('TripSecurity', {
         id: props.route.params.id,
         pin: paseoSeleccionado?.pinPaseo,
       });
     }
-    if (paseoSeleccionado?.idCreador!) {
+    if (user && paseoSeleccionado?.idCreador!) {
       obtenerUsuarioPaseo(paseoSeleccionado?.idCreador!);
     }
+  }
+
+  const procesoEnviarAPantallaSeguridad = async () => {
+    let userG = await Storage.getItem('userG');
+    if(userG) {
+      enviarAPantallaSeguridad();
+    }
+    let today = new Date();
+    today.setHours(0,0,0,0);
+    let paseo = new Date(paseoSeleccionado?.fechaPaseo!);
+    paseo.setHours(0,0,0,0);
+
+    setPaseoCompletado(paseo < today);
+
+    console.log("TripDetails::paseoCompletado: " + paseoCompletado);
+
+  }
+
+  useEffect(() => {
+    procesoEnviarAPantallaSeguridad();
   }, [paseoSeleccionado]);
 
   useEffect(() => {
@@ -94,7 +142,7 @@ const TripDetails = (props) => {
             tipoVoto: x.tipoVoto,
           };
         });
-        votarSeccion(paseoSeleccionado?.idCreador!, props.route.params.id, idSecciones, 'RESTAURANTE');
+        votarSeccion(user._id!, props.route.params.id, idSecciones, 'RESTAURANTE');
         break;
       case 'attr':
         setEnviandoVotacionAtr(true);
@@ -105,13 +153,17 @@ const TripDetails = (props) => {
             tipoVoto: x.tipoVoto,
           };
         });
-        votarSeccion(paseoSeleccionado?.idCreador!, props.route.params.id, idSeccionesAtracciones, 'ATRACCION_TURISTICA');
+        votarSeccion(user._id!, props.route.params.id, idSeccionesAtracciones, 'ATRACCION_TURISTICA');
         break;
     }
   };
 
+  const handleCerrarVotacion = (idPaseo:string, tipo:TipoSeccion) => {
+    cerrarSeccion(idPaseo,tipo);
+  };
+
   const revisarVotosUsuario = (lugar: ILugar) => {
-    const usuarioVoto = lugar?.votaciones?.find(x => x.idVotante === user._id);
+    const usuarioVoto = lugar?.votaciones?.find(x => x.idVotante === user?._id);
     if (usuarioVoto === undefined || usuarioVoto.resultado === 'nullVal') {
       return {
         like: false,
@@ -135,8 +187,8 @@ const TripDetails = (props) => {
     for (let i = 0; i < lugares.length; i++) {
       const lugar = lugares[i];
       if (lugar.votaciones && lugar.votaciones.length > 0) {
-        const indice = lugar?.votaciones?.findIndex(x => x.idVotante === user._id);
-        const votacion = lugar?.votaciones?.find(x => x.idVotante === user._id);
+        const indice = lugar?.votaciones?.findIndex(x => x.idVotante === user?._id);
+        const votacion = lugar?.votaciones?.find(x => x.idVotante === user?._id);
         if (indice !== -1) {
           indicesVotosUsuario.push({
             tipoVoto: votacion?.resultado!,
@@ -164,11 +216,12 @@ const TripDetails = (props) => {
   };
 
   useEffect(() => {
-    if (!enviandoVotacionAtr && !enviandoVotacionRest) {
+    if (!enviandoVotacionAtr && !enviandoVotacionRest && user) {
       let idPaseo: string = props.route.params.id;
       obtenerPaseo(idPaseo);
     }
   }, [enviandoVotacionAtr, enviandoVotacionRest]);
+
   const protectPress = (idPaseo: string) => {
     protegerPaseo(idPaseo);
   };
@@ -195,11 +248,19 @@ const TripDetails = (props) => {
   };
 
   useEffect(() => {
-    if (!enviandoVotacionAtr && !enviandoVotacionRest) {
+    if (!enviandoVotacionAtr && !enviandoVotacionRest && user) {
       let idPaseo: string = props.route.params.id;
       obtenerPaseo(idPaseo);
     }
   }, [enviandoVotacionAtr, enviandoVotacionRest]);
+
+  useEffect(() => {
+    if (seCerroSeccion) {
+      let idPaseo: string = props.route.params.id;
+      obtenerPaseo(idPaseo);    
+      setSeCerroSeccion(false);
+    }
+  }, [seCerroSeccion]);
 
   return (
     <Block safe>
@@ -220,7 +281,7 @@ const TripDetails = (props) => {
             <Block row flex={0} align="center">
 
               {paseoSeleccionado?.pinPaseo &&
-                paseoSeleccionado?.idCreador === user._id &&
+                paseoSeleccionado?.idCreador === user?._id &&
 
                 <TouchableOpacity
                   onPress={(value) =>
@@ -239,7 +300,7 @@ const TripDetails = (props) => {
 
 
               {!paseoSeleccionado?.pinPaseo &&
-                paseoSeleccionado?.idCreador === user._id &&
+                paseoSeleccionado?.idCreador === user?._id &&
                 <TouchableOpacity
                   onPress={(value) =>
                     Alert.alert(
@@ -255,7 +316,7 @@ const TripDetails = (props) => {
                 </TouchableOpacity>
               }
 
-              {paseoSeleccionado?.idCreador === user._id &&
+              {paseoSeleccionado?.idCreador === user?._id &&
                 <TouchableOpacity
                   onPress={() => { onShare(paseoSeleccionado?._id!); }} >
                   <Image source={assets.share} />
@@ -323,7 +384,7 @@ const TripDetails = (props) => {
                 {dayjs(paseoSeleccionado?.fechaCreacion).format(t('common.dateFormat'))}
               </Text>
               {paseoSeleccionado?.pinPaseo &&
-                paseoSeleccionado?.idCreador === user._id &&
+                paseoSeleccionado?.idCreador === user?._id &&
                 <Text p gray>
                   PIN: {paseoSeleccionado?.pinPaseo!}
                 </Text>
@@ -340,6 +401,8 @@ const TripDetails = (props) => {
               <Text h5 semibold>
                 {t('newTrip.restaurants')}
               </Text>
+              {!paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones &&
+                paseoSeleccionado?.idCreador === user._id && !paseoCompletado &&
               <Block row flex={0} align="center">
                 <TouchableOpacity onPress={() => navegarRestaurantes()}>
                   <Block row flex={0} align="center">
@@ -355,15 +418,25 @@ const TripDetails = (props) => {
                   </Block>
                 </TouchableOpacity>
               </Block>
+              }
             </Block>
 
             {paseoSeleccionado?.seccionRestaurantes?.restaurantes.map(
               (restaurante, index) => (
                 <Block row align="center" marginBottom={sizes.m}
                   key={`rest-${restaurante.idLugarGoogle}-${index}`}>
-                  <PlaceDetail place={restaurante} posicion={index} tipo="rest" manejarVotos={manejarVotos} usuarioVotado={revisarVotosUsuario(restaurante)} />
+                  <PlaceDetail 
+                    place={restaurante} 
+                    posicion={index} 
+                    tipo="rest" 
+                    manejarVotos={manejarVotos} 
+                    usuarioVotado={revisarVotosUsuario(restaurante)}
+                    votosCerrados={paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones}
+                    paseoCompletado={paseoCompletado}
+                  />
                 </Block>
-              ))}
+              ))
+            }
 
             {
               paseoSeleccionado?.seccionRestaurantes?.restaurantes.length === 0 && (
@@ -375,7 +448,7 @@ const TripDetails = (props) => {
               )
             }
 
-            {
+            {/* {
               !enviandoVotacionRest ?
                 <Button
                   onPress={() => { enviarVotos('rest'); }}
@@ -396,7 +469,55 @@ const TripDetails = (props) => {
                     {t('newTrip.sendingVotes')}
                   </Text>
                 </Button>
-            }
+            } */}
+
+            {user && !paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones && 
+             !paseoCompletado && (
+              !enviandoVotacionRest ?
+                <Button
+                  onPress={() => { enviarVotos('rest'); }}
+                  gradient={gradients.primary}
+                  outlined
+                  marginVertical={sizes.s}
+                >
+                  <Text bold white transform="uppercase">
+                    {t('newTrip.vote')}
+                  </Text>
+                </Button> :
+                <Button
+                  gradient={gradients.primary}
+                  outlined
+                  marginVertical={sizes.s}
+                >
+                  <Text bold white transform="uppercase">
+                    {t('newTrip.sendingVotes')}
+                  </Text>
+                </Button>
+            )}
+
+
+            {user && paseoSeleccionado?.idCreador === user._id && !paseoCompletado &&
+             !paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones &&
+            <Button
+              gradient={gradients.warning}
+              outlined
+              marginVertical={sizes.xs}
+              paddingHorizontal={sizes.sm}
+              onPress={(value) =>
+                Alert.alert(
+                  t('tripDetails.closeVotingConfirmationTitle'),
+                  t('tripDetails.closeVotingConfirmationMessage'),
+                  [
+                    { text: t('common.no'), style: 'cancel' },
+                    { text: t('common.yes'), onPress: () => handleCerrarVotacion(paseoSeleccionado?._id!, TipoSeccion.RESTAURANTE) },
+                  ]
+                )}
+              >
+              <Text bold white transform="uppercase">
+                {t('tripDetails.closeVotes')}
+              </Text>
+            </Button>
+            }            
           </Block>
 
           {/* Atracciones */}
@@ -406,6 +527,8 @@ const TripDetails = (props) => {
               <Text h5 semibold>
                 {t('newTrip.touristAttractions')}
               </Text>
+              {!paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones &&
+                paseoSeleccionado?.idCreador === user._id && !paseoCompletado &&
               <Block row flex={0} align="center">
                 <TouchableOpacity onPress={() => navegarAtracciones()}>
                   <Block row flex={0} align="center">
@@ -421,27 +544,38 @@ const TripDetails = (props) => {
                   </Block>
                 </TouchableOpacity>
               </Block>
+              }
             </Block>
 
             {paseoSeleccionado?.seccionAtraccionesTuristicas?.atraccionesturisticas.map(
               (attraccion, index) => (
                 <Block row align="center" marginBottom={sizes.m}
                   key={`attr-${attraccion.idLugarGoogle}-${index}`}>
-                  <PlaceDetail place={attraccion} posicion={index} tipo="attr" manejarVotos={manejarVotos} usuarioVotado={revisarVotosUsuario(attraccion)} />
+                  <PlaceDetail 
+                    place={attraccion} 
+                    posicion={index} 
+                    tipo="attr" 
+                    manejarVotos={manejarVotos} 
+                    usuarioVotado={revisarVotosUsuario(attraccion)}
+                    votosCerrados={paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones}
+                    paseoCompletado={paseoCompletado}
+                  />
                 </Block>
               ))}
 
             {
               paseoSeleccionado?.seccionAtraccionesTuristicas?.atraccionesturisticas.length === 0 && (
                 <Block row marginBottom={sizes.sm}>
-                  <Text h7 color={colors.primary}>
+                  <Text h5 color={colors.primary}>
                     {t('tripDetails.noTouristAttractions')}
                   </Text>
                 </Block>
               )
             }
 
-            {!enviandoVotacionAtr ?
+            {!paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones && 
+             !paseoCompletado && (
+             !enviandoVotacionAtr ?
               <Button
                 onPress={() => { enviarVotos('attr'); }}
                 gradient={gradients.primary}
@@ -461,6 +595,29 @@ const TripDetails = (props) => {
                   {t('newTrip.sendingVotes')}
                 </Text>
               </Button>
+            )}
+
+            {user && paseoSeleccionado?.idCreador === user._id && !paseoCompletado &&
+             !paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones &&
+            <Button
+              gradient={gradients.warning}
+              outlined
+              marginVertical={sizes.xs}
+              paddingHorizontal={sizes.sm}
+              onPress={(value) =>
+                Alert.alert(
+                  t('tripDetails.closeVotingConfirmationTitle'),
+                  t('tripDetails.closeVotingConfirmationMessage'),
+                  [
+                    { text: t('common.no'), style: 'cancel' },
+                    { text: t('common.yes'), onPress: () => handleCerrarVotacion(paseoSeleccionado?._id!, TipoSeccion.ATRACCION_TURISTICA) },
+                  ]
+                )}
+            >
+              <Text bold white transform="uppercase">
+                {t('tripDetails.closeVotes')}
+              </Text>
+            </Button>
             }
 
           </Block>

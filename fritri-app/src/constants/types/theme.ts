@@ -254,7 +254,8 @@ export interface ThemeIcons {
   like: ImageSourcePropType;
   disLike: ImageSourcePropType;
   likeFill: ImageSourcePropType;
-  disLikeFill: ImageSourcePropType; 
+  disLikeFill: ImageSourcePropType;
+  trophy: ImageSourcePropType; 
 }
 
 export interface ThemeAssets {

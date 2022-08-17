@@ -13,6 +13,8 @@ export const PlaceDetail = (props) => {
 
   const attraccion = props.place;
   const assetNoImg = props.type === 'rest' ? assets.restaurant : assets.attraction;
+  const votosCerrados = props.votosCerrados;
+  const paseoCompletado = props.paseoCompletado;
 
   const { like, noLike } = props.usuarioVotado;
 
@@ -43,7 +45,6 @@ export const PlaceDetail = (props) => {
       props.manejarVotos(props.posicion, props.tipo, 'nullVal');
     }
   }, [likeCheck, dislikeCheck])
-
 
   useEffect(() => {
     if(likeCheck) {
@@ -127,6 +128,7 @@ export const PlaceDetail = (props) => {
         </TouchableOpacity>
         <Block row justify="flex-end">
           <Block row flex={0} align="flex-start" style={{ marginRight: 10 }}>
+          {!votosCerrados && !paseoCompletado &&
             <TouchableOpacity onPress={() => { manejarVotoLugar('like') }} >
               <Image
                 radius={0}
@@ -136,8 +138,10 @@ export const PlaceDetail = (props) => {
                 height={sizes.m}
               />
             </TouchableOpacity>
+          }
           </Block>
           <Block row flex={0} align="center">
+          {!votosCerrados && !paseoCompletado &&
             <TouchableOpacity onPress={() => { manejarVotoLugar('dislike') }} >
               <Image
                 radius={0}
@@ -147,6 +151,16 @@ export const PlaceDetail = (props) => {
                 height={sizes.m}
               />
             </TouchableOpacity>
+          }
+          {votosCerrados && attraccion.ganador! &&
+            <Image
+                radius={0}
+                source={assets.trophy}
+                style={{tintColor: colors.secondary}}
+                width={sizes.m}
+                height={sizes.m}
+              />
+          }          
           </Block>
         </Block>
       </Block>
