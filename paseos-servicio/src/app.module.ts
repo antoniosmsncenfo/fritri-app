@@ -12,7 +12,7 @@ import { UsuariosService } from './usuarios/usuarios.service';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot('mongodb://localhost:27017/Paseos_FriTri'),
+    MongooseModule.forRoot(process.env.MONGO_DB),
     PaseosModule,
     VotacionesModule,
     HttpModule,

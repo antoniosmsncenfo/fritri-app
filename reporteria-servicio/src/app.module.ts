@@ -9,9 +9,7 @@ import { PaseosModule } from './paseos/paseos.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(
-      process.env.MONGO_DB || 'mongodb://localhost:27017/Estadisticas_FriTri',
-    ),
+    MongooseModule.forRoot(process.env.MONGO_DB),
     PaseosModule,
     DestinosModule,
     UsuariosModule,
