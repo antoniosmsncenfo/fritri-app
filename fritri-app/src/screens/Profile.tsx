@@ -14,7 +14,7 @@ import { useUsuario } from '../hooks/useUsuario';
 import { IRegistration, RegistrationStatus } from '../interfaces/registro-usuario';
 import { IUsuario } from '../constants/types/index';
 import { COUNTRIES } from '../constants/countries';
-import axios from 'axios';
+import { CommonActions } from '@react-navigation/native';
 
 
 const isAndroid = Platform.OS === 'android';
@@ -86,7 +86,7 @@ const TouchableInput = ({ label, value, icon, onPress }: ITouchableInput) => {
 
 const Profile = () => {
 
-  const { user, handleUser } = useData();
+  const { user, handleUser, clearUser } = useData();
   const { t } = useTranslation();
   const navigation = useNavigation();
 
@@ -218,7 +218,17 @@ const Profile = () => {
       t('common.logOutConfirmT'),
       t('common.logOutConfirmC'),
       [
-        { text: 'Yes', onPress: () => navigation.navigate('Login') },
+        { text: 'Yes', onPress: () => {
+          clearUser()
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [
+                { name: 'Login'},
+              ],
+            })
+          );
+        }},
         { text: 'No', onPress: () => ('No button clicked'), style: 'cancel' },
       ],
       {

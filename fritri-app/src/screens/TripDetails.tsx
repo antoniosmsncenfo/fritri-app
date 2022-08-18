@@ -4,13 +4,14 @@ import React, { useEffect, useState } from 'react';
 import { usePaseo } from '../hooks/usePaseos';
 import dayjs from 'dayjs';
 import { Alert, Share, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 import { useUsuario } from '../hooks/useUsuario';
 import { useVotacion } from '../hooks/useVotacion';
 import { PlaceDetail } from '../components/PlaceDetail';
 import { ILugar, TipoSeccion } from '../interfaces/paseo';
 import { ITipoVoto, ITipoVotoEnviar } from '../interfaces/tipo-voto';
 import * as Linking from 'expo-linking';
+import Storage from '@react-native-async-storage/async-storage';
 
 const TripDetails = (props) => {
   const { assets, sizes, colors, gradients } = useTheme();
@@ -29,25 +30,48 @@ const TripDetails = (props) => {
   const [atraccionesVotar, setAtraccionesVotar] = useState<ITipoVoto[]>([]);
   const [isFromDashboard, setIsFromDashboard] = useState(false);
 
+  const [paseoCompletado, setPaseoCompletado] = useState(false);
+
+  const checkGUser = async () => {
+    let userG = await Storage.getItem('userG');
+    if(!userG) {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            { name: 'Login' },
+          ],
+        })
+      );
+    } else {
+      let idPaseo: string = props.route.params.id;
+      checkRouteFrom();
+      obtenerPaseo(idPaseo);
+    }
+  }
+
   useEffect(() => {
-    let idPaseo: string = props.route.params.id;
-    obtenerPaseo(idPaseo);
-    checkRouteFrom();
-  }, []);
+    checkGUser();
+  }, [props.route.params.id]);
+
 
   const checkRouteFrom = () => {
     const checkFrom = ['TripSecurity', 'Notifications', 'EditTrip'];
     if (props.route.params.fromDashboard || checkFrom.includes(props.route.params.from)) { setIsFromDashboard(true); }
   }
 
-  useEffect(() => {
-    if (paseoSeleccionado?.pinPaseo && !isFromDashboard) {
+  const revisarPaseoCreador = () => {
+    return (user && paseoSeleccionado?.idCreador === user._id);
+  }
+
+  const enviarAPantallaSeguridad = () => {
+    if (paseoSeleccionado && paseoSeleccionado?.pinPaseo && !isFromDashboard && !revisarPaseoCreador()) {
       navigation.navigate('TripSecurity', {
         id: props.route.params.id,
         pin: paseoSeleccionado?.pinPaseo,
       });
     }
-    if (paseoSeleccionado?.idCreador!) {
+    if (user && paseoSeleccionado?.idCreador!) {
       obtenerUsuarioPaseo(paseoSeleccionado?.idCreador!);
     }
     if (paseoSeleccionado?.pinPaseo && seAsignoPin) {
@@ -59,10 +83,30 @@ const TripDetails = (props) => {
         ],
         {
           cancelable: false,
-        }        
-      );         
+        }
+      );
     }
-    setSeAsignoPin(false);    
+    let today = new Date();
+    today.setHours(0,0,0,0);
+    let paseo = new Date(paseoSeleccionado?.fechaPaseo!);
+    paseo.setHours(0,0,0,0);
+
+    setPaseoCompletado(paseo < today);
+
+    console.log("TripDetails::paseoCompletado: " + paseoCompletado);
+
+    setSeAsignoPin(false); 
+  }
+
+  const procesoEnviarAPantallaSeguridad = async () => {
+    let userG = await Storage.getItem('userG');
+    if(userG) {
+      enviarAPantallaSeguridad();
+    }
+  }
+
+  useEffect(() => {
+    procesoEnviarAPantallaSeguridad();
   }, [paseoSeleccionado]);
 
   useEffect(() => {
@@ -132,7 +176,7 @@ const TripDetails = (props) => {
   };
 
   const revisarVotosUsuario = (lugar: ILugar) => {
-    const usuarioVoto = lugar?.votaciones?.find(x => x.idVotante === user._id);
+    const usuarioVoto = lugar?.votaciones?.find(x => x.idVotante === user?._id);
     if (usuarioVoto === undefined || usuarioVoto.resultado === 'nullVal') {
       return {
         like: false,
@@ -156,8 +200,8 @@ const TripDetails = (props) => {
     for (let i = 0; i < lugares.length; i++) {
       const lugar = lugares[i];
       if (lugar.votaciones && lugar.votaciones.length > 0) {
-        const indice = lugar?.votaciones?.findIndex(x => x.idVotante === user._id);
-        const votacion = lugar?.votaciones?.find(x => x.idVotante === user._id);
+        const indice = lugar?.votaciones?.findIndex(x => x.idVotante === user?._id);
+        const votacion = lugar?.votaciones?.find(x => x.idVotante === user?._id);
         if (indice !== -1) {
           indicesVotosUsuario.push({
             tipoVoto: votacion?.resultado!,
@@ -185,7 +229,7 @@ const TripDetails = (props) => {
   };
 
   useEffect(() => {
-    if (!enviandoVotacionAtr && !enviandoVotacionRest) {
+    if (!enviandoVotacionAtr && !enviandoVotacionRest && user) {
       let idPaseo: string = props.route.params.id;
       obtenerPaseo(idPaseo);
     }
@@ -217,7 +261,7 @@ const TripDetails = (props) => {
   };
 
   useEffect(() => {
-    if (!enviandoVotacionAtr && !enviandoVotacionRest) {
+    if (!enviandoVotacionAtr && !enviandoVotacionRest && user) {
       let idPaseo: string = props.route.params.id;
       obtenerPaseo(idPaseo);
     }
@@ -250,7 +294,7 @@ const TripDetails = (props) => {
             <Block row flex={0} align="center">
 
               {paseoSeleccionado?.pinPaseo &&
-                paseoSeleccionado?.idCreador === user._id &&
+                paseoSeleccionado?.idCreador === user?._id &&
 
                 <TouchableOpacity
                   onPress={(value) =>
@@ -269,7 +313,7 @@ const TripDetails = (props) => {
 
 
               {!paseoSeleccionado?.pinPaseo &&
-                paseoSeleccionado?.idCreador === user._id &&
+                paseoSeleccionado?.idCreador === user?._id &&
                 <TouchableOpacity
                   onPress={(value) =>
                     Alert.alert(
@@ -285,7 +329,7 @@ const TripDetails = (props) => {
                 </TouchableOpacity>
               }
 
-              {paseoSeleccionado?.idCreador === user._id &&
+              {paseoSeleccionado?.idCreador === user?._id &&
                 <TouchableOpacity
                   onPress={() => { onShare(paseoSeleccionado?._id!); }} >
                   <Image source={assets.share} />
@@ -353,7 +397,7 @@ const TripDetails = (props) => {
                 {dayjs(paseoSeleccionado?.fechaCreacion).format(t('common.dateFormat'))}
               </Text>
               {paseoSeleccionado?.pinPaseo &&
-                paseoSeleccionado?.idCreador === user._id &&
+                paseoSeleccionado?.idCreador === user?._id &&
                 <Text p gray>
                   PIN: {paseoSeleccionado?.pinPaseo!}
                 </Text>
@@ -371,6 +415,7 @@ const TripDetails = (props) => {
                 {t('newTrip.restaurants')}
               </Text>
               {!paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones &&
+                paseoSeleccionado?.idCreador === user._id && !paseoCompletado &&
               <Block row flex={0} align="center">
                 <TouchableOpacity onPress={() => navegarRestaurantes()}>
                   <Block row flex={0} align="center">
@@ -399,7 +444,8 @@ const TripDetails = (props) => {
                     tipo="rest" 
                     manejarVotos={manejarVotos} 
                     usuarioVotado={revisarVotosUsuario(restaurante)}
-                    votosCerrados={paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones} 
+                    votosCerrados={paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones}
+                    paseoCompletado={paseoCompletado}
                   />
                 </Block>
               ))
@@ -438,7 +484,8 @@ const TripDetails = (props) => {
                 </Button>
             } */}
 
-            {!paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones && (
+            {user && !paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones && 
+             !paseoCompletado && (
               !enviandoVotacionRest ?
                 <Button
                   onPress={() => { enviarVotos('rest'); }}
@@ -462,7 +509,7 @@ const TripDetails = (props) => {
             )}
 
 
-            {paseoSeleccionado?.idCreador === user._id &&
+            {user && paseoSeleccionado?.idCreador === user._id && !paseoCompletado &&
              !paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones &&
             <Button
               gradient={gradients.warning}
@@ -494,6 +541,7 @@ const TripDetails = (props) => {
                 {t('newTrip.touristAttractions')}
               </Text>
               {!paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones &&
+                paseoSeleccionado?.idCreador === user._id && !paseoCompletado &&
               <Block row flex={0} align="center">
                 <TouchableOpacity onPress={() => navegarAtracciones()}>
                   <Block row flex={0} align="center">
@@ -523,6 +571,7 @@ const TripDetails = (props) => {
                     manejarVotos={manejarVotos} 
                     usuarioVotado={revisarVotosUsuario(attraccion)}
                     votosCerrados={paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones}
+                    paseoCompletado={paseoCompletado}
                   />
                 </Block>
               ))}
@@ -537,7 +586,8 @@ const TripDetails = (props) => {
               )
             }
 
-            {!paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones && (
+            {!paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones && 
+             !paseoCompletado && (
              !enviandoVotacionAtr ?
               <Button
                 onPress={() => { enviarVotos('attr'); }}
@@ -560,7 +610,7 @@ const TripDetails = (props) => {
               </Button>
             )}
 
-            {paseoSeleccionado?.idCreador === user._id &&
+            {user && paseoSeleccionado?.idCreador === user._id && !paseoCompletado &&
              !paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones &&
             <Button
               gradient={gradients.warning}
