@@ -25,7 +25,7 @@ ReactDOM.render(
   <Auth0Provider
     domain="fritri.us.auth0.com"
     clientId="FJlfJ6P91fWYYYJ0iwv6oS8Qzum8lx7a"
-    redirectUri="http://localhost:3000/dashboards/analytics"
+    redirectUri="http://localhost:7777/dashboards/analytics"
   >
     <BrowserRouter>
       <MaterialUIControllerProvider>
