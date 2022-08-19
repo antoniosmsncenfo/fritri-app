@@ -34,7 +34,7 @@ const Settings = () => {
           </Block>
           <Block>
             <Text semibold>{t('settings.recommended.title')}</Text>
-            <Text size={12}>{t('settings.recommended.subtitle')}</Text>
+            {/* <Text size={12}>{t('settings.recommended.subtitle')}</Text> */}
           </Block>
         </Block>
         <Block
@@ -53,14 +53,14 @@ const Settings = () => {
           align="center"
           justify="space-between"
           marginBottom={sizes.m}>
-          <Text>{t('settings.recommended.language')} EN/FR</Text>
+          <Text>{t('settings.recommended.language')} EN/ES</Text>
           <Switch
             checked={!isEN}
-            onPress={(checked) => setLocale(checked ? 'fr' : 'en')}
+            onPress={(checked) => setLocale(checked ? 'es' : 'en')}
           />
         </Block>
 
-        <Block
+        {/* <Block
           row
           align="center"
           justify="space-between"
@@ -85,10 +85,10 @@ const Settings = () => {
             height={18}
             width={10}
           />
-        </Button>
+        </Button> */}
       </Block>
       {/* payment */}
-      <Block card padding={sizes.sm} marginBottom={sizes.sm}>
+      {/* <Block card padding={sizes.sm} marginBottom={sizes.sm}>
         <Block row align="center" marginBottom={sizes.s}>
           <Block
             flex={0}
@@ -126,10 +126,10 @@ const Settings = () => {
             width={10}
           />
         </Button>
-      </Block>
+      </Block> */}
 
       {/* privacy */}
-      <Block card padding={sizes.sm} marginBottom={sizes.sm}>
+      {/* <Block card padding={sizes.sm} marginBottom={sizes.sm}>
         <Block row align="center" marginBottom={sizes.s}>
           <Block
             flex={0}
@@ -189,7 +189,7 @@ const Settings = () => {
             width={10}
           />
         </Button>
-      </Block>
+      </Block> */}
     </Block>
   );
 };
