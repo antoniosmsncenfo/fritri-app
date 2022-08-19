@@ -145,24 +145,11 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
     >
       <Toolbar sx={navbarContainer}>
         <MDBox color="inherit" mb={{ xs: 1, md: 0 }} sx={(theme) => navbarRow(theme, { isMini })}>
-          <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} />
-          <IconButton sx={navbarDesktopMenu} onClick={handleMiniSidenav} size="small" disableRipple>
-            <Icon fontSize="medium" sx={iconsStyle}>
-              {miniSidenav ? "menu_open" : "menu"}
-            </Icon>
-          </IconButton>
+          <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} />          
         </MDBox>
         {isMini ? null : (
-          <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
-            <MDBox pr={1}>
-              <MDInput label="Search here" />
-            </MDBox>
-            <MDBox color={light ? "white" : "inherit"}>
-              <Link to="/authentication/sign-in/basic">
-                <IconButton sx={navbarIconButton} size="small" disableRipple>
-                  <Icon sx={iconsStyle}>account_circle</Icon>
-                </IconButton>
-              </Link>
+          <MDBox sx={(theme) => navbarRow(theme, { isMini })}>           
+            <MDBox color={light ? "white" : "inherit"}>            
               <IconButton
                 size="small"
                 disableRipple
@@ -174,25 +161,7 @@ function DashboardNavbar({ absolute, light, isMini }: Props): JSX.Element {
                   {miniSidenav ? "menu_open" : "menu"}
                 </Icon>
               </IconButton>
-              <IconButton
-                size="small"
-                disableRipple
-                color="inherit"
-                sx={navbarIconButton}
-                onClick={handleConfiguratorOpen}
-              >
-                <Icon sx={iconsStyle}>settings</Icon>
-              </IconButton>
-              <IconButton
-                size="small"
-                color="inherit"
-                sx={navbarIconButton}
-                onClick={handleOpenMenu}
-              >
-                <MDBadge badgeContent={9} color="error" size="xs" circular>
-                  <Icon sx={iconsStyle}>notifications</Icon>
-                </MDBadge>
-              </IconButton>
+              
               {renderMenu()}
             </MDBox>
           </MDBox>

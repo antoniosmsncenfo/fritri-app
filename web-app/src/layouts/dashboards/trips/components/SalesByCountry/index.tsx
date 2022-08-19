@@ -55,7 +55,7 @@ function SalesByCountry(): JSX.Element {
           </Icon>
         </MDBox>
         <MDTypography variant="h6" sx={{ mt: 2, mb: 1, ml: 2 }}>
-          Sales by Country
+          Trips by Country
         </MDTypography>
       </MDBox>
       <MDBox p={2}>

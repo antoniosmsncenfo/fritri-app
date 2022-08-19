@@ -21,7 +21,7 @@ import BR from "assets/images/icons/flags/BR.png";
 
 const salesTableData = [
   {
-    country: [US, "united state"],
+    country: ['https://countryflagsapi.com/png/costa rica', "united state"],
     sales: 2500,
     value: "$230,900",
     bounce: "29.9%",
