@@ -27,7 +27,7 @@ import MDBadgeDot from "components/MDBadgeDot";
 import PieChart from "examples/Charts/PieChart";
 
 // Data
-import channelChartData from "layouts/dashboards/sales/components/ChannelsChart/data";
+import channelChartData from "layouts/dashboards/destinations/components/ChannelsChart/data";
 
 // Material Dashboard 2 PRO React TS contexts
 import { useMaterialUIController } from "context";

@@ -36,8 +36,8 @@ Coded by www.creative-tim.com
 */
 
 // Material Dashboard 2 PRO React layouts
-import Analytics from "layouts/dashboards/analytics";
-import Sales from "layouts/dashboards/sales";
+import Trips from "layouts/dashboards/trips";
+import Destinations from "layouts/dashboards/destinations";
 
 // Material Dashboard 2 PRO React TS components
 import MDAvatar from "components/MDAvatar";
@@ -74,14 +74,14 @@ const routes = [
       {
         name: "Trips",
         key: "trips",
-        route: "/dashboards/analytics",
-        component: <Analytics />,
+        route: "/dashboards/trips",
+        component: <Trips />,
       },
       {
         name: "Destinations",
         key: "destinations",
-        route: "/dashboards/sales",
-        component: <Sales />,
+        route: "/dashboards/destinations",
+        component: <Destinations />,
       },
     ],
   },

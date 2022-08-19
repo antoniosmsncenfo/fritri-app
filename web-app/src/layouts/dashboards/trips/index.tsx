@@ -14,6 +14,7 @@ Coded by www.creative-tim.com
 */
 
 // @mui material components
+import { useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import Tooltip from "@mui/material/Tooltip";
 import Icon from "@mui/material/Icon";
@@ -32,19 +33,31 @@ import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatist
 import BookingCard from "examples/Cards/BookingCard";
 
 // Anaytics dashboard components
-import SalesByCountry from "layouts/dashboards/analytics/components/SalesByCountry";
+import SalesByCountry from "layouts/dashboards/trips/components/SalesByCountry";
 
 // Data
-import reportsBarChartData from "layouts/dashboards/analytics/data/reportsBarChartData";
-import reportsLineChartData from "layouts/dashboards/analytics/data/reportsLineChartData";
+import reportsBarChartData from "layouts/dashboards/trips/data/reportsBarChartData";
+import reportsLineChartData from "layouts/dashboards/trips/data/reportsLineChartData";
 
 // Images
 import booking1 from "assets/images/products/product-1-min.jpg";
 import booking2 from "assets/images/products/product-2-min.jpg";
 import booking3 from "assets/images/products/product-3-min.jpg";
+import { useEstadisticasDestino } from "hooks/useEstadisticasDestino";
 
-function Analytics(): JSX.Element {
+
+function Trips(): JSX.Element {
   const { sales, tasks } = reportsLineChartData;
+  const { obtenerEstadisticasPaseo, estadisticasPaseo } = useEstadisticasDestino();
+
+  useEffect(() => {
+    obtenerEstadisticasPaseo()
+  }, [])
+
+
+  useEffect(() => {
+    console.log(JSON.stringify(estadisticasPaseo, null, 2))
+  }, [estadisticasPaseo])
 
   // Action buttons for the BookingCard
   const actionButtons = (
@@ -224,4 +237,4 @@ function Analytics(): JSX.Element {
   );
 }
 
-export default Analytics;
+export default Trips;
