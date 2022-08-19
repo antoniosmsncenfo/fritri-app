@@ -29,6 +29,7 @@ async function bootstrap() {
     `Documentación en la dirección: http://127.0.0.1:${process.env.PORT}/api`,
     'SWAGGER',
   );
+  app.enableCors();
   await app.listen(process.env.PORT || 3005);
 }
 bootstrap();

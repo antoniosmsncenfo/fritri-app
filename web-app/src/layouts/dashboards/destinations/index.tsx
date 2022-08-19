@@ -40,15 +40,15 @@ import SalesTable from "examples/Tables/SalesTable";
 import DataTable from "examples/Tables/DataTable";
 
 // Sales dashboard components
-import ChannelsChart from "layouts/dashboards/sales/components/ChannelsChart";
+import ChannelsChart from "layouts/dashboards/destinations/components/ChannelsChart";
 
 // Data
-import defaultLineChartData from "layouts/dashboards/sales/data/defaultLineChartData";
-import horizontalBarChartData from "layouts/dashboards/sales/data/horizontalBarChartData";
-import salesTableData from "layouts/dashboards/sales/data/salesTableData";
-import dataTableData from "layouts/dashboards/sales/data/dataTableData";
+import defaultLineChartData from "layouts/dashboards/destinations/data/defaultLineChartData";
+import horizontalBarChartData from "layouts/dashboards/destinations/data/horizontalBarChartData";
+import salesTableData from "layouts/dashboards/destinations/data/salesTableData";
+import dataTableData from "layouts/dashboards/destinations/data/dataTableData";
 
-function Sales(): JSX.Element {
+function Destinations(): JSX.Element {
   // DefaultStatisticsCard state for the dropdown value
   const [salesDropdownValue, setSalesDropdownValue] = useState<string>("6 May - 7 May");
   const [customersDropdownValue, setCustomersDropdownValue] = useState<string>("6 May - 7 May");
@@ -218,4 +218,4 @@ function Sales(): JSX.Element {
   );
 }
 
-export default Sales;
+export default Destinations;
