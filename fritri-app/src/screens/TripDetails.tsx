@@ -32,6 +32,7 @@ const TripDetails = (props) => {
   const [isFromDashboard, setIsFromDashboard] = useState(false);
 
   const [paseoCompletado, setPaseoCompletado] = useState(false);
+  const [yaMostroInvitacion, setYaMostroInvitacion] = useState(false);
 
   const checkGUser = async () => {
     let userG = await Storage.getItem('userG');
@@ -51,19 +52,17 @@ const TripDetails = (props) => {
     }
   }
 
+  useFocusEffect(
+    React.useCallback(() => {
+      let idPaseo: string = props.route.params.id;
+      obtenerPaseo(idPaseo);
+    }, [props.route.params.id])
+  );
+
   useEffect(() => {
     checkGUser();
   }, [props.route.params.id]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      preguntarUsuarioUnirsePaseo();
-      return () => {
-        setPaseoSeleccionado(null);
-        setPaseoSeleccionadoCargado(false);
-      };
-    }, [props.route.params.id])
-  );
 
   useEffect(() => {
     if(invitacionAceptada) {
@@ -95,7 +94,7 @@ const TripDetails = (props) => {
   }
 
   const enviarAPantallaSeguridad = () => {
-    if (paseoSeleccionado && paseoSeleccionado?.pinPaseo && !isFromDashboard && !revisarPaseoCreador() && !esUsuarioYaIntegrante()) {
+    if (paseoSeleccionado && paseoSeleccionado?.pinPaseo && props.route.params.from !== 'TripSecurity' && !revisarPaseoCreador() && !esUsuarioYaIntegrante()) {
       navigation.navigate('TripSecurity', {
         id: props.route.params.id,
         pin: paseoSeleccionado?.pinPaseo,
@@ -135,9 +134,11 @@ const TripDetails = (props) => {
 
   const preguntarUsuarioUnirsePaseo = () => {
     const usuarioEsIntegrante = paseoSeleccionado?.integrantes!.find(x => x.idIntegrante === user._id);
-    if(paseoSeleccionado && !paseoSeleccionado.pinPaseo && !usuarioEsIntegrante && paseoSeleccionado?.idCreador !== user?._id) {
+    if(paseoSeleccionado && !paseoSeleccionado.pinPaseo && !usuarioEsIntegrante && paseoSeleccionado?.idCreador !== user?._id && !yaMostroInvitacion) {
+      setYaMostroInvitacion(true);
       mostrarMensajeUnirse();
-    } else if(props.route.params.from === 'TripSecurity' && paseoSeleccionado && !usuarioEsIntegrante && paseoSeleccionado?.idCreador !== user?._id) {
+    } else if(props.route.params.from === 'TripSecurity' && paseoSeleccionado && !usuarioEsIntegrante && paseoSeleccionado?.idCreador !== user?._id && !yaMostroInvitacion) {
+      setYaMostroInvitacion(true);
       mostrarMensajeUnirse();
     }
   }
@@ -158,6 +159,7 @@ const TripDetails = (props) => {
 
   useEffect(() => {
     procesoEnviarAPantallaSeguridad();
+    preguntarUsuarioUnirsePaseo();
   }, [paseoSeleccionado]);
 
   useEffect(() => {
