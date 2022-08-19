@@ -218,6 +218,8 @@ export const usePaseo = () => {
         seCerroSeccion,
         setSeCerroSeccion,
         aceptarInvitacionPaseo,
-        invitacionAceptada
+        invitacionAceptada,
+        setPaseoSeleccionado,
+        setPaseoSeleccionadoCargado
     };
 };
