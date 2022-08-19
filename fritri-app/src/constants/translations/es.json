@@ -183,29 +183,29 @@
     "passwordError": "Se produjo un error",
     "errorMessage": "Intente de nuevo. Si el problema persiste, contacte a soporte al cliente.",
     "timeLimitTitle": "Restricción de cambio",
-    "timeLimitMessage": "Debe esperar {{time}} minutes to request a new temporary password."
+    "timeLimitMessage": "Debe esperar {{time}} minutos para solicitar de nuevo la contraseña"
   },
   "newPassword": {
-    "title": "Change password",
-    "subtitle": "Please enter your new password",
-    "sendTempPass": "Save new password",
-    "passwordSent": "New password registered",
-    "checkEmail": "Please login with your new password.",
-    "passwordError": "Something went wrong!",
-    "errorMessage": "Please try again. If problem persists, please contact customer support.",
-    "errorPassword": "Please check the passwords!",
-    "errorNewPassword": "Change password error",
-    "errorCurrentMessage": "The current password is incorrect."
+    "title": "Cambiar contraseña",
+    "subtitle": "Digite su nueva contraseña",
+    "sendTempPass": "Salvar la nueva contraseña",
+    "passwordSent": "Nueva contraseña registrada",
+    "checkEmail": "Ingrese con su nueva contraseña",
+    "passwordError": "Algo salió mal",
+    "errorMessage": "Intente de nuevo. Si el problema persiste, contacte a soporte al cliente.",
+    "errorPassword": "Revise las contraseñas",
+    "errorNewPassword": "Error en cambio de contraseña",
+    "errorCurrentMessage": "La contraseña actual es incorrecta"
   },
   "settings": {
     "recommended": {
-      "title": "Application Settings",
-      "subtitle": "These are the most important settings",
+      "title": "Configuración de la aplicación",
+      "subtitle": "Estos son los ajustes más importantes",
       "faceid": "Use FaceID to sign in",
       "autolock": "Auto-Lock security",
-      "notifications": "Notifications",
-      "darkmode": "Dark Mode",
-      "language": "Language"
+      "notifications": "Notificaciones",
+      "darkmode": "Modo oscuro",
+      "language": "Idioma"
     },
     "payment": {
       "title": "Payment Settings",
@@ -242,25 +242,25 @@
     "moreOptions": "You can see more options from other categories."
   },
   "profile": {
-    "title": "Profile",
-    "posts": "Posts",
+    "title": "Perfil",
+    "posts": "Publicaciones",
     "followers": "Followers",
     "following": "Following",
     "aboutMe": "About me",
-    "updateError": "Update error",
-    "fieldsError": "Please check the fields!",
-    "updateTitle": "Update confirmation",
-    "updateMessage": "Your profile was updated successfully."
+    "updateError": "Error de actualización",
+    "fieldsError": "Revise los campos",
+    "updateTitle": "Confirmación de actualización",
+    "updateMessage": "Su perfil fue actualizado"
   },
   "notifications": {
-    "title": "Notifications",
-    "read": "Read Notifications",
-    "unread": "Unread Notifications",
+    "title": "Notificaciones",
+    "read": "Notificaciones eídas",
+    "unread": "Notificaciones sin leer",
     "personal": "Personal",
-    "business": "Business",
-    "empty": "You don't have notifications",
-    "archiveAlertTitle": "Confirmation",
-    "archiveAlertMessage": "This action will delete the notification"
+    "business": "Negocio",
+    "empty": "No tiene notificaciones",
+    "archiveAlertTitle": "Confirmación",
+    "archiveAlertMessage": "Esta acción eliminará la notificación"
   },
   "shop": {
     "subtotal": {
@@ -271,81 +271,81 @@
     "alsoShopped": "Customers who shopped for items in your cart also shopped for"
   },
   "newTrip": {
-    "tripName": "Trip name",
-    "tripNamePlaceHolder": "Trip name",
-    "tripDate": "Trip date",
-    "destination": "Destination",
-    "destinationPlaceHolder": "Search",
-    "searchDestination": "Search destination",
-    "useGps": "Use GPS to find nearby destinations",
-    "restaurants": "Restaurants",
-    "notFound1": "We didn’t find ",
-    "notFound2": " as destination.",
-    "moreOptions": "Please try to be more specific.",
-    "random": "Random",
-    "touristAttractions": "Tourist Attractions",
+    "tripName": "Nombre del paseo",
+    "tripNamePlaceHolder": "Nombre del paseo",
+    "tripDate": "Fecha del paseo",
+    "destination": "Destino",
+    "destinationPlaceHolder": "Buscar",
+    "searchDestination": "Buscar destino",
+    "useGps": "Usar GPS para encontrar destinos cercanos",
+    "restaurants": "Restaurantes",
+    "notFound1": "No se encontró ",
+    "notFound2": " como destino",
+    "moreOptions": "Intente ser más específico",
+    "random": "Aleatorio",
+    "touristAttractions": "Atracciones turísticas",
     "vote": "Vote",
-    "sendingVotes": "Sending votes"
+    "sendingVotes": "Registrando votos"
   },
   "destination": {
-    "select": "Select",
-    "view": "View"
+    "select": "Seleccionar",
+    "view": "Ver"
   },
   "tripDetails": {
-    "tripCreated": "Created this trip on ",
-    "restaurants": "Restaurants",
-    "noRestaurants": "The owner hasn't included any restaurants",
-    "touristAttractions": "Tourist Attractions",
-    "noTouristAttractions": "The owner hasn't included any tourist attractions",
-    "otherVotes": "See the votes...",
-    "closeVotes": "Close voting",
-    "edit": "Edit",
-    "protectConfirmationTitle": "Protection",
-    "protectConfirmationMessage": "Do you want to protect this trip with a pin?",
-    "protectConfirmationPin": "The new PIN to access this trip is: {{pin}}",
-    "unprotectConfirmationTitle": "Protection",
-    "unprotectConfirmationMessage": "Do you want to remove this trip's protection pin?",
-    "shareMessage": "You've been invited to my trip!\nPlease follow this link to participate in the voting process: ",
-    "closeVotingConfirmationTitle": "Close voting",
-    "closeVotingConfirmationMessage": "Do you want to close the votes on this section?"    
+    "tripCreated": "Creó este paseo el ",
+    "restaurants": "Restaurantes",
+    "noRestaurants": "No se han incluído restaurantes",
+    "touristAttractions": "Atracciones turísticas",
+    "noTouristAttractions": "No se han incluído atracciones turísticas",
+    "otherVotes": "Ver los votos...",
+    "closeVotes": "Cerrar votaciones",
+    "edit": "Editar",
+    "protectConfirmationTitle": "Protección",
+    "protectConfirmationMessage": "¿Desea proteger este paseo con un PIN de acceso?",
+    "protectConfirmationPin": "El nuevo PIN para acceder este paseo es: {{pin}}",
+    "unprotectConfirmationTitle": "Protección",
+    "unprotectConfirmationMessage": "¿Desea eliminar el PIN de acceso?",
+    "shareMessage": "Has sido invitado a mi paseo.\nPara que puedas participar en las votaciones debes abrir este link: ",
+    "closeVotingConfirmationTitle": "Cerrar votaciones",
+    "closeVotingConfirmationMessage": "¿Desea cerrar las votaciones en esta sección?"    
   },
   "tripSecurity": {
-    "title": "Enter trip's PIN",
-    "access": "Get access to the trip",
+    "title": "Digite el PIN de acceso",
+    "access": "Obtener acceso al paseo",
     "code": "PIN",
-    "missingDataTitle": "Trip's PIN error",
-    "missingDataMessage": "Please enter the PIN code",
-    "errorMessage": "Wrong PIN code"
+    "missingDataTitle": "Error de PIN",
+    "missingDataMessage": "Debe digitar el PIN de acceso",
+    "errorMessage": "PIN incorrecto"
   },
   "seeVotes": {
-    "noVotesFor": "No votes for",
-    "statistics": "Statistics"
+    "noVotesFor": "No hay votos para",
+    "statistics": "Votos"
   },
   "restaurants": {
-    "sights": "Go to tourist attractions",
-    "recommendations": "Recommendations",
-    "searching": "Searching in a range of",
-    "notFound1": "We didn't find restaurants in the range",
-    "moreOptions": "Please try increasing the amount of km.",
-    "seeMore": "See more",
-    "update": "Update restaurants",
-    "updateSuccessful":"Update successful"
+    "sights": "Ir a la atracción turística",
+    "recommendations": "Recomendaciones",
+    "searching": "Buscando en un rango de",
+    "notFound1": "No encontramos restaurantes dentro del rango",
+    "moreOptions": "Intente incrementar la cantidad de kilómetros",
+    "seeMore": "Ver más",
+    "update": "Actualizar restaurants",
+    "updateSuccessful":"Actualización exitosa"
   },
   "sights": {
-    "finish": "Finish trip",
-    "recommendations": "Recommendations",
-    "searching": "Searching in a range of",
-    "notFound1": "We didn't find tourist attractions in the range",
-    "moreOptions": "Please try increasing the amount of km.",
-    "seeMore": "See more",
-    "createdTrip": "New trip",
-    "createdTripText": "Your new trip was created",
-    "update": "Update tourist attractions",
-    "updateSuccessful":"Update successful"
+    "finish": "Finalizar paseo",
+    "recommendations": "Recomendaciones",
+    "searching": "Buscando en un rango de",
+    "notFound1": "No encontramos atracciones turísticas dentro del rango",
+    "moreOptions": "Intente incrementar la cantidad de kilómetros",
+    "seeMore": "Ver más",
+    "createdTrip": "Paseo nuevo",
+    "createdTripText": "Su paseo ha sido registrado",
+    "update": "Actualizar atracciones turísticas",
+    "updateSuccessful":"Actualización exitosa"
   },
   "lugarGoogle": {
-    "select": "Select",
-    "view": "View",
-    "price": "Price"
+    "select": "Seleccionar",
+    "view": "Ver",
+    "price": "Precio"
   }
 }
