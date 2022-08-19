@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { CantidadPaseos, IDestino, ILugar, IPaseo, ISeccionAtraccionesTuristicas, ISeccionRestaurantes, ISolicitudPaseoAleatorio, IPaseoUpdate, TipoSeccion } from '../interfaces/paseo';
-import { crearPaseoNuevo, obtenerPaseoPorID, obtenerPaseosUsuarioPorEstado, actualizarPaseoExistente, protegerPaseoPorID, removerPinPaseoPorID, cerrarSeccionDb } from '../api/paseoDB';
+import { crearPaseoNuevo, obtenerPaseoPorID, obtenerPaseosUsuarioPorEstado, actualizarPaseoExistente, protegerPaseoPorID, removerPinPaseoPorID, cerrarSeccionDb, aceptarInvitacionPaseoDb } from '../api/paseoDB';
 import { EstadoPaseo } from '../interfaces/paseo';
 import { ISolicitudLugaresGoogle, TipoLugaresGoogle } from '../interfaces/solicitud-lugares-google';
 import { getGooglePlacesByType } from '../api/lugaresTuristicosDB';
@@ -13,6 +13,7 @@ export const usePaseo = () => {
     const [paseoSeleccionado, setPaseoSeleccionado] = useState<IPaseo | null>(null);
     const [paseoCreado, setPaseoCreado] = useState<IPaseo | null>(null);
     const [paseoActualizado, setPaseoActualizado] = useState<IPaseo | null>(null);
+    const [invitacionAceptada, setInvitacionAceptada] = useState(false);
     const { user } = useData();
     const radio = 5;
     const cantidadLugaresAleatorios = 3;
@@ -186,6 +187,17 @@ export const usePaseo = () => {
         crearPaseo(paseo, true);
     };
 
+    const aceptarInvitacionPaseo = async(idUsuario: string, idPaseo: string) => {
+        try {
+            const result = await aceptarInvitacionPaseoDb(idUsuario, idPaseo);
+            if (result) {
+                setInvitacionAceptada(true);
+            }
+        } catch(error) {
+            console.log("usePaseo->aceptarInvitacionPaseo::ERROR "+ JSON.stringify(error));
+        }
+    }
+
     return {
         paseosUsuario,
         setPaseosUsuario,
@@ -204,6 +216,8 @@ export const usePaseo = () => {
         setSeAsignoPin,
         cerrarSeccion,
         seCerroSeccion,
-        setSeCerroSeccion        
+        setSeCerroSeccion,
+        aceptarInvitacionPaseo,
+        invitacionAceptada
     };
 };
