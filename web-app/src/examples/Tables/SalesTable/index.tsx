@@ -39,31 +39,38 @@ interface Props {
 }
 
 function SalesTable({ title, rows, shadow }: Props): JSX.Element {
-  const renderTableCells = rows.map(
-    (row: { [key: string]: string | number | (string | number)[] }, key: any) => {
-      const tableRows: any = [];
-      const rowKey = `row-${key}`;
 
-      Object.entries(row).map(([cellTitle, cellContent]: any) =>
-        Array.isArray(cellContent)
+  const renderTableCells = rows.map(
+    (row: { [key: string]: string | number | (string | number)[] }, index: number) => {
+      const tableRows: any = [];
+      const rowKey = `row-${index}`;
+
+      let stringKey = '';
+      Object.entries(row).map(([cellTitle, cellContent]: any) => {
+
+        if (Array.isArray(cellContent)) {
+          stringKey = cellContent[1];
+        }
+
+        return Array.isArray(cellContent)
           ? tableRows.push(
-              <SalesTableCell
-                key={cellContent[1]}
-                title={cellTitle}
-                content={cellContent[1]}
-                image={cellContent[0]}
-                noBorder={key === rows.length - 1}
-              />
-            )
+            <SalesTableCell
+              key={cellContent[1]}
+              title={cellTitle}
+              content={cellContent[1]}
+              image={cellContent[0]}
+              noBorder={index === rows.length - 1}
+            />
+          )
           : tableRows.push(
-              <SalesTableCell
-                key={cellContent}
-                title={cellTitle}
-                content={cellContent}
-                noBorder={key === rows.length - 1}
-              />
-            )
-      );
+            <SalesTableCell
+              key={stringKey + cellTitle + cellContent}
+              title={cellTitle}
+              content={cellContent}
+              noBorder={index === rows.length - 1}
+            />
+          )
+      });
 
       return <TableRow key={rowKey}>{tableRows}</TableRow>;
     }

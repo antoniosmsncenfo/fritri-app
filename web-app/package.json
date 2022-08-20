@@ -1,8 +1,8 @@
 {
-  "name": "material-dashboard-2-pro-react-ts",
+  "name": "fritri-app",
   "version": "1.0.0",
   "private": true,
-  "description": "React + TypeScript version of Material Dashboard 2 PRO by Creative Tim",
+  "description": "Fritri app for the best trips with friends by GreekDev",
   "dependencies": {
     "@asseinfo/react-kanban": "2.2.0",
     "@auth0/auth0-react": "^1.10.2",
@@ -22,6 +22,7 @@
     "@testing-library/react": "12.1.2",
     "@testing-library/user-event": "13.5.0",
     "@types/jest": "27.4.0",
+    "@types/lodash": "^4.14.184",
     "@types/node": "16.11.21",
     "@types/react": "17.0.38",
     "@types/react-dom": "17.0.11",
@@ -38,6 +39,7 @@
     "react-flatpickr": "3.10.7",
     "react-github-btn": "1.2.1",
     "react-images-viewer": "1.7.1",
+    "react-lodash": "^0.1.2",
     "react-quill": "2.0.0",
     "react-router-dom": "6.2.1",
     "react-scripts": "5.0.0",
