@@ -10,4 +10,6 @@ export class EstadisticaPaseo {
   cantidadIntegrantes: number;
   cantidadRestaurantes: number;
   cantidadAtracciones: number;
+  latitud: number;
+  longitud: number;
 }

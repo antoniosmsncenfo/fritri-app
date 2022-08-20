@@ -59,6 +59,16 @@ export class Paseo {
     required: true,
   })
   cantidadAtracciones: number;
+
+  @Prop({
+    required: true,
+  })
+  latitud: number;
+
+  @Prop({
+    required: true,
+  })
+  longitud: number;
 }
 
 export const PaseoSchema = SchemaFactory.createForClass(Paseo);

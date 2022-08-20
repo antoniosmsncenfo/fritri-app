@@ -35,6 +35,18 @@ export class Destino {
     required: true,
   })
   descripcion: string;
+
+  @ApiProperty()
+  @Prop({
+    required: true,
+  })
+  latitud: number;
+
+  @ApiProperty()
+  @Prop({
+    required: true,
+  })
+  longitud: number;
 }
 
 export const DestinoSchema = SchemaFactory.createForClass(Destino);

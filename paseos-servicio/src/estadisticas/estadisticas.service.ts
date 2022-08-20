@@ -42,6 +42,8 @@ export class EstadisticasService {
         paseo.seccionAtraccionesTuristicas.atraccionesturisticas.length,
       cantidadRestaurantes: paseo.seccionRestaurantes.restaurantes.length,
       cantidadIntegrantes: 0,
+      latitud: paseo.destino.latitud,
+      longitud: paseo.destino.longitud,
     };
     await this.enviarEstadisticaServicio(estadistica);
   }

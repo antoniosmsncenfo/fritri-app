@@ -29,4 +29,10 @@ export class CrearPaseoDto {
   @ApiProperty()
   @IsNumber()
   readonly cantidadAtracciones: number;
+  @ApiProperty()
+  @IsNumber()
+  latitud: number;
+  @ApiProperty()
+  @IsNumber()
+  longitud: number;
 }
