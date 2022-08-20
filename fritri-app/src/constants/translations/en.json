@@ -309,9 +309,9 @@
     "closeVotingConfirmationTitle": "Close voting",
     "closeVotingConfirmationMessage": "Do you want to close the votes on this section?",
     "invitationTitle": "Trip invitation",
-    "invitationBody": "Do you want to join to the trip? \n If you click No, You will send to Dashboard.",
+    "invitationBody": "Do you want to join this trip? \n If you decline, we will send you to the dashboard.",
     "invitationAcceptedTitle": "Trip invitation accepted",
-    "invitationAcceptedBody": "You already join to the trip"
+    "invitationAcceptedBody": "You have joined the trip"
   },
   "tripSecurity": {
     "title": "Enter trip's PIN",
