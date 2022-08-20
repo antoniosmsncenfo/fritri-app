@@ -326,13 +326,13 @@
     "statistics": "Votos"
   },
   "restaurants": {
-    "sights": "Ir a la atracción turística",
+    "sights": "Ir a atracciones turísticas",
     "recommendations": "Recomendaciones",
     "searching": "Buscando en un rango de",
     "notFound1": "No encontramos restaurantes dentro del rango",
     "moreOptions": "Intente incrementar la cantidad de kilómetros",
     "seeMore": "Ver más",
-    "update": "Actualizar restaurants",
+    "update": "Actualizar restaurantes",
     "updateSuccessful":"Actualización exitosa"
   },
   "sights": {
