@@ -11,6 +11,7 @@ import { NotificacionPaseoActualizado } from 'src/notificaciones/dto/notificacio
 import { Notificacion } from 'src/notificaciones/dto/notificacion.dto';
 import { EstadisticasService } from '../estadisticas/estadisticas.service';
 import { CerrarSeccionDto } from './dto/cerrar-seccion';
+import { AceptarInvitacionDto } from './dto/aceptar-invitacion';
 const mongoose = require('mongoose');
 
 export enum EstadoPaseo {
@@ -364,4 +365,42 @@ export class PaseosService {
       );
     });
   }
+
+  async aceptarInvitaction(aceptarInvitacionDto: AceptarInvitacionDto) {
+    let resultadoPaseo: PaseoDocument = null;
+    let mensajeOk = 'Usuario agregado como integrante al paseo';
+    let mensajeNo = 'El usuario ya forma parte del paseo';
+    try {
+      const { idUsuario, idPaseo } = aceptarInvitacionDto;
+      resultadoPaseo = await this.paseoModel.findOne({ _id: idPaseo });
+      if (!resultadoPaseo) {
+        throw new Error(`No existe el paseo solicitado con el id::${idPaseo}`);
+      }
+      const esUsuarioIntegrante = resultadoPaseo.integrantes.find(x => x.idIntegrante === mongoose.mongo.ObjectId(idUsuario));
+      if(!esUsuarioIntegrante) {
+        if(!resultadoPaseo.integrantes) {
+          resultadoPaseo.integrantes = []
+        }
+        resultadoPaseo.integrantes.push({
+          idIntegrante: mongoose.mongo.ObjectId(idUsuario),
+          fechaIntegracion: new Date(),
+          esConfirmadaAsistencia: false
+        });
+        await resultadoPaseo.save();
+        return mensajeOk;
+      } else {
+        return mensajeNo;
+      }
+    } catch (error) {
+      if (error.message.match(/No existe/)) {
+        throw new NotFoundException(
+          `No existe el paseo solicitado`,
+        );
+      }
+      throw new BadRequestException(
+        `Error al tratar de aceptar la invitación del paseo::${error.message}`,
+      );
+    }
+  }
+
 }

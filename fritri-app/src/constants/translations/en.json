@@ -199,7 +199,7 @@
   },
   "settings": {
     "recommended": {
-      "title": "Recommended Settings",
+      "title": "Application Settings",
       "subtitle": "These are the most important settings",
       "faceid": "Use FaceID to sign in",
       "autolock": "Auto-Lock security",
@@ -307,7 +307,11 @@
     "unprotectConfirmationMessage": "Do you want to remove this trip's protection pin?",
     "shareMessage": "You've been invited to my trip!\nPlease follow this link to participate in the voting process: ",
     "closeVotingConfirmationTitle": "Close voting",
-    "closeVotingConfirmationMessage": "Do you want to close the votes on this section?"    
+    "closeVotingConfirmationMessage": "Do you want to close the votes on this section?",
+    "invitationTitle": "Trip invitation",
+    "invitationBody": "Do you want to join this trip? \n If you decline, we will send you to the dashboard.",
+    "invitationAcceptedTitle": "Trip invitation accepted",
+    "invitationAcceptedBody": "You have joined the trip"
   },
   "tripSecurity": {
     "title": "Enter trip's PIN",
@@ -319,7 +323,7 @@
   },
   "seeVotes": {
     "noVotesFor": "No votes for",
-    "statistics": "Statistics"
+    "statistics": "Votes"
   },
   "restaurants": {
     "sights": "Go to tourist attractions",

@@ -17,6 +17,7 @@ import { CrearPaseoDto } from './dto/crear-paseo.dto';
 import { ActualizarPaseoDto } from './dto/actualizar-paseo.dto';
 import { Paseo } from './schemas/paseos.schema';
 import { CerrarSeccionDto } from './dto/cerrar-seccion';
+import { AceptarInvitacionDto } from './dto/aceptar-invitacion';
 
 @Controller('paseos')
 export class PaseosController {
@@ -74,5 +75,12 @@ export class PaseosController {
   @HttpCode(200)
   async eliminar(@Param('idPaseo') idPaseo: string) {
     return await this.paseosService.eliminar(idPaseo);
+  }
+
+  @Post('aceptar-invitacion')
+  @UsePipes(new ValidationPipe())
+  @HttpCode(200)
+  async aceptarInvitacion(@Body() aceptarInvitaionDto: AceptarInvitacionDto) {
+    return await this.paseosService.aceptarInvitaction(aceptarInvitaionDto);
   }
 }

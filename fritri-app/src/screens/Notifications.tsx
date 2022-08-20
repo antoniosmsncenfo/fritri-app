@@ -44,7 +44,7 @@ const Notificacion = ({ notificacion, onPress}: INotificacionProps) => {
 
   const {colors, icons, gradients, sizes} = useTheme();
   const navigation = useNavigation();
-
+  const {t} = useTranslation();
   const markAsRead = () => {
     onPress({ action: 'read', notificacion });
   };
@@ -108,12 +108,13 @@ const Notificacion = ({ notificacion, onPress}: INotificacionProps) => {
             onPress={() =>
               navigation.navigate('TripDetails', {id:notificacion.idPaseo, from: 'Notifications'})} >
 
-          <Block row justify="space-between">
+          <Block justify="space-between">
             <Text semibold>{notificacion.titulo}</Text>
             <Block row flex={0} align="center">
               <Image source={icons.clock} />
               <Text secondary size={12} marginLeft={sizes.xs}>
-                {dayjs().to(dayjs(notificacion.fechaCreacion))}
+                {/* {dayjs().to(dayjs(notificacion.fechaCreacion))} */}
+                {dayjs(notificacion.fechaCreacion).format(t('common.dateFormat'))}
               </Text>
             </Block>
           </Block>

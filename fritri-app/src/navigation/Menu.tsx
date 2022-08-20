@@ -85,11 +85,12 @@ const DrawerContent = (
   // screen list for Drawer menu
   const screens = [
     {name: t('screens.home'), to: 'Home', icon: assets.home},
+    {name: t('screens.profile'), to: 'Profile', icon: assets.profile},
+    {name: t('navigation.notifications'), to: 'Notifications', icon: assets.bell},
+    {name: t('screens.settings'), to: 'Settings', icon: assets.settings},      
     //{name: t('screens.components'), to: 'Components', icon: assets.components},
     //{name: t('screens.articles'), to: 'Articles', icon: assets.document},
     //{name: t('screens.rental'), to: 'Rentals', icon: assets.rental},
-    {name: t('screens.profile'), to: 'Profile', icon: assets.profile},
-    //{name: t('screens.settings'), to: 'Settings', icon: assets.settings},
     //{name: t('screens.register'), to: 'Register', icon: assets.register},
     //{name: t('screens.extra'), to: 'Extra', icon: assets.extras},
     //{name: t('screens.verDestino'), to: 'ViewDestination', icon: assets.extras},
@@ -97,7 +98,6 @@ const DrawerContent = (
     // {name: t('screens.register'), to: 'Register', icon: assets.register},
     //{name: t('screens.extra'), to: 'Extra', icon: assets.extras},
     // {name: t('screens.loginFacebook'), to: 'LoginFacebook', icon: assets.extras},
-    {name: t('navigation.notifications'), to: 'Notifications', icon: assets.bell},
   ];
 
   return (
@@ -113,12 +113,12 @@ const DrawerContent = (
             radius={0}
             width={33}
             height={33}
-            color={colors.text}
+            color={labelColor}
             source={assets.logo}
             marginRight={sizes.sm}
           />
           <Block>
-            <Text size={12} semibold>
+            <Text size={16} semibold color={labelColor}>
               {t('app.name')}
             </Text>
             {/* <Text size={12} semibold>

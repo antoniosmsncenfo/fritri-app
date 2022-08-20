@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { usePaseo } from '../hooks/usePaseos';
 import dayjs from 'dayjs';
 import { Alert, Share, TouchableOpacity } from 'react-native';
-import { useNavigation, CommonActions } from '@react-navigation/native';
+import { useNavigation, CommonActions, useFocusEffect} from '@react-navigation/native';
 import { useUsuario } from '../hooks/useUsuario';
 import { useVotacion } from '../hooks/useVotacion';
 import { PlaceDetail } from '../components/PlaceDetail';
@@ -19,7 +19,8 @@ const TripDetails = (props) => {
   const navigation = useNavigation();
   const { obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado, 
     protegerPaseo, removerPin, seAsignoPin, setSeAsignoPin,
-    cerrarSeccion, seCerroSeccion, setSeCerroSeccion } = usePaseo();
+    cerrarSeccion, seCerroSeccion, setSeCerroSeccion, aceptarInvitacionPaseo, invitacionAceptada, setPaseoSeleccionado,
+    setPaseoSeleccionadoCargado } = usePaseo();
   const { usuarioPaseo, obtenerUsuarioPaseo } = useUsuario();
   const { 
     votarSeccion, enviandoVotacionRest, enviandoVotacionAtr, 
@@ -31,6 +32,7 @@ const TripDetails = (props) => {
   const [isFromDashboard, setIsFromDashboard] = useState(false);
 
   const [paseoCompletado, setPaseoCompletado] = useState(false);
+  const [yaMostroInvitacion, setYaMostroInvitacion] = useState(false);
 
   const checkGUser = async () => {
     let userG = await Storage.getItem('userG');
@@ -50,9 +52,32 @@ const TripDetails = (props) => {
     }
   }
 
+  useFocusEffect(
+    React.useCallback(() => {
+      let idPaseo: string = props.route.params.id;
+      obtenerPaseo(idPaseo);
+    }, [props.route.params.id])
+  );
+
   useEffect(() => {
     checkGUser();
   }, [props.route.params.id]);
+
+
+  useEffect(() => {
+    if(invitacionAceptada) {
+      Alert.alert(
+        t('tripDetails.invitationAcceptedTitle'),
+        t('tripDetails.invitationAcceptedBody'),
+        [
+          { text: t('common.ok')}
+        ],
+        {
+          cancelable: false,
+        }
+      );
+    }
+  }, [invitacionAceptada])
 
 
   const checkRouteFrom = () => {
@@ -64,8 +89,12 @@ const TripDetails = (props) => {
     return (user && paseoSeleccionado?.idCreador === user._id);
   }
 
+  const esUsuarioYaIntegrante = () => {
+    return (user && paseoSeleccionado?.integrantes!.find(x => x.idIntegrante === user._id));
+  }
+
   const enviarAPantallaSeguridad = () => {
-    if (paseoSeleccionado && paseoSeleccionado?.pinPaseo && !isFromDashboard && !revisarPaseoCreador()) {
+    if (paseoSeleccionado && paseoSeleccionado?.pinPaseo && props.route.params.from !== 'TripSecurity' && !revisarPaseoCreador() && !esUsuarioYaIntegrante()) {
       navigation.navigate('TripSecurity', {
         id: props.route.params.id,
         pin: paseoSeleccionado?.pinPaseo,
@@ -93,8 +122,6 @@ const TripDetails = (props) => {
 
     setPaseoCompletado(paseo < today);
 
-    console.log("TripDetails::paseoCompletado: " + paseoCompletado);
-
     setSeAsignoPin(false); 
   }
 
@@ -105,14 +132,41 @@ const TripDetails = (props) => {
     }
   }
 
+  const preguntarUsuarioUnirsePaseo = () => {
+    const usuarioEsIntegrante = paseoSeleccionado?.integrantes!.find(x => x.idIntegrante === user._id);
+    if(paseoSeleccionado && !paseoSeleccionado.pinPaseo && !usuarioEsIntegrante && paseoSeleccionado?.idCreador !== user?._id && !yaMostroInvitacion) {
+      setYaMostroInvitacion(true);
+      mostrarMensajeUnirse();
+    } else if(props.route.params.from === 'TripSecurity' && paseoSeleccionado && !usuarioEsIntegrante && paseoSeleccionado?.idCreador !== user?._id && !yaMostroInvitacion) {
+      setYaMostroInvitacion(true);
+      mostrarMensajeUnirse();
+    }
+  }
+
+  const mostrarMensajeUnirse = () => {
+    Alert.alert(
+      t('tripDetails.invitationTitle'),
+      t('tripDetails.invitationBody'),
+      [
+        {text: t('common.no'), style: 'cancel', onPress: () => navigation.navigate('Home') },
+        {text: t('common.yes'), onPress: () => aceptarInvitacionPaseo(user._id!, paseoSeleccionado?._id!)},
+      ],
+      {
+        cancelable: false,
+      }
+    );
+  }
+
   useEffect(() => {
     procesoEnviarAPantallaSeguridad();
+    preguntarUsuarioUnirsePaseo();
   }, [paseoSeleccionado]);
 
   useEffect(() => {
     if (paseoSeleccionadoCargado) {
       procesoVotosUsuario();
     }
+    preguntarUsuarioUnirsePaseo();
   }, [paseoSeleccionadoCargado]);
 
   const manejarVotos = (posicion: number, tipo: string, tipoVoto: string) => {
