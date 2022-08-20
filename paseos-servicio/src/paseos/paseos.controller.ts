@@ -18,6 +18,7 @@ import { ActualizarPaseoDto } from './dto/actualizar-paseo.dto';
 import { Paseo } from './schemas/paseos.schema';
 import { CerrarSeccionDto } from './dto/cerrar-seccion';
 import { AceptarInvitacionDto } from './dto/aceptar-invitacion';
+import { CambiarEstadoDto } from './dto/cambiar-estado';
 
 @Controller('paseos')
 export class PaseosController {
@@ -47,6 +48,12 @@ export class PaseosController {
   async removerPin(@Param('idPaseo') idPaseo: string) {
     return await this.paseosService.removerPin(idPaseo);
   }  
+
+  @Patch('cambiar-estado')
+  @HttpCode(200)
+  async cambiarEstado(@Body() cambiarEstadoDto: CambiarEstadoDto) {
+    return await this.paseosService.cambiarEstado(cambiarEstadoDto);
+  }
 
   @Get('obtener-paseos-usuario')
   @HttpCode(200)

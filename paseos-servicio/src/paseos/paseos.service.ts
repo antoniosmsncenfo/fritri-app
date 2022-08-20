@@ -12,6 +12,7 @@ import { Notificacion } from 'src/notificaciones/dto/notificacion.dto';
 import { EstadisticasService } from '../estadisticas/estadisticas.service';
 import { CerrarSeccionDto } from './dto/cerrar-seccion';
 import { AceptarInvitacionDto } from './dto/aceptar-invitacion';
+import { CambiarEstadoDto } from './dto/cambiar-estado';
 const mongoose = require('mongoose');
 
 export enum EstadoPaseo {
@@ -308,6 +309,39 @@ export class PaseosService {
 
     } catch(error) {
       throw new BadRequestException(`Error al tratar de cerrar sección de votos::${error.message}`);
+    }
+    return resultadoPaseo;
+  }
+
+  async cambiarEstado(cambiarEstadoDto: CambiarEstadoDto) {
+    let resultadoPaseo:PaseoDocument;
+    try {
+      const { idPaseo, estadoPaseo } = cambiarEstadoDto;
+      resultadoPaseo = await this.paseoModel.findOne({ _id: idPaseo });
+      if(!resultadoPaseo) {
+        throw new Error(`No existe el paseo con el id::${idPaseo}`);
+      }
+
+      let filter;
+      let update
+      filter = { _id: idPaseo };
+      update = { 'estado':estadoPaseo};
+      
+      resultadoPaseo = await this.paseoModel.findOneAndUpdate(filter,update, {
+        returnOriginal: false
+      });
+
+      const notificacionPaseoActualizado: NotificacionPaseoActualizado = {
+        idPaseo: idPaseo,
+        nombrePaseo: resultadoPaseo.nombre,
+        integrantes: resultadoPaseo.integrantes,
+        modificacionesRealizadas: [ `Se marcó el paseo como ${estadoPaseo}.` ]
+      };
+
+      await this.notificarPaseoActualizado(notificacionPaseoActualizado);
+
+    } catch(error) {
+      throw new BadRequestException(`Error al tratar de cambiar el estado del paseo::${error.message}`);
     }
     return resultadoPaseo;
   }
