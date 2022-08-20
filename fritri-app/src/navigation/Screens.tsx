@@ -170,7 +170,7 @@ export default () => {
        <Stack.Screen
         name="TripDetails"
         component={TripDetails}
-        options={{ title: t('navigation.tripDetails'), ...screenOptions.back }}
+        options={{ title: t('navigation.tripDetails'), ...screenOptions.goToHome }}
       />    
       <Stack.Screen
         name="TripSecurity"

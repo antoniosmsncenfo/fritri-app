@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { usePaseo } from '../hooks/usePaseos';
 import { EstadoPaseo, IPaseo } from '../interfaces/paseo';
 import { CantidadPaseos } from '../interfaces/paseo';
-import { CommonActions } from '@react-navigation/native';
+import { CommonActions , useFocusEffect} from '@react-navigation/native';
 
 const Home = () => {
   const { t } = useTranslation();
@@ -37,6 +37,13 @@ const Home = () => {
     obtenerPaseosUsuario(user?._id!,EstadoPaseo.Pendiente,CantidadPaseos.Diez);
   }, [])
 
+  useFocusEffect(
+    React.useCallback(() => {
+      checkGUser();
+      obtenerPaseosUsuario(user?._id!,EstadoPaseo.Pendiente,CantidadPaseos.Diez);
+    }, [])
+  );
+
   useEffect(() => {
     setPaseosFiltrados(paseosUsuario?.filter(p => 
       p.nombre.toLowerCase().includes(searchTerm.toString().toLowerCase())));
@@ -51,7 +58,6 @@ const Home = () => {
   //Maneja el cambio de tab y cambia la lista de productos
   const handlePaseos = useCallback(  
     (tab: number) => {
-      console.log("Consulta a BD");
       setTab(tab);
       if (tab===2) {
         navigation.navigate('NewTrip');
