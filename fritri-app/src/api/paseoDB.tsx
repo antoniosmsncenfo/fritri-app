@@ -167,3 +167,27 @@ export const cerrarSeccionDb = async (idPaseo:string, tipo:TipoSeccion) => {
         throw e;
     }
 };
+
+export const aceptarInvitacionPaseoDb = async (idUsuario: string, idPaseo: string) => {
+    let request = {
+        method: 'post',
+        url: `${process.env.PASEOS_BASE_URL}/aceptar-invitacion`,
+        headers: {},
+        data: {
+            idUsuario,
+            idPaseo
+        }
+    };
+    try {
+        const resultado = await axios(request);
+        if (resultado.status === 200) {
+            return resultado.data;
+        }
+        else {
+            return null;
+        }
+    }
+    catch (e) {
+        throw e;
+    }
+};
