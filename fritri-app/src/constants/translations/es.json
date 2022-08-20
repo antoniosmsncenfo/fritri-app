@@ -307,7 +307,11 @@
     "unprotectConfirmationMessage": "¿Desea eliminar el PIN de acceso?",
     "shareMessage": "Has sido invitado a mi paseo.\nPara que puedas participar en las votaciones debes abrir este link: ",
     "closeVotingConfirmationTitle": "Cerrar votaciones",
-    "closeVotingConfirmationMessage": "¿Desea cerrar las votaciones en esta sección?"    
+    "closeVotingConfirmationMessage": "¿Desea cerrar las votaciones en esta sección?",
+    "invitationTitle": "Invitación",
+    "invitationBody": "¿Desea unirse a este paseo? \n Si desiste, se mostrará la página de inicio.",
+    "invitationAcceptedTitle": "Invitación aceptada",
+    "invitationAcceptedBody": "Se ha unido al paseo"
   },
   "tripSecurity": {
     "title": "Digite el PIN de acceso",
