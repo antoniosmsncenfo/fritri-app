@@ -37,20 +37,9 @@ interface Props {
   [key: string]: any;
 }
 
-function Footer({ company, links }: Props): JSX.Element {
-  const { href, name } = company;
+function Footer(): JSX.Element {
+  
   const { size } = typography;
-
-  const renderLinks = () =>
-    links.map((link) => (
-      <MDBox key={link.name} component="li" px={2} lineHeight={1}>
-        <Link href={link.href} target="_blank">
-          <MDTypography variant="button" fontWeight="regular" color="text">
-            {link.name}
-          </MDTypography>
-        </Link>
-      </MDBox>
-    ));
 
   return (
     <MDBox

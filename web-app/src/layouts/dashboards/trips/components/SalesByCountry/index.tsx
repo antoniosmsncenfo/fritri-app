@@ -31,8 +31,28 @@ import SalesTable from "examples/Tables/SalesTable";
 
 // Data
 import salesTableData from "layouts/dashboards/trips/components/SalesByCountry/data/salesTableData";
+import { useEstadisticasPaseo, ITripsByCountry } from "hooks/useEstadisticasPaseo";
 
-function SalesByCountry(): JSX.Element {
+import { useState, useEffect } from "react";
+
+function TripsByCountry(): JSX.Element {
+  const { obtenerPaisesPorPaseos } = useEstadisticasPaseo();
+  const [tripsByCountry, setTripsByCountry] = useState<ITripsByCountry[]>([]);
+  const [makers, setMarkers] = useState<[
+    {
+      name: string,
+      latLng: [number, number],
+    }]>([{ name: "Costa Rica", latLng: [-12.98078, -72.876651], }]);
+
+  useEffect(() => {
+    (async () => {
+      setTripsByCountry(await obtenerPaisesPorPaseos());
+    })();
+
+    setMarkers([{ name: "USA", latLng: [9.0, -84], }]);
+  }, [])
+
+
   return (
     <Card sx={{ width: "100%" }}>
       <MDBox display="flex">
@@ -61,38 +81,16 @@ function SalesByCountry(): JSX.Element {
       <MDBox p={2}>
         <Grid container>
           <Grid item xs={12} md={7} lg={6}>
-            <SalesTable rows={salesTableData} shadow={false} />
+            <SalesTable rows={tripsByCountry} shadow={false} />
           </Grid>
-          <Grid item xs={12} md={5} lg={6} sx={{ mt: { xs: 5, lg: 0 } }}>
+          <Grid item xs={12} md={5} lg={6} sx={{ mt: { xs: 5, lg: 0 } }} minHeight={250}>
             <VectorMap
               map={worldMerc}
               zoomOnScroll
               zoomButtons
               markersSelectable
               backgroundColor="transparent"
-              selectedMarkers={["1", "3"]}
-              markers={[
-                {
-                  name: "USA",
-                  latLng: [9.0, -84],
-                },
-                {
-                  name: "Germany",
-                  latLng: [51.17661451970939, 10.97947735117339],
-                },
-                {
-                  name: "Brazil",
-                  latLng: [-7.596735421549542, -54.781694323779185],
-                },
-                {
-                  name: "Russia",
-                  latLng: [62.318222797104276, 89.81564777631716],
-                },
-                {
-                  name: "China",
-                  latLng: [22.320178999475512, 114.17161225541399],
-                },
-              ]}
+              markers={makers}
               regionStyle={{
                 initial: {
                   fill: "#dee2e7",
@@ -136,4 +134,4 @@ function SalesByCountry(): JSX.Element {
   );
 }
 
-export default SalesByCountry;
+export default TripsByCountry;

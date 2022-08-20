@@ -33,7 +33,7 @@ import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatist
 import BookingCard from "examples/Cards/BookingCard";
 
 // Anaytics dashboard components
-import SalesByCountry from "layouts/dashboards/trips/components/SalesByCountry";
+import TripsByCountry from "layouts/dashboards/trips/components/SalesByCountry";
 
 // Data
 import reportsBarChartData from "layouts/dashboards/trips/data/reportsBarChartData";
@@ -43,23 +43,10 @@ import reportsLineChartData from "layouts/dashboards/trips/data/reportsLineChart
 import booking1 from "assets/images/products/product-1-min.jpg";
 import booking2 from "assets/images/products/product-2-min.jpg";
 import booking3 from "assets/images/products/product-3-min.jpg";
-import { useEstadisticasDestino } from "hooks/useEstadisticasDestino";
-// eslint-disable-next-line import/no-extraneous-dependencies
-import _ from "lodash";
-// https://countryflagsapi.com/png/panama
+
 function Trips(): JSX.Element {
   const { sales, tasks } = reportsLineChartData;
-  const { obtenerEstadisticasPaseo, estadisticasPaseo } = useEstadisticasDestino();
 
-  useEffect(() => {
-    obtenerEstadisticasPaseo()
-  }, [])
-
-
-  useEffect(() => {
-    console.log(_.groupBy(estadisticasPaseo, i => i.paisPaseo))
-    // console.log(JSON.stringify(estadisticasPaseo, null, 2))
-  }, [estadisticasPaseo])
 
   // Action buttons for the BookingCard
   const actionButtons = (
@@ -87,7 +74,7 @@ function Trips(): JSX.Element {
       <DashboardNavbar />
       <MDBox py={3}>
         <Grid container>
-          <SalesByCountry />
+          <TripsByCountry />
         </Grid>
         <MDBox mt={6}>
           <Grid container spacing={3}>
@@ -234,7 +221,7 @@ function Trips(): JSX.Element {
           </Grid>
         </MDBox>
       </MDBox>
-      <Footer company={{ name: 'GeekDev', href: '#' }} />
+      <Footer />
     </DashboardLayout>
   );
 }
