@@ -44,6 +44,7 @@ export class EstadisticasService {
       cantidadIntegrantes: 0,
       latitud: paseo.destino.latitud,
       longitud: paseo.destino.longitud,
+      esAleatorio: paseo.esAleatorio,
     };
     await this.enviarEstadisticaServicio(estadistica);
   }

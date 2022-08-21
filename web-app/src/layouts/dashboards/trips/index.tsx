@@ -128,36 +128,7 @@ function Trips(): JSX.Element {
         </MDBox>
         <MDBox mt={1.5}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={1.5}>
-                <ComplexStatisticsCard
-                  color="dark"
-                  icon="restaurant"
-                  title="Total restaurants"
-                  count={dataEstadisticaDePaseos?.totalsTrips?.restaurants}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={1.5}>
-                <ComplexStatisticsCard
-                  icon="kayaking"
-                  title="Total attractions"
-                  count={dataEstadisticaDePaseos?.totalsTrips?.attractions}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={1.5}>
-                <ComplexStatisticsCard
-                  color="success"
-                  icon="place"
-                  title="Total countries"
-                  count={dataEstadisticaDePaseos?.totalsTrips?.countries}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
+          <Grid item xs={12} md={6} lg={4}>
               <MDBox mb={1.5}>
                 <ComplexStatisticsCard
                   color="success"
@@ -167,6 +138,55 @@ function Trips(): JSX.Element {
                 />
               </MDBox>
             </Grid>
+            <Grid item xs={12} md={6} lg={4}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  color="success"
+                  icon="swipeLeft"
+                  title="Manually created trips"
+                  count={dataEstadisticaDePaseos?.totalsTrips?.noRandomTrips}
+                />
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={6} lg={4}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  color="success"
+                  icon="cached"
+                  title="Random created trips"
+                  count={dataEstadisticaDePaseos?.totalsTrips?.randomTrips}
+                />
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={6} lg={4}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  color="dark"
+                  icon="restaurant"
+                  title="Total restaurants"
+                  count={dataEstadisticaDePaseos?.totalsTrips?.restaurants}
+                />
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={6} lg={4}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  icon="kayaking"
+                  title="Total attractions"
+                  count={dataEstadisticaDePaseos?.totalsTrips?.attractions}
+                />
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={6} lg={4}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  color="success"
+                  icon="place"
+                  title="Total countries"
+                  count={dataEstadisticaDePaseos?.totalsTrips?.countries}
+                />
+              </MDBox>
+            </Grid>            
           </Grid>
         </MDBox>
       </MDBox>

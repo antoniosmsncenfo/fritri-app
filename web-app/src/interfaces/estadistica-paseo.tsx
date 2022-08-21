@@ -12,6 +12,7 @@ export interface IEstadisticaPaseo {
     cantidadAtracciones: number;
     latitud: number;
     longitud: number;
+    esAleatorio: boolean;
     __v: number;
     _id: string;
 }

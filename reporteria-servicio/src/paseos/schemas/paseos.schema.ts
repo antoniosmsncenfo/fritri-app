@@ -69,6 +69,11 @@ export class Paseo {
     required: true,
   })
   longitud: number;
+
+  @Prop({
+    default: false,
+  })
+  esAleatorio: boolean;
 }
 
 export const PaseoSchema = SchemaFactory.createForClass(Paseo);

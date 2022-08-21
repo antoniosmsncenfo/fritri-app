@@ -6,7 +6,7 @@ import paisesLista from './data/countries';
 export interface ITripsByCountry { [key: string]: string | number | (string | number)[]; }
 export interface ITripsLocations { name: string, latLng: [number, number], trips: number }
 export interface IChartsSeries { labels: string[]; datasets: { label: string, data: number[] } };
-export interface ITotalsTrips { restaurants: number; attractions: number; countries: number; trips: number; };
+export interface ITotalsTrips { restaurants: number; attractions: number; countries: number; trips: number; randomTrips: number; noRandomTrips: number; };
 
 export interface IDataEstadisticaDePaseos {
   topTrips: number;
@@ -19,7 +19,7 @@ export interface IDataEstadisticaDePaseos {
 }
 
 export const useEstadisticasPaseo = () => {
-  const topPaises = 5;
+  const topPaises = 10;
   const days: string[] = ["M", "T", "W", "T", "F", "S", "S"];
   const months: string[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
@@ -111,9 +111,16 @@ export const useEstadisticasPaseo = () => {
     const totalRestaurantes = estadisticas.map(p => p.cantidadRestaurantes).reduce((a, b) => a + b);
     const totalAtracciones = estadisticas.map(p => p.cantidadAtracciones).reduce((a, b) => a + b);
     const totalPaseos = estadisticas.length;
+    const totalPaseosAleatorios = estadisticas.filter(p => p.esAleatorio).length;
+    const totalPaseosManuales = totalPaseos - totalPaseosAleatorios;
     const totalPaises = Object.entries(_.groupBy(estadisticas, i => i.paisPaseo)).length;
     return {
-      restaurants: totalRestaurantes, attractions: totalAtracciones, countries: totalPaises, trips: totalPaseos
+      restaurants: totalRestaurantes,
+      attractions: totalAtracciones,
+      countries: totalPaises,
+      trips: totalPaseos,
+      noRandomTrips: totalPaseosManuales,
+      randomTrips: totalPaseosAleatorios
     };
   }
 
