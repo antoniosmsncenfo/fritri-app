@@ -8,7 +8,7 @@ import { useNavigation, CommonActions, useFocusEffect} from '@react-navigation/n
 import { useUsuario } from '../hooks/useUsuario';
 import { useVotacion } from '../hooks/useVotacion';
 import { PlaceDetail } from '../components/PlaceDetail';
-import { ILugar, TipoSeccion } from '../interfaces/paseo';
+import { EstadoFinal, ILugar, TipoSeccion } from '../interfaces/paseo';
 import { ITipoVoto, ITipoVotoEnviar } from '../interfaces/tipo-voto';
 import * as Linking from 'expo-linking';
 import Storage from '@react-native-async-storage/async-storage';
@@ -19,8 +19,10 @@ const TripDetails = (props) => {
   const navigation = useNavigation();
   const { obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado, 
     protegerPaseo, removerPin, seAsignoPin, setSeAsignoPin,
-    cerrarSeccion, seCerroSeccion, setSeCerroSeccion, aceptarInvitacionPaseo, invitacionAceptada, setPaseoSeleccionado,
-    setPaseoSeleccionadoCargado } = usePaseo();
+    cerrarSeccion, seCerroSeccion, setSeCerroSeccion, 
+    aceptarInvitacionPaseo, invitacionAceptada, 
+    setPaseoSeleccionado, setPaseoSeleccionadoCargado,
+    cambiarEstadoFinalPaseo, seCambioEstadoFinal, setSeCambioEstadoFinal } = usePaseo();
   const { usuarioPaseo, obtenerUsuarioPaseo } = useUsuario();
   const { 
     votarSeccion, enviandoVotacionRest, enviandoVotacionAtr, 
@@ -120,7 +122,12 @@ const TripDetails = (props) => {
     let paseo = new Date(paseoSeleccionado?.fechaPaseo!);
     paseo.setHours(0,0,0,0);
 
-    setPaseoCompletado(paseo < today);
+    if ((paseo < today) || (paseoSeleccionado?.estadoFinal===EstadoFinal.CANCELADO)) {
+      setPaseoCompletado(true);
+    }
+    else{
+      setPaseoCompletado(false);
+    }
 
     setSeAsignoPin(false); 
   }
@@ -229,6 +236,10 @@ const TripDetails = (props) => {
     cerrarSeccion(idPaseo,tipo);
   };
 
+  const handleCancelarPaseo = (idPaseo:string) => {
+    cambiarEstadoFinalPaseo(idPaseo,EstadoFinal.CANCELADO);
+  };
+
   const revisarVotosUsuario = (lugar: ILugar) => {
     const usuarioVoto = lugar?.votaciones?.find(x => x.idVotante === user?._id);
     if (usuarioVoto === undefined || usuarioVoto.resultado === 'nullVal') {
@@ -329,6 +340,14 @@ const TripDetails = (props) => {
     }
   }, [seCerroSeccion]);
 
+  useEffect(() => {
+    if (seCambioEstadoFinal) {
+      let idPaseo: string = props.route.params.id;
+      obtenerPaseo(idPaseo);    
+      setSeCambioEstadoFinal(false);
+    }
+  }, [seCambioEstadoFinal]);
+
   return (
     <Block safe>
       <Block
@@ -417,13 +436,13 @@ const TripDetails = (props) => {
               marginBottom={sizes.s}
               marginLeft={sizes.s}>
               {paseoSeleccionado?.destino.nombre}
-            </Text>
-          </Block>
+            </Text>          
+          </Block>        
           {/* Fecha */}
           <Block row
             align="flex-start"
             justify="flex-start"
-            marginTop={sizes.sm}>
+            marginTop={sizes.s}>
             <Image
               radius={0}
               source={assets.calendar}
@@ -434,7 +453,41 @@ const TripDetails = (props) => {
               marginLeft={sizes.s}>
               {dayjs(paseoSeleccionado?.fechaPaseo).format(t('common.dateFormat'))}
             </Text>
-          </Block>
+          </Block>  
+          {/* Cancelar */}
+          {user && paseoSeleccionado?.idCreador === user._id && !paseoCompletado &&
+            <Button
+              gradient={gradients.danger}
+              outlined
+              marginVertical={sizes.xs}
+              paddingHorizontal={sizes.sm}
+              onPress={(value) =>
+                Alert.alert(
+                  t('tripDetails.cancelTripConfirmationTitle'),
+                  t('tripDetails.cancelTripConfirmationMessage'),
+                  [
+                    { text: t('common.no'), style: 'cancel' },
+                    { text: t('common.yes'), onPress: () => handleCancelarPaseo(paseoSeleccionado?._id!) },
+                  ]
+                )}
+              >
+              <Text bold white transform="uppercase">
+                {t('tripDetails.cancelTripLink')}
+              </Text>
+            </Button>
+          }
+          {/* Cancelado */}
+          {paseoSeleccionado?.estadoFinal === EstadoFinal.CANCELADO &&
+          <Block outlined color={colors.danger} 
+            paddingHorizontal={sizes.sm}>
+            <Block row justify="center">
+              <Text h5 semibold color={colors.danger}
+                paddingVertical={sizes.s}>
+                {t('tripDetails.wasCancelled')}
+              </Text>
+            </Block>
+          </Block>          
+          }
           {/* Usuario */}
           <Block row
             marginTop={sizes.s}>
@@ -457,7 +510,7 @@ const TripDetails = (props) => {
                 </Text>
               }
             </Block>
-          </Block>
+          </Block>           
         </Block>
 
         <Block>

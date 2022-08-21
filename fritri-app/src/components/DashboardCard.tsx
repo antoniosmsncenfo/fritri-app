@@ -8,9 +8,9 @@ import Text from './Text';
 import dayjs from 'dayjs';
 import {useData, useTheme, useTranslation} from '../hooks/';
 
-import { IPaseo } from '../interfaces/paseo';
+import { EstadoFinal, IPaseo } from '../interfaces/paseo';
 
-const DashboardCard = ({nombre, fechaPaseo, destino, _id}: IPaseo) => {
+const DashboardCard = ({nombre, fechaPaseo, destino, _id, estadoFinal}: IPaseo) => {
   const {t} = useTranslation();
   const {assets, colors, sizes} = useTheme();
   const navigation = useNavigation();
@@ -66,6 +66,17 @@ const DashboardCard = ({nombre, fechaPaseo, destino, _id}: IPaseo) => {
             { dayjs(fechaPaseo).format(t('common.dateFormat'))}
           </Text>
         </Block>
+        {estadoFinal===EstadoFinal.CANCELADO &&
+        <Block row align="flex-start" justify="flex-start">
+          <Text p color={colors.danger}
+            size={sizes.linkSize}
+            marginBottom={sizes.s}
+            marginLeft={sizes.s}
+            >
+            {t('tripDetails.cancelled')}
+          </Text>
+        </Block>
+        }        
         <TouchableOpacity
           onPress={() => handleViewDetails(_id!)}>
           <Block row flex={0} align="center">

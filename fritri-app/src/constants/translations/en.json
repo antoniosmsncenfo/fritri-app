@@ -311,7 +311,12 @@
     "invitationTitle": "Trip invitation",
     "invitationBody": "Do you want to join this trip? \n If you decline, we will send you to the dashboard.",
     "invitationAcceptedTitle": "Trip invitation accepted",
-    "invitationAcceptedBody": "You have joined the trip"
+    "invitationAcceptedBody": "You have joined the trip",
+    "cancelTripLink": "Cancel trip",
+    "cancelTripConfirmationTitle": "Trip cancellation",
+    "cancelTripConfirmationMessage": "Do you really want to cancel this trip?",
+    "cancelled": "Cancelled", 
+    "wasCancelled": "This trip was cancelled"
   },
   "tripSecurity": {
     "title": "Enter trip's PIN",

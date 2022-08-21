@@ -311,7 +311,12 @@
     "invitationTitle": "Invitación",
     "invitationBody": "¿Desea unirse a este paseo? \n Si desiste, se mostrará la página de inicio.",
     "invitationAcceptedTitle": "Invitación aceptada",
-    "invitationAcceptedBody": "Se ha unido al paseo"
+    "invitationAcceptedBody": "Se ha unido al paseo",
+    "cancelTripLink": "Cancelar paseo",
+    "cancelTripConfirmationTitle": "Cancelación de paseo",
+    "cancelTripConfirmationMessage": "¿Realmente desea cancelar este paseo?",
+    "cancelled": "Cancelado", 
+    "wasCancelled": "Este paseo fue cancelado"          
   },
   "tripSecurity": {
     "title": "Digite el PIN de acceso",
