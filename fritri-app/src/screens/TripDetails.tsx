@@ -240,6 +240,10 @@ const TripDetails = (props) => {
     cambiarEstadoFinalPaseo(idPaseo,EstadoFinal.CANCELADO);
   };
 
+  const handleCompletarPaseo = (idPaseo:string) => {
+    cambiarEstadoFinalPaseo(idPaseo,EstadoFinal.REALIZADO);
+  };
+
   const revisarVotosUsuario = (lugar: ILugar) => {
     const usuarioVoto = lugar?.votaciones?.find(x => x.idVotante === user?._id);
     if (usuarioVoto === undefined || usuarioVoto.resultado === 'nullVal') {
@@ -476,6 +480,29 @@ const TripDetails = (props) => {
               </Text>
             </Button>
           }
+          {/* Definir estado final */}
+          {user && paseoSeleccionado?.idCreador === user._id && 
+            paseoCompletado && paseoSeleccionado?.estadoFinal===EstadoFinal.PROGRAMADO &&
+            <Button
+              gradient={gradients.info}
+              outlined
+              marginVertical={sizes.xs}
+              paddingHorizontal={sizes.sm}
+              onPress={(value) =>
+                Alert.alert(
+                  t('tripDetails.finalStatusTitle'),
+                  t('tripDetails.wasTripCompleted'),
+                  [
+                    { text: t('common.no'), onPress: () => handleCancelarPaseo(paseoSeleccionado?._id!) },
+                    { text: t('common.yes'), onPress: () => handleCompletarPaseo(paseoSeleccionado?._id!) },
+                  ]
+                )}
+              >
+              <Text bold white transform="uppercase">
+                {t('tripDetails.finalStatusLink')}
+              </Text>
+            </Button>
+          }          
           {/* Cancelado */}
           {paseoSeleccionado?.estadoFinal === EstadoFinal.CANCELADO &&
           <Block outlined color={colors.danger} 
@@ -488,6 +515,18 @@ const TripDetails = (props) => {
             </Block>
           </Block>          
           }
+          {/* Realizado */}
+          {paseoSeleccionado?.estadoFinal === EstadoFinal.REALIZADO &&
+          <Block outlined color={colors.primary} 
+            paddingHorizontal={sizes.sm}>
+            <Block row justify="center">
+              <Text h5 semibold color={colors.primary}
+                paddingVertical={sizes.s}>
+                {t('tripDetails.wasCompleted')}
+              </Text>
+            </Block>
+          </Block>          
+          }          
           {/* Usuario */}
           <Block row
             marginTop={sizes.s}>
@@ -567,29 +606,6 @@ const TripDetails = (props) => {
                 </Block>
               )
             }
-
-            {/* {
-              !enviandoVotacionRest ?
-                <Button
-                  onPress={() => { enviarVotos('rest'); }}
-                  gradient={gradients.primary}
-                  outlined
-                  marginVertical={sizes.s}
-                >
-                  <Text bold white transform="uppercase">
-                    {t('newTrip.vote')}
-                  </Text>
-                </Button> :
-                <Button
-                  gradient={gradients.primary}
-                  outlined
-                  marginVertical={sizes.s}
-                >
-                  <Text bold white transform="uppercase">
-                    {t('newTrip.sendingVotes')}
-                  </Text>
-                </Button>
-            } */}
 
             {user && !paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones && 
              !paseoCompletado && (

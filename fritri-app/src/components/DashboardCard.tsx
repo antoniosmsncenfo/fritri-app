@@ -67,16 +67,21 @@ const DashboardCard = ({nombre, fechaPaseo, destino, _id, estadoFinal}: IPaseo) 
           </Text>
         </Block>
         {estadoFinal===EstadoFinal.CANCELADO &&
-        <Block row align="flex-start" justify="flex-start">
-          <Text p color={colors.danger}
-            size={sizes.linkSize}
-            marginBottom={sizes.s}
-            marginLeft={sizes.s}
-            >
+        <Block row align="flex-start" justify="center" color={colors.danger}>
+          <Text p color={colors.white}
+            size={sizes.linkSize}>
             {t('tripDetails.cancelled')}
           </Text>
         </Block>
-        }        
+        }
+        {estadoFinal===EstadoFinal.REALIZADO &&
+        <Block row align="flex-start" justify="center" color={colors.primary}>
+          <Text p color={colors.white}
+            size={sizes.linkSize}>
+            {t('tripDetails.completed')}
+          </Text>
+        </Block>
+        }                
         <TouchableOpacity
           onPress={() => handleViewDetails(_id!)}>
           <Block row flex={0} align="center">

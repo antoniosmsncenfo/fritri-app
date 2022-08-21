@@ -316,7 +316,12 @@
     "cancelTripConfirmationTitle": "Trip cancellation",
     "cancelTripConfirmationMessage": "Do you really want to cancel this trip?",
     "cancelled": "Cancelled", 
-    "wasCancelled": "This trip was cancelled"
+    "completed": "Completed",
+    "wasCancelled": "This trip was cancelled",
+    "wasCompleted": "This trip was completed",
+    "finalStatusLink": "What happened with this trip?",
+    "finalStatusTitle": "Trip status",
+    "wasTripCompleted": "Was this trip completed?"    
   },
   "tripSecurity": {
     "title": "Enter trip's PIN",
