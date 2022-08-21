@@ -17,10 +17,10 @@ const ViewDestination = (props) => {
 
   useEffect(() => {
     setDestino(props.route.params);
-    const { idGoogle } = props.route.params;
-
-    if (idGoogle !== undefined && idGoogle !== '') {
-      getGooglePlace(idGoogle);
+    const { idLugarGoogle, idGoogle } = props.route.params;
+    const idLugarGoogleBuscar = idLugarGoogle ? idLugarGoogle : idGoogle;
+    if (idLugarGoogleBuscar !== undefined && idLugarGoogleBuscar !== '') {
+      getGooglePlace(idLugarGoogleBuscar);
       setSearchMoreInfo(true);
     }
   }, []);
