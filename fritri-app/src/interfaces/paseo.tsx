@@ -112,3 +112,9 @@ export enum TipoSeccion {
     RESTAURANTE = 'RESTAURANTE',
     ATRACCION_TURISTICA = 'ATRACCION_TURISTICA' 
   }
+
+export enum EstadoFinal {
+    PROGRAMADO = 'PROGRAMADO',
+    CANCELADO = 'CANCELADO',
+    REALIZADO = 'REALIZADO' 
+}  

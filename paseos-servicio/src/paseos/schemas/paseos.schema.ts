@@ -12,7 +12,7 @@ export enum TipoSeccion {
 	ATRACCION_TURISTICA = 'ATRACCION_TURISTICA' 
   }
 
-export enum EstadoPaseo {
+export enum EstadoFinal {
   PROGRAMADO = 'PROGRAMADO',
   CANCELADO = 'CANCELADO',
   REALIZADO = 'REALIZADO' 
@@ -44,9 +44,9 @@ export class Paseo {
   pinPaseo: number;
 
   @Prop({
-    default: EstadoPaseo.PROGRAMADO,
+    default: EstadoFinal.PROGRAMADO,
   })
-  estado: EstadoPaseo;
+  estadoFinal: EstadoFinal;
 
   @Prop({
     required: true,

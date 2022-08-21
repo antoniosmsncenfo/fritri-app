@@ -1,8 +1,8 @@
 import { IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { EstadoPaseo } from '../schemas/paseos.schema';
+import { EstadoFinal } from '../schemas/paseos.schema';
 
-export class CambiarEstadoDto {
+export class CambiarEstadoFinalDto {
   
     @ApiProperty()
     @IsNotEmpty()
@@ -10,6 +10,6 @@ export class CambiarEstadoDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    readonly estadoPaseo: EstadoPaseo;
+    readonly estadoFinal: EstadoFinal;
     
 }

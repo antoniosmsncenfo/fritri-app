@@ -12,7 +12,7 @@ import { Notificacion } from 'src/notificaciones/dto/notificacion.dto';
 import { EstadisticasService } from '../estadisticas/estadisticas.service';
 import { CerrarSeccionDto } from './dto/cerrar-seccion';
 import { AceptarInvitacionDto } from './dto/aceptar-invitacion';
-import { CambiarEstadoDto } from './dto/cambiar-estado';
+import { CambiarEstadoFinalDto } from './dto/cambiar-estado';
 const mongoose = require('mongoose');
 
 export enum EstadoPaseo {
@@ -313,10 +313,10 @@ export class PaseosService {
     return resultadoPaseo;
   }
 
-  async cambiarEstado(cambiarEstadoDto: CambiarEstadoDto) {
+  async cambiarEstadoFinal(cambiarEstadoFinalDto: CambiarEstadoFinalDto) {
     let resultadoPaseo:PaseoDocument;
     try {
-      const { idPaseo, estadoPaseo } = cambiarEstadoDto;
+      const { idPaseo, estadoFinal } = cambiarEstadoFinalDto;
       resultadoPaseo = await this.paseoModel.findOne({ _id: idPaseo });
       if(!resultadoPaseo) {
         throw new Error(`No existe el paseo con el id::${idPaseo}`);
@@ -325,7 +325,7 @@ export class PaseosService {
       let filter;
       let update
       filter = { _id: idPaseo };
-      update = { 'estado':estadoPaseo};
+      update = { 'estadoFinal':estadoFinal};
       
       resultadoPaseo = await this.paseoModel.findOneAndUpdate(filter,update, {
         returnOriginal: false
@@ -335,7 +335,7 @@ export class PaseosService {
         idPaseo: idPaseo,
         nombrePaseo: resultadoPaseo.nombre,
         integrantes: resultadoPaseo.integrantes,
-        modificacionesRealizadas: [ `Se marcó el paseo como ${estadoPaseo}.` ]
+        modificacionesRealizadas: [ `Se marcó el paseo como ${estadoFinal}.` ]
       };
 
       await this.notificarPaseoActualizado(notificacionPaseoActualizado);
