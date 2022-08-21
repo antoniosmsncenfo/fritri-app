@@ -31,28 +31,9 @@ import SalesTable from "examples/Tables/SalesTable";
 
 // Data
 import salesTableData from "layouts/dashboards/trips/components/SalesByCountry/data/salesTableData";
-import { useEstadisticasPaseo, IDataEstadisticaDePaseos } from "hooks/useEstadisticasPaseo";
+import { IDataEstadisticaDePaseos } from "hooks/useEstadisticasPaseo";
 
-import { useState, useEffect } from "react";
-
-function TripsByCountry(): JSX.Element {
-  const { obtenerDataEstadisticaDePaseos } = useEstadisticasPaseo();
-  const [dataEstadisticaDePaseos, setDataEstadisticaDePaseos] = useState<IDataEstadisticaDePaseos>();
-  // const [makers, setMarkers] = useState<[
-  //   {
-  //     name: string,
-  //     latLng: [number, number],
-  //   }]>([{ name: "Costa Rica", latLng: [-12.98078, -72.876651], }]);
-
-  useEffect(() => {
-    (async () => {
-      setDataEstadisticaDePaseos(await obtenerDataEstadisticaDePaseos());
-    })();
-
-    // setMarkers([{ name: "USA", latLng: [9.0, -84], }]);
-  }, [])
-
-
+function TripsByCountry({ tripsByCountry, tripsLocations, topTrips }: IDataEstadisticaDePaseos): JSX.Element {
   return (
     <Card sx={{ width: "100%" }}>
       <MDBox display="flex">
@@ -75,22 +56,22 @@ function TripsByCountry(): JSX.Element {
           </Icon>
         </MDBox>
         <MDTypography variant="h6" sx={{ mt: 2, mb: 1, ml: 2 }}>
-          Trips by Country
+          Top {topTrips} trips by Country
         </MDTypography>
       </MDBox>
       <MDBox p={2}>
         <Grid container>
           <Grid item xs={12} md={7} lg={6}>
-            <SalesTable rows={dataEstadisticaDePaseos?.tripsByCountry} shadow={false} />
+            <SalesTable rows={tripsByCountry} shadow={false} />
           </Grid>
           <Grid item xs={12} md={5} lg={6} sx={{ mt: { xs: 5, lg: 0 } }} minHeight={250}>
-            {dataEstadisticaDePaseos?.tripsLocations.length > 0 && (<VectorMap
+            {tripsLocations?.length > 0 && (<VectorMap
               map={worldMerc}
               zoomOnScroll
               zoomButtons
               markersSelectable
               backgroundColor="transparent"
-              markers={dataEstadisticaDePaseos?.tripsLocations}
+              markers={tripsLocations}
               regionStyle={{
                 initial: {
                   fill: "#dee2e7",
