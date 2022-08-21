@@ -88,7 +88,9 @@ export enum CantidadPaseos {
     Cinco = 5,
     Diez = 10,
     Quince = 15,
-    Veinte = 20
+    Veinte = 20,
+    Cincuenta = 50,
+    Cien = 100
 }
 
 export enum EstadoPaseo {
@@ -110,5 +112,5 @@ export interface IPaseoUpdate extends IPaseo {
 
 export enum TipoSeccion {
     RESTAURANTE = 'RESTAURANTE',
-    ATRACCION_TURISTICA = 'ATRACCION_TURISTICA' 
+    ATRACCION_TURISTICA = 'ATRACCION_TURISTICA'
   }
