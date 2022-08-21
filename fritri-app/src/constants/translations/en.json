@@ -250,7 +250,8 @@
     "updateError": "Update error",
     "fieldsError": "Please check the fields!",
     "updateTitle": "Update confirmation",
-    "updateMessage": "Your profile was updated successfully."
+    "updateMessage": "Your profile was updated successfully.",
+    "you": "You"
   },
   "notifications": {
     "title": "Notifications",

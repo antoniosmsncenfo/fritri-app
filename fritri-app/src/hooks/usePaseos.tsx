@@ -120,7 +120,7 @@ export const usePaseo = () => {
         }
   
       } catch(error) {
-        console.log("useVotacion->cerrarSeccion::ERROR "+ JSON.stringify(error));
+        console.log("usePaseos->cerrarSeccion::ERROR "+ JSON.stringify(error));
         resultado = false;
       }
   
@@ -139,7 +139,7 @@ export const usePaseo = () => {
         }
   
       } catch(error) {
-        console.log("useVotacion->cambiarEstadoFinalPaseo::ERROR "+ JSON.stringify(error));
+        console.log("usePaseos->cambiarEstadoFinalPaseo::ERROR "+ JSON.stringify(error));
         resultado = false;
       }
   

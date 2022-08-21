@@ -33,14 +33,12 @@ const Home = () => {
   }
 
   useEffect(() => {
-    console.log("FLAG1");
     checkGUser();
     obtenerPaseosUsuario(user?._id!,EstadoPaseo.Pendiente,CantidadPaseos.Diez);
   }, [])
 
   useFocusEffect(
     React.useCallback(() => {
-      console.log("FLAG2");
       checkGUser();
       setTab(0);
       obtenerPaseosUsuario(user?._id!,EstadoPaseo.Pendiente,CantidadPaseos.Diez);
@@ -48,7 +46,6 @@ const Home = () => {
   );
 
   useEffect(() => {
-    console.log("FLAG3");
     setPaseosFiltrados(paseosUsuario?.filter(p => 
       p.nombre.toLowerCase().includes(searchTerm.toString().toLowerCase())));
   
@@ -62,7 +59,6 @@ const Home = () => {
   //Maneja el cambio de tab y cambia la lista de productos
   const handlePaseos = useCallback(  
     (tab: number) => {
-      console.log("FLAG4");
       setTab(tab);
       if (tab===2) {
         navigation.navigate('NewTrip');
@@ -77,7 +73,6 @@ const Home = () => {
   );
   
   const handleSearch = useCallback((value) => {
-    console.log("FLAG5");
     setSearchTerm(value);
   }, []);
 

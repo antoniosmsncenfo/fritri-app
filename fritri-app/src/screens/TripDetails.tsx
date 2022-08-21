@@ -3,7 +3,7 @@ import { Block, Button, Input, Image, Text } from '../components/';
 import React, { useEffect, useState } from 'react';
 import { usePaseo } from '../hooks/usePaseos';
 import dayjs from 'dayjs';
-import { Alert, Share, TouchableOpacity } from 'react-native';
+import { Alert, Share, TouchableOpacity,Platform } from 'react-native';
 import { useNavigation, CommonActions, useFocusEffect} from '@react-navigation/native';
 import { useUsuario } from '../hooks/useUsuario';
 import { useVotacion } from '../hooks/useVotacion';
@@ -17,6 +17,7 @@ const TripDetails = (props) => {
   const { assets, sizes, colors, gradients } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation();
+  const isAndroid = Platform.OS === 'android';
   const { obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado, 
     protegerPaseo, removerPin, seAsignoPin, setSeAsignoPin,
     cerrarSeccion, seCerroSeccion, setSeCerroSeccion, 
@@ -436,7 +437,7 @@ const TripDetails = (props) => {
               source={assets.location}
               style={{ tintColor: colors.secondary }}
             />
-            <Text p secondary
+            <Text p black
               marginBottom={sizes.s}
               marginLeft={sizes.s}>
               {paseoSeleccionado?.destino.nombre}
@@ -452,7 +453,7 @@ const TripDetails = (props) => {
               source={assets.calendar}
               style={{ tintColor: colors.secondary }}
             />
-            <Text p secondary
+            <Text p black
               marginBottom={sizes.s}
               marginLeft={sizes.s}>
               {dayjs(paseoSeleccionado?.fechaPaseo).format(t('common.dateFormat'))}
@@ -461,10 +462,10 @@ const TripDetails = (props) => {
           {/* Cancelar */}
           {user && paseoSeleccionado?.idCreador === user._id && !paseoCompletado &&
             <Button
-              gradient={gradients.danger}
+              danger
               outlined
+              shadow={!isAndroid}
               marginVertical={sizes.xs}
-              paddingHorizontal={sizes.sm}
               onPress={(value) =>
                 Alert.alert(
                   t('tripDetails.cancelTripConfirmationTitle'),
@@ -475,7 +476,7 @@ const TripDetails = (props) => {
                   ]
                 )}
               >
-              <Text bold white transform="uppercase">
+              <Text bold danger transform="uppercase">
                 {t('tripDetails.cancelTripLink')}
               </Text>
             </Button>
@@ -535,16 +536,17 @@ const TripDetails = (props) => {
               style={{ width: sizes.xl, height: sizes.xl, borderRadius: sizes.s }}
             />
             <Block marginLeft={sizes.s}>
-              <Text p semibold>
-                {usuarioPaseo?.nombreCompleto}
+              <Text p semibold primary>
+                {paseoSeleccionado?.idCreador === user._id ? t('profile.you')
+                : usuarioPaseo?.nombreCompleto}
               </Text>
-              <Text p gray>
+              <Text p black>
                 {t('tripDetails.tripCreated')}
                 {dayjs(paseoSeleccionado?.fechaCreacion).format(t('common.dateFormat'))}
               </Text>
               {paseoSeleccionado?.pinPaseo &&
                 paseoSeleccionado?.idCreador === user?._id &&
-                <Text p gray>
+                <Text p black>
                   PIN: {paseoSeleccionado?.pinPaseo!}
                 </Text>
               }
@@ -635,8 +637,9 @@ const TripDetails = (props) => {
             {user && paseoSeleccionado?.idCreador === user._id && !paseoCompletado &&
              !paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones &&
             <Button
-              gradient={gradients.warning}
+              primary
               outlined
+              shadow={!isAndroid}
               marginVertical={sizes.xs}
               paddingHorizontal={sizes.sm}
               onPress={(value) =>
@@ -649,7 +652,7 @@ const TripDetails = (props) => {
                   ]
                 )}
               >
-              <Text bold white transform="uppercase">
+              <Text bold primary transform="uppercase">
                 {t('tripDetails.closeVotes')}
               </Text>
             </Button>
@@ -736,8 +739,9 @@ const TripDetails = (props) => {
             {user && paseoSeleccionado?.idCreador === user._id && !paseoCompletado &&
              !paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones &&
             <Button
-              gradient={gradients.warning}
+              primary
               outlined
+              shadow={!isAndroid}
               marginVertical={sizes.xs}
               paddingHorizontal={sizes.sm}
               onPress={(value) =>
@@ -750,7 +754,7 @@ const TripDetails = (props) => {
                   ]
                 )}
             >
-              <Text bold white transform="uppercase">
+              <Text bold primary transform="uppercase">
                 {t('tripDetails.closeVotes')}
               </Text>
             </Button>

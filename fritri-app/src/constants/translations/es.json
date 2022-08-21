@@ -250,7 +250,8 @@
     "updateError": "Error de actualización",
     "fieldsError": "Revise los campos",
     "updateTitle": "Confirmación de actualización",
-    "updateMessage": "Su perfil fue actualizado"
+    "updateMessage": "Su perfil fue actualizado",
+    "you": "Usted"
   },
   "notifications": {
     "title": "Notificaciones",
