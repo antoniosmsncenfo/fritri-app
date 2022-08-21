@@ -10,6 +10,8 @@ export interface IEstadisticaPaseo {
     cantidadIntegrantes: number;
     cantidadRestaurantes: number;
     cantidadAtracciones: number;
+    latitud: number;
+    longitud: number;
     __v: number;
     _id: string;
 }
