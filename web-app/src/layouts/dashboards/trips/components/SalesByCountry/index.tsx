@@ -31,25 +31,25 @@ import SalesTable from "examples/Tables/SalesTable";
 
 // Data
 import salesTableData from "layouts/dashboards/trips/components/SalesByCountry/data/salesTableData";
-import { useEstadisticasPaseo, ITripsByCountry } from "hooks/useEstadisticasPaseo";
+import { useEstadisticasPaseo, IDataEstadisticaDePaseos } from "hooks/useEstadisticasPaseo";
 
 import { useState, useEffect } from "react";
 
 function TripsByCountry(): JSX.Element {
-  const { obtenerPaisesPorPaseos } = useEstadisticasPaseo();
-  const [tripsByCountry, setTripsByCountry] = useState<ITripsByCountry[]>([]);
-  const [makers, setMarkers] = useState<[
-    {
-      name: string,
-      latLng: [number, number],
-    }]>([{ name: "Costa Rica", latLng: [-12.98078, -72.876651], }]);
+  const { obtenerDataEstadisticaDePaseos } = useEstadisticasPaseo();
+  const [dataEstadisticaDePaseos, setDataEstadisticaDePaseos] = useState<IDataEstadisticaDePaseos>();
+  // const [makers, setMarkers] = useState<[
+  //   {
+  //     name: string,
+  //     latLng: [number, number],
+  //   }]>([{ name: "Costa Rica", latLng: [-12.98078, -72.876651], }]);
 
   useEffect(() => {
     (async () => {
-      setTripsByCountry(await obtenerPaisesPorPaseos());
+      setDataEstadisticaDePaseos(await obtenerDataEstadisticaDePaseos());
     })();
 
-    setMarkers([{ name: "USA", latLng: [9.0, -84], }]);
+    // setMarkers([{ name: "USA", latLng: [9.0, -84], }]);
   }, [])
 
 
@@ -81,16 +81,16 @@ function TripsByCountry(): JSX.Element {
       <MDBox p={2}>
         <Grid container>
           <Grid item xs={12} md={7} lg={6}>
-            <SalesTable rows={tripsByCountry} shadow={false} />
+            <SalesTable rows={dataEstadisticaDePaseos?.tripsByCountry} shadow={false} />
           </Grid>
           <Grid item xs={12} md={5} lg={6} sx={{ mt: { xs: 5, lg: 0 } }} minHeight={250}>
-            <VectorMap
+            {dataEstadisticaDePaseos?.tripsLocations.length > 0 && (<VectorMap
               map={worldMerc}
               zoomOnScroll
               zoomButtons
               markersSelectable
               backgroundColor="transparent"
-              markers={makers}
+              markers={dataEstadisticaDePaseos?.tripsLocations}
               regionStyle={{
                 initial: {
                   fill: "#dee2e7",
@@ -126,7 +126,7 @@ function TripsByCountry(): JSX.Element {
               }}
               onRegionTipShow={() => false}
               onMarkerTipShow={() => false}
-            />
+            />)}
           </Grid>
         </Grid>
       </MDBox>
