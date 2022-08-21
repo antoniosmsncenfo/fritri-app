@@ -1,7 +1,7 @@
 import { getEstadisticasPaseo } from 'api/estadisticas/EstadisticasDB';
 import { IEstadisticaPaseo } from 'interfaces/estadistica-paseo';
 import _ from 'lodash';
-import paisesLista from './data';
+import paisesLista from './data/countries';
 
 export interface ITripsByCountry { [key: string]: string | number | (string | number)[]; }
 export interface ITripsLocations { name: string, latLng: [number, number], trips: number }
@@ -9,9 +9,7 @@ export interface IDataEstadisticaDePaseos { tripsByCountry: ITripsByCountry[], t
 
 export const useEstadisticasPaseo = () => {
   const topPaises = 5;
-  // const [estadisticas, setEstadisticas] = useState<IEstadisticaPaseo[]>([]);
-  // const [dataEstadisticaDePaseos, setDataEstadisticaDePaseos] = useState<IDataEstadisticaDePaseos>(null);
-
+  
   const obtenerCodigoPais = (pais: string): string =>
     paisesLista.paises.filter(p => p.name_es === pais)?.map(p => p.code)[0] || 'CR'
 
