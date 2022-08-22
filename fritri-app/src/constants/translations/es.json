@@ -179,11 +179,11 @@
     "missingDataMessage": "Ingrese su correo electrónico",
     "sendTempPass": "Enviar contraseña temporal",
     "passwordSent": "Contraseña temporal enviada",
-    "checkEmail": "Revise su bandeja de entrada y carpeta de spam folder, and use the temporary password to login",
+    "checkEmail": "Revise su bandeja de entrada y correo no deseado y utilice la contraseña recibida para ingresar.",
     "passwordError": "Se produjo un error",
     "errorMessage": "Intente de nuevo. Si el problema persiste, contacte a soporte al cliente.",
     "timeLimitTitle": "Restricción de cambio",
-    "timeLimitMessage": "Debe esperar {{time}} minutos para solicitar de nuevo la contraseña"
+    "timeLimitMessage": "Debe esperar {{time}} minutos para solicitar de nuevo la contraseña."
   },
   "newPassword": {
     "title": "Cambiar contraseña",
