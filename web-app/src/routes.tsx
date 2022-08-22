@@ -48,12 +48,13 @@ import Icon from "@mui/material/Icon";
 // Images
 import profilePicture from "assets/images/admin.jpg";
 import Logout from "layouts/authentication/logout";
+import Fritri from "layouts/authentication/sign-in/fritri";
 
 const routes = [
   {
     type: "collapse",
     name: "FriTri Admin",
-    key: "brooklyn-alice",
+    key: "fritri-admin",
     icon: <MDAvatar src={profilePicture} alt="FriTri Admin" size="sm" />,
     collapse: [
       {
@@ -61,7 +62,7 @@ const routes = [
         key: "logout",
         route: "/authentication/logout",
         component: <Logout />,
-      },
+      },      
     ],
   },
   { type: "divider", key: "divider-0" },

@@ -52,9 +52,12 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "co
 // Images
 import brandWhite from "assets/images/logo-ct.png";
 import brandDark from "assets/images/logo-ct-dark.png";
+import Fritri from "layouts/authentication/sign-in/fritri";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
+  const { isAuthenticated } = useAuth0();
   const {
     miniSidenav,
     direction,
@@ -159,18 +162,29 @@ export default function App() {
       <CssBaseline />
       {layout === "dashboard" && (
         <Sidenav
-            color={sidenavColor}
-            brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-            brandName="FriTrip APP"
-            routes={routes}
-            onMouseEnter={handleOnMouseEnter}
-            onMouseLeave={handleOnMouseLeave}
-          />
+          color={sidenavColor}
+          brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
+          brandName="FriTrip APP"
+          routes={routes}
+          onMouseEnter={handleOnMouseEnter}
+          onMouseLeave={handleOnMouseLeave}
+        />
       )}
       {layout === "vr" && <Configurator />}
       <Routes>
-        {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/dashboards/trips" />} />
+        {getRoutes([...routes, {
+          name: "Login",
+          key: "login",
+          route: "/authentication/sign-in/fritri",
+          component: <Fritri />,
+        }])}
+        {
+          isAuthenticated
+            ?
+            (<Route path="*" element={<Navigate to="/dashboards/trips" />} />)
+            :
+            (<Route path="*" element={<Navigate to="/authentication/sign-in/fritri" />} />)
+        }
       </Routes>
     </ThemeProvider>
   );
