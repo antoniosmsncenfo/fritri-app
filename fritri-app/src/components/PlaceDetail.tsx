@@ -79,7 +79,7 @@ export const PlaceDetail = (props) => {
         align="center"
         justify="center"
         marginRight={sizes.s}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => { navigation.navigate('ViewDestination', attraccion) }}>
           {attraccion.urlFotos.length > 0 && (
             <Image
               radius={sizes.s}
