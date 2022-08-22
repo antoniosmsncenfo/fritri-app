@@ -14,11 +14,11 @@ Coded by www.creative-tim.com
 */
 
 const channelChartData = {
-  labels: ["Facebook", "Direct", "Organic", "Referral"],
+  labels: ["Restaurants", "Destinations", "Atracctions",],
   datasets: {
     label: "Projects",
-    backgroundColors: ["info", "primary", "dark", "secondary", "primary"],
-    data: [15, 20, 12, 60],
+    backgroundColors: ["info", "primary", "dark"],
+    data: [15, 20, 12,],
   },
 };
 

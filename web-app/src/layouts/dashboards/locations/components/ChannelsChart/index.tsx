@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 PRO React TS - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-2-pro-react-ts
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 // @mui material components
 import Card from "@mui/material/Card";
 import Tooltip from "@mui/material/Tooltip";
@@ -27,44 +12,37 @@ import MDBadgeDot from "components/MDBadgeDot";
 import PieChart from "examples/Charts/PieChart";
 
 // Data
-import channelChartData from "layouts/dashboards/destinations/components/ChannelsChart/data";
+import channelChartData from "layouts/dashboards/locations/components/ChannelsChart/data";
 
 // Material Dashboard 2 PRO React TS contexts
 import { useMaterialUIController } from "context";
+import { ILocationsPieChartSeries } from "hooks/useEstadisticasDestino";
 
-function ChannelsChart(): JSX.Element {
+function ChannelsChart(locationsChartSeries:ILocationsPieChartSeries): JSX.Element {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
 
   return (
     <Card sx={{ height: "100%" }}>
       <MDBox display="flex" justifyContent="space-between" alignItems="center" pt={2} px={2}>
-        <MDTypography variant="h6">Channels</MDTypography>
-        <Tooltip title="See traffic channels" placement="bottom" arrow>
-          <MDButton variant="outlined" color="secondary" size="small" circular iconOnly>
-            <Icon>priority_high</Icon>
-          </MDButton>
-        </Tooltip>
+        <MDTypography variant="h6">Locations</MDTypography>        
       </MDBox>
       <MDBox mt={3}>
         <Grid container alignItems="center">
           <Grid item xs={7}>
-            <PieChart chart={channelChartData} height="12.5rem" />
+            <PieChart chart={locationsChartSeries} height="10rem" />
           </Grid>
           <Grid item xs={5}>
             <MDBox pr={1}>
               <MDBox mb={1}>
-                <MDBadgeDot color="info" size="sm" badgeContent="Facebook" />
+                <MDBadgeDot color="info" size="sm" badgeContent="Destinations" />
               </MDBox>
               <MDBox mb={1}>
-                <MDBadgeDot color="primary" size="sm" badgeContent="Direct" />
+                <MDBadgeDot color="primary" size="sm" badgeContent="Restaurants" />
               </MDBox>
               <MDBox mb={1}>
-                <MDBadgeDot color="dark" size="sm" badgeContent="Organic" />
-              </MDBox>
-              <MDBox mb={1}>
-                <MDBadgeDot color="secondary" size="sm" badgeContent="Referral" />
-              </MDBox>
+                <MDBadgeDot color="dark" size="sm" badgeContent="Attractions" />
+              </MDBox>             
             </MDBox>
           </Grid>
         </Grid>
@@ -77,14 +55,10 @@ function ChannelsChart(): JSX.Element {
         flexDirection={{ xs: "column", sm: "row" }}
         mt="auto"
       >
-        <MDBox width={{ xs: "100%", sm: "60%" }} lineHeight={1}>
+        <MDBox width={{ xs: "100%", }} lineHeight={1}>
           <MDTypography variant="button" color="text" fontWeight="light">
-            More than <strong>1,200,000</strong> sales are made using referral marketing, and{" "}
-            <strong>700,000</strong> are from social media.
+          Shows the proportion of results returned in searches for both destinations, restaurants and tourist attractions.
           </MDTypography>
-        </MDBox>
-        <MDBox width={{ xs: "100%", sm: "40%" }} textAlign="right" mt={{ xs: 2, sm: "auto" }}>
-          <MDButton color={darkMode ? "white" : "light"}>read more</MDButton>
         </MDBox>
       </MDBox>
     </Card>
