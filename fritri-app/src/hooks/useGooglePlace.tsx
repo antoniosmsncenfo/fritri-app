@@ -9,6 +9,7 @@ import { useData } from './useData';
 
 export const useGooglePlace = () => {
   const [googlePlace, setGooglePlace] = useState<ILugarGoogle | null>(null);
+  const [googlePlaceReady, setGooglePlaceReady] = useState(false);
   const [googlePlacesList, setGooglePlacesList] = useState<ILugarGoogle[]>([]);
   const [destinations, setDestinations] = useState<IDestino[]>([]);
   const [lugaresGooglePorTipoResponse, setLugaresGooglePorTipoResponse] = useState<ILugarGoogleRespuesta>({ lugaresGoogle: [], tokenPaginacion: '' });
@@ -33,6 +34,7 @@ export const useGooglePlace = () => {
     const result = await getGooglePlaceByType(idGoogle);
     if (result) {
       setGooglePlace(result);
+      setGooglePlaceReady(true);
     }
   };
 
@@ -53,6 +55,7 @@ export const useGooglePlace = () => {
   return {
     getGooglePlace,
     googlePlace,
+    googlePlaceReady,
     destinations,
     destinationsSearch,
     destinationsSearchByCoordinates,
