@@ -40,7 +40,8 @@ const Home = () => {
   useFocusEffect(
     React.useCallback(() => {
       checkGUser();
-      obtenerPaseosUsuario(user?._id!,EstadoPaseo.Pendiente,CantidadPaseos.Cien);
+      setTab(0);
+      obtenerPaseosUsuario(user?._id!,EstadoPaseo.Pendiente,CantidadPaseos.Diez);
     }, [])
   );
 

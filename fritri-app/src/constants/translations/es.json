@@ -179,11 +179,11 @@
     "missingDataMessage": "Ingrese su correo electrónico",
     "sendTempPass": "Enviar contraseña temporal",
     "passwordSent": "Contraseña temporal enviada",
-    "checkEmail": "Revise su bandeja de entrada y carpeta de spam folder, and use the temporary password to login",
+    "checkEmail": "Revise su bandeja de entrada y correo no deseado y utilice la contraseña recibida para ingresar.",
     "passwordError": "Se produjo un error",
     "errorMessage": "Intente de nuevo. Si el problema persiste, contacte a soporte al cliente.",
     "timeLimitTitle": "Restricción de cambio",
-    "timeLimitMessage": "Debe esperar {{time}} minutos para solicitar de nuevo la contraseña"
+    "timeLimitMessage": "Debe esperar {{time}} minutos para solicitar de nuevo la contraseña."
   },
   "newPassword": {
     "title": "Cambiar contraseña",
@@ -250,7 +250,8 @@
     "updateError": "Error de actualización",
     "fieldsError": "Revise los campos",
     "updateTitle": "Confirmación de actualización",
-    "updateMessage": "Su perfil fue actualizado"
+    "updateMessage": "Su perfil fue actualizado",
+    "you": "Usted"
   },
   "notifications": {
     "title": "Notificaciones",
@@ -284,7 +285,7 @@
     "moreOptions": "Intente ser más específico",
     "random": "Aleatorio",
     "touristAttractions": "Atracciones turísticas",
-    "vote": "Vote",
+    "vote": "Votar",
     "sendingVotes": "Registrando votos"
   },
   "destination": {
@@ -311,7 +312,17 @@
     "invitationTitle": "Invitación",
     "invitationBody": "¿Desea unirse a este paseo? \n Si desiste, se mostrará la página de inicio.",
     "invitationAcceptedTitle": "Invitación aceptada",
-    "invitationAcceptedBody": "Se ha unido al paseo"
+    "invitationAcceptedBody": "Se ha unido al paseo",
+    "cancelTripLink": "Cancelar paseo",
+    "cancelTripConfirmationTitle": "Cancelación de paseo",
+    "cancelTripConfirmationMessage": "¿Realmente desea cancelar este paseo?",
+    "cancelled": "Cancelado",
+    "completed": "Realizado",
+    "wasCancelled": "Este paseo fue cancelado",
+    "wasCompleted": "Este paseo fue realizado",    
+    "finalStatusLink": "Definir estado final",
+    "finalStatusTitle": "Estado final",
+    "wasTripCompleted": "¿Se logró realizar este paseo?"
   },
   "tripSecurity": {
     "title": "Digite el PIN de acceso",
@@ -326,13 +337,13 @@
     "statistics": "Votos"
   },
   "restaurants": {
-    "sights": "Ir a la atracción turística",
+    "sights": "Ir a atracciones turísticas",
     "recommendations": "Recomendaciones",
     "searching": "Buscando en un rango de",
     "notFound1": "No encontramos restaurantes dentro del rango",
     "moreOptions": "Intente incrementar la cantidad de kilómetros",
     "seeMore": "Ver más",
-    "update": "Actualizar restaurants",
+    "update": "Actualizar restaurantes",
     "updateSuccessful":"Actualización exitosa"
   },
   "sights": {

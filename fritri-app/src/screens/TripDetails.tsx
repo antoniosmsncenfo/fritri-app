@@ -3,12 +3,12 @@ import { Block, Button, Input, Image, Text } from '../components/';
 import React, { useEffect, useState } from 'react';
 import { usePaseo } from '../hooks/usePaseos';
 import dayjs from 'dayjs';
-import { Alert, Share, TouchableOpacity } from 'react-native';
+import { Alert, Share, TouchableOpacity,Platform } from 'react-native';
 import { useNavigation, CommonActions, useFocusEffect} from '@react-navigation/native';
 import { useUsuario } from '../hooks/useUsuario';
 import { useVotacion } from '../hooks/useVotacion';
 import { PlaceDetail } from '../components/PlaceDetail';
-import { ILugar, TipoSeccion } from '../interfaces/paseo';
+import { EstadoFinal, ILugar, TipoSeccion } from '../interfaces/paseo';
 import { ITipoVoto, ITipoVotoEnviar } from '../interfaces/tipo-voto';
 import * as Linking from 'expo-linking';
 import Storage from '@react-native-async-storage/async-storage';
@@ -18,10 +18,13 @@ const TripDetails = (props) => {
   const { assets, sizes, colors, gradients } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation();
+  const isAndroid = Platform.OS === 'android';
   const { obtenerPaseo, paseoSeleccionado, paseoSeleccionadoCargado, 
     protegerPaseo, removerPin, seAsignoPin, setSeAsignoPin,
-    cerrarSeccion, seCerroSeccion, setSeCerroSeccion, aceptarInvitacionPaseo, invitacionAceptada, setPaseoSeleccionado,
-    setPaseoSeleccionadoCargado } = usePaseo();
+    cerrarSeccion, seCerroSeccion, setSeCerroSeccion, 
+    aceptarInvitacionPaseo, invitacionAceptada, 
+    setPaseoSeleccionado, setPaseoSeleccionadoCargado,
+    cambiarEstadoFinalPaseo, seCambioEstadoFinal, setSeCambioEstadoFinal } = usePaseo();
   const { usuarioPaseo, obtenerUsuarioPaseo } = useUsuario();
   const { 
     votarSeccion, enviandoVotacionRest, enviandoVotacionAtr, 
@@ -121,7 +124,12 @@ const TripDetails = (props) => {
     let paseo = new Date(paseoSeleccionado?.fechaPaseo!);
     paseo.setHours(0,0,0,0);
 
-    setPaseoCompletado(paseo < today);
+    if ((paseo < today) || (paseoSeleccionado?.estadoFinal===EstadoFinal.CANCELADO)) {
+      setPaseoCompletado(true);
+    }
+    else{
+      setPaseoCompletado(false);
+    }
 
     setSeAsignoPin(false); 
   }
@@ -230,6 +238,14 @@ const TripDetails = (props) => {
     cerrarSeccion(idPaseo,tipo);
   };
 
+  const handleCancelarPaseo = (idPaseo:string) => {
+    cambiarEstadoFinalPaseo(idPaseo,EstadoFinal.CANCELADO);
+  };
+
+  const handleCompletarPaseo = (idPaseo:string) => {
+    cambiarEstadoFinalPaseo(idPaseo,EstadoFinal.REALIZADO);
+  };
+
   const revisarVotosUsuario = (lugar: ILugar) => {
     const usuarioVoto = lugar?.votaciones?.find(x => x.idVotante === user?._id);
     if (usuarioVoto === undefined || usuarioVoto.resultado === 'nullVal') {
@@ -329,6 +345,14 @@ const TripDetails = (props) => {
       setSeCerroSeccion(false);
     }
   }, [seCerroSeccion]);
+
+  useEffect(() => {
+    if (seCambioEstadoFinal) {
+      let idPaseo: string = props.route.params.id;
+      obtenerPaseo(idPaseo);    
+      setSeCambioEstadoFinal(false);
+    }
+  }, [seCambioEstadoFinal]);
 
   return (
     <Block safe>
@@ -437,28 +461,97 @@ const TripDetails = (props) => {
               source={assets.location}
               style={{ tintColor: colors.secondary }}
             />
-            <Text p secondary
+            <Text p black
               marginBottom={sizes.s}
               marginLeft={sizes.s}>
               {paseoSeleccionado?.destino.nombre}
-            </Text>
-          </Block>
+            </Text>          
+          </Block>        
           {/* Fecha */}
           <Block row
             align="flex-start"
             justify="flex-start"
-            marginTop={sizes.sm}>
+            marginTop={sizes.s}>
             <Image
               radius={0}
               source={assets.calendar}
               style={{ tintColor: colors.secondary }}
             />
-            <Text p secondary
+            <Text p black
               marginBottom={sizes.s}
               marginLeft={sizes.s}>
               {dayjs(paseoSeleccionado?.fechaPaseo).format(t('common.dateFormat'))}
             </Text>
-          </Block>
+          </Block>  
+          {/* Cancelar */}
+          {user && paseoSeleccionado?.idCreador === user._id && !paseoCompletado &&
+            <Button
+              danger
+              outlined
+              shadow={!isAndroid}
+              marginVertical={sizes.xs}
+              onPress={(value) =>
+                Alert.alert(
+                  t('tripDetails.cancelTripConfirmationTitle'),
+                  t('tripDetails.cancelTripConfirmationMessage'),
+                  [
+                    { text: t('common.no'), style: 'cancel' },
+                    { text: t('common.yes'), onPress: () => handleCancelarPaseo(paseoSeleccionado?._id!) },
+                  ]
+                )}
+              >
+              <Text bold danger transform="uppercase">
+                {t('tripDetails.cancelTripLink')}
+              </Text>
+            </Button>
+          }
+          {/* Definir estado final */}
+          {user && paseoSeleccionado?.idCreador === user._id && 
+            paseoCompletado && paseoSeleccionado?.estadoFinal===EstadoFinal.PROGRAMADO &&
+            <Button
+              gradient={gradients.info}
+              outlined
+              marginVertical={sizes.xs}
+              paddingHorizontal={sizes.sm}
+              onPress={(value) =>
+                Alert.alert(
+                  t('tripDetails.finalStatusTitle'),
+                  t('tripDetails.wasTripCompleted'),
+                  [
+                    { text: t('common.no'), onPress: () => handleCancelarPaseo(paseoSeleccionado?._id!) },
+                    { text: t('common.yes'), onPress: () => handleCompletarPaseo(paseoSeleccionado?._id!) },
+                  ]
+                )}
+              >
+              <Text bold white transform="uppercase">
+                {t('tripDetails.finalStatusLink')}
+              </Text>
+            </Button>
+          }          
+          {/* Cancelado */}
+          {paseoSeleccionado?.estadoFinal === EstadoFinal.CANCELADO &&
+          <Block outlined color={colors.danger} 
+            paddingHorizontal={sizes.sm}>
+            <Block row justify="center">
+              <Text h5 semibold color={colors.danger}
+                paddingVertical={sizes.s}>
+                {t('tripDetails.wasCancelled')}
+              </Text>
+            </Block>
+          </Block>          
+          }
+          {/* Realizado */}
+          {paseoSeleccionado?.estadoFinal === EstadoFinal.REALIZADO &&
+          <Block outlined color={colors.primary} 
+            paddingHorizontal={sizes.sm}>
+            <Block row justify="center">
+              <Text h5 semibold color={colors.primary}
+                paddingVertical={sizes.s}>
+                {t('tripDetails.wasCompleted')}
+              </Text>
+            </Block>
+          </Block>          
+          }          
           {/* Usuario */}
           <Block row
             marginTop={sizes.s}>
@@ -467,21 +560,22 @@ const TripDetails = (props) => {
               style={{ width: sizes.xl, height: sizes.xl, borderRadius: sizes.s }}
             />
             <Block marginLeft={sizes.s}>
-              <Text p semibold>
-                {usuarioPaseo?.nombreCompleto}
+              <Text p semibold primary>
+                {paseoSeleccionado?.idCreador === user._id ? t('profile.you')
+                : usuarioPaseo?.nombreCompleto}
               </Text>
-              <Text p gray>
+              <Text p black>
                 {t('tripDetails.tripCreated')}
                 {dayjs(paseoSeleccionado?.fechaCreacion).format(t('common.dateFormat'))}
               </Text>
               {paseoSeleccionado?.pinPaseo &&
                 paseoSeleccionado?.idCreador === user?._id &&
-                <Text p gray>
+                <Text p black>
                   PIN: {paseoSeleccionado?.pinPaseo!}
                 </Text>
               }
             </Block>
-          </Block>
+          </Block>           
         </Block>
 
         <Block>
@@ -539,29 +633,6 @@ const TripDetails = (props) => {
               )
             }
 
-            {/* {
-              !enviandoVotacionRest ?
-                <Button
-                  onPress={() => { enviarVotos('rest'); }}
-                  gradient={gradients.primary}
-                  outlined
-                  marginVertical={sizes.s}
-                >
-                  <Text bold white transform="uppercase">
-                    {t('newTrip.vote')}
-                  </Text>
-                </Button> :
-                <Button
-                  gradient={gradients.primary}
-                  outlined
-                  marginVertical={sizes.s}
-                >
-                  <Text bold white transform="uppercase">
-                    {t('newTrip.sendingVotes')}
-                  </Text>
-                </Button>
-            } */}
-
             {user && !paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones && 
              !paseoCompletado && (
               !enviandoVotacionRest ?
@@ -590,8 +661,9 @@ const TripDetails = (props) => {
             {user && paseoSeleccionado?.idCreador === user._id && !paseoCompletado &&
              !paseoSeleccionado?.seccionRestaurantes?.esFinalizadasVotaciones &&
             <Button
-              gradient={gradients.warning}
+              primary
               outlined
+              shadow={!isAndroid}
               marginVertical={sizes.xs}
               paddingHorizontal={sizes.sm}
               onPress={(value) =>
@@ -604,7 +676,7 @@ const TripDetails = (props) => {
                   ]
                 )}
               >
-              <Text bold white transform="uppercase">
+              <Text bold primary transform="uppercase">
                 {t('tripDetails.closeVotes')}
               </Text>
             </Button>
@@ -691,8 +763,9 @@ const TripDetails = (props) => {
             {user && paseoSeleccionado?.idCreador === user._id && !paseoCompletado &&
              !paseoSeleccionado?.seccionAtraccionesTuristicas?.esFinalizadasVotaciones &&
             <Button
-              gradient={gradients.warning}
+              primary
               outlined
+              shadow={!isAndroid}
               marginVertical={sizes.xs}
               paddingHorizontal={sizes.sm}
               onPress={(value) =>
@@ -705,7 +778,7 @@ const TripDetails = (props) => {
                   ]
                 )}
             >
-              <Text bold white transform="uppercase">
+              <Text bold primary transform="uppercase">
                 {t('tripDetails.closeVotes')}
               </Text>
             </Button>

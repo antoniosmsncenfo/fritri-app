@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { CantidadPaseos, IDestino, ILugar, IPaseo, ISeccionAtraccionesTuristicas, ISeccionRestaurantes, ISolicitudPaseoAleatorio, IPaseoUpdate, TipoSeccion } from '../interfaces/paseo';
-import { crearPaseoNuevo, obtenerPaseoPorID, obtenerPaseosUsuarioPorEstado, actualizarPaseoExistente, protegerPaseoPorID, removerPinPaseoPorID, cerrarSeccionDb, aceptarInvitacionPaseoDb } from '../api/paseoDB';
+import { CantidadPaseos, IDestino, ILugar, IPaseo, ISeccionAtraccionesTuristicas, ISeccionRestaurantes, ISolicitudPaseoAleatorio, IPaseoUpdate, TipoSeccion, ResultadoPaseo, EstadoFinal } from '../interfaces/paseo';
+import { crearPaseoNuevo, obtenerPaseoPorID, obtenerPaseosUsuarioPorEstado, actualizarPaseoExistente, protegerPaseoPorID, removerPinPaseoPorID, cerrarSeccionDb, aceptarInvitacionPaseoDb, cambiarEstadoFinalDb } from '../api/paseoDB';
 import { EstadoPaseo } from '../interfaces/paseo';
 import { ISolicitudLugaresGoogle, TipoLugaresGoogle } from '../interfaces/solicitud-lugares-google';
 import { getGooglePlacesByType } from '../api/lugaresTuristicosDB';
@@ -120,12 +120,31 @@ export const usePaseo = () => {
         }
   
       } catch(error) {
-        console.log("useVotacion->cerrarSeccion::ERROR "+ JSON.stringify(error));
+        console.log("usePaseos->cerrarSeccion::ERROR "+ JSON.stringify(error));
         resultado = false;
       }
   
       return resultado;
     };    
+
+    const [seCambioEstadoFinal, setSeCambioEstadoFinal] = useState(false);
+
+    async function cambiarEstadoFinalPaseo(idPaseo:string, estadoFinal:EstadoFinal): Promise<any> {
+      let resultado;
+      try {
+        const resultado = await cambiarEstadoFinalDb(idPaseo, estadoFinal);
+        
+        if(resultado) {
+            setSeCambioEstadoFinal(true)
+        }
+  
+      } catch(error) {
+        console.log("usePaseos->cambiarEstadoFinalPaseo::ERROR "+ JSON.stringify(error));
+        resultado = false;
+      }
+  
+      return resultado;
+    }; 
 
     const obtenerLugaresAleatorios = async (latitud: number, longitud: number, tipo: TipoLugaresGoogle): Promise<ILugar[]> => {
         const solicitud: ISolicitudLugaresGoogle = { latitud, longitud, radio, tipo, tokenPaginacion: '' };
@@ -217,6 +236,9 @@ export const usePaseo = () => {
         cerrarSeccion,
         seCerroSeccion,
         setSeCerroSeccion,
+        cambiarEstadoFinalPaseo,
+        seCambioEstadoFinal,
+        setSeCambioEstadoFinal,
         aceptarInvitacionPaseo,
         invitacionAceptada,
         setPaseoSeleccionado,
