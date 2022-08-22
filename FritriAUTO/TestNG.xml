@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="FritriAutoApp" verbose="1">
+    <test name="FritriApp">
+        <classes>
+            <class name="Fritri_Auto">
+                <methods>
+
+                    <include name="createTrip"></include>
+
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
