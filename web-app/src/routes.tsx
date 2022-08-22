@@ -37,7 +37,7 @@ Coded by www.creative-tim.com
 
 // Material Dashboard 2 PRO React layouts
 import Trips from "layouts/dashboards/trips";
-import Destinations from "layouts/dashboards/destinations";
+import Locations from "layouts/dashboards/locations";
 
 // Material Dashboard 2 PRO React TS components
 import MDAvatar from "components/MDAvatar";
@@ -78,10 +78,10 @@ const routes = [
         component: <Trips />,
       },
       {
-        name: "Destinations",
-        key: "destinations",
-        route: "/dashboards/destinations",
-        component: <Destinations />,
+        name: "Locations",
+        key: "Locations",
+        route: "/dashboards/locations",
+        component: <Locations />,
       },
     ],
   },

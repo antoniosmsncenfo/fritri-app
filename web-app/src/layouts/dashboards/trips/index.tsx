@@ -47,7 +47,6 @@ import { useEstadisticasPaseo, IDataEstadisticaDePaseos } from "hooks/useEstadis
 import { useState, useEffect } from "react";
 
 function Trips(): JSX.Element {
-  const { sales, tasks } = reportsLineChartData;
   const { obtenerDataEstadisticaDePaseos } = useEstadisticasPaseo();
   const [dataEstadisticaDePaseos, setDataEstadisticaDePaseos] = useState<IDataEstadisticaDePaseos>();
 

@@ -13,13 +13,25 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-const channelChartData = {
-  labels: ["Facebook", "Direct", "Organic", "Referral"],
+// types
+interface Types {
+  labels: string[];
   datasets: {
-    label: "Projects",
-    backgroundColors: ["info", "primary", "dark", "secondary", "primary"],
-    data: [15, 20, 12, 60],
-  },
+    label: string;
+    color: "primary" | "secondary" | "info" | "success" | "warning" | "error" | "light" | "dark";
+    data: number[];
+  }[];
+}
+
+const defaultLineChartData: Types = {
+  labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+  datasets: [
+    {
+      label: "Facebook Ads",
+      color: "info",
+      data: [50, 100, 200, 190, 400, 350, 500, 450, 700],
+    }
+  ],
 };
 
-export default channelChartData;
+export default defaultLineChartData;

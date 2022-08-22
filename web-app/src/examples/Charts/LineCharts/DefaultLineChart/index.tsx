@@ -53,8 +53,8 @@ interface Props {
 }
 
 function DefaultLineChart({ icon, title, description, height, chart }: Props): JSX.Element {
-  const chartDatasets = chart.datasets
-    ? chart.datasets.map((dataset) => ({
+  const chartDatasets = chart?.datasets
+    ? chart?.datasets.map((dataset) => ({
         ...dataset,
         tension: 0,
         pointRadius: 3,
@@ -71,7 +71,7 @@ function DefaultLineChart({ icon, title, description, height, chart }: Props): J
       }))
     : [];
 
-  const { data, options } = configs(chart.labels || [], chartDatasets);
+  const { data, options } = configs(chart?.labels || [], chartDatasets);
 
   const renderChart = (
     <MDBox py={2} pr={2} pl={icon.component ? 1 : 2}>
@@ -111,7 +111,7 @@ function DefaultLineChart({ icon, title, description, height, chart }: Props): J
             <Line data={data} options={options} />
           </MDBox>
         ),
-        [chart, height]
+        [chart!, height]
       )}
     </MDBox>
   );
