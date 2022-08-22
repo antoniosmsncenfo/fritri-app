@@ -41,7 +41,7 @@ const Home = () => {
     React.useCallback(() => {
       checkGUser();
       setTab(0);
-      obtenerPaseosUsuario(user?._id!,EstadoPaseo.Pendiente,CantidadPaseos.Diez);
+      obtenerPaseosUsuario(user?._id!,EstadoPaseo.Pendiente,CantidadPaseos.Cien);
     }, [])
   );
 
