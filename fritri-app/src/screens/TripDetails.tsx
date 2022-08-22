@@ -339,13 +339,36 @@ const TripDetails = (props) => {
         paddingHorizontal={sizes.padding}>
 
         {/* Block para el encabezado */}
-        <Block>
-          <Block row
-            justify="space-between"
+        <Block 
+          justify="space-between" 
+          row 
+          flex={1}
+        >
+          <Block
+          style={{ 
+            flexGrow: 2,
+            flexShrink: 2,
+            flexBasis: 280,
+           }}
+            row
+            justify="flex-start"
+            flex={1}
           >
             <Text h4 marginVertical={sizes.s}>
               {paseoSeleccionado?.nombre}
             </Text>
+          </Block>
+
+          <Block
+            row
+            justify="flex-end"
+            align="center"
+            style={{ 
+              flexGrow: 2,
+              flexShrink: 2,
+              flexBasis: 40,
+            }}
+          >
             <Block row flex={0} align="center">
 
               {paseoSeleccionado?.pinPaseo &&
