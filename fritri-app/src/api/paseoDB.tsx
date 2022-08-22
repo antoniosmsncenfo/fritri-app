@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { EstadoPaseo } from '../../../paseos-servicio/src/paseos/paseos.service';
-import { IPaseo, IPaseoUpdate, TipoSeccion } from '../interfaces/paseo';
+import { IPaseo, IPaseoUpdate, TipoSeccion, EstadoPaseo, EstadoFinal } from '../interfaces/paseo';
 
 export const crearPaseoNuevo = async (paseo: IPaseo, aleatorio: boolean) => {
     let request = {
@@ -151,6 +150,33 @@ export const cerrarSeccionDb = async (idPaseo:string, tipo:TipoSeccion) => {
     let request = {
         method: 'patch',
         url: `${process.env.PASEOS_BASE_URL}/cerrar-seccion`,
+        headers: {},
+        data,
+    };
+    try {
+        const resultado = await axios(request);
+        if (resultado.status === 200) {
+            return resultado.data;
+        }
+        else {
+            return null;
+        }
+    }
+    catch (e) {
+        throw e;
+    }
+};
+
+export const cambiarEstadoFinalDb = async (idPaseo:string, estadoFinal:EstadoFinal) => {
+
+    const data = {
+        idPaseo:idPaseo,
+        estadoFinal: estadoFinal
+    };
+
+    let request = {
+        method: 'patch',
+        url: `${process.env.PASEOS_BASE_URL}/cambiar-estado-final`,
         headers: {},
         data,
     };

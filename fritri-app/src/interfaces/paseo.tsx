@@ -13,6 +13,7 @@ export interface IPaseo {
     fechaCreacion: Date;
     pinPaseo?: number;
     esAleatorio?: boolean;
+    estadoFinal?: EstadoFinal;
     __v?: number;
 }
 
@@ -114,3 +115,9 @@ export enum TipoSeccion {
     RESTAURANTE = 'RESTAURANTE',
     ATRACCION_TURISTICA = 'ATRACCION_TURISTICA'
   }
+
+export enum EstadoFinal {
+    PROGRAMADO = 'PROGRAMADO',
+    CANCELADO = 'CANCELADO',
+    REALIZADO = 'REALIZADO' 
+}  
