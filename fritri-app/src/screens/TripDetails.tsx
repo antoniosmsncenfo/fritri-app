@@ -13,6 +13,7 @@ import { ITipoVoto, ITipoVotoEnviar } from '../interfaces/tipo-voto';
 import * as Linking from 'expo-linking';
 import Storage from '@react-native-async-storage/async-storage';
 
+const DOMAIN_REDIRECT = 'https://fritri.herokuapp.com/';
 const TripDetails = (props) => {
   const { assets, sizes, colors, gradients } = useTheme();
   const { t } = useTranslation();
@@ -316,7 +317,7 @@ const TripDetails = (props) => {
   const onShare = async (idPaseo: string) => {
     const result = await Share.share({
       message:
-        t('tripDetails.shareMessage') + Linking.createURL('tripDetails/' + idPaseo),
+        `${t('tripDetails.shareMessage')} ${DOMAIN_REDIRECT}?url=${Linking.createURL('tripDetails/' + idPaseo)}`,
     });
     if (result.action === Share.sharedAction) {
       if (result.activityType) {
@@ -362,13 +363,36 @@ const TripDetails = (props) => {
         paddingHorizontal={sizes.padding}>
 
         {/* Block para el encabezado */}
-        <Block>
-          <Block row
-            justify="space-between"
+        <Block 
+          justify="space-between" 
+          row 
+          flex={1}
+        >
+          <Block
+          style={{ 
+            flexGrow: 2,
+            flexShrink: 2,
+            flexBasis: 280,
+           }}
+            row
+            justify="flex-start"
+            flex={1}
           >
             <Text h4 marginVertical={sizes.s}>
               {paseoSeleccionado?.nombre}
             </Text>
+          </Block>
+
+          <Block
+            row
+            justify="flex-end"
+            align="center"
+            style={{ 
+              flexGrow: 2,
+              flexShrink: 2,
+              flexBasis: 40,
+            }}
+          >
             <Block row flex={0} align="center">
 
               {paseoSeleccionado?.pinPaseo &&

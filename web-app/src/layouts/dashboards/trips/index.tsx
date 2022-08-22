@@ -14,7 +14,6 @@ Coded by www.creative-tim.com
 */
 
 // @mui material components
-import { useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import Tooltip from "@mui/material/Tooltip";
 import Icon from "@mui/material/Icon";
@@ -43,10 +42,19 @@ import reportsLineChartData from "layouts/dashboards/trips/data/reportsLineChart
 import booking1 from "assets/images/products/product-1-min.jpg";
 import booking2 from "assets/images/products/product-2-min.jpg";
 import booking3 from "assets/images/products/product-3-min.jpg";
+import { useEstadisticasPaseo, IDataEstadisticaDePaseos } from "hooks/useEstadisticasPaseo";
+
+import { useState, useEffect } from "react";
 
 function Trips(): JSX.Element {
-  const { sales, tasks } = reportsLineChartData;
+  const { obtenerDataEstadisticaDePaseos } = useEstadisticasPaseo();
+  const [dataEstadisticaDePaseos, setDataEstadisticaDePaseos] = useState<IDataEstadisticaDePaseos>();
 
+  useEffect(() => {
+    (async () => {
+      setDataEstadisticaDePaseos(await obtenerDataEstadisticaDePaseos());
+    })();
+  }, [])
 
   // Action buttons for the BookingCard
   const actionButtons = (
@@ -74,7 +82,11 @@ function Trips(): JSX.Element {
       <DashboardNavbar />
       <MDBox py={3}>
         <Grid container>
-          <TripsByCountry />
+          <TripsByCountry
+            tripsByCountry={dataEstadisticaDePaseos?.tripsByCountry}
+            tripsLocations={dataEstadisticaDePaseos?.tripsLocations}
+            topTrips={dataEstadisticaDePaseos?.topTrips}
+          />
         </Grid>
         <MDBox mt={6}>
           <Grid container spacing={3}>
@@ -82,10 +94,10 @@ function Trips(): JSX.Element {
               <MDBox mb={3}>
                 <ReportsBarChart
                   color="info"
-                  title="website views"
-                  description="Last Campaign Performance"
-                  date="campaign sent 2 days ago"
-                  chart={reportsBarChartData}
+                  title="Trips planned per day"
+                  description="Number of trips planned per day of the week"
+                  date="historical data"
+                  chart={dataEstadisticaDePaseos?.tripsPerDay}
                 />
               </MDBox>
             </Grid>
@@ -93,14 +105,10 @@ function Trips(): JSX.Element {
               <MDBox mb={3}>
                 <ReportsLineChart
                   color="success"
-                  title="daily sales"
-                  description={
-                    <>
-                      (<strong>+15%</strong>) increase in today sales.
-                    </>
-                  }
-                  date="updated 4 min ago"
-                  chart={sales}
+                  title="Trips per month"
+                  description="Number of trips planned per month of the year"
+                  date="historical data"
+                  chart={dataEstadisticaDePaseos?.tripsPlannedPerMonth}
                 />
               </MDBox>
             </Grid>
@@ -108,10 +116,10 @@ function Trips(): JSX.Element {
               <MDBox mb={3}>
                 <ReportsLineChart
                   color="dark"
-                  title="completed tasks"
-                  description="Last Campaign Performance"
-                  date="just updated"
-                  chart={tasks}
+                  title="Trips created per month"
+                  description="Number of trips created per month of the year"
+                  date="historical data"
+                  chart={dataEstadisticaDePaseos?.tripsCreatedPerMonth}
                 />
               </MDBox>
             </Grid>
@@ -119,105 +127,65 @@ function Trips(): JSX.Element {
         </MDBox>
         <MDBox mt={1.5}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={1.5}>
-                <ComplexStatisticsCard
-                  color="dark"
-                  icon="weekend"
-                  title="Bookings"
-                  count={281}
-                  percentage={{
-                    color: "success",
-                    amount: "+55%",
-                    label: "than lask week",
-                  }}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={1.5}>
-                <ComplexStatisticsCard
-                  icon="leaderboard"
-                  title="Today's Users"
-                  count="2,300"
-                  percentage={{
-                    color: "success",
-                    amount: "+3%",
-                    label: "than last month",
-                  }}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
+          <Grid item xs={12} md={6} lg={4}>
               <MDBox mb={1.5}>
                 <ComplexStatisticsCard
                   color="success"
-                  icon="store"
-                  title="Revenue"
-                  count="34k"
-                  percentage={{
-                    color: "success",
-                    amount: "+1%",
-                    label: "than yesterday",
-                  }}
+                  icon="work"
+                  title="Total trips"
+                  count={dataEstadisticaDePaseos?.totalsTrips?.trips}
                 />
               </MDBox>
             </Grid>
-            <Grid item xs={12} md={6} lg={3}>
+            <Grid item xs={12} md={6} lg={4}>
               <MDBox mb={1.5}>
                 <ComplexStatisticsCard
-                  color="primary"
-                  icon="person_add"
-                  title="Followers"
-                  count="+91"
-                  percentage={{
-                    color: "success",
-                    amount: "",
-                    label: "Just updated",
-                  }}
-                />
-              </MDBox>
-            </Grid>
-          </Grid>
-        </MDBox>
-        <MDBox mt={2}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mt={3}>
-                <BookingCard
-                  image={booking1}
-                  title="Cozy 5 Stars Apartment"
-                  description='The place is close to Barceloneta Beach and bus stop just 2 min by walk and near to "Naviglio" where you can enjoy the main night life in Barcelona.'
-                  price="$899/night"
-                  location="Barcelona, Spain"
-                  action={actionButtons}
+                  color="success"
+                  icon="swipeLeft"
+                  title="Manually created trips"
+                  count={dataEstadisticaDePaseos?.totalsTrips?.noRandomTrips}
                 />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
-              <MDBox mt={3}>
-                <BookingCard
-                  image={booking2}
-                  title="Office Studio"
-                  description='The place is close to Metro Station and bus stop just 2 min by walk and near to "Naviglio" where you can enjoy the night life in London, UK.'
-                  price="$1.119/night"
-                  location="London, UK"
-                  action={actionButtons}
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  color="success"
+                  icon="cached"
+                  title="Random created trips"
+                  count={dataEstadisticaDePaseos?.totalsTrips?.randomTrips}
                 />
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
-              <MDBox mt={3}>
-                <BookingCard
-                  image={booking3}
-                  title="Beautiful Castle"
-                  description='The place is close to Metro Station and bus stop just 2 min by walk and near to "Naviglio" where you can enjoy the main night life in Milan.'
-                  price="$459/night"
-                  location="Milan, Italy"
-                  action={actionButtons}
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  color="dark"
+                  icon="restaurant"
+                  title="Total restaurants"
+                  count={dataEstadisticaDePaseos?.totalsTrips?.restaurants}
                 />
               </MDBox>
             </Grid>
+            <Grid item xs={12} md={6} lg={4}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  icon="kayaking"
+                  title="Total attractions"
+                  count={dataEstadisticaDePaseos?.totalsTrips?.attractions}
+                />
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={6} lg={4}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  color="success"
+                  icon="place"
+                  title="Total countries"
+                  count={dataEstadisticaDePaseos?.totalsTrips?.countries}
+                />
+              </MDBox>
+            </Grid>            
           </Grid>
         </MDBox>
       </MDBox>

@@ -47,7 +47,7 @@ interface Props {
 }
 
 function ReportsBarChart({ color, title, description, date, chart }: Props): JSX.Element {
-  const { data, options } = configs(chart.labels || [], chart.datasets || {});
+  const { data, options } = configs(chart?.labels || [], chart?.datasets || {});
 
   return (
     <Card sx={{ height: "100%" }}>

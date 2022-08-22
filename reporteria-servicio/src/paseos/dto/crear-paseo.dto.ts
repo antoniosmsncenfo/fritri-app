@@ -35,4 +35,6 @@ export class CrearPaseoDto {
   @ApiProperty()
   @IsNumber()
   longitud: number;
+  @ApiProperty()
+  readonly esAleatorio: boolean;
 }

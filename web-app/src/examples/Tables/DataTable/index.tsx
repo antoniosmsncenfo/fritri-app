@@ -75,8 +75,8 @@ function DataTable({
     entries = entriesPerPage.entries ? entriesPerPage.entries : ["10", "25", "50", "100"];
   }
 
-  const columns = useMemo<any>(() => table.columns, [table]);
-  const data = useMemo<any>(() => table.rows, [table]);
+  const columns = useMemo<any>(() => table?.columns, [table]);
+  const data = useMemo<any>(() => table?.rows, [table]);
 
   const tableInstance = useTable(
     { columns, data, initialState: { pageIndex: 0 } },

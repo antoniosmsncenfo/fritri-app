@@ -23,7 +23,13 @@ export class PaseosService {
       if (!resutadoPaseo) {
         resultado = await this.paseoModel.create(crearPaseo);
       } else {
-        throw new Error('Paseo duplicado');
+        resutadoPaseo = await this.paseoModel.findOneAndUpdate(
+          { idPaseo: crearPaseo.idPaseo },
+          crearPaseo,
+          {
+            returnOriginal: false,
+          },
+        );
       }
     } catch (error) {
       throw new BadRequestException(

@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -40,15 +40,25 @@ import SalesTable from "examples/Tables/SalesTable";
 import DataTable from "examples/Tables/DataTable";
 
 // Sales dashboard components
-import ChannelsChart from "layouts/dashboards/destinations/components/ChannelsChart";
+import ChannelsChart from "layouts/dashboards/locations/components/ChannelsChart";
 
 // Data
-import defaultLineChartData from "layouts/dashboards/destinations/data/defaultLineChartData";
-import horizontalBarChartData from "layouts/dashboards/destinations/data/horizontalBarChartData";
-import salesTableData from "layouts/dashboards/destinations/data/salesTableData";
-import dataTableData from "layouts/dashboards/destinations/data/dataTableData";
+import defaultLineChartData from "layouts/dashboards/locations/data/defaultLineChartData";
+import horizontalBarChartData from "layouts/dashboards/locations/data/horizontalBarChartData";
+import salesTableData from "layouts/dashboards/locations/data/salesTableData";
+import dataTableData from "layouts/dashboards/locations/data/dataTableData";
+import { IDataEstadisticaDestino, useEstadisticasDestino } from "hooks/useEstadisticasDestino";
 
-function Destinations(): JSX.Element {
+function Locations(): JSX.Element {
+  const { obtenerDataEstadisticaDeDestinos } = useEstadisticasDestino();
+  const [dataEstadisticaDeDestinos, setDataEstadisticaDeDestinos] = useState<IDataEstadisticaDestino>();
+
+  useEffect(() => {
+    (async () => {
+      setDataEstadisticaDeDestinos(await obtenerDataEstadisticaDeDestinos());
+    })();
+  }, [])
+
   // DefaultStatisticsCard state for the dropdown value
   const [salesDropdownValue, setSalesDropdownValue] = useState<string>("6 May - 7 May");
   const [customersDropdownValue, setCustomersDropdownValue] = useState<string>("6 May - 7 May");
@@ -100,50 +110,20 @@ function Destinations(): JSX.Element {
           <Grid container spacing={3}>
             <Grid item xs={12} sm={4}>
               <DefaultStatisticsCard
-                title="sales"
-                count="$230,220"
-                percentage={{
-                  color: "success",
-                  value: "+55%",
-                  label: "since last month",
-                }}
-                dropdown={{
-                  action: openSalesDropdown,
-                  menu: renderMenu(salesDropdown, closeSalesDropdown),
-                  value: salesDropdownValue,
-                }}
+                title="Destinations returned "
+                count={dataEstadisticaDeDestinos ? (dataEstadisticaDeDestinos?.totalsLocations?.destinations) : "Loading..."}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
               <DefaultStatisticsCard
-                title="customers"
-                count="3.200"
-                percentage={{
-                  color: "success",
-                  value: "+12%",
-                  label: "since last month",
-                }}
-                dropdown={{
-                  action: openCustomersDropdown,
-                  menu: renderMenu(customersDropdown, closeCustomersDropdown),
-                  value: customersDropdownValue,
-                }}
+                title="Restaurants returned "
+                count={dataEstadisticaDeDestinos ? (dataEstadisticaDeDestinos?.totalsLocations?.restaurants) : "Loading..."}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
               <DefaultStatisticsCard
-                title="avg. revenue"
-                count="$1.200"
-                percentage={{
-                  color: "secondary",
-                  value: "+$213",
-                  label: "since last month",
-                }}
-                dropdown={{
-                  action: openRevenueDropdown,
-                  menu: renderMenu(revenueDropdown, closeRevenueDropdown),
-                  value: revenueDropdownValue,
-                }}
+                title="Attractions returned "
+                count={dataEstadisticaDeDestinos ? (dataEstadisticaDeDestinos?.totalsLocations?.attractions) : "Loading..."}
               />
             </Grid>
           </Grid>
@@ -151,63 +131,75 @@ function Destinations(): JSX.Element {
         <MDBox mb={3}>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6} lg={4}>
-              <ChannelsChart />
+              <ChannelsChart
+                datasets={dataEstadisticaDeDestinos?.locationsChartSeries.datasets}
+                labels={dataEstadisticaDeDestinos?.locationsChartSeries.labels}
+              />
             </Grid>
             <Grid item xs={12} sm={6} lg={8}>
               <DefaultLineChart
-                title="Revenue"
-                description={
-                  <MDBox display="flex" justifyContent="space-between">
-                    <MDBox display="flex" ml={-1}>
-                      <MDBadgeDot color="info" size="sm" badgeContent="Facebook Ads" />
-                      <MDBadgeDot color="dark" size="sm" badgeContent="Google Ads" />
-                    </MDBox>
-                    <MDBox mt={-4} mr={-1} position="absolute" right="1.5rem">
-                      <Tooltip title="See which ads perform better" placement="left" arrow>
-                        <MDButton
-                          variant="outlined"
-                          color="secondary"
-                          size="small"
-                          circular
-                          iconOnly
-                        >
-                          <Icon>priority_high</Icon>
-                        </MDButton>
-                      </Tooltip>
-                    </MDBox>
-                  </MDBox>
-                }
-                chart={defaultLineChartData}
+                title="Locations returned per month"
+                chart={dataEstadisticaDeDestinos?.locationsLineChartSeries}
               />
             </Grid>
           </Grid>
-        </MDBox>
-        <MDBox mb={3}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} lg={8}>
-              <HorizontalBarChart title="Sales by age" chart={horizontalBarChartData} />
-            </Grid>
-            <Grid item xs={12} lg={4}>
-              <SalesTable title="Sales by Country" rows={salesTableData} />
-            </Grid>
-          </Grid>
-        </MDBox>
+        </MDBox>        
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Card>
               <MDBox pt={3} px={3}>
                 <MDTypography variant="h6" fontWeight="medium">
-                  Top Selling Products
+                  Top {dataEstadisticaDeDestinos?.topPlaces} destinations
                 </MDTypography>
               </MDBox>
               <MDBox py={1}>
-                <DataTable
-                  table={dataTableData}
+                {dataEstadisticaDeDestinos?.topDestinations && (<DataTable
+                  table={dataEstadisticaDeDestinos?.topDestinations}
                   entriesPerPage={false}
                   showTotalEntries={false}
                   isSorted={false}
                   noEndBorder
-                />
+                />)}
+              </MDBox>
+            </Card>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3}  pt={3}>
+          <Grid item xs={12}>
+            <Card>
+              <MDBox pt={3} px={3}>
+                <MDTypography variant="h6" fontWeight="medium">
+                  Top {dataEstadisticaDeDestinos?.topPlaces} restaurants
+                </MDTypography>
+              </MDBox>
+              <MDBox py={1}>
+                {dataEstadisticaDeDestinos?.topRestaurants && (<DataTable
+                  table={dataEstadisticaDeDestinos?.topRestaurants}
+                  entriesPerPage={false}
+                  showTotalEntries={false}
+                  isSorted={false}
+                  noEndBorder
+                />)}
+              </MDBox>
+            </Card>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3}  pt={3}>
+          <Grid item xs={12}>
+            <Card>
+              <MDBox pt={3} px={3}>
+                <MDTypography variant="h6" fontWeight="medium">
+                  Top {dataEstadisticaDeDestinos?.topPlaces} attractions
+                </MDTypography>
+              </MDBox>
+              <MDBox py={1}>
+                {dataEstadisticaDeDestinos?.topAttractions && (<DataTable
+                  table={dataEstadisticaDeDestinos?.topAttractions}
+                  entriesPerPage={false}
+                  showTotalEntries={false}
+                  isSorted={false}
+                  noEndBorder
+                />)}
               </MDBox>
             </Card>
           </Grid>
@@ -218,4 +210,4 @@ function Destinations(): JSX.Element {
   );
 }
 
-export default Destinations;
+export default Locations;

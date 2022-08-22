@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Linking, View } from 'react-native';
+import { Linking } from 'react-native';
 
 import { useTheme, useTranslation } from '../hooks';
 import { Block, Image, Text } from '../components';
@@ -10,77 +10,113 @@ const ViewDestination = (props) => {
   const { t } = useTranslation();
   const { assets, sizes } = useTheme();
   const [destino, setDestino] = useState<IDestino | null>(null);
-  const { getGooglePlace, googlePlace } = useGooglePlace();
+  const {getGooglePlace, googlePlace, googlePlaceReady} = useGooglePlace();
   const [searchMoreInfo, setSearchMoreInfo] = useState(false);
+  const [ocultarDireccion, setOcultarDireccion] = useState(false);
+  const [ocultarTelefono, setOcultarTelefono] = useState(false);
 
   useEffect(() => {
     setDestino(props.route.params);
-    const { idGoogle } = props.route.params;
-
-    if (idGoogle !== undefined && idGoogle !== '') {
-      getGooglePlace(idGoogle);
+    const { idLugarGoogle, idGoogle } = props.route.params;
+    const idLugarGoogleBuscar = idLugarGoogle ? idLugarGoogle : idGoogle;
+    if (idLugarGoogleBuscar !== undefined && idLugarGoogleBuscar !== '') {
+      getGooglePlace(idLugarGoogleBuscar);
       setSearchMoreInfo(true);
     }
   }, []);
+
+  useEffect(() => {
+    if(googlePlaceReady) {
+      if(!googlePlace?.direccion) {
+        setOcultarDireccion(true);
+      }
+      if(!googlePlace?.telefono) {
+        setOcultarTelefono(true);
+      }
+    }
+  }, [googlePlaceReady])
 
   const callPlace = (telefono) => {
     return Linking.openURL(`tel:${telefono}`);
   };
 
   return (
-    <>
-      <Block marginTop={sizes.m} paddingHorizontal={sizes.padding} marginBottom={sizes.l}>
-        <Block>
+    <Block safe>
+      <Block
+        marginTop={sizes.m}
+        scroll
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingVertical: sizes.s}}
+        paddingHorizontal={sizes.padding}>
+        <Block marginBottom={sizes.m}>
           <Image
             resizeMode="cover"
-            source={{ uri: destino?.urlFotos![0] }}
-            style={{ width: '100%', height: '60%' }}
+            source={{uri: destino?.urlFotos![0]}}
+            style={{height: 250}}
           />
-          {destino?.estado && destino?.pais && (<Text p secondary marginTop={sizes.sm}>
-            {destino?.estado} / {destino?.pais}
-          </Text>)}
-          <Text h4 marginVertical={sizes.s}>
-            {destino?.nombre}
-          </Text>
-        </Block>
-      </Block>
-
-      {/* Parte del restaurante o actividad turística */}
-      {searchMoreInfo &&
-        <View style={{
-          flexDirection: 'column',
-          height: 150,
-          padding: 15,
-          marginTop: -200,
-        }}>
-          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'stretch', borderWidth: 0, height: 20, borderColor: 'green', width: '88%', marginTop: -15 }} >
-            <Image source={assets.locationNew} radius={6} style={{ marginRight: 10, marginLeft: 10, marginTop: 2, width: 20, height: 20 }} />
-            {googlePlace?.direccion ?
-              <Text lineHeight={26} >
+          <Block>
+            <Block row justify="space-between">
+              {destino?.estado && destino?.pais && (
+                <Text p secondary marginTop={sizes.sm}>
+                  {destino?.estado} / {destino?.pais}
+                </Text>
+              )}
+            </Block>
+          </Block>
+          <Block>
+            <Block row justify="space-between">
+              <Text h4 marginVertical={sizes.s}>
+                {destino?.nombre}
+              </Text>
+            </Block>
+          </Block>
+          <Block
+            row
+            align="flex-start"
+            justify="flex-start"
+            marginTop={sizes.sm}>
+            {
+              !ocultarDireccion && 
+                <Image
+                radius={0}
+                source={assets.locationNew}
+                style={{width: 25, height: 25}}
+              />
+            }
+            { googlePlace?.direccion! ?
+              <Text p secondary marginBottom={sizes.s} marginLeft={sizes.s}>
                 {googlePlace?.direccion}
               </Text>
-              :
-              <Text lineHeight={26}>
+              : !ocultarDireccion &&
+              <Text p secondary marginBottom={sizes.s} marginLeft={sizes.s}>
                 {t('common.loading')}
               </Text>
             }
-          </View>
-
-          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'baseline', borderWidth: 0, borderColor: 'red', height: 50, marginTop: -55 }} >
-            <Image source={assets.phone} radius={6} style={{ marginTop: 15, marginRight: 10, marginLeft: 10, width: 20, height: 20 }} />
-            {googlePlace?.telefono ?
-              (<Text lineHeight={26} onPress={() => { callPlace(googlePlace?.telefono); }}>
-                {`${googlePlace?.telefono}`}
-              </Text>)
-              :
-              <Text lineHeight={26}>
+          </Block>
+          <Block
+            row
+            align="flex-start"
+            justify="flex-start"
+            marginTop={sizes.sm}>
+            {
+              !ocultarTelefono && 
+                <Image
+                  radius={0}
+                  source={assets.phone}
+                  style={{width: 20, height: 20}}
+                />
+            }
+              { googlePlace?.telefono ?
+                <Text p onPress={() => { callPlace(googlePlace?.telefono); }} secondary marginBottom={sizes.s} marginLeft={sizes.s}>{googlePlace?.telefono}</Text>
+              : !ocultarTelefono &&
+              <Text p secondary marginBottom={sizes.s} marginLeft={sizes.s}>
                 {t('common.loading')}
               </Text>
             }
-          </View>
-        </View>
-      }
-    </>
+          </Block>
+        </Block>
+      </Block>
+    </Block>
   );
 };
 

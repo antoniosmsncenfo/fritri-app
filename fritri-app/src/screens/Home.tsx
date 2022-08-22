@@ -18,9 +18,9 @@ const Home = () => {
   const { paseosUsuario, setPaseosUsuario, obtenerPaseosUsuario} = usePaseo();
   const [ paseosFiltrados, setPaseosFiltrados] = useState<IPaseo[] | undefined>([]);
   const [ searchTerm, setSearchTerm] = useState('');
-  
+
   const checkGUser = async () => {
-    if(!user) {
+    if (!user) {
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
@@ -30,12 +30,12 @@ const Home = () => {
         })
       );
     }
-  }
+  };
 
   useEffect(() => {
     checkGUser();
-    obtenerPaseosUsuario(user?._id!,EstadoPaseo.Pendiente,CantidadPaseos.Diez);
-  }, [])
+    obtenerPaseosUsuario(user?._id!,EstadoPaseo.Pendiente,CantidadPaseos.Cien);
+  }, []);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -46,43 +46,43 @@ const Home = () => {
   );
 
   useEffect(() => {
-    setPaseosFiltrados(paseosUsuario?.filter(p => 
+    setPaseosFiltrados(paseosUsuario?.filter(p =>
       p.nombre.toLowerCase().includes(searchTerm.toString().toLowerCase())));
-  
-  }, [paseosUsuario, searchTerm])
-  
+
+  }, [paseosUsuario, searchTerm]);
+
   //Maneja el cambio de tab y cambia la lista de productos
-  const handleNew = useCallback(() => {  
+  const handleNew = useCallback(() => {
     navigation.navigate('NewTrip');
   }, []);
 
   //Maneja el cambio de tab y cambia la lista de productos
-  const handlePaseos = useCallback(  
+  const handlePaseos = useCallback(
     (tab: number) => {
       setTab(tab);
-      if (tab===2) {
+      if (tab === 2) {
         navigation.navigate('NewTrip');
       }
-      else{        
-        tab === 0 
-        ? obtenerPaseosUsuario(user._id!,EstadoPaseo.Pendiente,CantidadPaseos.Diez) 
-        : obtenerPaseosUsuario(user._id!,EstadoPaseo.Completado,CantidadPaseos.Diez)
+      else {
+        tab === 0
+        ? obtenerPaseosUsuario(user._id!,EstadoPaseo.Pendiente,CantidadPaseos.Diez)
+        : obtenerPaseosUsuario(user._id!,EstadoPaseo.Completado,CantidadPaseos.Diez);
       }
     },
     [],
   );
-  
+
   const handleSearch = useCallback((value) => {
     setSearchTerm(value);
   }, []);
 
   return (
     <Block>
-      
+
       {/* search input */}
       <Block color={colors.card} flex={0} padding={sizes.padding}>
         <Input search color={colors.primary}
-        placeholder={t('common.search')} 
+        placeholder={t('common.search')}
         onChangeText={(value) => handleSearch(value)}
         value={searchTerm}
         />
@@ -172,19 +172,19 @@ const Home = () => {
                 source={assets.calendar}
               />
             </Block>
-            <Text p 
+            <Text p
             //font={fonts?.[tab === 2 ? 'medium' : 'normal']}
             font={fonts.medium}
               >
               {t('home.new')}
             </Text>
           </Block>
-        </Button>        
+        </Button>
       </Block>
-      
-      {paseosUsuario?.length===0 &&
+
+      {paseosUsuario?.length === 0 &&
         <Block paddingTop={sizes.padding} paddingHorizontal={sizes.padding} flex={0}>
-          <Text align='center' color={colors.primary} h4>{t('home.noTrips')}</Text>          
+          <Text align="center" color={colors.primary} h4>{t('home.noTrips')}</Text>
         </Block>
       }
 
@@ -199,7 +199,7 @@ const Home = () => {
             <DashboardCard {...paseo} key={`card-${paseo?._id}`} />
           ))}
         </Block>
-      </Block>    
+      </Block>
     </Block>
   );
 };

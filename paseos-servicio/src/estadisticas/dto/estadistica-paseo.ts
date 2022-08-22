@@ -12,4 +12,5 @@ export class EstadisticaPaseo {
   cantidadAtracciones: number;
   latitud: number;
   longitud: number;
+  esAleatorio: boolean;
 }

@@ -53,8 +53,8 @@ const pageRoutes = [
             route: "/dashboards/trips",
           },
           {
-            name: "destinations",
-            route: "/dashboards/destinations",
+            name: "locations",
+            route: "/dashboards/locations",
           },
         ],
       },
