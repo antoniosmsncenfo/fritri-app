@@ -143,33 +143,63 @@ function Locations(): JSX.Element {
               />
             </Grid>
           </Grid>
-        </MDBox>
-        <MDBox mb={3}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} lg={8}>
-              <HorizontalBarChart title="Sales by age" chart={horizontalBarChartData} />
-            </Grid>
-            <Grid item xs={12} lg={4}>
-              <SalesTable title="Sales by Country" rows={salesTableData} />
-            </Grid>
-          </Grid>
-        </MDBox>
+        </MDBox>        
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Card>
               <MDBox pt={3} px={3}>
                 <MDTypography variant="h6" fontWeight="medium">
-                  Top Selling Products
+                  Top {dataEstadisticaDeDestinos?.topPlaces} destinations
                 </MDTypography>
               </MDBox>
               <MDBox py={1}>
-                <DataTable
-                  table={dataTableData}
+                {dataEstadisticaDeDestinos?.topDestinations && (<DataTable
+                  table={dataEstadisticaDeDestinos?.topDestinations}
                   entriesPerPage={false}
                   showTotalEntries={false}
                   isSorted={false}
                   noEndBorder
-                />
+                />)}
+              </MDBox>
+            </Card>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3}  pt={3}>
+          <Grid item xs={12}>
+            <Card>
+              <MDBox pt={3} px={3}>
+                <MDTypography variant="h6" fontWeight="medium">
+                  Top {dataEstadisticaDeDestinos?.topPlaces} restaurants
+                </MDTypography>
+              </MDBox>
+              <MDBox py={1}>
+                {dataEstadisticaDeDestinos?.topRestaurants && (<DataTable
+                  table={dataEstadisticaDeDestinos?.topRestaurants}
+                  entriesPerPage={false}
+                  showTotalEntries={false}
+                  isSorted={false}
+                  noEndBorder
+                />)}
+              </MDBox>
+            </Card>
+          </Grid>
+        </Grid>
+        <Grid container spacing={3}  pt={3}>
+          <Grid item xs={12}>
+            <Card>
+              <MDBox pt={3} px={3}>
+                <MDTypography variant="h6" fontWeight="medium">
+                  Top {dataEstadisticaDeDestinos?.topPlaces} attractions
+                </MDTypography>
+              </MDBox>
+              <MDBox py={1}>
+                {dataEstadisticaDeDestinos?.topAttractions && (<DataTable
+                  table={dataEstadisticaDeDestinos?.topAttractions}
+                  entriesPerPage={false}
+                  showTotalEntries={false}
+                  isSorted={false}
+                  noEndBorder
+                />)}
               </MDBox>
             </Card>
           </Grid>
