@@ -183,6 +183,11 @@ export class PaseosService {
     let resultado;
     const idPaseo = actualizarPaseoDto.idPaseo;
     try {
+      if(actualizarPaseoDto.integrantes && actualizarPaseoDto.integrantes.length > 0) {
+        for (const integrante of actualizarPaseoDto.integrantes) {
+          integrante.idIntegrante = mongoose.mongo.ObjectId(integrante.idIntegrante);
+        }
+      }      
       resultadoPaseo = await this.paseoModel.findOneAndUpdate(
         { _id: idPaseo, eliminado: false },
         actualizarPaseoDto,
